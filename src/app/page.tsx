@@ -1,5 +1,24 @@
 import Link from "next/link";
 import { ROUTE_GROUPS, getAppRoutes } from "@/lib/routes";
+import { buildInfo } from "@/lib/build-info";
+
+// 格式化时间
+function formatTime(isoString: string) {
+  try {
+    const date = new Date(isoString);
+    return date.toLocaleString("zh-CN", {
+      timeZone: "Asia/Shanghai",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  } catch {
+    return isoString;
+  }
+}
 
 export default function Home() {
   const stats = ROUTE_GROUPS.map((group) => ({
@@ -102,6 +121,55 @@ export default function Home() {
           </code>{" "}
           文件即可自动显示在对应分组的侧边栏中。
         </p>
+      </div>
+
+      {/* 构建信息 */}
+      <div className="mt-8 rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
+        <h2 className="mb-4 font-semibold text-zinc-900 dark:text-white flex items-center gap-2">
+          <span className="text-lg">🚀</span>
+          部署信息
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/30">
+              <svg className="h-5 w-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">Commit</p>
+              <p className="font-mono text-sm font-medium text-zinc-900 dark:text-white">
+                {buildInfo.commitShort}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
+              <svg className="h-5 w-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">分支</p>
+              <p className="font-mono text-sm font-medium text-zinc-900 dark:text-white">
+                {buildInfo.branch}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 sm:col-span-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30">
+              <svg className="h-5 w-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">构建时间</p>
+              <p className="font-mono text-sm font-medium text-zinc-900 dark:text-white">
+                {formatTime(buildInfo.buildTime)}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

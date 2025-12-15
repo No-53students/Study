@@ -114,7 +114,7 @@ export default function Sidebar({ groups }: SidebarProps) {
         </div>
 
         {/* Navigation */}
-        <nav className="h-[calc(100vh-4rem)] overflow-y-auto p-4">
+        <nav className="h-[calc(100vh-4rem)] overflow-y-auto p-4 pb-20">
           <ul className="space-y-1">
             {/* 首页 */}
             <li>
