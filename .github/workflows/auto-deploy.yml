@@ -15,49 +15,96 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
-    # 3. 登录阿里云镜像仓库
+    # 3. 登录阿里云镜像仓库（推荐使用官方Action）
     - name: Login to Aliyun Registry
-      run: |
-        echo ${{ secrets.ALIYUN_PASSWORD }} | docker login --username=aliyun2183524432 \
-        crpi-86g0zmv6zs7w8xtg.cn-hangzhou.personal.cr.aliyuncs.com --password-stdin
+      uses: docker/login-action@v2
+      with:
+        registry: crpi-86g0zmv6zs7w8xtg.cn-hangzhou.personal.cr.aliyuncs.com
+        username: ${{ secrets.ALIYUN_USERNAME }}  # 建议使用Secret而非硬编码
+        password: ${{ secrets.ALIYUN_PASSWORD }}
 
-    # 4. 构建并推送镜像
+    # 4. 获取Git信息用于镜像标签
+    - name: Get Git Info
+      id: git
+      run: |
+        echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_OUTPUT
+
+    # 5. 构建并推送镜像（使用docker/build-push-action更稳定）
     - name: Build and Push
-      run: |
-        # 使用Git提交哈希作为版本号
-        VERSION=$(git rev-parse --short HEAD)
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: true
+        tags: |
+          crpi-86g0zmv6zs7w8xtg.cn-hangzhou.personal.cr.aliyuncs.com/53_student_study_1/study_1:latest
+          crpi-86g0zmv6zs7w8xtg.cn-hangzhou.personal.cr.aliyuncs.com/53_student_study_1/study_1:${{ steps.git.outputs.sha_short }}
+          crpi-86g0zmv6zs7w8xtg.cn-hangzhou.personal.cr.aliyuncs.com/53_student_study_1/study_1:${{ steps.git.outputs.branch }}
 
-        # 构建镜像
-        docker build -t study-app .
-
-        # 打标签并推送
-        docker tag study-app crpi-86g0zmv6zs7w8xtg.cn-hangzhou.personal.cr.aliyuncs.com/53_student_study_1/study_1:$VERSION
-        docker push crpi-86g0zmv6zs7w8xtg.cn-hangzhou.personal.cr.aliyuncs.com/53_student_study_1/study_1:$VERSION
-
-        # 同时更新latest标签
-        docker tag study-app crpi-86g0zmv6zs7w8xtg.cn-hangzhou.personal.cr.aliyuncs.com/53_student_study_1/study_1:latest
-        docker push crpi-86g0zmv6zs7w8xtg.cn-hangzhou.personal.cr.aliyuncs.com/53_student_study_1/study_1:latest
-
-    # 5. 部署到ECS服务器
+    # 6. 部署到ECS服务器（增强版）
     - name: Deploy to ECS
       uses: appleboy/ssh-action@v0.1.5
       with:
-        host: 47.110.84.170  # 您的ECS公网IP
-        username: root
+        host: ${{ secrets.ECS_HOST }}  # 建议使用Secret而非硬编码
+        username: ${{ secrets.ECS_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
+          #!/bin/bash
+          set -e  # 遇到错误立即退出
+
+          echo "🚀 开始部署应用..."
+
           # 登录镜像仓库
-          docker login --username=aliyun2183524432 crpi-86g0zmv6zs7w8xtg.cn-hangzhou.personal.cr.aliyuncs.com
+          echo "🔐 登录阿里云镜像仓库..."
+          docker login --username=${{ secrets.ALIYUN_USERNAME }} --password=${{ secrets.ALIYUN_PASSWORD }} crpi-86g0zmv6zs7w8xtg.cn-hangzhou.personal.cr.aliyuncs.com
 
           # 拉取最新镜像
+          echo "📥 拉取最新镜像..."
           docker pull crpi-86g0zmv6zs7w8xtg.cn-hangzhou.personal.cr.aliyuncs.com/53_student_study_1/study_1:latest
 
           # 停止并删除旧容器
+          echo "⏹️ 停止并删除旧容器..."
           docker stop study-app || true
           docker rm study-app || true
 
-          # 运行新容器
-          docker run -d --name study-app -p 3000:3000 crpi-86g0zmv6zs7w8xtg.cn-hangzhou.personal.cr.aliyuncs.com/53_student_study_1/study_1:latest
+          # 运行新容器（添加重启策略和标签）
+          echo "🏃 运行新容器..."
+          docker run -d \
+            --name study-app \
+            --restart=always \
+            --label "git.commit=${{ steps.git.outputs.sha_short }}" \
+            --label "deploy.time=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            -p 3000:3000 \
+            crpi-86g0zmv6zs7w8xtg.cn-hangzhou.personal.cr.aliyuncs.com/53_student_study_1/study_1:latest
+
+          # 等待应用启动
+          echo "⏳ 等待应用启动（15秒）..."
+          sleep 15
+
+          # 检查容器状态
+          if docker ps | grep -q study-app; then
+            echo "✅ 容器运行正常"
+
+            # 显示容器信息
+            echo "📋 容器信息:"
+            docker ps | grep study-app
+
+            # 显示最近日志
+            echo "📝 最近20行日志:"
+            docker logs study-app | tail -20
+          else
+            echo "❌ 容器未运行，查看详细日志:"
+            docker logs study-app || true
+            exit 1
+          fi
 
           # 清理未使用的镜像
+          echo "🧹 清理未使用的镜像..."
           docker image prune -f
+
+          echo "🎉 部署完成!"
+
+    # 7. 部署成功通知（可选）
+    - name: Notify on Success
+      if: success()
+      run: echo "✅ 部署成功！应用已更新到最新版本 (${{ steps.git.outputs.sha_short }})"
