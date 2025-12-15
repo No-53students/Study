@@ -43,7 +43,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Sidebar groups={sidebarGroups} />
-        <main className="ml-64 min-h-screen bg-zinc-50 dark:bg-zinc-950">
+        <main className="min-h-screen bg-zinc-50 pt-14 lg:ml-64 lg:pt-0 dark:bg-zinc-950">
           {children}
         </main>
       </body>
