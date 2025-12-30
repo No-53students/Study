@@ -12,7 +12,11 @@
       "Bash(for dir in children component-basics composition conditional-rendering context error-boundary event-handling forms forward-ref fragment list-rendering portal props react-memo suspense-lazy)",
       "Bash(do find src/app/\\(react-basics\\)/$dir -name \"page.tsx\" -exec sed -i '' \"s|src/app/$dir/|src/app/(react-basics)/$dir/|g\" {} ;)",
       "Bash(done)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(head:*)"
     ],
     "deny": [],
     "ask": []

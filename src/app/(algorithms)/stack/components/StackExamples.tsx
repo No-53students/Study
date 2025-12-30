@@ -1,49 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
-// ============================================
-// 栈的实现
-// ============================================
-
-class Stack<T> {
-  private items: T[] = [];
-
-  // 入栈
-  push(item: T): void {
-    this.items.push(item);
-  }
-
-  // 出栈
-  pop(): T | undefined {
-    return this.items.pop();
-  }
-
-  // 查看栈顶元素
-  peek(): T | undefined {
-    return this.items[this.items.length - 1];
-  }
-
-  // 判断是否为空
-  isEmpty(): boolean {
-    return this.items.length === 0;
-  }
-
-  // 获取栈大小
-  size(): number {
-    return this.items.length;
-  }
-
-  // 清空栈
-  clear(): void {
-    this.items = [];
-  }
-
-  // 获取所有元素（用于可视化）
-  toArray(): T[] {
-    return [...this.items];
-  }
-}
+import { AlgorithmEditor } from "@/components/AlgorithmEditor";
 
 // ============================================
 // 示例 1: 栈的基本操作可视化
@@ -549,6 +507,383 @@ main();`}
 }
 
 // ============================================
+// 示例 5: 代码练习 - 括号匹配
+// ============================================
+
+function BracketMatchingPractice() {
+  return (
+    <AlgorithmEditor
+      title="有效的括号"
+      description="给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串 s ，判断字符串是否有效。有效字符串需满足：左括号必须用相同类型的右括号闭合，左括号必须以正确的顺序闭合。"
+      difficulty="easy"
+      initialCode={`// 请实现 solution 函数
+// 输入: 字符串 s
+// 输出: 返回 true 如果括号有效，否则返回 false
+
+function solution(s) {
+  // 在这里编写你的代码
+
+}
+
+// 测试一下
+console.log(solution("()"));      // 应该输出: true
+console.log(solution("()[]{}"));  // 应该输出: true
+console.log(solution("(]"));      // 应该输出: false`}
+      solution={`function solution(s) {
+  const stack = [];
+  const pairs = {
+    ')': '(',
+    ']': '[',
+    '}': '{'
+  };
+
+  for (const char of s) {
+    if ('([{'.includes(char)) {
+      // 左括号入栈
+      stack.push(char);
+    } else if (')]}'.includes(char)) {
+      // 右括号检查匹配
+      if (stack.length === 0 || stack.pop() !== pairs[char]) {
+        return false;
+      }
+    }
+  }
+
+  // 栈为空说明所有括号都匹配
+  return stack.length === 0;
+}`}
+      testCases={[
+        { id: "1", name: "简单匹配", input: ["()"], expected: true },
+        { id: "2", name: "多种括号", input: ["()[]{}"], expected: true },
+        { id: "3", name: "嵌套括号", input: ["({[]})"], expected: true },
+        { id: "4", name: "不匹配", input: ["(]"], expected: false },
+        { id: "5", name: "顺序错误", input: ["([)]"], expected: false },
+        { id: "6", name: "空字符串", input: [""], expected: true },
+        { id: "7", name: "只有左括号", input: ["(("], expected: false },
+      ]}
+      hints={[
+        "考虑使用栈来存储遇到的左括号",
+        "遇到右括号时，检查栈顶的左括号是否匹配",
+        "最后检查栈是否为空，如果不为空说明有未匹配的左括号",
+      ]}
+      height="280px"
+    />
+  );
+}
+
+// ============================================
+// 示例 6: 代码练习 - 移除元素（多种解法）
+// ============================================
+
+function RemoveElementPractice() {
+  return (
+    <AlgorithmEditor
+      title="移除元素"
+      description="给你一个数组 nums 和一个值 val，你需要原地移除所有数值等于 val 的元素。元素的顺序可能发生改变。然后返回 nums 中与 val 不同的元素的数量 k。要求：更改 nums 数组，使 nums 的前 k 个元素包含不等于 val 的元素。"
+      difficulty="easy"
+      initialCode={`// 请实现 solution 函数
+// 输入: nums 数组, val 要移除的值
+// 输出: 返回移除后数组的新长度 k
+// 注意: 需要原地修改 nums 数组
+
+function solution(nums, val) {
+  // 在这里编写你的代码
+  // 提示: 可以使用双指针法
+
+}
+
+// 测试
+const nums1 = [3, 2, 2, 3];
+console.log("输入:", [...nums1], "val:", 3);
+console.log("返回:", solution(nums1, 3)); // 应该返回 2
+console.log("数组前k个元素:", nums1.slice(0, 2)); // [2, 2]
+
+const nums2 = [0, 1, 2, 2, 3, 0, 4, 2];
+console.log("\\n输入:", [...nums2], "val:", 2);
+console.log("返回:", solution(nums2, 2)); // 应该返回 5
+console.log("数组前k个元素:", nums2.slice(0, 5)); // [0, 1, 3, 0, 4] 顺序可能不同`}
+      solution={`// ========== 解法一：快慢双指针 ==========
+// 时间复杂度: O(n), 空间复杂度: O(1)
+// 思路: 慢指针指向下一个要填入的位置，快指针遍历数组
+function solution1(nums, val) {
+  let slow = 0; // 慢指针：指向下一个要填入的位置
+
+  for (let fast = 0; fast < nums.length; fast++) {
+    // 快指针遇到不等于val的元素，就填入慢指针位置
+    if (nums[fast] !== val) {
+      nums[slow] = nums[fast];
+      slow++;
+    }
+  }
+
+  return slow; // 慢指针的值就是新数组的长度
+}
+
+// ========== 解法二：双向双指针（交换法）==========
+// 时间复杂度: O(n), 空间复杂度: O(1)
+// 思路: 当找到val时，与末尾元素交换，减少赋值次数
+// 优势: 当要删除的元素很少时，比解法一更高效
+function solution2(nums, val) {
+  let left = 0;
+  let right = nums.length - 1;
+
+  while (left <= right) {
+    if (nums[left] === val) {
+      // 将末尾元素移到当前位置
+      nums[left] = nums[right];
+      right--;
+      // 注意: left不动，因为交换来的元素还需要检查
+    } else {
+      left++;
+    }
+  }
+
+  return left;
+}
+
+// ========== 解法三：使用 splice（不推荐，但易理解）==========
+// 时间复杂度: O(n²), 空间复杂度: O(1)
+// 注意: splice 本身是 O(n)，嵌套循环导致 O(n²)
+function solution3(nums, val) {
+  for (let i = nums.length - 1; i >= 0; i--) {
+    if (nums[i] === val) {
+      nums.splice(i, 1);
+    }
+  }
+  return nums.length;
+}
+
+// 默认使用解法一（最优解）
+function solution(nums, val) {
+  return solution1(nums, val);
+}
+
+// 测试所有解法
+console.log("===== 解法一：快慢双指针 =====");
+const nums1 = [3, 2, 2, 3];
+console.log("输入:", [...nums1]);
+console.log("返回:", solution1(nums1, 3));
+console.log("结果:", nums1.slice(0, 2));
+
+console.log("\\n===== 解法二：双向双指针 =====");
+const nums2 = [3, 2, 2, 3];
+console.log("输入:", [...nums2]);
+console.log("返回:", solution2(nums2, 3));
+console.log("结果:", nums2.slice(0, 2));
+
+console.log("\\n===== 解法三：splice =====");
+const nums3 = [3, 2, 2, 3];
+console.log("输入:", [...nums3]);
+console.log("返回:", solution3(nums3, 3));
+console.log("结果:", nums3);`}
+      testCases={[
+        {
+          id: "1",
+          name: "基本测试",
+          input: [[3, 2, 2, 3], 3],
+          expected: 2,
+          description: "移除所有的 3，剩余 [2, 2]",
+        },
+        {
+          id: "2",
+          name: "多个目标值",
+          input: [[0, 1, 2, 2, 3, 0, 4, 2], 2],
+          expected: 5,
+          description: "移除所有的 2，剩余 5 个元素",
+        },
+        {
+          id: "3",
+          name: "空数组",
+          input: [[], 1],
+          expected: 0,
+        },
+        {
+          id: "4",
+          name: "全部移除",
+          input: [[1, 1, 1], 1],
+          expected: 0,
+          description: "所有元素都等于 val",
+        },
+        {
+          id: "5",
+          name: "无需移除",
+          input: [[1, 2, 3], 4],
+          expected: 3,
+          description: "没有元素等于 val",
+        },
+        {
+          id: "6",
+          name: "单元素匹配",
+          input: [[1], 1],
+          expected: 0,
+        },
+        {
+          id: "7",
+          name: "单元素不匹配",
+          input: [[1], 2],
+          expected: 1,
+        },
+      ]}
+      hints={[
+        "这道题的关键是「原地修改」，不能使用额外的数组空间",
+        "考虑使用双指针：一个指针遍历数组，另一个指针指向下一个要填入的位置",
+        "当快指针遇到不等于 val 的元素时，将其复制到慢指针位置",
+        "最终慢指针的值就是新数组的长度",
+      ]}
+      height="320px"
+    />
+  );
+}
+
+// ============================================
+// 示例 7: 代码练习 - 最小栈
+// ============================================
+
+function MinStackPractice() {
+  return (
+    <AlgorithmEditor
+      title="最小栈"
+      description="设计一个支持 push、pop、top 和 getMin 操作的栈。getMin 操作应该在常数时间内返回栈中的最小元素。"
+      difficulty="medium"
+      initialCode={`// 请实现 MinStack 类
+// 要求 getMin() 时间复杂度为 O(1)
+
+class MinStack {
+  constructor() {
+    // 初始化你的数据结构
+  }
+
+  push(val) {
+    // 将元素 val 推入栈中
+  }
+
+  pop() {
+    // 删除栈顶的元素
+  }
+
+  top() {
+    // 获取栈顶元素
+  }
+
+  getMin() {
+    // 获取栈中最小元素
+  }
+}
+
+// solution 函数用于测试
+function solution(operations, values) {
+  const stack = new MinStack();
+  const results = [];
+
+  for (let i = 0; i < operations.length; i++) {
+    const op = operations[i];
+    if (op === 'push') {
+      stack.push(values[i]);
+      results.push(null);
+    } else if (op === 'pop') {
+      stack.pop();
+      results.push(null);
+    } else if (op === 'top') {
+      results.push(stack.top());
+    } else if (op === 'getMin') {
+      results.push(stack.getMin());
+    }
+  }
+
+  return results;
+}
+
+// 测试
+console.log(solution(
+  ['push', 'push', 'push', 'getMin', 'pop', 'top', 'getMin'],
+  [-2, 0, -3, null, null, null, null]
+));
+// 应该输出: [null, null, null, -3, null, 0, -2]`}
+      solution={`class MinStack {
+  constructor() {
+    this.stack = [];
+    this.minStack = []; // 辅助栈，存储最小值
+  }
+
+  push(val) {
+    this.stack.push(val);
+    // 如果最小栈为空或当前值更小，则入栈
+    if (this.minStack.length === 0 || val <= this.minStack[this.minStack.length - 1]) {
+      this.minStack.push(val);
+    }
+  }
+
+  pop() {
+    const val = this.stack.pop();
+    // 如果弹出的是最小值，同时从最小栈弹出
+    if (val === this.minStack[this.minStack.length - 1]) {
+      this.minStack.pop();
+    }
+    return val;
+  }
+
+  top() {
+    return this.stack[this.stack.length - 1];
+  }
+
+  getMin() {
+    return this.minStack[this.minStack.length - 1];
+  }
+}
+
+function solution(operations, values) {
+  const stack = new MinStack();
+  const results = [];
+
+  for (let i = 0; i < operations.length; i++) {
+    const op = operations[i];
+    if (op === 'push') {
+      stack.push(values[i]);
+      results.push(null);
+    } else if (op === 'pop') {
+      stack.pop();
+      results.push(null);
+    } else if (op === 'top') {
+      results.push(stack.top());
+    } else if (op === 'getMin') {
+      results.push(stack.getMin());
+    }
+  }
+
+  return results;
+}`}
+      testCases={[
+        {
+          id: "1",
+          name: "基本操作",
+          input: [
+            ["push", "push", "push", "getMin", "pop", "top", "getMin"],
+            [-2, 0, -3, null, null, null, null],
+          ],
+          expected: [null, null, null, -3, null, 0, -2],
+          description: "push -2, push 0, push -3, getMin, pop, top, getMin",
+        },
+        {
+          id: "2",
+          name: "相同最小值",
+          input: [
+            ["push", "push", "push", "getMin", "pop", "getMin"],
+            [1, 1, 1, null, null, null],
+          ],
+          expected: [null, null, null, 1, null, 1],
+        },
+      ]}
+      hints={[
+        "可以使用两个栈：一个存储所有元素，另一个存储最小值",
+        "每次 push 时，如果新值小于等于当前最小值，则同时入最小栈",
+        "每次 pop 时，如果弹出的值等于最小栈顶，则同时弹出最小栈",
+      ]}
+      height="400px"
+    />
+  );
+}
+
+// ============================================
 // 综合示例导出
 // ============================================
 
@@ -593,6 +928,19 @@ export default function StackExamples() {
       <BracketMatching />
       <BrowserHistory />
       <CallStackDemo />
+
+      {/* 代码练习区域 */}
+      <div className="mt-8">
+        <h2 className="mb-4 text-xl font-bold">代码练习</h2>
+        <p className="mb-6 text-sm text-zinc-600 dark:text-zinc-400">
+          在下面的编辑器中编写代码，点击"运行"按钮来测试你的解答。
+        </p>
+        <div className="space-y-8">
+          <BracketMatchingPractice />
+          <RemoveElementPractice />
+          <MinStackPractice />
+        </div>
+      </div>
     </div>
   );
 }

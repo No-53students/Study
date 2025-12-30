@@ -229,8 +229,10 @@ export function getAppRoutes(groupName?: string): RouteInfo[] {
         itemName.startsWith("_") || // _components 等私有目录
         itemName.startsWith(".") || // .git 等隐藏目录
         itemName.startsWith("@") || // @parallel 并行路由
+        itemName.startsWith("[") || // [id] 等动态路由
         itemName === "api" || // API 路由
-        itemName === "components" // 组件目录
+        itemName === "components" || // 组件目录
+        itemName === "data" // 数据目录
       ) {
         continue;
       }
