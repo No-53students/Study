@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Link from "next/link";
-import { Problem, DIFFICULTY_CONFIG, CATEGORIES, Category } from "../types";
+import { Problem, DIFFICULTY_CONFIG, CATEGORIES, Category, FrontendRelevance, FRONTEND_RELEVANCE_CONFIG } from "../types";
 import { allProblems, getProblemsByCategory } from "../data";
 
 // 动态导入 Monaco Editor
@@ -33,6 +33,7 @@ export default function LeetCodePage() {
   const [selectedProblem, setSelectedProblem] = useState<Problem | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [difficultyFilter, setDifficultyFilter] = useState<"all" | "easy" | "medium" | "hard">("all");
+  const [relevanceFilter, setRelevanceFilter] = useState<"all" | FrontendRelevance>("all");
 
   // 代码状态
   const [code, setCode] = useState("");
@@ -68,6 +69,10 @@ export default function LeetCodePage() {
       problems = problems.filter(p => p.difficulty === difficultyFilter);
     }
 
+    if (relevanceFilter !== "all") {
+      problems = problems.filter(p => p.frontendRelevance === relevanceFilter);
+    }
+
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       problems = problems.filter(p =>
@@ -78,7 +83,7 @@ export default function LeetCodePage() {
     }
 
     return problems;
-  }, [selectedCategory, difficultyFilter, searchQuery]);
+  }, [selectedCategory, difficultyFilter, relevanceFilter, searchQuery]);
 
   // 分类统计
   const categoryStats = useMemo(() => {
@@ -335,6 +340,26 @@ export default function LeetCodePage() {
           ))}
         </div>
 
+        {/* 前端相关度筛选 */}
+        <div className="flex gap-1 p-2 border-b border-zinc-800">
+          {(["all", "high", "medium", "low"] as const).map((r) => (
+            <button
+              key={r}
+              onClick={() => setRelevanceFilter(r)}
+              className={`flex-1 px-2 py-1 text-xs rounded transition-colors ${
+                relevanceFilter === r
+                  ? r === "all"
+                    ? "bg-zinc-700 text-white"
+                    : `${FRONTEND_RELEVANCE_CONFIG[r].bg} ${FRONTEND_RELEVANCE_CONFIG[r].color}`
+                  : "text-zinc-400 hover:text-white hover:bg-zinc-800"
+              }`}
+              title={r !== "all" ? FRONTEND_RELEVANCE_CONFIG[r].description : "显示所有题目"}
+            >
+              {r === "all" ? "前端" : `${FRONTEND_RELEVANCE_CONFIG[r].icon} ${FRONTEND_RELEVANCE_CONFIG[r].label}`}
+            </button>
+          ))}
+        </div>
+
         {/* 分类列表 */}
         <div className="flex-1 overflow-y-auto">
           {/* 所有题目 */}
@@ -388,7 +413,15 @@ export default function LeetCodePage() {
                 <span className="text-zinc-500 text-xs w-8 flex-shrink-0">
                   {problem.leetcodeId || "-"}
                 </span>
-                <span className="truncate text-left">{problem.title}</span>
+                <span className="truncate text-left flex-1">{problem.title}</span>
+                {problem.frontendRelevance && (
+                  <span
+                    className="text-xs flex-shrink-0"
+                    title={FRONTEND_RELEVANCE_CONFIG[problem.frontendRelevance].description}
+                  >
+                    {FRONTEND_RELEVANCE_CONFIG[problem.frontendRelevance].icon}
+                  </span>
+                )}
               </button>
             ))}
           </div>
@@ -439,7 +472,7 @@ export default function LeetCodePage() {
                 <div className="p-4">
                   {/* 标题区 */}
                   <div className="mb-4">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center gap-2 mb-2 flex-wrap">
                       {selectedProblem.leetcodeId && (
                         <span className="text-zinc-500 text-sm">#{selectedProblem.leetcodeId}</span>
                       )}
@@ -448,6 +481,14 @@ export default function LeetCodePage() {
                       >
                         {DIFFICULTY_CONFIG[selectedProblem.difficulty].label}
                       </span>
+                      {selectedProblem.frontendRelevance && (
+                        <span
+                          className={`px-2 py-0.5 rounded text-xs font-medium ${FRONTEND_RELEVANCE_CONFIG[selectedProblem.frontendRelevance].color} ${FRONTEND_RELEVANCE_CONFIG[selectedProblem.frontendRelevance].bg}`}
+                          title={selectedProblem.frontendNote || FRONTEND_RELEVANCE_CONFIG[selectedProblem.frontendRelevance].description}
+                        >
+                          {FRONTEND_RELEVANCE_CONFIG[selectedProblem.frontendRelevance].icon} {FRONTEND_RELEVANCE_CONFIG[selectedProblem.frontendRelevance].label}
+                        </span>
+                      )}
                       {allPassed && (
                         <span className="px-2 py-0.5 rounded text-xs font-medium text-green-400 bg-green-500/10">
                           ✓ 已解决
@@ -457,6 +498,9 @@ export default function LeetCodePage() {
                     <h1 className="text-xl font-bold">{selectedProblem.title}</h1>
                     {selectedProblem.titleEn && (
                       <p className="text-sm text-zinc-500 mt-1">{selectedProblem.titleEn}</p>
+                    )}
+                    {selectedProblem.frontendNote && (
+                      <p className="text-xs text-zinc-500 mt-1 italic">{selectedProblem.frontendNote}</p>
                     )}
                   </div>
 

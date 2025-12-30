@@ -10,6 +10,8 @@ export const dpMultidimensionalProblems: Problem[] = [
     difficulty: "medium",
     category: "dp-multi",
     tags: ["数学", "动态规划", "组合数学"],
+    frontendRelevance: "medium",
+    frontendNote: "路径DP",
     description: `一个机器人位于一个 \`m x n\` 网格的左上角（起始点在下图中标记为 "Start"）。
 
 机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角（在下图中标记为 "Finish"）。
@@ -191,6 +193,8 @@ export const dpMultidimensionalProblems: Problem[] = [
     difficulty: "medium",
     category: "dp-multi",
     tags: ["数组", "动态规划", "矩阵"],
+    frontendRelevance: "medium",
+    frontendNote: "最小路径和",
     description: `给定一个包含非负整数的 \`m x n\` 网格 \`grid\`，请找出一条从左上角到右下角的路径，使得路径上的数字总和为最小。
 
 **说明**：每次只能向下或者向右移动一步。`,
@@ -407,6 +411,8 @@ export const dpMultidimensionalProblems: Problem[] = [
     difficulty: "medium",
     category: "dp-multi",
     tags: ["数组", "动态规划", "矩阵"],
+    frontendRelevance: "low",
+    frontendNote: "障碍物路径",
     description: `一个机器人位于一个 \`m x n\` 网格的左上角（起始点在下图中标记为 "Start"）。
 
 机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角（在下图中标记为 "Finish"）。
@@ -596,6 +602,8 @@ export const dpMultidimensionalProblems: Problem[] = [
     difficulty: "medium",
     category: "dp-multi",
     tags: ["数组", "动态规划"],
+    frontendRelevance: "low",
+    frontendNote: "三角形路径",
     description: `给定一个三角形 \`triangle\`，找出自顶向下的最小路径和。
 
 每一步只能移动到下一行中相邻的结点上。**相邻的结点** 在这里指的是 **下标** 与 **上一层结点下标** 相同或者等于 **上一层结点下标 + 1** 的两个结点。也就是说，如果正位于当前行的下标 \`i\`，那么下一步可以移动到下一行的下标 \`i\` 或 \`i + 1\`。`,
@@ -778,6 +786,8 @@ export const dpMultidimensionalProblems: Problem[] = [
     difficulty: "medium",
     category: "dp-multi",
     tags: ["字符串", "动态规划"],
+    frontendRelevance: "low",
+    frontendNote: "最长公共子序列",
     description: `给定两个字符串 \`text1\` 和 \`text2\`，返回这两个字符串的最长 **公共子序列** 的长度。如果不存在 **公共子序列**，返回 \`0\`。
 
 一个字符串的 **子序列** 是指这样一个新的字符串：它是由原字符串在不改变字符的相对顺序的情况下删除某些字符（也可以不删除任何字符）后组成的新字符串。
@@ -989,6 +999,8 @@ export const dpMultidimensionalProblems: Problem[] = [
     difficulty: "medium",
     category: "dp-multi",
     tags: ["字符串", "动态规划"],
+    frontendRelevance: "low",
+    frontendNote: "编辑距离，复杂DP",
     description: `给你两个单词 \`word1\` 和 \`word2\`，请返回将 \`word1\` 转换成 \`word2\` 所使用的最少操作数。
 
 你可以对一个单词进行如下三种操作：
@@ -1221,6 +1233,8 @@ exection -> execution (插入 'u')
     difficulty: "hard",
     category: "dp-multi",
     tags: ["数组", "动态规划"],
+    frontendRelevance: "low",
+    frontendNote: "股票III，复杂DP",
     description: `给定一个数组，它的第 \`i\` 个元素是一支给定的股票在第 \`i\` 天的价格。
 
 设计一个算法来计算你所能获取的最大利润。你最多可以完成 **两笔** 交易。
@@ -1455,6 +1469,8 @@ exection -> execution (插入 'u')
     difficulty: "hard",
     category: "dp-multi",
     tags: ["数组", "动态规划"],
+    frontendRelevance: "low",
+    frontendNote: "股票IV，复杂DP",
     description: `给你一个整数数组 \`prices\` 和一个整数 \`k\`，其中 \`prices[i]\` 是某支给定的股票在第 \`i\` 天的价格。
 
 设计一个算法来计算你所能获取的最大利润。你最多可以完成 \`k\` 笔交易。也就是说，你最多可以买 \`k\` 次，卖 \`k\` 次。
@@ -1703,6 +1719,495 @@ exection -> execution (插入 'u')
 - 减少不必要的计算`,
         timeComplexity: "O(n × k)",
         spaceComplexity: "O(k)",
+      },
+    ],
+  },
+
+  // 9. 最长回文子串 (5)
+  {
+    id: "longest-palindromic-substring",
+    leetcodeId: 5,
+    title: "最长回文子串",
+    titleEn: "Longest Palindromic Substring",
+    difficulty: "medium",
+    category: "dp-multi",
+    tags: ["字符串", "动态规划"],
+    frontendRelevance: "medium",
+    frontendNote: "回文串DP/中心扩展",
+    description: `给你一个字符串 \`s\`，找到 \`s\` 中最长的回文子串。`,
+    examples: `**示例 1：**
+\`\`\`
+输入：s = "babad"
+输出："bab"
+解释："aba" 同样是符合题意的答案。
+\`\`\`
+
+**示例 2：**
+\`\`\`
+输入：s = "cbbd"
+输出："bb"
+\`\`\``,
+    constraints: `- \`1 <= s.length <= 1000\`
+- \`s\` 仅由数字和英文字母组成`,
+    initialCode: `function longestPalindrome(s) {
+  // 在此处编写你的代码
+
+}`,
+    solution: `function longestPalindrome(s) {
+  const n = s.length;
+  if (n < 2) return s;
+
+  let start = 0;
+  let maxLen = 1;
+
+  // 中心扩展
+  const expandAroundCenter = (left, right) => {
+    while (left >= 0 && right < n && s[left] === s[right]) {
+      left--;
+      right++;
+    }
+    return right - left - 1;
+  };
+
+  for (let i = 0; i < n; i++) {
+    const len1 = expandAroundCenter(i, i);     // 奇数长度
+    const len2 = expandAroundCenter(i, i + 1); // 偶数长度
+    const len = Math.max(len1, len2);
+
+    if (len > maxLen) {
+      maxLen = len;
+      start = i - Math.floor((len - 1) / 2);
+    }
+  }
+
+  return s.substring(start, start + maxLen);
+}`,
+    testCases: [
+      {
+        id: "1",
+        name: "示例1",
+        input: ["babad"],
+        expected: "bab"
+      },
+      {
+        id: "2",
+        name: "示例2",
+        input: ["cbbd"],
+        expected: "bb"
+      }
+    ],
+    hints: [
+      "可以使用中心扩展法",
+      "也可以使用动态规划",
+      "注意奇数和偶数长度的回文串"
+    ],
+    explanation: `## 解题思路
+
+### 中心扩展法
+
+1. 遍历每个位置作为回文中心
+2. 分别考虑奇数长度和偶数长度
+3. 从中心向两边扩展，找到最长回文
+
+### 复杂度分析
+- 时间复杂度：O(n²)
+- 空间复杂度：O(1)`,
+    timeComplexity: "O(n²)",
+    spaceComplexity: "O(1)",
+    relatedProblems: ["longest-common-subsequence", "edit-distance"],
+    solutions: [
+      {
+        name: "中心扩展法（推荐）",
+        code: `function longestPalindrome(s) {
+  const n = s.length;
+  if (n < 2) return s;
+
+  let start = 0;
+  let maxLen = 1;
+
+  // 中心扩展
+  const expandAroundCenter = (left, right) => {
+    while (left >= 0 && right < n && s[left] === s[right]) {
+      left--;
+      right++;
+    }
+    return right - left - 1;
+  };
+
+  for (let i = 0; i < n; i++) {
+    const len1 = expandAroundCenter(i, i);     // 奇数长度
+    const len2 = expandAroundCenter(i, i + 1); // 偶数长度
+    const len = Math.max(len1, len2);
+
+    if (len > maxLen) {
+      maxLen = len;
+      start = i - Math.floor((len - 1) / 2);
+    }
+  }
+
+  return s.substring(start, start + maxLen);
+}`,
+        explanation: `## 中心扩展法
+
+### 思路
+1. 遍历每个位置作为回文中心
+2. 奇数长度：以 i 为中心
+3. 偶数长度：以 i 和 i+1 为中心
+4. 从中心向两边扩展
+
+### 要点
+- 时间复杂度 O(n²)，空间 O(1)
+- 比动态规划更节省空间`,
+        timeComplexity: "O(n²)",
+        spaceComplexity: "O(1)",
+      },
+      {
+        name: "动态规划",
+        code: `function longestPalindrome(s) {
+  const n = s.length;
+  if (n < 2) return s;
+
+  // dp[i][j] 表示 s[i...j] 是否为回文
+  const dp = Array.from({ length: n }, () => new Array(n).fill(false));
+
+  let start = 0;
+  let maxLen = 1;
+
+  // 单个字符都是回文
+  for (let i = 0; i < n; i++) {
+    dp[i][i] = true;
+  }
+
+  // 按长度递增顺序填表
+  for (let len = 2; len <= n; len++) {
+    for (let i = 0; i <= n - len; i++) {
+      const j = i + len - 1;
+
+      if (s[i] === s[j]) {
+        if (len === 2) {
+          dp[i][j] = true;
+        } else {
+          dp[i][j] = dp[i + 1][j - 1];
+        }
+      }
+
+      if (dp[i][j] && len > maxLen) {
+        maxLen = len;
+        start = i;
+      }
+    }
+  }
+
+  return s.substring(start, start + maxLen);
+}`,
+        explanation: `## 动态规划
+
+### 思路
+1. dp[i][j] 表示 s[i...j] 是否为回文
+2. 转移：s[i] === s[j] && dp[i+1][j-1]
+3. 按长度递增顺序填表
+
+### 要点
+- 需要按长度从小到大填表
+- 空间复杂度 O(n²)`,
+        timeComplexity: "O(n²)",
+        spaceComplexity: "O(n²)",
+      },
+      {
+        name: "Manacher 算法",
+        code: `function longestPalindrome(s) {
+  // 预处理：插入分隔符
+  let t = '#';
+  for (const c of s) {
+    t += c + '#';
+  }
+
+  const n = t.length;
+  const p = new Array(n).fill(0); // p[i] = 以 i 为中心的回文半径
+  let center = 0, right = 0;
+
+  for (let i = 0; i < n; i++) {
+    // 利用对称性
+    if (i < right) {
+      const mirror = 2 * center - i;
+      p[i] = Math.min(right - i, p[mirror]);
+    }
+
+    // 尝试扩展
+    while (i - p[i] - 1 >= 0 && i + p[i] + 1 < n &&
+           t[i - p[i] - 1] === t[i + p[i] + 1]) {
+      p[i]++;
+    }
+
+    // 更新中心和右边界
+    if (i + p[i] > right) {
+      center = i;
+      right = i + p[i];
+    }
+  }
+
+  // 找最长回文
+  let maxLen = 0, maxCenter = 0;
+  for (let i = 0; i < n; i++) {
+    if (p[i] > maxLen) {
+      maxLen = p[i];
+      maxCenter = i;
+    }
+  }
+
+  // 转换回原字符串的位置
+  const start = (maxCenter - maxLen) / 2;
+  return s.substring(start, start + maxLen);
+}`,
+        explanation: `## Manacher 算法
+
+### 思路
+1. 预处理：在每个字符间插入 #，统一奇偶处理
+2. 利用回文的对称性，减少重复计算
+3. 维护右边界最远的回文中心
+
+### 特点
+- 时间复杂度 O(n)，最优解法
+- 实现较复杂`,
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(n)",
+      },
+    ],
+  },
+
+  // 10. 最长有效括号 (32)
+  {
+    id: "longest-valid-parentheses",
+    leetcodeId: 32,
+    title: "最长有效括号",
+    titleEn: "Longest Valid Parentheses",
+    difficulty: "hard",
+    category: "dp-multi",
+    tags: ["字符串", "动态规划", "栈"],
+    frontendRelevance: "low",
+    frontendNote: "Hard DP",
+    description: `给你一个只包含 \`'('\` 和 \`')'\` 的字符串，找出最长有效（格式正确且连续）括号子串的长度。`,
+    examples: `**示例 1：**
+\`\`\`
+输入：s = "(()"
+输出：2
+解释：最长有效括号子串是 "()"
+\`\`\`
+
+**示例 2：**
+\`\`\`
+输入：s = ")()())"
+输出：4
+解释：最长有效括号子串是 "()()"
+\`\`\`
+
+**示例 3：**
+\`\`\`
+输入：s = ""
+输出：0
+\`\`\``,
+    constraints: `- \`0 <= s.length <= 3 * 10^4\`
+- \`s[i]\` 为 \`'('\` 或 \`')'\``,
+    initialCode: `function longestValidParentheses(s) {
+  // 在此处编写你的代码
+
+}`,
+    solution: `function longestValidParentheses(s) {
+  const n = s.length;
+  if (n < 2) return 0;
+
+  // dp[i] 表示以 s[i] 结尾的最长有效括号长度
+  const dp = new Array(n).fill(0);
+  let maxLen = 0;
+
+  for (let i = 1; i < n; i++) {
+    if (s[i] === ')') {
+      if (s[i - 1] === '(') {
+        // ...() 形式
+        dp[i] = (i >= 2 ? dp[i - 2] : 0) + 2;
+      } else if (i - dp[i - 1] - 1 >= 0 && s[i - dp[i - 1] - 1] === '(') {
+        // ...)) 形式，需要找到匹配的 (
+        dp[i] = dp[i - 1] + 2 + (i - dp[i - 1] - 2 >= 0 ? dp[i - dp[i - 1] - 2] : 0);
+      }
+    }
+    maxLen = Math.max(maxLen, dp[i]);
+  }
+
+  return maxLen;
+}`,
+    testCases: [
+      {
+        id: "1",
+        name: "示例1",
+        input: ["(()"],
+        expected: 2
+      },
+      {
+        id: "2",
+        name: "示例2",
+        input: [")()())"],
+        expected: 4
+      },
+      {
+        id: "3",
+        name: "空字符串",
+        input: [""],
+        expected: 0
+      }
+    ],
+    hints: [
+      "dp[i] 表示以 s[i] 结尾的最长有效括号长度",
+      "考虑两种情况：...() 和 ...))",
+      "也可以使用栈来解决"
+    ],
+    explanation: `## 解题思路
+
+### 动态规划
+
+状态定义：dp[i] 表示以 s[i] 结尾的最长有效括号长度
+
+状态转移（当 s[i] === ')' 时）：
+1. 如果 s[i-1] === '('：dp[i] = dp[i-2] + 2
+2. 如果 s[i-1] === ')' 且 s[i-dp[i-1]-1] === '('：
+   dp[i] = dp[i-1] + 2 + dp[i-dp[i-1]-2]
+
+### 复杂度分析
+- 时间复杂度：O(n)
+- 空间复杂度：O(n)`,
+    timeComplexity: "O(n)",
+    spaceComplexity: "O(n)",
+    relatedProblems: ["valid-parentheses", "generate-parentheses"],
+    solutions: [
+      {
+        name: "动态规划（推荐）",
+        code: `function longestValidParentheses(s) {
+  const n = s.length;
+  if (n < 2) return 0;
+
+  // dp[i] 表示以 s[i] 结尾的最长有效括号长度
+  const dp = new Array(n).fill(0);
+  let maxLen = 0;
+
+  for (let i = 1; i < n; i++) {
+    if (s[i] === ')') {
+      if (s[i - 1] === '(') {
+        // ...() 形式
+        dp[i] = (i >= 2 ? dp[i - 2] : 0) + 2;
+      } else if (i - dp[i - 1] - 1 >= 0 && s[i - dp[i - 1] - 1] === '(') {
+        // ...)) 形式，需要找到匹配的 (
+        dp[i] = dp[i - 1] + 2 + (i - dp[i - 1] - 2 >= 0 ? dp[i - dp[i - 1] - 2] : 0);
+      }
+    }
+    maxLen = Math.max(maxLen, dp[i]);
+  }
+
+  return maxLen;
+}`,
+        explanation: `## 动态规划
+
+### 思路
+1. dp[i] = 以 s[i] 结尾的最长有效括号长度
+2. 只有 s[i] === ')' 时才可能形成有效括号
+3. 两种情况：
+   - ...()：dp[i] = dp[i-2] + 2
+   - ...))：需要找前面的 (
+
+### 要点
+- 注意边界条件检查`,
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(n)",
+      },
+      {
+        name: "使用栈",
+        code: `function longestValidParentheses(s) {
+  let maxLen = 0;
+  const stack = [-1]; // 栈底存放上一个未匹配的位置
+
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] === '(') {
+      stack.push(i);
+    } else {
+      stack.pop();
+      if (stack.length === 0) {
+        // 没有可以匹配的左括号，更新栈底
+        stack.push(i);
+      } else {
+        // 当前有效括号长度 = 当前位置 - 栈顶位置
+        maxLen = Math.max(maxLen, i - stack[stack.length - 1]);
+      }
+    }
+  }
+
+  return maxLen;
+}`,
+        explanation: `## 使用栈
+
+### 思路
+1. 栈底存放"上一个未匹配的位置"
+2. 遇到 (：入栈
+3. 遇到 )：出栈
+   - 如果栈空，说明没有匹配，把当前位置入栈作为新边界
+   - 否则，计算有效长度 = 当前位置 - 栈顶
+
+### 要点
+- 初始时栈底为 -1
+- 栈中存储的是索引`,
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(n)",
+      },
+      {
+        name: "双向扫描（空间优化）",
+        code: `function longestValidParentheses(s) {
+  let left = 0, right = 0;
+  let maxLen = 0;
+
+  // 从左到右扫描
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] === '(') {
+      left++;
+    } else {
+      right++;
+    }
+
+    if (left === right) {
+      maxLen = Math.max(maxLen, 2 * right);
+    } else if (right > left) {
+      left = right = 0;
+    }
+  }
+
+  left = right = 0;
+
+  // 从右到左扫描
+  for (let i = s.length - 1; i >= 0; i--) {
+    if (s[i] === '(') {
+      left++;
+    } else {
+      right++;
+    }
+
+    if (left === right) {
+      maxLen = Math.max(maxLen, 2 * left);
+    } else if (left > right) {
+      left = right = 0;
+    }
+  }
+
+  return maxLen;
+}`,
+        explanation: `## 双向扫描
+
+### 思路
+1. 从左到右扫描，计数左右括号
+2. 当 left === right 时，找到有效括号
+3. 当 right > left 时，重置计数
+4. 从右到左再扫描一次，处理 left > right 的情况
+
+### 特点
+- 空间复杂度 O(1)
+- 需要两次扫描`,
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(1)",
       },
     ],
   },

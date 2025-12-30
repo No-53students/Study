@@ -10,6 +10,8 @@ export const heapProblems: Problem[] = [
     difficulty: "medium",
     category: "heap",
     tags: ["数组", "分治", "快速选择", "排序", "堆"],
+    frontendRelevance: "medium",
+    frontendNote: "快速选择/堆",
     description: `给定整数数组 \`nums\` 和整数 \`k\`，请返回数组中第 \`k\` 个最大的元素。
 
 请注意，你需要找的是数组排序后的第 \`k\` 个最大的元素，而不是第 \`k\` 个不同的元素。
@@ -240,6 +242,8 @@ export const heapProblems: Problem[] = [
     difficulty: "medium",
     category: "heap",
     tags: ["数组", "哈希表", "分治", "桶排序", "计数", "快速选择", "排序", "堆"],
+    frontendRelevance: "medium",
+    frontendNote: "前K高频元素",
     description: `给你一个整数数组 \`nums\` 和一个整数 \`k\`，请你返回其中出现频率前 \`k\` 高的元素。你可以按 **任意顺序** 返回答案。`,
     examples: `**示例 1：**
 \`\`\`
@@ -481,6 +485,8 @@ export const heapProblems: Problem[] = [
     difficulty: "hard",
     category: "heap",
     tags: ["设计", "双指针", "数据流", "排序", "堆"],
+    frontendRelevance: "low",
+    frontendNote: "数据流中位数Hard",
     description: `**中位数**是有序整数列表中的中间值。如果列表的大小是偶数，则没有中间值，中位数是两个中间值的平均值。
 
 - 例如 \`arr = [2,3,4]\` 的中位数是 \`3\`
@@ -856,6 +862,8 @@ medianFinder.findMedian(); // 返回 2.0
     difficulty: "hard",
     category: "heap",
     tags: ["贪心", "数组", "排序", "堆"],
+    frontendRelevance: "low",
+    frontendNote: "IPO",
     description: `假设 力扣（LeetCode）即将开始 **IPO** 。为了以更高的价格将股票卖给风险投资公司，力扣希望在 IPO 之前开展一些项目以增加其资本。
 
 由于资源有限，它只能在 IPO 之前完成最多 \`k\` 个不同的项目。帮助 力扣 设计完成最多 \`k\` 个不同项目后得到最大总资本的方式。
@@ -1185,6 +1193,196 @@ medianFinder.findMedian(); // 返回 2.0
 - 适合小数据量或 k 很小的情况`,
         timeComplexity: "O(k * n)",
         spaceComplexity: "O(n)",
+      },
+    ],
+  },
+
+  // 5. 查找和最小的 K 对数字 (373)
+  {
+    id: "find-k-pairs-with-smallest-sums",
+    leetcodeId: 373,
+    title: "查找和最小的 K 对数字",
+    titleEn: "Find K Pairs with Smallest Sums",
+    difficulty: "medium",
+    category: "heap",
+    tags: ["数组", "堆（优先队列）"],
+    frontendRelevance: "low",
+    frontendNote: "最小和对",
+    description: `给定两个以 非递减顺序排列 的整数数组 nums1 和 nums2 , 以及一个整数 k 。
+
+定义一对值 (u,v)，其中第一个元素来自 nums1，第二个元素来自 nums2 。
+
+请找到和最小的 k 个数对 (u1,v1), (u2,v2) ... (uk,vk) 。`,
+    examples: `**示例 1：**
+\`\`\`
+输入：nums1 = [1,7,11], nums2 = [2,4,6], k = 3
+输出：[[1,2],[1,4],[1,6]]
+解释：返回序列中的前 3 对数：
+[1,2],[1,4],[1,6],[7,2],[7,4],[11,2],[7,6],[11,4],[11,6]
+\`\`\`
+
+**示例 2：**
+\`\`\`
+输入：nums1 = [1,1,2], nums2 = [1,2,3], k = 2
+输出：[[1,1],[1,1]]
+解释：返回序列中的前 2 对数：
+[1,1],[1,1],[1,2],[2,1],[1,2],[2,2],[1,3],[1,3],[2,3]
+\`\`\`
+
+**示例 3：**
+\`\`\`
+输入：nums1 = [1,2], nums2 = [3], k = 3
+输出：[[1,3],[2,3]]
+解释：也可能序列中所有的数对都被返回:[1,3],[2,3]
+\`\`\``,
+    constraints: `- \`1 <= nums1.length, nums2.length <= 10^5\`
+- \`-10^9 <= nums1[i], nums2[i] <= 10^9\`
+- \`nums1\` 和 \`nums2\` 均为 升序排列
+- \`1 <= k <= 10^4\`
+- \`k <= nums1.length * nums2.length\``,
+    initialCode: `function kSmallestPairs(nums1, nums2, k) {
+  // 在此处编写代码
+}`,
+    solution: `function kSmallestPairs(nums1, nums2, k) {
+  const result = [];
+  if (nums1.length === 0 || nums2.length === 0) return result;
+
+  // 最小堆：[sum, i, j]
+  const heap = [];
+
+  // 初始化：将 nums1 的每个元素与 nums2[0] 配对
+  for (let i = 0; i < Math.min(nums1.length, k); i++) {
+    heap.push([nums1[i] + nums2[0], i, 0]);
+  }
+
+  // 堆化
+  const heapify = () => {
+    heap.sort((a, b) => a[0] - b[0]);
+  };
+  heapify();
+
+  while (result.length < k && heap.length > 0) {
+    const [sum, i, j] = heap.shift();
+    result.push([nums1[i], nums2[j]]);
+
+    // 将 (i, j+1) 加入堆
+    if (j + 1 < nums2.length) {
+      heap.push([nums1[i] + nums2[j + 1], i, j + 1]);
+      heapify();
+    }
+  }
+
+  return result;
+}`,
+    testCases: [
+      { id: "1", name: "示例1", input: [[1,7,11], [2,4,6], 3], expected: [[1,2],[1,4],[1,6]] },
+      { id: "2", name: "示例2", input: [[1,1,2], [1,2,3], 2], expected: [[1,1],[1,1]] },
+      { id: "3", name: "示例3", input: [[1,2], [3], 3], expected: [[1,3],[2,3]] },
+    ],
+    hints: [
+      "使用最小堆维护候选数对",
+      "初始时将 (nums1[i], nums2[0]) 加入堆",
+      "每次弹出最小的，将 (i, j+1) 加入堆",
+    ],
+    explanation: `## 解题思路
+
+### 最小堆
+
+由于两个数组都是升序的，最小和一定从 (0, 0) 开始。
+
+### 算法流程
+
+1. 初始化：将所有 (nums1[i], nums2[0]) 加入最小堆
+2. 每次弹出堆顶（最小和）
+3. 将 (i, j+1) 加入堆（如果存在）
+4. 重复直到找到 k 个
+
+### 为什么这样有效？
+
+对于每个 nums1[i]，我们按顺序考虑 nums2[0], nums2[1], ...
+堆确保我们总是选择当前最小的和。
+
+### 复杂度分析
+- 时间复杂度：O(k log k)
+- 空间复杂度：O(k)`,
+    timeComplexity: "O(k log k)",
+    spaceComplexity: "O(k)",
+    relatedProblems: ["kth-smallest-element-in-a-sorted-matrix"],
+    solutions: [
+      {
+        name: "最小堆（推荐）",
+        code: `function kSmallestPairs(nums1, nums2, k) {
+  const result = [];
+  if (nums1.length === 0 || nums2.length === 0) return result;
+
+  // 最小堆：[sum, i, j]
+  const heap = [];
+
+  // 初始化：将 nums1 的每个元素与 nums2[0] 配对
+  for (let i = 0; i < Math.min(nums1.length, k); i++) {
+    heap.push([nums1[i] + nums2[0], i, 0]);
+  }
+
+  // 堆化
+  const heapify = () => {
+    heap.sort((a, b) => a[0] - b[0]);
+  };
+  heapify();
+
+  while (result.length < k && heap.length > 0) {
+    const [sum, i, j] = heap.shift();
+    result.push([nums1[i], nums2[j]]);
+
+    // 将 (i, j+1) 加入堆
+    if (j + 1 < nums2.length) {
+      heap.push([nums1[i] + nums2[j + 1], i, j + 1]);
+      heapify();
+    }
+  }
+
+  return result;
+}`,
+        explanation: `## 最小堆法
+
+### 核心思想
+维护一个最小堆，每次取出和最小的数对。
+
+### 避免重复
+只沿着 nums2 方向扩展，避免重复考虑同一对。
+
+### 优化
+只需将 min(nums1.length, k) 个初始对加入堆。`,
+        timeComplexity: "O(k log k)",
+        spaceComplexity: "O(k)",
+      },
+      {
+        name: "暴力排序（用于理解）",
+        code: `function kSmallestPairs(nums1, nums2, k) {
+  const pairs = [];
+
+  for (let i = 0; i < nums1.length; i++) {
+    for (let j = 0; j < nums2.length; j++) {
+      pairs.push([nums1[i], nums2[j]]);
+    }
+  }
+
+  pairs.sort((a, b) => (a[0] + a[1]) - (b[0] + b[1]));
+
+  return pairs.slice(0, k);
+}`,
+        explanation: `## 暴力法
+
+### 思路
+1. 生成所有可能的数对
+2. 按和排序
+3. 取前 k 个
+
+### 缺点
+- 时间复杂度 O(mn log(mn))
+- 空间复杂度 O(mn)
+- 数据量大时会超时`,
+        timeComplexity: "O(mn log(mn))",
+        spaceComplexity: "O(mn)",
       },
     ],
   },

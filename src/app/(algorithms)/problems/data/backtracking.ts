@@ -10,6 +10,8 @@ export const backtrackingProblems: Problem[] = [
     difficulty: "medium",
     category: "backtracking",
     tags: ["数组", "回溯"],
+    frontendRelevance: "medium",
+    frontendNote: "全排列",
     description: `给定一个不含重复数字的数组 \`nums\`，返回其 **所有可能的全排列**。你可以 **按任意顺序** 返回答案。`,
     examples: `**示例 1：**
 \`\`\`
@@ -226,6 +228,8 @@ export const backtrackingProblems: Problem[] = [
     difficulty: "medium",
     category: "backtracking",
     tags: ["位运算", "数组", "回溯"],
+    frontendRelevance: "medium",
+    frontendNote: "子集，回溯/位运算",
     description: `给你一个整数数组 \`nums\`，数组中的元素 **互不相同**。返回该数组所有可能的子集（幂集）。
 
 解集 **不能** 包含重复的子集。你可以按 **任意顺序** 返回解集。`,
@@ -405,6 +409,8 @@ export const backtrackingProblems: Problem[] = [
     difficulty: "medium",
     category: "backtracking",
     tags: ["哈希表", "字符串", "回溯"],
+    frontendRelevance: "low",
+    frontendNote: "电话号码组合",
     description: `给定一个仅包含数字 \`2-9\` 的字符串，返回所有它能表示的字母组合。答案可以按 **任意顺序** 返回。
 
 给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
@@ -638,6 +644,8 @@ export const backtrackingProblems: Problem[] = [
     difficulty: "medium",
     category: "backtracking",
     tags: ["数组", "回溯"],
+    frontendRelevance: "medium",
+    frontendNote: "组合总和",
     description: `给你一个 **无重复元素** 的整数数组 \`candidates\` 和一个目标整数 \`target\`，找出 \`candidates\` 中可以使数字和为目标数 \`target\` 的所有 **不同组合**，并以列表形式返回。你可以按 **任意顺序** 返回这些组合。
 
 \`candidates\` 中的 **同一个** 数字可以 **无限制重复被选取**。如果至少一个数字的被选数量不同，则两种组合是不同的。
@@ -855,6 +863,8 @@ export const backtrackingProblems: Problem[] = [
     difficulty: "medium",
     category: "backtracking",
     tags: ["字符串", "动态规划", "回溯"],
+    frontendRelevance: "medium",
+    frontendNote: "括号生成，回溯入门",
     description: `数字 \`n\` 代表生成括号的对数，请你设计一个函数，用于能够生成所有可能的并且 **有效的** 括号组合。`,
     examples: `**示例 1：**
 \`\`\`
@@ -1046,6 +1056,8 @@ dp[n] = { "(" + dp[j] + ")" + dp[n-1-j] | 0 ≤ j < n }`,
     difficulty: "medium",
     category: "backtracking",
     tags: ["数组", "字符串", "回溯", "矩阵"],
+    frontendRelevance: "medium",
+    frontendNote: "DFS搜索",
     description: `给定一个 \`m x n\` 二维字符网格 \`board\` 和一个字符串单词 \`word\`。如果 \`word\` 存在于网格中，返回 \`true\`；否则，返回 \`false\`。
 
 单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中"相邻"单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。`,
@@ -1340,6 +1352,8 @@ dp[n] = { "(" + dp[j] + ")" + dp[n-1-j] | 0 ≤ j < n }`,
     difficulty: "medium",
     category: "backtracking",
     tags: ["字符串", "动态规划", "回溯"],
+    frontendRelevance: "low",
+    frontendNote: "分割回文串",
     description: `给你一个字符串 \`s\`，请你将 \`s\` 分割成一些子串，使每个子串都是 **回文串**。返回 \`s\` 所有可能的分割方案。`,
     examples: `**示例 1：**
 \`\`\`
@@ -1577,6 +1591,8 @@ dp[n] = { "(" + dp[j] + ")" + dp[n-1-j] | 0 ≤ j < n }`,
     difficulty: "hard",
     category: "backtracking",
     tags: ["数组", "回溯"],
+    frontendRelevance: "low",
+    frontendNote: "N皇后Hard",
     description: `按照国际象棋的规则，皇后可以攻击与之处在同一行或同一列或同一斜线上的棋子。
 
 **n 皇后问题** 研究的是如何将 \`n\` 个皇后放置在 \`n×n\` 的棋盘上，并且使皇后彼此之间不能相互攻击。
@@ -1848,6 +1864,196 @@ dp[n] = { "(" + dp[j] + ")" + dp[n-1-j] | 0 ≤ j < n }`,
 ### 优点
 - 极致的性能优化
 - 适合大规模计算`,
+        timeComplexity: "O(n!)",
+        spaceComplexity: "O(n)",
+      },
+    ],
+  },
+
+  // 9. N 皇后 II (52)
+  {
+    id: "n-queens-ii",
+    leetcodeId: 52,
+    title: "N 皇后 II",
+    titleEn: "N-Queens II",
+    difficulty: "hard",
+    category: "backtracking",
+    tags: ["回溯"],
+    frontendRelevance: "low",
+    frontendNote: "N皇后II",
+    description: `n 皇后问题 研究的是如何将 n 个皇后放置在 n × n 的棋盘上，并且使皇后彼此之间不能相互攻击。
+
+给你一个整数 n ，返回 n 皇后问题 不同的解决方案的数量。`,
+    examples: `**示例 1：**
+\`\`\`
+输入：n = 4
+输出：2
+解释：如图所示，4 皇后问题存在两个不同的解法。
+\`\`\`
+
+**示例 2：**
+\`\`\`
+输入：n = 1
+输出：1
+\`\`\``,
+    constraints: `- \`1 <= n <= 9\``,
+    initialCode: `function totalNQueens(n) {
+  // 在此处编写代码
+}`,
+    solution: `function totalNQueens(n) {
+  let count = 0;
+  const cols = new Set();
+  const diag1 = new Set(); // 主对角线 row - col
+  const diag2 = new Set(); // 副对角线 row + col
+
+  const backtrack = (row) => {
+    if (row === n) {
+      count++;
+      return;
+    }
+
+    for (let col = 0; col < n; col++) {
+      if (cols.has(col) || diag1.has(row - col) || diag2.has(row + col)) {
+        continue;
+      }
+
+      cols.add(col);
+      diag1.add(row - col);
+      diag2.add(row + col);
+
+      backtrack(row + 1);
+
+      cols.delete(col);
+      diag1.delete(row - col);
+      diag2.delete(row + col);
+    }
+  };
+
+  backtrack(0);
+  return count;
+}`,
+    testCases: [
+      { id: "1", name: "n=4", input: [4], expected: 2 },
+      { id: "2", name: "n=1", input: [1], expected: 1 },
+      { id: "3", name: "n=8", input: [8], expected: 92 },
+    ],
+    hints: [
+      "与 N 皇后问题类似，但只需要计数",
+      "使用集合记录已占用的列和对角线",
+      "可以使用位运算优化",
+    ],
+    explanation: `## 解题思路
+
+### 回溯法
+
+与 N 皇后问题 (51) 相同的思路，但只计数不记录解：
+1. 逐行放置皇后
+2. 用集合记录已占用的列、主对角线、副对角线
+3. 找到有效放置时递归下一行
+4. 到达最后一行时计数加一
+
+### 对角线规律
+
+- 主对角线：同一条主对角线上 row - col 相同
+- 副对角线：同一条副对角线上 row + col 相同
+
+### 复杂度分析
+- 时间复杂度：O(n!)
+- 空间复杂度：O(n)`,
+    timeComplexity: "O(n!)",
+    spaceComplexity: "O(n)",
+    relatedProblems: ["n-queens"],
+    solutions: [
+      {
+        name: "回溯 + 集合",
+        code: `function totalNQueens(n) {
+  let count = 0;
+  const cols = new Set();
+  const diag1 = new Set();
+  const diag2 = new Set();
+
+  const backtrack = (row) => {
+    if (row === n) {
+      count++;
+      return;
+    }
+
+    for (let col = 0; col < n; col++) {
+      if (cols.has(col) || diag1.has(row - col) || diag2.has(row + col)) {
+        continue;
+      }
+
+      cols.add(col);
+      diag1.add(row - col);
+      diag2.add(row + col);
+
+      backtrack(row + 1);
+
+      cols.delete(col);
+      diag1.delete(row - col);
+      diag2.delete(row + col);
+    }
+  };
+
+  backtrack(0);
+  return count;
+}`,
+        explanation: `## 集合法
+
+### 核心思想
+使用三个集合分别记录已占用的：
+1. 列
+2. 主对角线 (row - col)
+3. 副对角线 (row + col)`,
+        timeComplexity: "O(n!)",
+        spaceComplexity: "O(n)",
+      },
+      {
+        name: "位运算优化",
+        code: `function totalNQueens(n) {
+  let count = 0;
+
+  const solve = (row, cols, diag1, diag2) => {
+    if (row === n) {
+      count++;
+      return;
+    }
+
+    // 所有可用位置
+    let availablePositions = ((1 << n) - 1) & ~(cols | diag1 | diag2);
+
+    while (availablePositions) {
+      // 取最低位的 1
+      const position = availablePositions & -availablePositions;
+      availablePositions &= availablePositions - 1;
+
+      solve(
+        row + 1,
+        cols | position,
+        (diag1 | position) << 1,
+        (diag2 | position) >> 1
+      );
+    }
+  };
+
+  solve(0, 0, 0, 0);
+  return count;
+}`,
+        explanation: `## 位运算优化
+
+### 核心思想
+用整数的二进制位表示占用情况：
+- cols：已占用的列
+- diag1：主对角线（每行左移一位）
+- diag2：副对角线（每行右移一位）
+
+### 位运算技巧
+- \`x & -x\`：获取最低位的 1
+- \`x & (x-1)\`：清除最低位的 1
+
+### 优点
+- 极致的性能优化
+- 常数时间判断冲突`,
         timeComplexity: "O(n!)",
         spaceComplexity: "O(n)",
       },

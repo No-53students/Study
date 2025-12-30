@@ -10,6 +10,8 @@ export const matrixProblems: Problem[] = [
     difficulty: "medium",
     category: "matrix",
     tags: ["数组", "哈希表", "矩阵"],
+    frontendRelevance: "low",
+    frontendNote: "有效数独",
     description: `请你判断一个 \`9 x 9\` 的数独是否有效。只需要 **根据以下规则**，验证已经填入的数字是否有效即可。
 
 1. 数字 \`1-9\` 在每一行只能出现一次。
@@ -279,6 +281,8 @@ export const matrixProblems: Problem[] = [
     difficulty: "medium",
     category: "matrix",
     tags: ["数组", "矩阵", "模拟"],
+    frontendRelevance: "medium",
+    frontendNote: "螺旋矩阵",
     description: `给你一个 \`m\` 行 \`n\` 列的矩阵 \`matrix\`，请按照 **顺时针螺旋顺序**，返回矩阵中的所有元素。`,
     examples: `**示例 1：**
 \`\`\`
@@ -552,6 +556,8 @@ layers = Math.ceil(Math.min(m, n) / 2)
     difficulty: "medium",
     category: "matrix",
     tags: ["数组", "矩阵", "数学"],
+    frontendRelevance: "medium",
+    frontendNote: "矩阵旋转",
     description: `给定一个 \`n × n\` 的二维矩阵 \`matrix\` 表示一个图像。请你将图像顺时针旋转 90 度。
 
 你必须在 **原地** 旋转图像，这意味着你需要直接修改输入的二维矩阵。**请不要** 使用另一个矩阵来旋转图像。`,
@@ -792,6 +798,8 @@ layers = Math.ceil(Math.min(m, n) / 2)
     difficulty: "medium",
     category: "matrix",
     tags: ["数组", "哈希表", "矩阵"],
+    frontendRelevance: "medium",
+    frontendNote: "矩阵置零",
     description: `给定一个 \`m x n\` 的矩阵，如果一个元素为 **0**，则将其所在行和列的所有元素都设为 **0**。请使用 **原地** 算法。`,
     examples: `**示例 1：**
 \`\`\`
@@ -1102,6 +1110,8 @@ layers = Math.ceil(Math.min(m, n) / 2)
     difficulty: "medium",
     category: "matrix",
     tags: ["数组", "矩阵", "模拟"],
+    frontendRelevance: "low",
+    frontendNote: "生命游戏",
     description: `根据 百度百科 ， **生命游戏**，简称为 **生命**，是英国数学家约翰·何顿·康威在 1970 年发明的细胞自动机。
 
 给定一个包含 \`m × n\` 个格子的面板，每个格子都可以看成是一个细胞。每个细胞都具有一个初始状态： **1** 即为 **活细胞（live）**，或 **0** 即为 **死细胞（dead）**。每个细胞与其八个相邻位置（水平，垂直，对角线）的细胞都遵循以下四条生存定律：
@@ -1465,6 +1475,162 @@ layers = Math.ceil(Math.min(m, n) / 2)
 - 只需要用已有的整数位，真正的 O(1) 空间
 - 位运算效率高`,
         timeComplexity: "O(m × n)",
+        spaceComplexity: "O(1)",
+      },
+    ],
+  },
+  // 8. 搜索二维矩阵 II (240)
+  {
+    id: "search-a-2d-matrix-ii",
+    leetcodeId: 240,
+    title: "搜索二维矩阵 II",
+    titleEn: "Search a 2D Matrix II",
+    difficulty: "medium" as const,
+    category: "matrix",
+    tags: ["Binary Search", "Divide and Conquer", "Matrix"],
+    frontendRelevance: "low",
+    frontendNote: "搜索二维矩阵II",
+    description: `编写一个高效的算法来搜索 m x n 矩阵 matrix 中的一个目标值 target。该矩阵具有以下特性：
+
+- 每行的元素从左到右升序排列。
+- 每列的元素从上到下升序排列。`,
+    examples: `**示例 1：**
+\`\`\`
+输入：matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 5
+输出：true
+\`\`\`
+
+**示例 2：**
+\`\`\`
+输入：matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 20
+输出：false
+\`\`\``,
+    constraints: `- m == matrix.length
+- n == matrix[i].length
+- 1 <= n, m <= 300
+- -10^9 <= matrix[i][j] <= 10^9
+- 每行的所有元素从左到右升序排列
+- 每列的所有元素从上到下升序排列
+- -10^9 <= target <= 10^9`,
+    initialCode: `function searchMatrix(matrix: number[][], target: number): boolean {
+  // 在这里写你的代码
+}`,
+    solution: `function searchMatrix(matrix: number[][], target: number): boolean {
+  const m = matrix.length, n = matrix[0].length;
+  let row = 0, col = n - 1;
+
+  while (row < m && col >= 0) {
+    if (matrix[row][col] === target) {
+      return true;
+    } else if (matrix[row][col] > target) {
+      col--;
+    } else {
+      row++;
+    }
+  }
+
+  return false;
+}`,
+    testCases: [
+      {
+        id: "1",
+        name: "找到目标",
+        input: [[[1, 4, 7, 11, 15], [2, 5, 8, 12, 19], [3, 6, 9, 16, 22], [10, 13, 14, 17, 24], [18, 21, 23, 26, 30]], 5],
+        expected: true,
+      },
+      {
+        id: "2",
+        name: "目标不存在",
+        input: [[[1, 4, 7, 11, 15], [2, 5, 8, 12, 19], [3, 6, 9, 16, 22], [10, 13, 14, 17, 24], [18, 21, 23, 26, 30]], 20],
+        expected: false,
+      },
+    ],
+    hints: [
+      "从矩阵的右上角或左下角开始搜索",
+      "右上角元素是该行最大值，该列最小值",
+      "可以根据比较结果排除一行或一列",
+    ],
+    explanation: `## 解题思路
+
+### Z字形查找（最优解）
+从右上角开始搜索：
+- 当前元素等于 target，找到
+- 当前元素大于 target，排除当前列（向左移动）
+- 当前元素小于 target，排除当前行（向下移动）
+
+### 为什么选择右上角？
+右上角元素是这一行的最大值，这一列的最小值：
+- 如果 target 更小，它不可能在当前列
+- 如果 target 更大，它不可能在当前行
+
+### 时间复杂度
+最多移动 m + n 次，所以是 O(m + n)。`,
+    timeComplexity: "O(m + n)",
+    spaceComplexity: "O(1)",
+    solutions: [
+      {
+        name: "Z字形查找",
+        code: `function searchMatrix(matrix: number[][], target: number): boolean {
+  const m = matrix.length, n = matrix[0].length;
+  // 从右上角开始
+  let row = 0, col = n - 1;
+
+  while (row < m && col >= 0) {
+    if (matrix[row][col] === target) {
+      return true;
+    } else if (matrix[row][col] > target) {
+      // 当前值太大，排除这一列
+      col--;
+    } else {
+      // 当前值太小，排除这一行
+      row++;
+    }
+  }
+
+  return false;
+}`,
+        explanation: `## Z字形查找
+
+### 核心思想
+从右上角开始，利用矩阵的有序性：
+- 右上角元素是该行最大、该列最小
+- 每次比较可以排除一行或一列
+
+### 搜索路径
+路径形似字母 Z，故名 Z 字形查找。
+
+### 时间复杂度
+O(m + n) - 最多走 m + n 步`,
+        timeComplexity: "O(m + n)",
+        spaceComplexity: "O(1)",
+      },
+      {
+        name: "二分查找（每行）",
+        code: `function searchMatrix(matrix: number[][], target: number): boolean {
+  for (const row of matrix) {
+    // 对每行进行二分查找
+    let left = 0, right = row.length - 1;
+    while (left <= right) {
+      const mid = Math.floor((left + right) / 2);
+      if (row[mid] === target) {
+        return true;
+      } else if (row[mid] < target) {
+        left = mid + 1;
+      } else {
+        right = mid - 1;
+      }
+    }
+  }
+  return false;
+}`,
+        explanation: `## 二分查找
+
+### 思路
+对每一行进行二分查找。
+
+### 时间复杂度
+O(m log n) - m 行，每行二分 log n`,
+        timeComplexity: "O(m log n)",
         spaceComplexity: "O(1)",
       },
     ],

@@ -10,6 +10,8 @@ export const arrayStringProblems: Problem[] = [
     difficulty: "easy",
     category: "array-string",
     tags: ["数组", "双指针", "排序"],
+    frontendRelevance: "high",
+    frontendNote: "双指针基础题，数组操作必会",
     description: `
 给你两个按 **非递减顺序** 排列的整数数组 \`nums1\` 和 \`nums2\`，另有两个整数 \`m\` 和 \`n\`，分别表示 \`nums1\` 和 \`nums2\` 中的元素数目。
 
@@ -161,23 +163,45 @@ function merge(nums1, m, nums2, n) {
     solutions: [
       {
         name: "逆向双指针（推荐）",
-        code: `function solution(nums1, m, nums2, n) {
-  // 逆向双指针：从后往前填充，避免覆盖
-  let p1 = m - 1;      // nums1 有效元素的末尾
-  let p2 = n - 1;      // nums2 的末尾
-  let p = m + n - 1;   // 合并后数组的末尾
+        code: `/**
+ * 合并两个有序数组 - 逆向双指针解法
+ *
+ * 核心思想：从后往前填充，利用 nums1 后面的空位
+ *
+ * 为什么要从后往前？
+ * - 从前往后会覆盖 nums1 中还未处理的元素
+ * - 从后往前填充，nums1 后面本来就是空位(0)，可以安全覆盖
+ *
+ * 时间复杂度：O(m + n)，每个元素只处理一次
+ * 空间复杂度：O(1)，原地操作
+ */
+function solution(nums1, m, nums2, n) {
+  // 初始化三个指针：
+  // p1: 指向 nums1 有效元素的最后一个位置
+  // p2: 指向 nums2 的最后一个位置
+  // p:  指向合并后数组应该填充的位置（从最后开始）
+  let p1 = m - 1;
+  let p2 = n - 1;
+  let p = m + n - 1;
 
-  // 从后往前比较并填充
+  // 主循环：当 nums2 还有元素未处理时继续
+  // 为什么只检查 p2？因为当 nums2 处理完，nums1 剩余元素已在正确位置
   while (p2 >= 0) {
+    // 比较两个数组当前指针位置的元素
+    // 注意：需要先检查 p1 >= 0，防止 nums1 已经处理完
     if (p1 >= 0 && nums1[p1] > nums2[p2]) {
+      // nums1 当前元素更大，放入合并位置
       nums1[p] = nums1[p1];
-      p1--;
+      p1--;  // nums1 指针左移
     } else {
+      // nums2 当前元素更大（或 nums1 已处理完）
       nums1[p] = nums2[p2];
-      p2--;
+      p2--;  // nums2 指针左移
     }
-    p--;
+    p--;  // 填充位置左移，准备下一次填充
   }
+
+  // 注意：不需要处理 p1 剩余元素，它们本来就在 nums1 正确位置
 
   return nums1;
 }`,
@@ -195,13 +219,27 @@ function merge(nums1, m, nums2, n) {
       },
       {
         name: "先合并后排序",
-        code: `function solution(nums1, m, nums2, n) {
-  // 先将 nums2 复制到 nums1 后半部分
+        code: `/**
+ * 合并两个有序数组 - 先合并后排序解法
+ *
+ * 思路：最直观的方法，先把两个数组放一起，再排序
+ *
+ * 缺点：没有利用"两个数组已经有序"这个条件
+ * 时间复杂度：O((m+n)log(m+n))，排序的开销
+ * 空间复杂度：O(log(m+n))，排序需要的栈空间
+ */
+function solution(nums1, m, nums2, n) {
+  // 第一步：将 nums2 的所有元素复制到 nums1 的后半部分
+  // nums1 本身预留了 n 个位置（值为0），正好用来存放 nums2
   for (let i = 0; i < n; i++) {
-    nums1[m + i] = nums2[i];
+    nums1[m + i] = nums2[i];  // m + i 就是 nums1 空位的起始位置
   }
-  // 然后排序
+
+  // 第二步：对整个 nums1 进行排序
+  // 使用比较函数 (a, b) => a - b 确保数字按升序排列
+  // 注意：不能直接用 sort()，因为默认是按字符串排序
   nums1.sort((a, b) => a - b);
+
   return nums1;
 }`,
         explanation: `## 先合并后排序
@@ -220,24 +258,55 @@ function merge(nums1, m, nums2, n) {
       },
       {
         name: "正向双指针+临时数组",
-        code: `function solution(nums1, m, nums2, n) {
+        code: `/**
+ * 合并两个有序数组 - 正向双指针解法
+ *
+ * 思路：从前往后比较，使用临时数组存储结果
+ *
+ * 为什么需要临时数组？
+ * - 从前往后填充会覆盖 nums1 中还未处理的元素
+ * - 所以需要额外空间保存合并结果
+ *
+ * 时间复杂度：O(m + n)
+ * 空间复杂度：O(m + n)，需要临时数组
+ */
+function solution(nums1, m, nums2, n) {
+  // 创建临时数组存储合并结果
   const temp = new Array(m + n);
+
+  // 初始化三个指针：
+  // p1: nums1 的当前位置
+  // p2: nums2 的当前位置
+  // p:  临时数组的当前位置
   let p1 = 0, p2 = 0, p = 0;
 
+  // 主循环：两个数组都还有元素时，比较并选择较小者
   while (p1 < m && p2 < n) {
     if (nums1[p1] <= nums2[p2]) {
-      temp[p++] = nums1[p1++];
+      // nums1 当前元素较小或相等，优先取 nums1 的
+      // 使用 <= 保持稳定性（相等时优先取 nums1）
+      temp[p++] = nums1[p1++];  // 等价于 temp[p] = nums1[p1]; p++; p1++;
     } else {
+      // nums2 当前元素较小
       temp[p++] = nums2[p2++];
     }
   }
 
-  while (p1 < m) temp[p++] = nums1[p1++];
-  while (p2 < n) temp[p++] = nums2[p2++];
+  // 处理 nums1 剩余元素（如果有）
+  while (p1 < m) {
+    temp[p++] = nums1[p1++];
+  }
 
+  // 处理 nums2 剩余元素（如果有）
+  while (p2 < n) {
+    temp[p++] = nums2[p2++];
+  }
+
+  // 将临时数组的结果复制回 nums1
   for (let i = 0; i < m + n; i++) {
     nums1[i] = temp[i];
   }
+
   return nums1;
 }`,
         explanation: `## 正向双指针+临时数组
@@ -266,6 +335,8 @@ function merge(nums1, m, nums2, n) {
     difficulty: "easy",
     category: "array-string",
     tags: ["数组", "双指针"],
+    frontendRelevance: "high",
+    frontendNote: "数组原地操作基础",
     description: `
 给你一个数组 \`nums\` 和一个值 \`val\`，你需要 **原地** 移除所有数值等于 \`val\` 的元素。元素的顺序可能发生改变。然后返回 \`nums\` 中与 \`val\` 不同的元素的数量。
 
@@ -390,17 +461,41 @@ function removeElement(nums, val) {
     solutions: [
       {
         name: "快慢双指针（推荐）",
-        code: `function solution(nums, val) {
-  let slow = 0;  // 慢指针：指向下一个要放置的位置
+        code: `/**
+ * 移除元素 - 快慢双指针解法
+ *
+ * 核心思想：快指针探路，慢指针记录有效元素应该放的位置
+ *
+ * 双指针角色：
+ * - 快指针(fast)：遍历数组的每个元素
+ * - 慢指针(slow)：指向下一个有效元素应该放置的位置
+ *
+ * 不变性：slow 左边的所有元素都不等于 val
+ *
+ * 时间复杂度：O(n)，遍历一次数组
+ * 空间复杂度：O(1)，原地操作
+ */
+function solution(nums, val) {
+  // 慢指针：指向下一个有效元素应该放置的位置
+  // 初始为 0，表示第一个有效元素应放在索引 0
+  let slow = 0;
 
+  // 快指针遍历整个数组
   for (let fast = 0; fast < nums.length; fast++) {
-    // 如果当前元素不等于 val，放到慢指针位置
+    // 如果当前元素不是要移除的值，它是有效的
     if (nums[fast] !== val) {
+      // 将有效元素放到 slow 位置
+      // 注意：当 slow === fast 时，这是自己赋值给自己，无害
       nums[slow] = nums[fast];
+      // slow 前进，为下一个有效元素腾出位置
       slow++;
     }
+    // 如果 nums[fast] === val，跳过这个元素
+    // slow 不动，fast 继续前进
   }
 
+  // slow 就是新数组的长度
+  // 因为 slow 指向的是"下一个要放置的位置"
   return slow;
 }`,
         explanation: `## 快慢双指针
@@ -418,19 +513,41 @@ function removeElement(nums, val) {
       },
       {
         name: "双向双指针",
-        code: `function solution(nums, val) {
+        code: `/**
+ * 移除元素 - 双向双指针解法
+ *
+ * 核心思想：用末尾的元素覆盖要删除的元素
+ *
+ * 适用场景：当要删除的元素很少时，这种方法赋值操作更少
+ *
+ * 原理：我们不关心最终数组的顺序，所以可以用任意元素来覆盖
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(1)
+ */
+function solution(nums, val) {
+  // left: 从头开始，检查每个元素
+  // right: 从尾开始，提供"替换用"的元素
   let left = 0;
   let right = nums.length - 1;
 
+  // 当 left > right 时，所有元素都已处理
   while (left <= right) {
     if (nums[left] === val) {
+      // 当前元素需要删除，用 right 位置的元素覆盖
       nums[left] = nums[right];
+      // right 左移，因为这个位置的元素已被"使用"
       right--;
+      // 注意：left 不移动！因为 nums[right] 可能也等于 val
+      // 需要在下一轮循环中再次检查 nums[left]
     } else {
+      // 当前元素不需要删除，检查下一个
       left++;
     }
   }
 
+  // left 就是新数组的长度
+  // 此时 left > right，left 指向第一个"无效"位置
   return left;
 }`,
         explanation: `## 双向双指针
@@ -462,6 +579,8 @@ function removeElement(nums, val) {
     difficulty: "easy",
     category: "array-string",
     tags: ["数组", "双指针"],
+    frontendRelevance: "high",
+    frontendNote: "数组去重，高频操作",
     description: `
 给你一个 **非严格递增排列** 的数组 \`nums\` ，请你 **原地** 删除重复出现的元素，使每个元素 **只出现一次** ，返回删除后数组的新长度。元素的 **相对顺序** 应该保持 **一致** 。然后返回 \`nums\` 中唯一元素的个数。
 
@@ -583,18 +702,44 @@ function removeDuplicates(nums) {
     solutions: [
       {
         name: "快慢双指针（推荐）",
-        code: `function solution(nums) {
+        code: `/**
+ * 删除有序数组中的重复项 - 快慢双指针解法
+ *
+ * 核心思想：利用数组有序的特性，相同元素一定相邻
+ *
+ * 双指针角色：
+ * - slow: 指向当前"不重复部分"的最后一个元素
+ * - fast: 探索数组，寻找下一个不同的元素
+ *
+ * 不变性：nums[0..slow] 都是不重复的元素
+ *
+ * 时间复杂度：O(n)，遍历一次
+ * 空间复杂度：O(1)，原地操作
+ */
+function solution(nums) {
+  // 边界情况：空数组直接返回 0
   if (nums.length === 0) return 0;
 
+  // slow 初始指向第一个元素（索引 0）
+  // 第一个元素必定是"不重复"的（因为它前面没有元素）
   let slow = 0;
 
+  // fast 从第二个元素开始遍历（索引 1）
   for (let fast = 1; fast < nums.length; fast++) {
+    // 关键判断：当前元素是否与 slow 指向的元素不同
     if (nums[fast] !== nums[slow]) {
+      // 发现新元素！执行两步：
+      // 1. slow 向前移动一位，为新元素腾出位置
       slow++;
+      // 2. 将新元素放到 slow 位置
       nums[slow] = nums[fast];
     }
+    // 如果相同，fast 继续前进，slow 不动
+    // 这样就"跳过"了重复元素
   }
 
+  // 返回不重复元素的数量
+  // slow 是最后一个不重复元素的索引，所以数量是 slow + 1
   return slow + 1;
 }`,
         explanation: `## 快慢双指针
@@ -623,6 +768,8 @@ function removeDuplicates(nums) {
     difficulty: "medium",
     category: "array-string",
     tags: ["数组", "双指针"],
+    frontendRelevance: "medium",
+    frontendNote: "数组去重变体",
     description: `
 给你一个有序数组 \`nums\` ，请你 **原地** 删除重复出现的元素，使得出现次数超过两次的元素**只出现两次** ，返回删除后数组的新长度。
 
@@ -734,19 +881,50 @@ slow 指向下一个要填入的位置，\`[0, slow-1]\` 是已经处理好的�
     solutions: [
       {
         name: "通用双指针（推荐）",
-        code: `function solution(nums) {
+        code: `/**
+ * 删除有序数组中的重复项 II - 通用双指针解法
+ *
+ * 核心思想：允许每个元素最多出现 k 次（这里 k = 2）
+ *
+ * 关键洞察：
+ * - 数组有序，相同元素一定连续
+ * - 如果 nums[fast] !== nums[slow - k]，说明放入这个元素不会超过 k 个
+ *
+ * 为什么比较 nums[slow - k]？
+ * - slow 指向"下一个要填入的位置"
+ * - [slow-k, slow-1] 是最后 k 个已处理的元素
+ * - 如果 nums[fast] == nums[slow-k]，说明这 k 个位置都是同一个值
+ * - 再放入就会超过 k 个
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(1)
+ */
+function solution(nums) {
+  // 如果数组长度 <= 2，不可能超过 2 个重复
   if (nums.length <= 2) return nums.length;
 
+  // k 是允许的最大重复次数
+  // 修改 k 的值可以解决"最多保留 k 个重复"的问题
   const k = 2;
+
+  // slow 从 k 开始，因为前 k 个元素一定是合法的
+  // （即使它们都相同，也不超过 k 个）
   let slow = k;
 
+  // fast 也从 k 开始遍历剩余元素
   for (let fast = k; fast < nums.length; fast++) {
+    // 核心判断：当前元素是否可以放入
+    // 比较 nums[fast] 和 nums[slow - k]
     if (nums[fast] !== nums[slow - k]) {
+      // 可以放入：放到 slow 位置
       nums[slow] = nums[fast];
+      // slow 前进
       slow++;
     }
+    // 如果相等，说明放入会超过 k 个，跳过
   }
 
+  // slow 就是新数组的长度
   return slow;
 }`,
         explanation: `## 通用双指针解法
@@ -775,6 +953,8 @@ slow 指向下一个要填入的位置，如果 nums[fast] === nums[slow-k]，�
     difficulty: "easy",
     category: "array-string",
     tags: ["数组", "哈希表", "分治", "计数", "排序"],
+    frontendRelevance: "high",
+    frontendNote: "Boyer-Moore投票算法",
     description: `
 给定一个大小为 \`n\` 的数组 \`nums\` ，返回其中的多数元素。多数元素是指在数组中出现次数 **大于** \`⌊ n/2 ⌋\` 的元素。
 
@@ -914,21 +1094,43 @@ function majorityElement(nums) {
     solutions: [
       {
         name: "Boyer-Moore 投票算法（推荐）",
-        code: `function solution(nums) {
+        code: `/**
+ * 多数元素 - Boyer-Moore 投票算法
+ *
+ * 核心思想：多数元素出现次数 > n/2，"抵消"后必定剩余
+ *
+ * 算法原理（精彩！）：
+ * - 把多数元素看作 +1，其他元素看作 -1
+ * - 由于多数元素个数 > n/2，其他元素总数 < n/2
+ * - 所以总和必定 > 0，多数元素最后一定会"胜出"
+ *
+ * 时间复杂度：O(n)，只遍历一次
+ * 空间复杂度：O(1)，只用两个变量
+ */
+function solution(nums) {
+  // candidate: 当前的"候选人"（可能是多数元素）
+  // count: 候选人的"票数"
   let candidate = nums[0];
   let count = 1;
 
+  // 从第二个元素开始遍历
   for (let i = 1; i < nums.length; i++) {
     if (count === 0) {
+      // 票数归零，更换候选人
+      // 此时之前的候选人已被"抵消"完毕
       candidate = nums[i];
       count = 1;
     } else if (nums[i] === candidate) {
+      // 遇到相同元素，票数 +1
       count++;
     } else {
+      // 遇到不同元素，票数 -1（互相抵消）
       count--;
     }
   }
 
+  // 由于多数元素一定存在，最后的候选人就是答案
+  // 注意：如果不保证多数元素存在，需要再验证一遍
   return candidate;
 }`,
         explanation: `## Boyer-Moore 投票算法
@@ -948,13 +1150,31 @@ function majorityElement(nums) {
       },
       {
         name: "哈希表计数",
-        code: `function solution(nums) {
+        code: `/**
+ * 多数元素 - 哈希表计数解法
+ *
+ * 思路：统计每个元素的出现次数，超过 n/2 就返回
+ *
+ * 优点：逻辑简单，容易理解
+ * 缺点：需要 O(n) 额外空间
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(n)，哈希表存储
+ */
+function solution(nums) {
+  // 使用 Map 统计每个元素的出现次数
   const map = new Map();
   const n = nums.length;
 
   for (const num of nums) {
+    // 获取当前计数，不存在则为 0，然后 +1
     map.set(num, (map.get(num) || 0) + 1);
-    if (map.get(num) > n / 2) return num;
+
+    // 一旦某个元素次数超过 n/2，立即返回
+    // 提前返回可以节省时间
+    if (map.get(num) > n / 2) {
+      return num;
+    }
   }
 }`,
         explanation: `## 哈希表计数
@@ -972,8 +1192,25 @@ function majorityElement(nums) {
       },
       {
         name: "排序法",
-        code: `function solution(nums) {
+        code: `/**
+ * 多数元素 - 排序解法
+ *
+ * 思路：排序后，多数元素一定会出现在中间位置
+ *
+ * 证明：
+ * - 多数元素出现次数 > n/2
+ * - 无论这些元素在原数组中如何分布
+ * - 排序后它们会连续排列，一定会覆盖中间位置
+ *
+ * 时间复杂度：O(n log n)，排序的开销
+ * 空间复杂度：O(log n)，排序需要的栈空间
+ */
+function solution(nums) {
+  // 对数组进行升序排序
   nums.sort((a, b) => a - b);
+
+  // 返回中间位置的元素
+  // 由于多数元素出现次数 > n/2，中间位置一定是它
   return nums[Math.floor(nums.length / 2)];
 }`,
         explanation: `## 排序法
@@ -1002,6 +1239,8 @@ function majorityElement(nums) {
     difficulty: "medium",
     category: "array-string",
     tags: ["数组", "数学", "双指针"],
+    frontendRelevance: "high",
+    frontendNote: "数组轮转技巧",
     description: `
 给定一个整数数组 \`nums\`，将数组中的元素向右轮转 \`k\` 个位置，其中 \`k\` 是非负数。
 `,
@@ -1161,21 +1400,40 @@ function rotate(nums, k) {
     solutions: [
       {
         name: "三次反转（推荐）",
-        code: `function solution(nums, k) {
+        code: `/**
+ * 轮转数组 - 三次反转解法
+ *
+ * 核心思想：通过反转操作实现原地轮转
+ *
+ * 数学原理：
+ * - 设原数组为 AB（A = 前 n-k 个元素，B = 后 k 个元素）
+ * - 目标是 BA
+ * - 整体反转：(AB)^R = B^R A^R
+ * - 再分别反转：(B^R)^R (A^R)^R = BA ✓
+ *
+ * 时间复杂度：O(n)，每个元素最多被访问两次
+ * 空间复杂度：O(1)，原地操作
+ */
+function solution(nums, k) {
   const n = nums.length;
+  // 处理 k >= n 的情况，轮转 n 次等于没动
   k = k % n;
 
+  // 辅助函数：反转数组的 [start, end] 区间
   const reverse = (start, end) => {
     while (start < end) {
+      // 使用解构赋值交换元素
       [nums[start], nums[end]] = [nums[end], nums[start]];
       start++;
       end--;
     }
   };
 
-  reverse(0, n - 1);
-  reverse(0, k - 1);
-  reverse(k, n - 1);
+  // 三步反转：
+  // 例：[1,2,3,4,5,6,7], k=3
+  reverse(0, n - 1);      // 第1步：整体反转 → [7,6,5,4,3,2,1]
+  reverse(0, k - 1);      // 第2步：反转前k个 → [5,6,7,4,3,2,1]
+  reverse(k, n - 1);      // 第3步：反转后n-k个 → [5,6,7,1,2,3,4]
 
   return nums;
 }`,
@@ -1195,14 +1453,33 @@ function rotate(nums, k) {
       },
       {
         name: "使用额外数组",
-        code: `function solution(nums, k) {
+        code: `/**
+ * 轮转数组 - 使用额外数组解法
+ *
+ * 思路：直接计算每个元素轮转后的新位置
+ *
+ * 公式：元素 nums[i] 轮转后的位置是 (i + k) % n
+ *
+ * 优点：直观易懂
+ * 缺点：需要 O(n) 额外空间
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(n)
+ */
+function solution(nums, k) {
   const n = nums.length;
+  // 创建临时数组存储轮转后的结果
   const temp = new Array(n);
 
+  // 计算每个元素的新位置
   for (let i = 0; i < n; i++) {
+    // (i + k) % n 就是轮转后的新索引
+    // 例：i=0, k=3, n=7 → 新位置 = 3
+    // 例：i=5, k=3, n=7 → 新位置 = 8 % 7 = 1
     temp[(i + k) % n] = nums[i];
   }
 
+  // 将临时数组复制回原数组
   for (let i = 0; i < n; i++) {
     nums[i] = temp[i];
   }
@@ -1221,21 +1498,40 @@ function rotate(nums, k) {
       },
       {
         name: "环状替换",
-        code: `function solution(nums, k) {
+        code: `/**
+ * 轮转数组 - 环状替换解法
+ *
+ * 思路：每个元素直接移动到最终位置，形成替换链
+ *
+ * 原理：
+ * - 从位置 0 开始，将元素移动到 (0+k)%n
+ * - 被替换的元素继续移动到新位置
+ * - 直到回到起点，形成一个"环"
+ * - 如果还有元素未移动，从下一个位置开始新的环
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(1)
+ */
+function solution(nums, k) {
   const n = nums.length;
   k = k % n;
-  let count = 0;
+  let count = 0;  // 记录已经移动的元素个数
 
+  // 外层循环：处理多个环
   for (let start = 0; count < n; start++) {
-    let current = start;
-    let prev = nums[start];
+    let current = start;    // 当前位置
+    let prev = nums[start]; // 要移动的值
 
+    // 内层循环：处理一个环
     do {
+      // 计算目标位置
       const next = (current + k) % n;
+      // 交换：将 prev 放入 next，保存 next 原来的值
       [nums[next], prev] = [prev, nums[next]];
+      // 移动到下一个位置
       current = next;
-      count++;
-    } while (current !== start);
+      count++;  // 移动了一个元素
+    } while (current !== start);  // 回到起点时结束这个环
   }
 
   return nums;
@@ -1264,6 +1560,8 @@ function rotate(nums, k) {
     difficulty: "easy",
     category: "array-string",
     tags: ["数组", "动态规划"],
+    frontendRelevance: "high",
+    frontendNote: "贪心/DP入门",
     description: `
 给定一个数组 \`prices\` ，它的第 \`i\` 个元素 \`prices[i]\` 表示一支给定股票第 \`i\` 天的价格。
 
@@ -1351,18 +1649,40 @@ function solution(prices) {
     solutions: [
       {
         name: "一次遍历（推荐）",
-        code: `function solution(prices) {
+        code: `/**
+ * 买卖股票的最佳时机 - 一次遍历解法
+ *
+ * 核心思想：记录历史最低价，计算当前价格卖出的利润
+ *
+ * 贪心策略：
+ * - 我们希望在最低点买入，最高点卖出
+ * - 遍历时维护"到目前为止的最低价"
+ * - 对于每个价格，计算"如果今天卖出"能获得的利润
+ *
+ * 时间复杂度：O(n)，遍历一次
+ * 空间复杂度：O(1)，只用两个变量
+ */
+function solution(prices) {
+  // minPrice: 记录到目前为止的最低价格
+  // 初始化为无穷大，确保第一个价格会更新它
   let minPrice = Infinity;
+  // maxProfit: 记录能获得的最大利润
   let maxProfit = 0;
 
+  // 遍历每一天的价格
   for (const price of prices) {
     if (price < minPrice) {
+      // 发现更低的价格，更新最低价
+      // 注意：这里不更新 maxProfit，因为还没卖
       minPrice = price;
     } else if (price - minPrice > maxProfit) {
+      // 今天价格高于最低价，计算利润
+      // 如果利润更大，更新 maxProfit
       maxProfit = price - minPrice;
     }
   }
 
+  // 返回最大利润（如果一直下跌，maxProfit 保持为 0）
   return maxProfit;
 }`,
         explanation: `## 一次遍历
@@ -1380,18 +1700,43 @@ function solution(prices) {
       },
       {
         name: "动态规划",
-        code: `function solution(prices) {
+        code: `/**
+ * 买卖股票的最佳时机 - 动态规划解法
+ *
+ * 思路：使用状态机，定义"持有股票"和"不持有股票"两种状态
+ *
+ * 状态定义：
+ * - dp0：当前不持有股票时的最大利润
+ * - dp1：当前持有股票时的最大利润
+ *
+ * 状态转移：
+ * - dp0 = max(昨天就不持有, 今天卖出)
+ * - dp1 = max(昨天就持有, 今天买入)
+ *
+ * 注意：只能交易一次，买入时利润从 0 开始计算
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(1)，状态压缩后只用常数空间
+ */
+function solution(prices) {
   const n = prices.length;
-  // dp[i][0] = 第i天不持有股票的最大利润
-  // dp[i][1] = 第i天持有股票的最大利润
-  let dp0 = 0;           // 不持有股票
-  let dp1 = -prices[0];  // 持有股票
 
+  // 初始状态（第 0 天）：
+  // dp0 = 0：第一天结束时不持有股票，利润为 0
+  // dp1 = -prices[0]：第一天买入，利润为 -prices[0]
+  let dp0 = 0;
+  let dp1 = -prices[0];
+
+  // 从第 1 天开始遍历
   for (let i = 1; i < n; i++) {
+    // 今天不持有股票 = max(昨天就不持有, 昨天持有今天卖出)
     dp0 = Math.max(dp0, dp1 + prices[i]);
-    dp1 = Math.max(dp1, -prices[i]);  // 只能买卖一次，所以是 -prices[i]
+    // 今天持有股票 = max(昨天就持有, 今天买入)
+    // 因为只能交易一次，买入时利润从 0 开始，所以是 -prices[i]
+    dp1 = Math.max(dp1, -prices[i]);
   }
 
+  // 最终答案：最后一天不持有股票的最大利润
   return dp0;
 }`,
         explanation: `## 动态规划
@@ -1421,6 +1766,8 @@ function solution(prices) {
     difficulty: "medium",
     category: "array-string",
     tags: ["数组", "贪心", "动态规划"],
+    frontendRelevance: "high",
+    frontendNote: "贪心入门",
     description: `
 给你一个整数数组 \`prices\` ，其中 \`prices[i]\` 表示某支股票第 \`i\` 天的价格。
 
@@ -1510,13 +1857,34 @@ function solution(prices) {
     solutions: [
       {
         name: "贪心算法（推荐）",
-        code: `function solution(prices) {
-  let profit = 0;
+        code: `/**
+ * 买卖股票的最佳时机 II - 贪心解法
+ *
+ * 核心思想：只要今天比昨天贵，就在昨天买今天卖
+ *
+ * 贪心策略：
+ * - 可以多次交易，那就"吃掉"所有上涨的差价
+ * - 一段连续上涨的利润 = 每相邻两天差价之和
+ *
+ * 数学证明：
+ * 假设价格为 [1, 2, 3]
+ * - 第1天买第3天卖：利润 = 3 - 1 = 2
+ * - 拆分成多次：(2-1) + (3-2) = 1 + 1 = 2
+ * - 两种方式利润相同！
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(1)
+ */
+function solution(prices) {
+  let profit = 0;  // 累计利润
 
+  // 从第 1 天开始，比较与前一天的价格
   for (let i = 1; i < prices.length; i++) {
+    // 如果今天比昨天贵，就"吃掉"这个差价
     if (prices[i] > prices[i - 1]) {
       profit += prices[i] - prices[i - 1];
     }
+    // 如果今天比昨天便宜或相等，不操作
   }
 
   return profit;
@@ -1536,19 +1904,40 @@ function solution(prices) {
       },
       {
         name: "动态规划",
-        code: `function solution(prices) {
+        code: `/**
+ * 买卖股票的最佳时机 II - 动态规划解法
+ *
+ * 思路：与"买卖股票I"类似，但可以多次交易
+ *
+ * 状态定义：
+ * - dp0：当前不持有股票时的最大利润
+ * - dp1：当前持有股票时的最大利润
+ *
+ * 与"买卖股票I"的区别：
+ * - 买入时是 dp0 - prices[i]（可以用之前的利润继续买）
+ * - 而不是 -prices[i]（从0开始）
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(1)
+ */
+function solution(prices) {
   const n = prices.length;
-  let dp0 = 0;           // 不持有股票
-  let dp1 = -prices[0];  // 持有股票
+  // 初始状态
+  let dp0 = 0;           // 不持有股票，利润为 0
+  let dp1 = -prices[0];  // 持有股票，利润为 -prices[0]
 
   for (let i = 1; i < n; i++) {
+    // 注意：需要同时更新，所以用临时变量
+    // 今天不持有 = max(昨天就不持有, 昨天持有今天卖出)
     const newDp0 = Math.max(dp0, dp1 + prices[i]);
+    // 今天持有 = max(昨天就持有, 今天买入)
+    // 关键区别：买入时用 dp0 - prices[i]，允许用之前的利润
     const newDp1 = Math.max(dp1, dp0 - prices[i]);
     dp0 = newDp0;
     dp1 = newDp1;
   }
 
-  return dp0;
+  return dp0;  // 最后不持有股票时利润最大
 }`,
         explanation: `## 动态规划
 
@@ -1577,6 +1966,8 @@ function solution(prices) {
     difficulty: "medium",
     category: "array-string",
     tags: ["数组", "贪心", "动态规划"],
+    frontendRelevance: "medium",
+    frontendNote: "贪心判断",
     description: `
 给你一个非负整数数组 \`nums\` ，你最初位于数组的 **第一个下标** 。数组中的每个元素代表你在该位置可以跳跃的最大长度。
 
@@ -1658,12 +2049,33 @@ function solution(nums) {
     solutions: [
       {
         name: "贪心算法（推荐）",
-        code: `function solution(nums) {
+        code: `/**
+ * 跳跃游戏 - 贪心解法
+ *
+ * 核心思想：维护能到达的最远位置 maxReach
+ *
+ * 贪心策略：
+ * - 遍历数组，不断更新能到达的最远位置
+ * - 如果某个位置超过了 maxReach，说明无法到达，返回 false
+ * - 如果 maxReach >= n-1，说明能到达终点，返回 true
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(1)
+ */
+function solution(nums) {
+  // maxReach: 从起点出发，能到达的最远位置
   let maxReach = 0;
 
   for (let i = 0; i < nums.length; i++) {
+    // 关键检查：当前位置是否可达
+    // 如果 i > maxReach，说明无法到达位置 i
     if (i > maxReach) return false;
+
+    // 更新最远可达位置
+    // i + nums[i] 表示从位置 i 能跳到的最远位置
     maxReach = Math.max(maxReach, i + nums[i]);
+
+    // 优化：如果已经能到达终点，提前返回
     if (maxReach >= nums.length - 1) return true;
   }
 
@@ -1684,16 +2096,35 @@ function solution(nums) {
       },
       {
         name: "动态规划",
-        code: `function solution(nums) {
+        code: `/**
+ * 跳跃游戏 - 动态规划解法
+ *
+ * 思路：dp[i] 表示能否到达位置 i
+ *
+ * 状态转移：
+ * - 对于位置 i，检查之前的每个位置 j
+ * - 如果 dp[j] = true 且 j + nums[j] >= i
+ * - 则 dp[i] = true
+ *
+ * 缺点：时间复杂度 O(n²)，效率较低
+ *
+ * 时间复杂度：O(n²)
+ * 空间复杂度：O(n)
+ */
+function solution(nums) {
   const n = nums.length;
+  // dp[i] 表示能否到达位置 i
   const dp = new Array(n).fill(false);
+  // 起点一定能到达
   dp[0] = true;
 
+  // 对于每个位置 i，检查是否能从之前的某个位置跳过来
   for (let i = 1; i < n; i++) {
     for (let j = 0; j < i; j++) {
+      // 条件：位置 j 可达，且从 j 能跳到 i
       if (dp[j] && j + nums[j] >= i) {
         dp[i] = true;
-        break;
+        break;  // 找到一个就够了，提前退出
       }
     }
   }
@@ -1726,6 +2157,8 @@ dp[i] 表示能否到达位置 i。
     difficulty: "medium",
     category: "array-string",
     tags: ["数组", "贪心", "动态规划"],
+    frontendRelevance: "medium",
+    frontendNote: "贪心跳跃",
     description: `
 给定一个长度为 \`n\` 的 **0 索引**整数数组 \`nums\`。初始位置为 \`nums[0]\`。
 
@@ -1819,15 +2252,40 @@ function solution(nums) {
     solutions: [
       {
         name: "贪心算法（推荐）",
-        code: `function solution(nums) {
-  let jumps = 0;
-  let currentEnd = 0;
-  let farthest = 0;
+        code: `/**
+ * 跳跃游戏 II - 贪心解法
+ *
+ * 核心思想：在当前能跳到的范围内，找下一步能跳得最远的位置
+ *
+ * 三个关键变量：
+ * - jumps: 已经跳跃的次数
+ * - currentEnd: 当前这一跳能到达的边界
+ * - farthest: 在 [0, i] 范围内能跳到的最远位置
+ *
+ * 算法流程：
+ * 1. 遍历数组（注意：不需要遍历最后一个元素）
+ * 2. 更新 farthest
+ * 3. 当到达 currentEnd 时，必须跳一次，更新边界
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(1)
+ */
+function solution(nums) {
+  let jumps = 0;        // 跳跃次数
+  let currentEnd = 0;   // 当前跳跃能到达的边界
+  let farthest = 0;     // 能跳到的最远位置
 
+  // 注意：遍历到 nums.length - 2 即可
+  // 因为我们不需要从最后一个位置再跳
   for (let i = 0; i < nums.length - 1; i++) {
+    // 更新从位置 i 能跳到的最远位置
     farthest = Math.max(farthest, i + nums[i]);
+
+    // 到达当前跳跃的边界
     if (i === currentEnd) {
+      // 必须再跳一次
       jumps++;
+      // 下一跳的边界是之前记录的最远位置
       currentEnd = farthest;
     }
   }
@@ -1851,21 +2309,46 @@ function solution(nums) {
       },
       {
         name: "BFS 思想",
-        code: `function solution(nums) {
+        code: `/**
+ * 跳跃游戏 II - BFS 思想解法
+ *
+ * 核心思想：把问题看作图的 BFS，每次跳跃相当于扩展一层
+ *
+ * 类比 BFS：
+ * - 每个位置是一个节点
+ * - 从位置 i 可以跳到的位置是它的邻居节点
+ * - 求从起点到终点的最短路径长度
+ *
+ * 实现：
+ * - [start, end] 是当前"层"的范围
+ * - 计算下一层能到达的最远位置
+ * - 每扩展一层，jumps++
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(1)
+ */
+function solution(nums) {
+  // 特殊情况：已经在终点
   if (nums.length <= 1) return 0;
 
-  let jumps = 0;
-  let start = 0;
-  let end = 0;
+  let jumps = 0;   // 跳跃次数（BFS 层数）
+  let start = 0;   // 当前层的起始位置
+  let end = 0;     // 当前层的结束位置
 
+  // 当还没到达终点时
   while (end < nums.length - 1) {
-    let maxEnd = end;
+    let maxEnd = end;  // 下一层能到达的最远位置
+
+    // 遍历当前层的所有位置
     for (let i = start; i <= end; i++) {
+      // 更新下一层的最远位置
       maxEnd = Math.max(maxEnd, i + nums[i]);
     }
-    start = end + 1;
-    end = maxEnd;
-    jumps++;
+
+    // 更新到下一层
+    start = end + 1;  // 下一层从 end+1 开始
+    end = maxEnd;     // 下一层到 maxEnd 结束
+    jumps++;          // 层数 +1
   }
 
   return jumps;
@@ -1895,6 +2378,8 @@ function solution(nums) {
     difficulty: "medium",
     category: "array-string",
     tags: ["数组", "计数排序", "排序"],
+    frontendRelevance: "low",
+    frontendNote: "H指数，学术场景",
     description: `
 给你一个整数数组 \`citations\` ，其中 \`citations[i]\` 表示研究者的第 \`i\` 篇论文被引用的次数。计算并返回该研究者的 **h 指数**。
 
@@ -1979,14 +2464,34 @@ function solution(citations) {
     solutions: [
       {
         name: "排序法（推荐）",
-        code: `function solution(citations) {
+        code: `/**
+ * H 指数 - 排序解法
+ *
+ * 核心思想：降序排序后，找最大的 h 使得前 h 篇论文引用数都 >= h
+ *
+ * H 指数定义：
+ * - h 指数是指至少有 h 篇论文被引用次数 >= h
+ * - 我们要找满足条件的最大 h
+ *
+ * 排序后的性质：
+ * - 第 i+1 篇论文的引用数是 citations[i]
+ * - 如果 citations[i] >= i+1，说明至少有 i+1 篇论文引用数 >= i+1
+ *
+ * 时间复杂度：O(n log n)，排序开销
+ * 空间复杂度：O(log n)，排序栈空间
+ */
+function solution(citations) {
+  // 降序排序：引用数高的排在前面
   citations.sort((a, b) => b - a);
 
   let h = 0;
   for (let i = 0; i < citations.length; i++) {
+    // 第 i+1 篇论文（排序后）的引用数
+    // 如果 >= i+1，说明至少有 i+1 篇论文引用数 >= i+1
     if (citations[i] >= i + 1) {
-      h = i + 1;
+      h = i + 1;  // 更新 h 指数
     } else {
+      // 引用数 < 篇数，后面的只会更小，提前退出
       break;
     }
   }
@@ -2007,19 +2512,41 @@ function solution(citations) {
       },
       {
         name: "计数排序",
-        code: `function solution(citations) {
+        code: `/**
+ * H 指数 - 计数排序解法
+ *
+ * 核心思想：h 指数最大为 n，可以用计数排序优化
+ *
+ * 关键洞察：
+ * - h 指数最大不超过论文总数 n
+ * - 所以引用数 > n 的论文，按 n 算即可
+ * - 这样可以用大小为 n+1 的数组计数
+ *
+ * 算法流程：
+ * 1. 统计每个引用数的论文数量
+ * 2. 从大到小累计，找第一个 total >= i 的 i
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(n)
+ */
+function solution(citations) {
   const n = citations.length;
+  // count[i] = 引用数为 i 的论文数量
+  // count[n] = 引用数 >= n 的论文数量
   const count = new Array(n + 1).fill(0);
 
-  // 计数，超过 n 的都算作 n
+  // 统计每个引用数的论文数量
   for (const c of citations) {
+    // 超过 n 的都算作 n（因为 h 指数最大就是 n）
     count[Math.min(c, n)]++;
   }
 
   // 从大到小累计
+  // total 表示引用数 >= i 的论文数量
   let total = 0;
   for (let i = n; i >= 0; i--) {
     total += count[i];
+    // 如果引用数 >= i 的论文数量 >= i，则 h = i
     if (total >= i) {
       return i;
     }
@@ -2051,6 +2578,8 @@ h 指数最大为 n，所以可以用计数排序。
     difficulty: "medium",
     category: "array-string",
     tags: ["数组", "前缀和"],
+    frontendRelevance: "high",
+    frontendNote: "前缀积技巧，常考",
     description: `
 给你一个整数数组 \`nums\`，返回 数组 \`answer\` ，其中 \`answer[i]\` 等于 \`nums\` 中除 \`nums[i]\` 之外其余各元素的乘积 。
 
@@ -2142,22 +2671,44 @@ function solution(nums) {
     solutions: [
       {
         name: "左右乘积（推荐）",
-        code: `function solution(nums) {
+        code: `/**
+ * 除自身以外数组的乘积 - 左右乘积解法
+ *
+ * 核心思想：answer[i] = 左侧所有数的乘积 × 右侧所有数的乘积
+ *
+ * 为什么不能用总乘积除以 nums[i]？
+ * - 题目要求不能使用除法
+ * - 如果有 0 存在，除法也会出问题
+ *
+ * 算法流程：
+ * 1. 第一次从左到右遍历，计算每个位置左侧的乘积
+ * 2. 第二次从右到左遍历，计算右侧乘积并与左侧相乘
+ *
+ * 空间优化：
+ * - 使用 answer 数组存储左侧乘积
+ * - 用一个变量 right 存储右侧乘积（动态计算）
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(1)，输出数组不算额外空间
+ */
+function solution(nums) {
   const n = nums.length;
   const answer = new Array(n).fill(1);
 
-  // 计算左侧乘积
+  // 第一遍：从左到右，计算每个位置左侧的乘积
+  // left 表示 nums[0..i-1] 的乘积
   let left = 1;
   for (let i = 0; i < n; i++) {
-    answer[i] = left;
-    left *= nums[i];
+    answer[i] = left;       // answer[i] 先存储左侧乘积
+    left *= nums[i];        // 更新 left，加入 nums[i]
   }
 
-  // 计算右侧乘积并合并
+  // 第二遍：从右到左，计算右侧乘积并与左侧相乘
+  // right 表示 nums[i+1..n-1] 的乘积
   let right = 1;
   for (let i = n - 1; i >= 0; i--) {
-    answer[i] *= right;
-    right *= nums[i];
+    answer[i] *= right;     // 左侧乘积 × 右侧乘积
+    right *= nums[i];       // 更新 right，加入 nums[i]
   }
 
   return answer;
@@ -2178,17 +2729,38 @@ answer[i] = 左侧乘积 × 右侧乘积
       },
       {
         name: "两个数组",
-        code: `function solution(nums) {
+        code: `/**
+ * 除自身以外数组的乘积 - 两个数组解法
+ *
+ * 思路：分别用两个数组存储左侧乘积和右侧乘积
+ *
+ * 定义：
+ * - left[i] = nums[0] * nums[1] * ... * nums[i-1]
+ * - right[i] = nums[i+1] * nums[i+2] * ... * nums[n-1]
+ * - answer[i] = left[i] * right[i]
+ *
+ * 边界情况：
+ * - left[0] = 1（左边没有元素）
+ * - right[n-1] = 1（右边没有元素）
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(n)，需要额外的两个数组
+ */
+function solution(nums) {
   const n = nums.length;
+  // left[i] 存储 nums[0..i-1] 的乘积
   const left = new Array(n).fill(1);
+  // right[i] 存储 nums[i+1..n-1] 的乘积
   const right = new Array(n).fill(1);
 
-  // 计算左侧乘积
+  // 计算左侧乘积数组
+  // left[0] = 1（左边没有元素）
   for (let i = 1; i < n; i++) {
     left[i] = left[i - 1] * nums[i - 1];
   }
 
-  // 计算右侧乘积
+  // 计算右侧乘积数组
+  // right[n-1] = 1（右边没有元素）
   for (let i = n - 2; i >= 0; i--) {
     right[i] = right[i + 1] * nums[i + 1];
   }
@@ -2224,6 +2796,8 @@ answer[i] = 左侧乘积 × 右侧乘积
     difficulty: "medium",
     category: "array-string",
     tags: ["数组", "贪心"],
+    frontendRelevance: "medium",
+    frontendNote: "贪心环形",
     description: `
 在一条环路上有 \`n\` 个加油站，其中第 \`i\` 个加油站有汽油 \`gas[i]\` 升。
 
@@ -2329,21 +2903,48 @@ function solution(gas, cost) {
     solutions: [
       {
         name: "贪心算法（推荐）",
-        code: `function solution(gas, cost) {
-  let totalGas = 0;
-  let currentGas = 0;
-  let startIndex = 0;
+        code: `/**
+ * 加油站 - 贪心解法
+ *
+ * 核心思想：
+ * 1. 如果总油量 < 总消耗，一定无解
+ * 2. 如果从 i 无法到达 j，则 i 到 j-1 之间的任何点都无法到达 j
+ *
+ * 贪心策略：
+ * - 维护当前油量 currentGas
+ * - 当 currentGas < 0 时，说明从 startIndex 出发无法到达当前位置
+ * - 此时将起点设为下一个位置，重置 currentGas
+ *
+ * 为什么正确？
+ * - 如果从 A 到不了 B，说明 A 到 B 之间某处油量变负
+ * - 从 A 到任何中间点 C 的油量 >= 0
+ * - 从 C 出发少了 A 到 C 这段的"贡献"，更不可能到 B
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(1)
+ */
+function solution(gas, cost) {
+  let totalGas = 0;    // 总油量差，用于判断是否有解
+  let currentGas = 0;  // 当前累积油量
+  let startIndex = 0;  // 候选起点
 
   for (let i = 0; i < gas.length; i++) {
-    totalGas += gas[i] - cost[i];
-    currentGas += gas[i] - cost[i];
+    // 计算在站点 i 的净油量（获得 - 消耗）
+    const netGas = gas[i] - cost[i];
+    totalGas += netGas;    // 累加总油量差
+    currentGas += netGas;  // 累加当前油量
 
+    // 如果当前油量变负，说明从 startIndex 出发到不了 i+1
     if (currentGas < 0) {
+      // 尝试从 i+1 出发
       startIndex = i + 1;
+      // 重置当前油量
       currentGas = 0;
     }
   }
 
+  // 如果总油量 >= 总消耗，则一定有解，答案就是 startIndex
+  // 否则无解，返回 -1
   return totalGas >= 0 ? startIndex : -1;
 }`,
         explanation: `## 贪心算法
@@ -2370,6 +2971,8 @@ function solution(gas, cost) {
     difficulty: "hard",
     category: "array-string",
     tags: ["数组", "贪心"],
+    frontendRelevance: "low",
+    frontendNote: "分发糖果Hard",
     description: `
 \`n\` 个孩子站成一排。给你一个整数数组 \`ratings\` 表示每个孩子的评分。
 
@@ -2465,34 +3068,70 @@ function solution(ratings) {
     solutions: [
       {
         name: "两次遍历（推荐）",
-        code: `function solution(ratings) {
+        code: `/**
+ * 分发糖果 - 两次遍历贪心解法
+ *
+ * 核心思想：
+ * 规则是"相邻孩子中评分高的要获得更多糖果"
+ * 我们把这个规则拆分成两个独立的子规则：
+ * 1. 如果右边孩子评分比左边高，右边要比左边多
+ * 2. 如果左边孩子评分比右边高，左边要比右边多
+ *
+ * 为什么要两次遍历？
+ * - 一次遍历无法同时满足左右两个方向的约束
+ * - 第一次遍历：从左到右，只考虑"右边比左边高"
+ * - 第二次遍历：从右到左，只考虑"左边比右边高"
+ * - 取两次结果的较大值，就能同时满足两个约束
+ *
+ * 时间复杂度：O(n)，两次遍历
+ * 空间复杂度：O(n)，存储每个孩子的糖果数
+ */
+function solution(ratings) {
   const n = ratings.length;
+
+  // 初始化：每个孩子至少分配 1 颗糖果
   const candies = new Array(n).fill(1);
 
-  // 从左到右：右边比左边高，右边+1
+  // 第一次遍历：从左到右
+  // 处理"右边评分比左边高"的情况
+  // 如果右边孩子评分更高，右边糖果 = 左边糖果 + 1
   for (let i = 1; i < n; i++) {
     if (ratings[i] > ratings[i - 1]) {
       candies[i] = candies[i - 1] + 1;
     }
+    // 如果右边评分 <= 左边，保持初始值 1 即可
+    // 因为我们还没处理"左边比右边高"的情况
   }
 
-  // 从右到左：左边比右边高，取较大值
+  // 第二次遍历：从右到左
+  // 处理"左边评分比右边高"的情况
+  // 注意：要取 max，因为可能第一次遍历已经给了更多糖果
   for (let i = n - 2; i >= 0; i--) {
     if (ratings[i] > ratings[i + 1]) {
+      // 取较大值：既满足"比左边邻居"的要求，也满足"比右边邻居"的要求
       candies[i] = Math.max(candies[i], candies[i + 1] + 1);
     }
   }
 
+  // 返回糖果总数
   return candies.reduce((a, b) => a + b, 0);
 }`,
-        explanation: `## 两次遍历
+        explanation: `## 两次遍历贪心
 
-### 思路
-分别从两个方向遍历，确保满足左右邻居的约束。
+### 核心思路
+将"相邻孩子评分高的要多分糖果"拆分成两个独立约束：
+1. 从左看：右边评分高 → 右边糖果要多
+2. 从右看：左边评分高 → 左边糖果要多
 
-### 实现
-1. 从左到右：如果 ratings[i] > ratings[i-1]，则 candies[i] = candies[i-1] + 1
-2. 从右到左：如果 ratings[i] > ratings[i+1]，则 candies[i] = max(candies[i], candies[i+1] + 1)`,
+### 为什么取 max？
+第二次遍历时，某个孩子可能已经因为"比左邻居评分高"而分到了很多糖果，如果只是简单赋值会破坏之前的结果。所以取 max 同时满足两个方向的约束。
+
+### 示例演示
+ratings = [1, 0, 2]
+初始：candies = [1, 1, 1]
+从左到右：candies = [1, 1, 2]（因为 2 > 0）
+从右到左：candies = [2, 1, 2]（因为 1 > 0，且 max(1, 1+1)=2）
+总计：5`,
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
@@ -2509,6 +3148,8 @@ function solution(ratings) {
     difficulty: "hard",
     category: "array-string",
     tags: ["数组", "双指针", "动态规划", "栈", "单调栈"],
+    frontendRelevance: "medium",
+    frontendNote: "双指针/单调栈经典，面试常考",
     description: `
 给定 \`n\` 个非负整数表示每个宽度为 \`1\` 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
 `,
@@ -2602,26 +3243,57 @@ function solution(height) {
     solutions: [
       {
         name: "双指针（推荐）",
-        code: `function solution(height) {
+        code: `/**
+ * 接雨水 - 双指针解法
+ *
+ * 核心思想：
+ * 每个位置能接的水量 = min(左边最高柱子, 右边最高柱子) - 当前高度
+ * 水会被较矮的边界所限制（木桶原理）
+ *
+ * 为什么用双指针？
+ * - 从两端向中间移动，可以在 O(1) 空间内确定每个位置的边界
+ * - 关键洞察：如果 height[left] < height[right]
+ *   说明左指针这一侧是"短板"，无论右边有多高，水位由 leftMax 决定
+ *
+ * 时间复杂度：O(n)，每个位置只访问一次
+ * 空间复杂度：O(1)，只用常数变量
+ */
+function solution(height) {
+  // 双指针：从两端向中间移动
   let left = 0, right = height.length - 1;
+
+  // 记录左右两边遇到的最大高度
   let leftMax = 0, rightMax = 0;
+
+  // 累计雨水量
   let water = 0;
 
   while (left < right) {
+    // 哪边较矮，就处理哪边
+    // 因为较矮的一边决定了水位上限
     if (height[left] < height[right]) {
+      // 处理左边
       if (height[left] >= leftMax) {
+        // 当前柱子比之前的都高，更新 leftMax
+        // 这个位置不能接水（它本身就是边界）
         leftMax = height[left];
       } else {
+        // 当前柱子比 leftMax 矮，可以接水
+        // 水量 = leftMax - height[left]
+        // 为什么不考虑 rightMax？因为 height[left] < height[right]
+        // 说明右边至少有一个更高的柱子，所以 rightMax >= height[right] > height[left]
+        // 水位由 leftMax 决定
         water += leftMax - height[left];
       }
-      left++;
+      left++;  // 左指针右移
     } else {
+      // 处理右边，逻辑同理
       if (height[right] >= rightMax) {
         rightMax = height[right];
       } else {
         water += rightMax - height[right];
       }
-      right--;
+      right--;  // 右指针左移
     }
   }
 
@@ -2629,37 +3301,72 @@ function solution(height) {
 }`,
         explanation: `## 双指针法
 
-### 思路
-每个位置能接的水 = min(左边最高柱子, 右边最高柱子) - 当前高度
+### 核心思路
+每个位置能接的水 = min(左边最高, 右边最高) - 当前高度
 
-使用双指针从两端向中间移动：
-- 维护 leftMax 和 rightMax 记录两边的最大高度
-- 较矮的一边决定当前能接多少水
-- 每次移动较矮的指针
+### 为什么移动较矮的指针？
+如果 height[left] < height[right]：
+- 右边至少有一个柱子（height[right]）比左边高
+- 所以左边的水位由 leftMax 决定，与右边无关
+- 可以安全地计算左边的水量
 
-### 关键点
-- 如果 height[left] < height[right]，说明左边较矮
-- 此时 leftMax 一定 <= rightMax（否则我们会处理右边）
-- 所以当前位置能接的水 = leftMax - height[left]`,
+### 图解
+\`\`\`
+     |
+|    |   rightMax >= height[right] > height[left]
+|____|   所以左边的水位由 leftMax 决定
+left right
+\`\`\``,
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
       },
       {
         name: "单调栈",
-        code: `function solution(height) {
+        code: `/**
+ * 接雨水 - 单调栈解法
+ *
+ * 核心思想：
+ * 用单调递减栈，横向计算水量（一层一层地算）
+ * 当遇到比栈顶高的柱子时，说明形成了"凹槽"
+ *
+ * 单调栈的作用：
+ * - 栈中存储柱子的索引，高度从栈底到栈顶单调递减
+ * - 当遇到更高的柱子时，可以确定凹槽的左右边界
+ *
+ * 时间复杂度：O(n)，每个元素最多入栈出栈各一次
+ * 空间复杂度：O(n)，栈的大小
+ */
+function solution(height) {
+  // 单调递减栈，存储柱子索引
   const stack = [];
   let water = 0;
 
   for (let i = 0; i < height.length; i++) {
+    // 当前柱子比栈顶高，可能形成凹槽
     while (stack.length > 0 && height[i] > height[stack[stack.length - 1]]) {
+      // 弹出栈顶，作为凹槽的底部
       const top = stack.pop();
+
+      // 如果栈空了，说明左边没有边界，无法接水
       if (stack.length === 0) break;
 
+      // 左边界：新的栈顶
+      // 右边界：当前柱子 i
+      // 底部：刚弹出的 top
       const left = stack[stack.length - 1];
+
+      // 凹槽宽度 = 右边界索引 - 左边界索引 - 1
       const width = i - left - 1;
+
+      // 凹槽高度 = min(左边界高度, 右边界高度) - 底部高度
+      // 这是"这一层"能接的水的高度
       const h = Math.min(height[left], height[i]) - height[top];
+
+      // 累加水量
       water += width * h;
     }
+
+    // 当前柱子入栈
     stack.push(i);
   }
 
@@ -2667,44 +3374,68 @@ function solution(height) {
 }`,
         explanation: `## 单调栈
 
-### 思路
-维护一个单调递减栈，存储柱子索引：
-1. 遍历柱子，如果当前柱子比栈顶高，说明可能形成凹槽
-2. 弹出栈顶作为凹槽底部
-3. 新栈顶是凹槽左边界，当前柱子是右边界
-4. 计算这一层能接的水
+### 核心思路
+维护单调递减栈，横向计算水量（一层一层地算）
 
-### 实现
-- 横向计算水量（一层一层算）
-- 水量 = 宽度 × 高度
-- 宽度 = 右边界索引 - 左边界索引 - 1
-- 高度 = min(左边界高度, 右边界高度) - 底部高度`,
+### 凹槽形成条件
+当前柱子高度 > 栈顶柱子高度，形成凹槽：
+- 栈顶是凹槽底部
+- 新栈顶是左边界
+- 当前柱子是右边界
+
+### 图解
+\`\`\`
+height = [0,1,0,2,1,0,1,3,2,1,2,1]
+
+遇到柱子3时，栈中有 [7(高度3), 6(高度1), 5(高度0)]
+弹出5：左边界6，右边界7，底部5
+计算这一层的水量...
+\`\`\``,
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
       {
         name: "动态规划",
-        code: `function solution(height) {
+        code: `/**
+ * 接雨水 - 动态规划解法
+ *
+ * 核心思想：
+ * 每个位置能接的水 = min(左边最高, 右边最高) - 当前高度
+ * 先预计算每个位置的 leftMax 和 rightMax
+ *
+ * 为什么预计算？
+ * - 如果每次都去找左右最高，时间复杂度是 O(n²)
+ * - 预计算后，查询是 O(1)
+ *
+ * 时间复杂度：O(n)，三次遍历
+ * 空间复杂度：O(n)，两个数组
+ */
+function solution(height) {
   const n = height.length;
   if (n === 0) return 0;
 
-  // 预计算每个位置左边的最大高度
+  // 第一次遍历：计算每个位置左边（含自己）的最大高度
+  // leftMax[i] = max(height[0], height[1], ..., height[i])
   const leftMax = new Array(n);
   leftMax[0] = height[0];
   for (let i = 1; i < n; i++) {
     leftMax[i] = Math.max(leftMax[i - 1], height[i]);
   }
 
-  // 预计算每个位置右边的最大高度
+  // 第二次遍历：计算每个位置右边（含自己）的最大高度
+  // rightMax[i] = max(height[i], height[i+1], ..., height[n-1])
   const rightMax = new Array(n);
   rightMax[n - 1] = height[n - 1];
   for (let i = n - 2; i >= 0; i--) {
     rightMax[i] = Math.max(rightMax[i + 1], height[i]);
   }
 
-  // 计算每个位置能接的水
+  // 第三次遍历：计算每个位置能接的水
   let water = 0;
   for (let i = 0; i < n; i++) {
+    // 水位 = min(左边最高, 右边最高)
+    // 能接的水 = 水位 - 当前高度
+    // 如果当前就是最高点，结果是 0
     water += Math.min(leftMax[i], rightMax[i]) - height[i];
   }
 
@@ -2712,18 +3443,20 @@ function solution(height) {
 }`,
         explanation: `## 动态规划
 
-### 思路
+### 核心思路
 每个位置能接的水 = min(左边最高, 右边最高) - 当前高度
 
-先预计算两个数组：
+### 预计算数组
 - leftMax[i]：位置 i 及其左边的最大高度
 - rightMax[i]：位置 i 及其右边的最大高度
 
-然后遍历一遍计算总水量。
-
-### 复杂度
-- 需要两次遍历预计算，一次遍历计算答案
-- 使用了两个额外数组`,
+### 示例
+\`\`\`
+height   = [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]
+leftMax  = [0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3]
+rightMax = [3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 1]
+water[i] = min(leftMax[i], rightMax[i]) - height[i]
+\`\`\``,
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
@@ -2739,6 +3472,8 @@ function solution(height) {
     difficulty: "easy",
     category: "array-string",
     tags: ["哈希表", "数学", "字符串"],
+    frontendRelevance: "high",
+    frontendNote: "字符串解析",
     description: `
 罗马数字包含以下七种字符: \`I\`， \`V\`， \`X\`， \`L\`，\`C\`，\`D\` 和 \`M\`。
 
@@ -2864,17 +3599,39 @@ function solution(s) {
     solutions: [
       {
         name: "模拟法（推荐）",
-        code: `function solution(s) {
+        code: `/**
+ * 罗马数字转整数 - 模拟法
+ *
+ * 核心思想：
+ * 罗马数字规则：
+ * - 通常情况：小数在大数右边，表示相加（如 VI = 5+1 = 6）
+ * - 特殊情况：小数在大数左边，表示相减（如 IV = 5-1 = 4）
+ *
+ * 算法：遍历字符串，比较当前字符和下一个字符的值
+ * - 如果当前值 < 下一个值：减去当前值（特殊情况）
+ * - 否则：加上当前值（正常情况）
+ *
+ * 时间复杂度：O(n)，遍历一次字符串
+ * 空间复杂度：O(1)，哈希表是固定大小
+ */
+function solution(s) {
+  // 罗马字符到数值的映射
   const map = {
     'I': 1, 'V': 5, 'X': 10, 'L': 50,
     'C': 100, 'D': 500, 'M': 1000
   };
 
   let result = 0;
+
   for (let i = 0; i < s.length; i++) {
+    // 比较当前字符和下一个字符的值
+    // 如果当前值 < 下一个值，说明是特殊情况（如 IV, IX）
     if (i < s.length - 1 && map[s[i]] < map[s[i + 1]]) {
+      // 特殊情况：减去当前值
+      // 例如 IV：先减去 I(1)，然后加上 V(5)，结果是 4
       result -= map[s[i]];
     } else {
+      // 正常情况：加上当前值
       result += map[s[i]];
     }
   }
@@ -2883,40 +3640,72 @@ function solution(s) {
 }`,
         explanation: `## 模拟法
 
-### 思路
-罗马数字的规则：
-- 通常情况下，小的数字在大的数字右边，值相加
-- 特殊情况下，小的数字在大的数字左边，需要减去
+### 核心规则
+罗马数字中，小的数字在大的数字左边时需要减去
 
-### 实现
-遍历字符串，比较当前字符和下一个字符：
-- 如果当前值 < 下一个值，说明是特殊情况，减去当前值
-- 否则加上当前值
+### 六种特殊情况
+- IV = 4 (5-1)
+- IX = 9 (10-1)
+- XL = 40 (50-10)
+- XC = 90 (100-10)
+- CD = 400 (500-100)
+- CM = 900 (1000-100)
 
-### 例子
-MCMXCIV = 1000 + (-100 + 1000) + (-10 + 100) + (-1 + 5) = 1994`,
+### 算法执行过程
+MCMXCIV = 1994
+- M: 1000 > 后面的 C(100)，+1000
+- C: 100 < 后面的 M(1000)，-100
+- M: 1000 > 后面的 X(10)，+1000
+- X: 10 < 后面的 C(100)，-10
+- C: 100 > 后面的 I(1)，+100
+- I: 1 < 后面的 V(5)，-1
+- V: 最后一个，+5
+- 结果：1000-100+1000-10+100-1+5 = 1994`,
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
       },
       {
         name: "替换特殊组合",
-        code: `function solution(s) {
+        code: `/**
+ * 罗马数字转整数 - 替换特殊组合法
+ *
+ * 核心思想：
+ * 先把6种特殊组合替换成临时字符，然后简单累加
+ * 这样就不需要处理"减法"的逻辑了
+ *
+ * 替换规则：
+ * - IV -> a (4)
+ * - IX -> b (9)
+ * - XL -> c (40)
+ * - XC -> d (90)
+ * - CD -> e (400)
+ * - CM -> f (900)
+ *
+ * 时间复杂度：O(n)，replace 和遍历都是 O(n)
+ * 空间复杂度：O(n)，需要存储替换后的字符串
+ */
+function solution(s) {
+  // 基本罗马字符映射
   const map = {
     'I': 1, 'V': 5, 'X': 10, 'L': 50,
     'C': 100, 'D': 500, 'M': 1000
   };
 
-  // 将特殊组合替换为单独的符号
+  // 将特殊组合替换为临时字符
+  // 这样所有字符都可以直接相加，不需要考虑减法
   s = s.replace('IV', 'a').replace('IX', 'b')
        .replace('XL', 'c').replace('XC', 'd')
        .replace('CD', 'e').replace('CM', 'f');
 
+  // 特殊组合的值
   const specialMap = {
     'a': 4, 'b': 9, 'c': 40, 'd': 90, 'e': 400, 'f': 900
   };
 
+  // 直接累加所有字符的值
   let result = 0;
   for (const char of s) {
+    // 先查基本映射，找不到再查特殊映射
     result += map[char] || specialMap[char];
   }
 
@@ -2936,7 +3725,14 @@ MCMXCIV = 1000 + (-100 + 1000) + (-10 + 100) + (-1 + 5) = 1994`,
 然后简单地累加所有字符对应的值。
 
 ### 优点
-代码逻辑更简单，不需要处理特殊情况的判断。`,
+代码逻辑更简单直观，不需要处理特殊情况的判断。
+
+### 示例
+MCMXCIV
+-> 替换 CM 为 f: MfXCIV
+-> 替换 XC 为 d: MfdIV
+-> 替换 IV 为 a: Mfda
+-> 累加：1000 + 900 + 90 + 4 = 1994`,
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
       },
@@ -2952,6 +3748,8 @@ MCMXCIV = 1000 + (-100 + 1000) + (-10 + 100) + (-1 + 5) = 1994`,
     difficulty: "medium",
     category: "array-string",
     tags: ["哈希表", "数学", "字符串"],
+    frontendRelevance: "medium",
+    frontendNote: "整数转字符串",
     description: `
 七个不同的符号代表罗马数字，其值如下：
 
@@ -3067,69 +3865,116 @@ function solution(num) {
     solutions: [
       {
         name: "贪心法（推荐）",
-        code: `function solution(num) {
+        code: `/**
+ * 整数转罗马数字 - 贪心法
+ *
+ * 核心思想：
+ * 贪心策略：每次尽可能使用最大的数值
+ * 因为罗马数字是"加法系统"，大数放前面
+ *
+ * 关键技巧：
+ * 把13个数值（7个基本 + 6个特殊组合）从大到小排列
+ * 特殊组合（如 CM=900）也当作独立的"符号"处理
+ *
+ * 时间复杂度：O(1)，最多循环13次，每次内层最多重复3-4次
+ * 空间复杂度：O(1)，固定大小的数组
+ */
+function solution(num) {
+  // 13个数值从大到小排列
+  // 包括6个特殊组合：CM(900), CD(400), XC(90), XL(40), IX(9), IV(4)
   const values = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
   const symbols = ["M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"];
 
   let result = "";
+
+  // 从最大的值开始，贪心选择
   for (let i = 0; i < values.length; i++) {
+    // 尽可能多地使用当前值
+    // 例如 3000 需要用 3 个 M
     while (num >= values[i]) {
-      result += symbols[i];
-      num -= values[i];
+      result += symbols[i];  // 添加对应符号
+      num -= values[i];      // 减去该值
     }
+    // num < values[i] 时，尝试下一个较小的值
   }
 
   return result;
 }`,
         explanation: `## 贪心法
 
-### 思路
+### 核心思路
 将13个数值（7个基本符号 + 6个特殊组合）从大到小排列，每次尽可能多地使用大的数值。
 
-### 实现步骤
-1. 从最大的值（1000）开始
-2. 如果 num >= 当前值，就添加对应符号，减去该值
-3. 重复直到 num < 当前值
-4. 移动到下一个较小的值
+### 为什么特殊组合也要列出？
+比如数字 900，如果不把 CM 作为整体，就无法正确转换。把 CM=900 当作一个独立的"符号"，就可以统一处理。
 
-### 例子
+### 执行过程示例
 1994:
 - 1994 >= 1000 → M, 剩余 994
 - 994 >= 900 → CM, 剩余 94
 - 94 >= 90 → XC, 剩余 4
 - 4 >= 4 → IV, 剩余 0
-结果：MCMXCIV`,
+- 结果：MCMXCIV`,
         timeComplexity: "O(1)",
         spaceComplexity: "O(1)",
       },
       {
         name: "硬编码法",
-        code: `function solution(num) {
+        code: `/**
+ * 整数转罗马数字 - 硬编码法
+ *
+ * 核心思想：
+ * 数字范围是 1-3999，直接预处理每一位的所有可能
+ * - 千位只有 0-3，对应 "", "M", "MM", "MMM"
+ * - 百/十/个位各有 0-9 共 10 种情况
+ *
+ * 优点：
+ * - 代码简洁，没有循环逻辑
+ * - 直接查表，速度极快
+ *
+ * 时间复杂度：O(1)，只做4次查表和字符串拼接
+ * 空间复杂度：O(1)，固定大小的数组
+ */
+function solution(num) {
+  // 千位: 0-3 (因为最大是 3999)
   const thousands = ["", "M", "MM", "MMM"];
+
+  // 百位: 0-9
+  // 注意 4(CD) 和 9(CM) 是特殊组合
   const hundreds = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"];
+
+  // 十位: 0-9
+  // 注意 4(XL) 和 9(XC) 是特殊组合
   const tens = ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"];
+
+  // 个位: 0-9
+  // 注意 4(IV) 和 9(IX) 是特殊组合
   const ones = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
 
-  return thousands[Math.floor(num / 1000)] +
-         hundreds[Math.floor((num % 1000) / 100)] +
-         tens[Math.floor((num % 100) / 10)] +
-         ones[num % 10];
+  // 提取各位数字，查表拼接
+  return thousands[Math.floor(num / 1000)] +          // 千位
+         hundreds[Math.floor((num % 1000) / 100)] +   // 百位
+         tens[Math.floor((num % 100) / 10)] +         // 十位
+         ones[num % 10];                              // 个位
 }`,
         explanation: `## 硬编码法
 
 ### 思路
-由于 num 的范围是 1-3999，可以预先列出每一位（千位、百位、十位、个位）所有可能的罗马数字表示。
+由于 num 的范围是 1-3999，可以预先列出每一位所有可能的罗马数字表示。
 
-### 实现
-- thousands: 千位 0-3 对应的罗马数字
-- hundreds: 百位 0-9 对应的罗马数字
-- tens: 十位 0-9 对应的罗马数字
-- ones: 个位 0-9 对应的罗马数字
+### 查表方式
+- 千位：num / 1000 取整
+- 百位：(num % 1000) / 100 取整
+- 十位：(num % 100) / 10 取整
+- 个位：num % 10
 
-直接查表拼接即可。
-
-### 优点
-代码简洁，查表速度快，无需循环。`,
+### 示例
+1994:
+- 千位 1 → "M"
+- 百位 9 → "CM"
+- 十位 9 → "XC"
+- 个位 4 → "IV"
+- 拼接：MCMXCIV`,
         timeComplexity: "O(1)",
         spaceComplexity: "O(1)",
       },
@@ -3145,6 +3990,8 @@ function solution(num) {
     difficulty: "easy",
     category: "array-string",
     tags: ["字符串"],
+    frontendRelevance: "high",
+    frontendNote: "字符串基础操作",
     description: `
 给你一个字符串 \`s\`，由若干单词组成，单词前后用一些空格字符隔开。返回字符串中 **最后一个** 单词的长度。
 
@@ -3239,19 +4086,38 @@ function solution(s) {
     solutions: [
       {
         name: "反向遍历（推荐）",
-        code: `function solution(s) {
+        code: `/**
+ * 最后一个单词的长度 - 反向遍历
+ *
+ * 核心思想：
+ * 从字符串末尾开始向前遍历，分两步：
+ * 1. 跳过末尾所有空格
+ * 2. 计数字母直到遇到空格或到达开头
+ *
+ * 为什么从后往前？
+ * - 我们只关心最后一个单词
+ * - 从后往前可以避免遍历整个字符串
+ * - 平均情况下比正向遍历更快
+ *
+ * 时间复杂度：O(n)，最坏情况遍历整个字符串
+ * 空间复杂度：O(1)，只用几个变量
+ */
+function solution(s) {
+  // 指针指向字符串末尾
   let end = s.length - 1;
 
-  // 跳过末尾空格
+  // 第一步：跳过末尾的所有空格
+  // 例如 "hello world  " -> 找到 'd' 的位置
   while (end >= 0 && s[end] === ' ') {
     end--;
   }
 
-  // 计算单词长度
+  // 第二步：计算单词长度
+  // 从当前位置向前数，直到遇到空格或到达开头
   let length = 0;
   while (end >= 0 && s[end] !== ' ') {
-    length++;
-    end--;
+    length++;  // 每遇到一个字母，长度加一
+    end--;     // 继续向前
   }
 
   return length;
@@ -3263,19 +4129,49 @@ function solution(s) {
 1. 跳过末尾的所有空格
 2. 计数字母直到遇到空格或到达开头
 
+### 执行过程
+"   fly me   to   the moon  "
+- end=27: ' ', 跳过空格...
+- end=22: 'n', 开始计数
+- end=21: 'o', length=1
+- end=20: 'o', length=2
+- end=19: 'm', length=3
+- end=18: ' ', 遇到空格，停止
+- 返回 4
+
 ### 优点
-- 只需要遍历最后一个单词的长度 + 末尾空格数
-- 空间复杂度 O(1)`,
+只需要遍历最后一个单词的长度 + 末尾空格数`,
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
       },
       {
         name: "内置函数",
-        code: `function solution(s) {
+        code: `/**
+ * 最后一个单词的长度 - 内置函数法
+ *
+ * 核心思想：
+ * 利用 JavaScript 内置函数来简化代码
+ * 1. trim() 去除首尾空格
+ * 2. split(' ') 按空格分割成单词数组
+ * 3. filter 过滤掉空字符串（多个空格会产生空串）
+ * 4. 取最后一个单词的长度
+ *
+ * 优点：代码简洁易懂
+ * 缺点：空间复杂度高，需要创建数组
+ *
+ * 时间复杂度：O(n)，需要遍历整个字符串
+ * 空间复杂度：O(n)，需要存储分割后的数组
+ */
+function solution(s) {
+  // trim() 去除首尾空格
+  // split(' ') 按空格分割
+  // filter(w => w.length > 0) 过滤空字符串
   const words = s.trim().split(' ').filter(w => w.length > 0);
+
+  // 取最后一个单词的长度
   return words[words.length - 1].length;
 }`,
-        explanation: `## 内置函数
+        explanation: `## 内置函数法
 
 ### 思路
 利用 JavaScript 内置函数：
@@ -3284,8 +4180,13 @@ function solution(s) {
 3. filter 过滤空字符串
 4. 取最后一个单词的长度
 
+### 为什么要 filter？
+多个连续空格会产生空字符串：
+"fly  me".split(' ') = ["fly", "", "me"]
+需要过滤掉空字符串
+
 ### 缺点
-空间复杂度较高，需要创建数组存储所有单词。`,
+空间复杂度较高，需要创建数组存储所有单词`,
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
@@ -3301,6 +4202,8 @@ function solution(s) {
     difficulty: "easy",
     category: "array-string",
     tags: ["字典树", "字符串"],
+    frontendRelevance: "high",
+    frontendNote: "字符串比较基础",
     description: `
 编写一个函数来查找字符串数组中的最长公共前缀。
 
@@ -3385,83 +4288,150 @@ function solution(strs) {
     solutions: [
       {
         name: "横向扫描（推荐）",
-        code: `function solution(strs) {
+        code: `/**
+ * 最长公共前缀 - 横向扫描
+ *
+ * 核心思想：
+ * 以第一个字符串作为初始前缀，与后续字符串逐一比较
+ * 每次比较后缩短前缀，直到与当前字符串匹配
+ *
+ * 为什么叫"横向"？
+ * - 一次完整地处理一个字符串，然后处理下一个
+ * - 相对于"纵向"逐个字符位置比较
+ *
+ * 时间复杂度：O(mn)，m是字符串数量，n是平均长度
+ * 空间复杂度：O(1)，只用一个 prefix 变量
+ */
+function solution(strs) {
+  // 空数组直接返回空字符串
   if (strs.length === 0) return "";
 
+  // 以第一个字符串作为初始前缀
   let prefix = strs[0];
 
+  // 遍历剩余字符串
   for (let i = 1; i < strs.length; i++) {
+    // 如果当前字符串不以 prefix 开头
+    // indexOf(prefix) !== 0 表示 prefix 不在开头位置
     while (strs[i].indexOf(prefix) !== 0) {
+      // 缩短前缀：去掉最后一个字符
       prefix = prefix.slice(0, -1);
+
+      // 前缀变空了，说明没有公共前缀
       if (prefix === "") return "";
     }
+    // prefix 现在是 strs[0..i] 的公共前缀
   }
 
   return prefix;
 }`,
         explanation: `## 横向扫描
 
-### 思路
-以第一个字符串为初始前缀，与后续字符串逐一比较。
+### 核心思路
+以第一个字符串为初始前缀，与后续字符串逐一比较并缩短
 
-### 实现步骤
-1. 取第一个字符串作为 prefix
-2. 遍历其他字符串
-3. 如果当前字符串不以 prefix 开头，就缩短 prefix
-4. 重复直到匹配或 prefix 变空
-
-### 例子
+### 执行过程
 ["flower", "flow", "flight"]
 - prefix = "flower"
-- 与 "flow" 比较：不匹配，缩短为 "flowe"、"flow"，匹配
-- 与 "flight" 比较：不匹配，缩短为 "flo"、"fl"，匹配
+- 与 "flow" 比较：indexOf("flower") = -1，不匹配
+  - 缩短为 "flowe"，indexOf = -1
+  - 缩短为 "flow"，indexOf = 0，匹配！
+- 与 "flight" 比较：indexOf("flow") = -1
+  - 缩短为 "flo"，indexOf = -1
+  - 缩短为 "fl"，indexOf = 0，匹配！
 - 返回 "fl"`,
         timeComplexity: "O(mn)",
         spaceComplexity: "O(1)",
       },
       {
         name: "纵向扫描",
-        code: `function solution(strs) {
+        code: `/**
+ * 最长公共前缀 - 纵向扫描
+ *
+ * 核心思想：
+ * 逐个字符位置比较所有字符串
+ * 每次检查所有字符串的第 i 个字符是否相同
+ *
+ * 为什么叫"纵向"？
+ * - 先比较所有字符串的第 0 个字符
+ * - 再比较所有字符串的第 1 个字符
+ * - 像一列一列地检查
+ *
+ * 时间复杂度：O(mn)
+ * 空间复杂度：O(1)
+ */
+function solution(strs) {
   if (strs.length === 0) return "";
 
+  // 以第一个字符串为基准，逐个字符遍历
   for (let i = 0; i < strs[0].length; i++) {
+    // 第一个字符串的第 i 个字符
     const char = strs[0][i];
+
+    // 检查其他所有字符串的第 i 个字符
     for (let j = 1; j < strs.length; j++) {
+      // 两种情况需要返回：
+      // 1. 第 j 个字符串长度不够（i >= strs[j].length）
+      // 2. 第 i 个字符不相同
       if (i >= strs[j].length || strs[j][i] !== char) {
+        // 返回第一个字符串的前 i 个字符
         return strs[0].slice(0, i);
       }
     }
   }
 
+  // 第一个字符串就是公共前缀
   return strs[0];
 }`,
         explanation: `## 纵向扫描
 
-### 思路
-逐个字符比较所有字符串的同一位置。
+### 核心思路
+逐个字符位置比较所有字符串的同一位置
 
-### 实现步骤
-1. 以第一个字符串为基准，逐个字符遍历
-2. 对于每个字符位置，检查所有字符串该位置是否相同
-3. 如果发现不同或超出某字符串长度，返回当前前缀
+### 执行过程
+["flower", "flow", "flight"]
+- i=0: 'f' == 'f' == 'f' ✓
+- i=1: 'l' == 'l' == 'l' ✓
+- i=2: 'o' == 'o' != 'i' ✗
+- 返回 "fl"
 
 ### 优点
-不需要缩短前缀，发现不匹配立即返回。`,
+发现不匹配立即返回，不需要缩短前缀的过程`,
         timeComplexity: "O(mn)",
         spaceComplexity: "O(1)",
       },
       {
         name: "分治法",
-        code: `function solution(strs) {
+        code: `/**
+ * 最长公共前缀 - 分治法
+ *
+ * 核心思想：
+ * 将字符串数组分成两半，分别求最长公共前缀，然后合并
+ * LCP(S1...Sn) = LCP(LCP(S1...Sk), LCP(Sk+1...Sn))
+ *
+ * 分治思路：
+ * - 问题可以分解为更小的子问题
+ * - 两个字符串的公共前缀是两半公共前缀的公共前缀
+ *
+ * 时间复杂度：O(mn)
+ * 空间复杂度：O(m log m)，递归栈深度
+ */
+function solution(strs) {
   if (strs.length === 0) return "";
 
+  // 递归函数：求 strs[left...right] 的最长公共前缀
   function commonPrefix(left, right) {
+    // 基本情况：只有一个字符串
     if (left === right) return strs[left];
 
+    // 分治：分成两半
     const mid = Math.floor((left + right) / 2);
+
+    // 递归求解左半部分和右半部分
     const lcpLeft = commonPrefix(left, mid);
     const lcpRight = commonPrefix(mid + 1, right);
 
+    // 合并：求两个前缀的公共前缀
     const minLen = Math.min(lcpLeft.length, lcpRight.length);
     for (let i = 0; i < minLen; i++) {
       if (lcpLeft[i] !== lcpRight[i]) {
@@ -3475,17 +4445,19 @@ function solution(strs) {
 }`,
         explanation: `## 分治法
 
-### 思路
-将字符串数组分成两半，递归求解，然后合并结果。
+### 核心思路
+将问题分解为更小的子问题：
+LCP(S1...Sn) = LCP(LCP(S1...Sk), LCP(Sk+1...Sn))
 
-### 实现步骤
-1. 将数组分成左右两部分
-2. 递归计算左半部分的最长公共前缀
-3. 递归计算右半部分的最长公共前缀
-4. 合并：找两个前缀的公共前缀
+### 执行过程
+["flower", "flow", "flight"]
+- 分成 ["flower", "flow"] 和 ["flight"]
+- 左半部分：LCP("flower", "flow") = "flow"
+- 右半部分：LCP("flight") = "flight"
+- 合并：LCP("flow", "flight") = "fl"
 
-### 复杂度
-时间复杂度 O(mn)，空间复杂度 O(m log m) 递归栈。`,
+### 适用场景
+当字符串数量很大时，分治法可以利用并行计算`,
         timeComplexity: "O(mn)",
         spaceComplexity: "O(m log m)",
       },
@@ -3501,6 +4473,8 @@ function solution(strs) {
     difficulty: "medium",
     category: "array-string",
     tags: ["双指针", "字符串"],
+    frontendRelevance: "high",
+    frontendNote: "字符串处理常考",
     description: `
 给你一个字符串 \`s\` ，请你反转字符串中 **单词** 的顺序。
 
@@ -3586,46 +4560,92 @@ function solution(s) {
     solutions: [
       {
         name: "内置函数（推荐）",
-        code: `function solution(s) {
+        code: `/**
+ * 反转字符串中的单词 - 内置函数法
+ *
+ * 核心思想：
+ * 利用 JavaScript 内置函数，链式调用完成任务
+ *
+ * 处理步骤：
+ * 1. trim() - 去除首尾空格
+ * 2. split(/\\s+/) - 按一个或多个空格分割（正则表达式）
+ * 3. reverse() - 反转数组
+ * 4. join(' ') - 用单个空格连接
+ *
+ * 正则解释：\\s+ 表示一个或多个空白字符
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(n)，需要存储分割后的数组
+ */
+function solution(s) {
+  // trim() 去除首尾空格
+  // split(/\\s+/) 按一个或多个空格分割，自动处理多余空格
+  // reverse() 反转数组
+  // join(' ') 用单个空格连接
   return s.trim().split(/\\s+/).reverse().join(' ');
 }`,
-        explanation: `## 内置函数
+        explanation: `## 内置函数法
 
-### 思路
-利用 JavaScript 强大的内置函数，一行代码搞定：
-1. trim() - 去除首尾空格
-2. split(/\\s+/) - 按一个或多个空格分割成数组
-3. reverse() - 反转数组
-4. join(' ') - 用单个空格连接
+### 处理流程
+"  hello   world  "
+1. trim() → "hello   world"
+2. split(/\\s+/) → ["hello", "world"]（自动处理多个空格）
+3. reverse() → ["world", "hello"]
+4. join(' ') → "world hello"
+
+### 正则表达式
+\\s+ 匹配一个或多个空白字符，包括空格、制表符等
+这样可以自动处理单词间的多个空格
 
 ### 优点
-代码简洁，易于理解。`,
+代码简洁，一行搞定`,
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
       {
         name: "双指针倒序",
-        code: `function solution(s) {
+        code: `/**
+ * 反转字符串中的单词 - 双指针倒序
+ *
+ * 核心思想：
+ * 从字符串末尾开始，用双指针提取每个单词
+ * 这样就自然地实现了单词顺序的反转
+ *
+ * 为什么从后往前？
+ * - 从后往前提取单词，添加到结果中，就是反转顺序
+ * - 避免了先分割再反转的步骤
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(n)，结果字符串的空间
+ */
+function solution(s) {
   let result = "";
   let right = s.length - 1;
 
   while (right >= 0) {
-    // 跳过末尾空格
+    // 第一步：跳过末尾空格
+    // 找到当前单词的最后一个字符
     while (right >= 0 && s[right] === ' ') {
       right--;
     }
+
+    // 字符串处理完毕
     if (right < 0) break;
 
-    // 找到单词的开始位置
+    // 第二步：找到单词的开始位置
+    // left 指向单词前的空格（或 -1）
     let left = right;
     while (left >= 0 && s[left] !== ' ') {
       left--;
     }
 
-    // 提取单词
+    // 第三步：提取单词 s[left+1, right+1]
     const word = s.slice(left + 1, right + 1);
+
+    // 添加到结果（如果不是第一个单词，前面加空格）
     result += result.length > 0 ? ' ' + word : word;
 
+    // 移动指针，准备提取下一个单词
     right = left;
   }
 
@@ -3633,51 +4653,72 @@ function solution(s) {
 }`,
         explanation: `## 双指针倒序
 
-### 思路
-从字符串末尾开始，用双指针提取每个单词。
+### 核心思路
+从字符串末尾开始，用双指针定位每个单词的边界
 
-### 实现步骤
-1. right 指针跳过末尾空格
-2. left 指针找到单词开始位置
-3. 提取单词 s[left+1, right+1]
-4. 添加到结果中
-5. right 移动到 left，继续
-
-### 优点
-不依赖内置函数，逻辑清晰。`,
+### 执行过程
+"  hello world  "
+- right=13: 跳过空格，right=11('d')
+- left=11→6('d'→' ')
+- 提取 "world"，result="world"
+- right=5: 跳过空格，right=4('o')
+- left=4→1('o'→' ')
+- 提取 "hello"，result="world hello"
+- right=0: 跳过空格，right=-1
+- 返回 "world hello"`,
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
       {
         name: "原地算法思路（JavaScript 模拟）",
-        code: `function solution(s) {
+        code: `/**
+ * 反转字符串中的单词 - 原地算法思路
+ *
+ * 核心思想（适用于可变字符串语言如 C/C++）：
+ * 1. 去除多余空格（原地压缩）
+ * 2. 反转整个字符串
+ * 3. 再反转每个单词
+ *
+ * 为什么这样做有效？
+ * - "the sky" 整体反转变成 "yks eht"
+ * - 再把每个单词反转："sky the"
+ * - 两次反转，单词内部顺序恢复，但单词之间顺序颠倒了
+ *
+ * JavaScript 字符串不可变，这里用数组模拟
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(n)（如果是 C++ 可以达到 O(1)）
+ */
+function solution(s) {
   // 转为数组模拟可变字符串
   let arr = s.trim().split('');
 
-  // 去除多余空格
+  // 第一步：去除多余空格（保留单词间的单个空格）
   let i = 0;
   for (let j = 0; j < arr.length; j++) {
+    // 保留非空格字符，或者不是连续空格
     if (arr[j] !== ' ' || (i > 0 && arr[i - 1] !== ' ')) {
       arr[i++] = arr[j];
     }
   }
   arr = arr.slice(0, i);
 
-  // 反转整个数组
+  // 第二步：反转整个数组
   arr.reverse();
 
-  // 反转每个单词
+  // 第三步：反转每个单词
   let start = 0;
   for (let end = 0; end <= arr.length; end++) {
+    // 遇到空格或末尾，说明一个单词结束
     if (end === arr.length || arr[end] === ' ') {
-      // 反转 [start, end-1]
+      // 反转 [start, end-1] 区间
       let left = start, right = end - 1;
       while (left < right) {
         [arr[left], arr[right]] = [arr[right], arr[left]];
         left++;
         right--;
       }
-      start = end + 1;
+      start = end + 1;  // 下一个单词的起始位置
     }
   }
 
@@ -3685,22 +4726,681 @@ function solution(s) {
 }`,
         explanation: `## 原地算法思路
 
-### 思路（适用于可变字符串语言如 C/C++）
+### 核心思路（经典面试算法）
 1. 去除多余空格
 2. 反转整个字符串
 3. 再反转每个单词
 
-### 例子
+### 执行示例
 "the sky is blue"
-- 去除空格后："the sky is blue"
-- 整体反转："eulb si yks eht"
-- 单词反转："blue is sky the"
+1. 去除空格后（本例无多余）："the sky is blue"
+2. 整体反转："eulb si yks eht"
+3. 逐词反转：
+   - "eulb" → "blue"
+   - "si" → "is"
+   - "yks" → "sky"
+   - "eht" → "the"
+4. 最终结果："blue is sky the"
 
-### 注意
-JavaScript 字符串不可变，这里用数组模拟。
-真正的原地算法空间复杂度为 O(1)。`,
+### 适用场景
+C/C++ 等可变字符串语言，可以实现真正的 O(1) 空间`,
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
+      },
+    ],
+  },
+
+  // 20. 缺失的第一个正数 (41)
+  {
+    id: "first-missing-positive",
+    leetcodeId: 41,
+    title: "缺失的第一个正数",
+    titleEn: "First Missing Positive",
+    difficulty: "hard",
+    category: "array-string",
+    tags: ["数组", "哈希表"],
+    frontendRelevance: "low",
+    frontendNote: "缺失正数Hard",
+    description: `给你一个未排序的整数数组 \`nums\`，请你找出其中没有出现的最小的正整数。
+
+请你实现时间复杂度为 \`O(n)\` 并且只使用常数级别额外空间的解决方案。`,
+    examples: `**示例 1：**
+\`\`\`
+输入：nums = [1,2,0]
+输出：3
+\`\`\`
+
+**示例 2：**
+\`\`\`
+输入：nums = [3,4,-1,1]
+输出：2
+\`\`\`
+
+**示例 3：**
+\`\`\`
+输入：nums = [7,8,9,11,12]
+输出：1
+\`\`\``,
+    constraints: `- \`1 <= nums.length <= 5 * 10^5\`
+- \`-2^31 <= nums[i] <= 2^31 - 1\``,
+    initialCode: `function firstMissingPositive(nums) {
+  // 在此处编写你的代码
+
+}`,
+    solution: `function firstMissingPositive(nums) {
+  const n = nums.length;
+
+  // 将每个数放到正确的位置：nums[i] 应该等于 i + 1
+  for (let i = 0; i < n; i++) {
+    while (nums[i] > 0 && nums[i] <= n && nums[nums[i] - 1] !== nums[i]) {
+      // 交换 nums[i] 和 nums[nums[i] - 1]
+      const temp = nums[nums[i] - 1];
+      nums[nums[i] - 1] = nums[i];
+      nums[i] = temp;
+    }
+  }
+
+  // 找第一个不在正确位置的数
+  for (let i = 0; i < n; i++) {
+    if (nums[i] !== i + 1) {
+      return i + 1;
+    }
+  }
+
+  return n + 1;
+}`,
+    testCases: [
+      { id: "1", name: "示例1", input: [[1,2,0]], expected: 3 },
+      { id: "2", name: "示例2", input: [[3,4,-1,1]], expected: 2 },
+      { id: "3", name: "示例3", input: [[7,8,9,11,12]], expected: 1 },
+      { id: "4", name: "连续", input: [[1,2,3]], expected: 4 },
+    ],
+    hints: [
+      "答案一定在 [1, n+1] 范围内",
+      "把数组当作哈希表使用",
+      "将每个正整数 x 放到索引 x-1 的位置",
+    ],
+    explanation: `## 解题思路
+
+### 原地哈希
+
+核心思想：将数组本身作为哈希表，把每个正整数 x 放到索引 x-1 的位置。
+
+### 步骤
+1. 遍历数组，对于每个 nums[i]：
+   - 如果 1 <= nums[i] <= n 且 nums[nums[i]-1] != nums[i]
+   - 则交换 nums[i] 和 nums[nums[i]-1]
+2. 再次遍历，找到第一个 nums[i] != i+1 的位置
+
+### 为什么答案在 [1, n+1]？
+长度为 n 的数组，最多包含 n 个不同的正整数。所以缺失的最小正整数最大是 n+1。
+
+### 复杂度分析
+- 时间复杂度：O(n)，虽然有嵌套循环，但每个数最多被交换一次
+- 空间复杂度：O(1)`,
+    timeComplexity: "O(n)",
+    spaceComplexity: "O(1)",
+    relatedProblems: ["missing-number", "find-all-numbers-disappeared-in-array"],
+    solutions: [
+      {
+        name: "原地哈希（推荐）",
+        code: `/**
+ * 缺失的第一个正数 - 原地哈希
+ *
+ * 核心思想：
+ * 把数组本身当作哈希表使用！
+ * 理想情况：nums[i] 应该存储值 i+1
+ * 即：nums[0]=1, nums[1]=2, nums[2]=3, ...
+ *
+ * 关键洞察：
+ * - 长度为 n 的数组，答案一定在 [1, n+1] 范围内
+ * - 如果 1,2,3,...,n 都存在，答案是 n+1
+ * - 否则答案是第一个缺失的正整数
+ *
+ * 时间复杂度：O(n)，虽然有 while，但每个数最多被交换一次
+ * 空间复杂度：O(1)，原地修改数组
+ */
+function firstMissingPositive(nums) {
+  const n = nums.length;
+
+  // 第一遍：将每个数放到正确的位置
+  // nums[i] 应该等于 i + 1
+  for (let i = 0; i < n; i++) {
+    // 当 nums[i] 在有效范围 [1, n] 内，且不在正确位置时，交换
+    // nums[i] - 1 是 nums[i] 应该在的索引位置
+    while (nums[i] > 0 && nums[i] <= n && nums[nums[i] - 1] !== nums[i]) {
+      // 将 nums[i] 放到它应该在的位置 nums[nums[i] - 1]
+      // 例如：nums[i]=3，则放到 nums[2] 的位置
+      const temp = nums[nums[i] - 1];
+      nums[nums[i] - 1] = nums[i];
+      nums[i] = temp;
+      // 继续检查交换过来的数是否需要再交换
+    }
+  }
+
+  // 第二遍：找第一个不在正确位置的数
+  // 如果 nums[i] != i+1，说明 i+1 这个数缺失
+  for (let i = 0; i < n; i++) {
+    if (nums[i] !== i + 1) {
+      return i + 1;
+    }
+  }
+
+  // 所有位置都正确，答案是 n+1
+  return n + 1;
+}`,
+        explanation: `## 原地哈希
+
+### 核心思想
+数组本身就是一个哈希表：索引 i 应该存储值 i+1
+
+### 示例
+[3, 4, -1, 1]
+- i=0: nums[0]=3 应该放到 nums[2]，交换→[-1, 4, 3, 1]
+- i=0: nums[0]=-1 不在范围内，跳过
+- i=1: nums[1]=4 应该放到 nums[3]，交换→[-1, 1, 3, 4]
+- i=1: nums[1]=1 应该放到 nums[0]，交换→[1, -1, 3, 4]
+- i=1: nums[1]=-1 不在范围内，跳过
+- 最终：[1, -1, 3, 4]
+- 检查：nums[1]=-1 ≠ 2，返回 2
+
+### 为什么时间是 O(n)？
+每个数最多被交换一次到正确位置，总交换次数不超过 n`,
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(1)",
+      },
+      {
+        name: "标记法",
+        code: `/**
+ * 缺失的第一个正数 - 标记法
+ *
+ * 核心思想：
+ * 用数值的正负号来标记某个数是否存在
+ * 如果 nums[i] 是负数，说明 i+1 存在于原数组中
+ *
+ * 步骤：
+ * 1. 将无效数（<=0 或 >n）改为 n+1（确保都是正数）
+ * 2. 对于每个有效数 x，将 nums[x-1] 变为负数（标记 x 存在）
+ * 3. 第一个正数的索引 i，说明 i+1 缺失
+ *
+ * 时间复杂度：O(n)，三次遍历
+ * 空间复杂度：O(1)
+ */
+function firstMissingPositive(nums) {
+  const n = nums.length;
+
+  // 第一步：将所有非正数和大于 n 的数改为 n+1
+  // 这样数组中只有 [1, n+1] 范围的正数
+  // n+1 不会影响结果，因为我们只关心 [1, n]
+  for (let i = 0; i < n; i++) {
+    if (nums[i] <= 0 || nums[i] > n) {
+      nums[i] = n + 1;
+    }
+  }
+
+  // 第二步：用负号标记存在的数
+  // 如果 x 存在，将 nums[x-1] 变为负数
+  for (let i = 0; i < n; i++) {
+    // 取绝对值，因为可能已经被标记为负数
+    const num = Math.abs(nums[i]);
+    if (num <= n) {
+      // 将 nums[num-1] 变为负数
+      // Math.abs 确保不会重复变负
+      nums[num - 1] = -Math.abs(nums[num - 1]);
+    }
+  }
+
+  // 第三步：找第一个正数的位置
+  // 如果 nums[i] > 0，说明 i+1 没有出现过
+  for (let i = 0; i < n; i++) {
+    if (nums[i] > 0) {
+      return i + 1;
+    }
+  }
+
+  // 所有 [1, n] 都存在
+  return n + 1;
+}`,
+        explanation: `## 标记法
+
+### 核心思想
+用数值的符号来标记某个数是否存在
+
+### 示例
+[3, 4, -1, 1]
+第一步：[-1 改为 5]→[3, 4, 5, 1]
+第二步：
+- nums[0]=3 → nums[2] 变负 → [3, 4, -5, 1]
+- nums[1]=4 → nums[3] 变负 → [3, 4, -5, -1]
+- nums[2]=5 > 4，跳过
+- nums[3]=1 → nums[0] 变负 → [-3, 4, -5, -1]
+第三步：nums[1]=4 > 0，返回 2
+
+### 与原地哈希对比
+- 不需要交换操作
+- 需要三次遍历`,
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(1)",
+      },
+    ],
+  },
+
+  // 21. 划分字母区间 (763)
+  {
+    id: "partition-labels",
+    leetcodeId: 763,
+    title: "划分字母区间",
+    titleEn: "Partition Labels",
+    difficulty: "medium",
+    category: "array-string",
+    tags: ["贪心", "哈希表", "双指针", "字符串"],
+    frontendRelevance: "medium",
+    frontendNote: "贪心划分",
+    description: `给你一个字符串 \`s\`。我们要把这个字符串划分为尽可能多的片段，同一字母最多出现在一个片段中。
+
+注意，划分结果需要满足：将所有划分结果按顺序连接，得到的字符串仍然是 \`s\`。
+
+返回一个表示每个字符串片段的长度的列表。`,
+    examples: `**示例 1：**
+\`\`\`
+输入：s = "ababcbacadefegdehijhklij"
+输出：[9,7,8]
+解释：
+划分结果为 "ababcbaca"、"defegde"、"hijhklij"。
+每个字母最多出现在一个片段中。
+像 "ababcbacadefegde", "hijhklij" 这样的划分是错误的，因为划分的片段数较少。
+\`\`\`
+
+**示例 2：**
+\`\`\`
+输入：s = "eccbbbbdec"
+输出：[10]
+\`\`\``,
+    constraints: `- \`1 <= s.length <= 500\`
+- \`s\` 仅由小写英文字母组成`,
+    initialCode: `function partitionLabels(s) {
+  // 在此处编写你的代码
+
+}`,
+    solution: `function partitionLabels(s) {
+  // 记录每个字母最后出现的位置
+  const lastIndex = {};
+  for (let i = 0; i < s.length; i++) {
+    lastIndex[s[i]] = i;
+  }
+
+  const result = [];
+  let start = 0;
+  let end = 0;
+
+  for (let i = 0; i < s.length; i++) {
+    // 更新当前片段的结束位置
+    end = Math.max(end, lastIndex[s[i]]);
+
+    // 如果当前位置等于结束位置，说明可以划分
+    if (i === end) {
+      result.push(end - start + 1);
+      start = end + 1;
+    }
+  }
+
+  return result;
+}`,
+    testCases: [
+      { id: "1", name: "示例1", input: ["ababcbacadefegdehijhklij"], expected: [9,7,8] },
+      { id: "2", name: "示例2", input: ["eccbbbbdec"], expected: [10] },
+      { id: "3", name: "每字母一段", input: ["abc"], expected: [1,1,1] },
+    ],
+    hints: [
+      "首先记录每个字母最后出现的位置",
+      "遍历字符串，维护当前片段的结束位置",
+      "当遍历到结束位置时，完成一个片段的划分",
+    ],
+    explanation: `## 解题思路
+
+### 贪心算法
+
+1. **预处理**：记录每个字母最后出现的位置
+2. **遍历**：维护当前片段的结束位置 end
+3. **划分**：当 i === end 时，完成一个片段
+
+### 核心思想
+对于当前片段中的每个字母，片段必须延伸到该字母最后出现的位置。
+
+### 复杂度分析
+- 时间复杂度：O(n)
+- 空间复杂度：O(1)，只有 26 个字母`,
+    timeComplexity: "O(n)",
+    spaceComplexity: "O(1)",
+    relatedProblems: ["merge-intervals"],
+    solutions: [
+      {
+        name: "贪心（推荐）",
+        code: `/**
+ * 划分字母区间 - 贪心算法
+ *
+ * 核心思想：
+ * 每个字母只能出现在一个片段中，所以片段必须包含该字母的所有出现位置
+ * 因此，片段的右边界至少要延伸到当前所有字母的最后出现位置
+ *
+ * 算法步骤：
+ * 1. 预处理：记录每个字母最后出现的位置
+ * 2. 遍历字符串，不断更新当前片段的右边界
+ * 3. 当遍历位置 = 右边界时，完成一个片段的划分
+ *
+ * 时间复杂度：O(n)，两次遍历
+ * 空间复杂度：O(1)，最多26个字母
+ */
+function partitionLabels(s) {
+  // 第一步：记录每个字母最后出现的位置
+  // 例如：字符 'a' 最后出现在索引 8
+  const lastIndex = {};
+  for (let i = 0; i < s.length; i++) {
+    lastIndex[s[i]] = i;
+  }
+
+  const result = [];  // 存储每个片段的长度
+  let start = 0;      // 当前片段的起始位置
+  let end = 0;        // 当前片段的结束位置（右边界）
+
+  // 第二步：遍历字符串
+  for (let i = 0; i < s.length; i++) {
+    // 更新当前片段的右边界
+    // 必须包含当前字母的所有出现，所以至少要到 lastIndex[s[i]]
+    end = Math.max(end, lastIndex[s[i]]);
+
+    // 如果当前位置等于右边界，说明可以划分
+    // 因为当前片段内的所有字母都已经处理完了
+    if (i === end) {
+      result.push(end - start + 1);  // 记录片段长度
+      start = end + 1;               // 开始新的片段
+    }
+  }
+
+  return result;
+}`,
+        explanation: `## 贪心算法
+
+### 核心思路
+片段的右边界必须包含当前所有字母的最后出现位置
+
+### 执行示例
+s = "ababcbacadefegdehijhklij"
+- lastIndex: {a:8, b:5, c:7, d:14, e:15, f:11, g:13, h:19, i:22, j:23, k:20, l:21}
+- i=0('a'): end=max(0,8)=8
+- i=1('b'): end=max(8,5)=8
+- ...
+- i=8('a'): i=end=8，划分！长度 9
+- i=9('d'): end=14
+- ...
+- i=15('e'): i=end=15，划分！长度 7
+- ...
+
+### 为什么这样正确？
+当 i=end 时，说明 [start, end] 内所有字母的最后位置都不超过 end，可以安全划分`,
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(1)",
+      },
+      {
+        name: "区间合并思路",
+        code: `/**
+ * 划分字母区间 - 区间合并思路
+ *
+ * 核心思想：
+ * 将每个字母看作一个区间 [首次出现位置, 最后出现位置]
+ * 问题转化为：合并所有重叠的区间
+ *
+ * 算法步骤：
+ * 1. 计算每个字母的区间 [start, end]
+ * 2. 按起始位置排序
+ * 3. 合并重叠区间
+ * 4. 合并后的每个区间就是一个片段
+ *
+ * 时间复杂度：O(n + k log k)，k 是不同字母数（最多26）
+ * 空间复杂度：O(k)
+ */
+function partitionLabels(s) {
+  // 第一步：记录每个字母的起始和结束位置
+  const intervals = {};
+  for (let i = 0; i < s.length; i++) {
+    if (!intervals[s[i]]) {
+      // 第一次出现，初始化区间
+      intervals[s[i]] = [i, i];
+    } else {
+      // 更新最后出现位置
+      intervals[s[i]][1] = i;
+    }
+  }
+
+  // 第二步：按起始位置排序
+  const sortedIntervals = Object.values(intervals).sort((a, b) => a[0] - b[0]);
+
+  // 第三步：合并重叠区间
+  const result = [];
+  let [start, end] = sortedIntervals[0];
+
+  for (let i = 1; i < sortedIntervals.length; i++) {
+    const [s, e] = sortedIntervals[i];
+    if (s <= end) {
+      // 区间重叠，合并
+      end = Math.max(end, e);
+    } else {
+      // 不重叠，记录当前区间，开始新区间
+      result.push(end - start + 1);
+      start = s;
+      end = e;
+    }
+  }
+  // 别忘了最后一个区间
+  result.push(end - start + 1);
+
+  return result;
+}`,
+        explanation: `## 区间合并思路
+
+### 核心思想
+将每个字母看作一个区间，问题变成区间合并问题
+
+### 示例
+s = "ababcbaca"
+- 'a': [0, 8]
+- 'b': [1, 5]
+- 'c': [4, 7]
+
+排序后：[0,8], [1,5], [4,7]
+合并：[0,8] + [1,5] → [0,8]
+      [0,8] + [4,7] → [0,8]
+结果：[9]（一个长度为9的片段）
+
+### 与贪心法对比
+- 思路更直观（区间合并是经典问题）
+- 代码较长
+- 本质上是同一个问题的不同视角`,
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(1)",
+      },
+    ],
+  },
+
+  // 22. 下一个排列 (31)
+  {
+    id: "next-permutation",
+    leetcodeId: 31,
+    title: "下一个排列",
+    titleEn: "Next Permutation",
+    difficulty: "medium",
+    category: "array-string",
+    tags: ["数组", "双指针"],
+    frontendRelevance: "medium",
+    frontendNote: "下一个排列算法",
+    description: `整数数组的一个 **排列** 就是将其所有成员以序列或线性顺序排列。
+
+整数数组的 **下一个排列** 是指其整数的下一个字典序更大的排列。更正式地，如果数组的所有排列根据其字典顺序从小到大排列在一个容器中，那么数组的 **下一个排列** 就是在这个有序容器中排在它后面的那个排列。如果不存在下一个更大的排列，那么这个数组必须重排为字典序最小的排列（即，其元素按升序排列）。
+
+必须 **原地** 修改，只允许使用额外常数空间。`,
+    examples: `**示例 1：**
+\`\`\`
+输入：nums = [1,2,3]
+输出：[1,3,2]
+\`\`\`
+
+**示例 2：**
+\`\`\`
+输入：nums = [3,2,1]
+输出：[1,2,3]
+\`\`\`
+
+**示例 3：**
+\`\`\`
+输入：nums = [1,1,5]
+输出：[1,5,1]
+\`\`\``,
+    constraints: `- \`1 <= nums.length <= 100\`
+- \`0 <= nums[i] <= 100\``,
+    initialCode: `function nextPermutation(nums) {
+  // 在此处编写你的代码
+
+}`,
+    solution: `function nextPermutation(nums) {
+  const n = nums.length;
+
+  // 1. 从右向左找第一个升序对 (i, i+1)，即 nums[i] < nums[i+1]
+  let i = n - 2;
+  while (i >= 0 && nums[i] >= nums[i + 1]) {
+    i--;
+  }
+
+  if (i >= 0) {
+    // 2. 从右向左找第一个大于 nums[i] 的数
+    let j = n - 1;
+    while (j > i && nums[j] <= nums[i]) {
+      j--;
+    }
+    // 3. 交换 nums[i] 和 nums[j]
+    [nums[i], nums[j]] = [nums[j], nums[i]];
+  }
+
+  // 4. 反转 i+1 到末尾的部分
+  let left = i + 1, right = n - 1;
+  while (left < right) {
+    [nums[left], nums[right]] = [nums[right], nums[left]];
+    left++;
+    right--;
+  }
+}`,
+    testCases: [
+      { id: "1", name: "示例1", input: [[1,2,3]], expected: [1,3,2] },
+      { id: "2", name: "示例2", input: [[3,2,1]], expected: [1,2,3] },
+      { id: "3", name: "示例3", input: [[1,1,5]], expected: [1,5,1] },
+      { id: "4", name: "中间", input: [[1,3,2]], expected: [2,1,3] },
+    ],
+    hints: [
+      "从右向左找第一个相邻升序对",
+      "从右向左找第一个大于该元素的数并交换",
+      "反转后面的部分使其最小",
+    ],
+    explanation: `## 解题思路
+
+### 算法步骤
+1. 从右向左找第一个相邻升序对 (i, i+1)，即 nums[i] < nums[i+1]
+2. 从右向左找第一个大于 nums[i] 的数 nums[j]
+3. 交换 nums[i] 和 nums[j]
+4. 反转 i+1 到末尾的部分
+
+### 为什么这样做？
+- 步骤1找到了可以增大的位置
+- 步骤2找到刚好大于 nums[i] 的数
+- 步骤4确保后面的部分是最小的
+
+### 复杂度分析
+- 时间复杂度：O(n)
+- 空间复杂度：O(1)`,
+    timeComplexity: "O(n)",
+    spaceComplexity: "O(1)",
+    relatedProblems: ["permutations", "permutations-ii"],
+    solutions: [
+      {
+        name: "两遍扫描",
+        code: `/**
+ * 下一个排列 - 两遍扫描算法
+ *
+ * 核心思想：
+ * 找到下一个字典序更大的排列，增大的幅度要尽可能小
+ *
+ * 关键观察：
+ * 1. 从右往左的递减序列已经是局部最大，无法再增大
+ * 2. 找到第一个打破递减趋势的位置 i（nums[i] < nums[i+1]）
+ * 3. 在 i 右边找一个刚好大于 nums[i] 的数来替换
+ * 4. 把 i 右边反转成最小排列
+ *
+ * 算法步骤：
+ * 1. 从右向左找第一个升序对 (i, i+1)，即 nums[i] < nums[i+1]
+ * 2. 从右向左找第一个大于 nums[i] 的数 nums[j]
+ * 3. 交换 nums[i] 和 nums[j]
+ * 4. 反转 i+1 到末尾
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(1)
+ */
+function nextPermutation(nums) {
+  const n = nums.length;
+
+  // 第一步：从右向左找第一个升序对
+  // 找到 i 使得 nums[i] < nums[i+1]
+  // 如果整个数组是降序的（如 [3,2,1]），则 i 会变成 -1
+  let i = n - 2;
+  while (i >= 0 && nums[i] >= nums[i + 1]) {
+    i--;
+  }
+
+  // 如果 i >= 0，说明存在下一个更大的排列
+  if (i >= 0) {
+    // 第二步：从右向左找第一个大于 nums[i] 的数
+    // 因为 [i+1, n-1] 是递减的，所以从右边找到的第一个就是最小的那个
+    let j = n - 1;
+    while (j > i && nums[j] <= nums[i]) {
+      j--;
+    }
+
+    // 第三步：交换 nums[i] 和 nums[j]
+    // 交换后 [i+1, n-1] 仍然是递减的
+    [nums[i], nums[j]] = [nums[j], nums[i]];
+  }
+
+  // 第四步：反转 i+1 到末尾
+  // 将递减变成递增，得到最小的排列
+  // 如果 i = -1，则反转整个数组，得到最小排列
+  let left = i + 1, right = n - 1;
+  while (left < right) {
+    [nums[left], nums[right]] = [nums[right], nums[left]];
+    left++;
+    right--;
+  }
+}`,
+        explanation: `## 两遍扫描算法
+
+### 核心思路
+找到能增大的最右位置，用刚好大于它的数替换，然后让右边尽可能小
+
+### 图解示例
+[1, 5, 8, 4, 7, 6, 5, 3, 1]
+          ↑
+          i=3, nums[i]=4
+
+从右边找第一个 > 4 的数：nums[6]=5
+交换后：[1, 5, 8, 5, 7, 6, 4, 3, 1]
+
+反转 i+1 到末尾：[7,6,4,3,1] → [1,3,4,6,7]
+结果：[1, 5, 8, 5, 1, 3, 4, 6, 7]
+
+### 边界情况
+- [3,2,1]：完全降序，i=-1，直接反转变成 [1,2,3]
+- [1,2,3]：i=1，交换 2,3 变成 [1,3,2]
+
+### 为什么反转而不是排序？
+交换后 [i+1, n-1] 仍然保持递减顺序，反转就变成递增（最小）`,
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(1)",
       },
     ],
   },

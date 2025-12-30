@@ -10,6 +10,8 @@ export const graphProblems: Problem[] = [
     difficulty: "medium",
     category: "graph",
     tags: ["深度优先搜索", "广度优先搜索", "并查集", "数组", "矩阵"],
+    frontendRelevance: "medium",
+    frontendNote: "DFS/BFS入门",
     description: `给你一个由 \`'1'\`（陆地）和 \`'0'\`（水）组成的的二维网格，请你计算网格中岛屿的数量。
 
 岛屿总是被水包围，并且每座岛屿只能由水平方向和/或竖直方向上相邻的陆地连接形成。
@@ -316,6 +318,8 @@ export const graphProblems: Problem[] = [
     difficulty: "medium",
     category: "graph",
     tags: ["深度优先搜索", "广度优先搜索", "并查集", "数组", "矩阵"],
+    frontendRelevance: "low",
+    frontendNote: "被围绕区域",
     description: `给你一个 \`m x n\` 的矩阵 \`board\`，由若干字符 \`'X'\` 和 \`'O'\` 组成，**捕获** 所有 **被围绕的区域**：
 
 - **连接**：一个单元格与水平或垂直方向上相邻的单元格连接。
@@ -615,6 +619,8 @@ export const graphProblems: Problem[] = [
     difficulty: "medium",
     category: "graph",
     tags: ["深度优先搜索", "广度优先搜索", "图", "拓扑排序"],
+    frontendRelevance: "medium",
+    frontendNote: "拓扑排序",
     description: `你这个学期必须选修 \`numCourses\` 门课程，记为 \`0\` 到 \`numCourses - 1\`。
 
 在选修某些课程之前需要一些先修课程。先修课程按数组 \`prerequisites\` 给出，其中 \`prerequisites[i] = [ai, bi]\`，表示如果要学习课程 \`ai\` 则 **必须** 先学习课程 \`bi\`。
@@ -832,6 +838,8 @@ export const graphProblems: Problem[] = [
     difficulty: "medium",
     category: "graph",
     tags: ["设计", "字典树", "哈希表", "字符串"],
+    frontendRelevance: "low",
+    frontendNote: "字典树实现",
     description: `**Trie**（发音类似 "try"）或者说 **前缀树** 是一种树形数据结构，用于高效地存储和检索字符串数据集中的键。这一数据结构有相当多的应用情景，例如自动补完和拼写检查。
 
 请你实现 Trie 类：
@@ -1130,6 +1138,586 @@ class Trie {
 - 对性能要求极高`,
         timeComplexity: "O(m)",
         spaceComplexity: "O(26 × n × m)",
+      },
+    ],
+  },
+
+  // 5. 克隆图 (133)
+  {
+    id: "clone-graph",
+    leetcodeId: 133,
+    title: "克隆图",
+    titleEn: "Clone Graph",
+    difficulty: "medium",
+    category: "graph",
+    tags: ["深度优先搜索", "广度优先搜索", "图", "哈希表"],
+    frontendRelevance: "low",
+    frontendNote: "深拷贝图结构，前端少用",
+    description: `给你无向 连通 图中一个节点的引用，请你返回该图的 深拷贝（克隆）。
+
+图中的每个节点都包含它的值 val（int） 和其邻居的列表（list[Node]）。
+
+class Node {
+    public int val;
+    public List<Node> neighbors;
+}`,
+    examples: `**示例 1：**
+\`\`\`
+输入：adjList = [[2,4],[1,3],[2,4],[1,3]]
+输出：[[2,4],[1,3],[2,4],[1,3]]
+解释：图中有 4 个节点，克隆后返回相同结构的新图
+\`\`\`
+
+**示例 2：**
+\`\`\`
+输入：adjList = [[]]
+输出：[[]]
+解释：只有一个节点，没有邻居
+\`\`\``,
+    constraints: `- 节点数不超过 100
+- \`1 <= Node.val <= 100\`
+- \`Node.val\` 是唯一的
+- 没有重复的边和自环
+- 图是连通图`,
+    initialCode: `function cloneGraph(node) {
+  // 在此处编写代码
+}`,
+    solution: `function cloneGraph(node) {
+  if (!node) return null;
+
+  const visited = new Map();
+
+  const dfs = (node) => {
+    if (visited.has(node)) {
+      return visited.get(node);
+    }
+
+    const clone = new Node(node.val);
+    visited.set(node, clone);
+
+    for (const neighbor of node.neighbors) {
+      clone.neighbors.push(dfs(neighbor));
+    }
+
+    return clone;
+  };
+
+  return dfs(node);
+}`,
+    testCases: [
+      {
+        id: "1",
+        name: "示例1",
+        input: [[[2,4],[1,3],[2,4],[1,3]]],
+        expected: [[2,4],[1,3],[2,4],[1,3]]
+      },
+      {
+        id: "2",
+        name: "单节点",
+        input: [[[]]],
+        expected: [[]]
+      }
+    ],
+    hints: [
+      "使用哈希表记录已克隆的节点",
+      "DFS 或 BFS 遍历图",
+      "先创建克隆节点，再处理邻居"
+    ],
+    explanation: `## 解题思路
+
+### DFS + 哈希表
+
+1. 用哈希表存储 原节点 → 克隆节点 的映射
+2. 遇到新节点：创建克隆，递归处理邻居
+3. 遇到已访问节点：直接返回其克隆
+
+### 关键点
+- 哈希表同时起到记录已访问和存储映射的作用
+- 先创建克隆节点再递归，避免循环引用问题
+
+### 复杂度分析
+- 时间复杂度：O(N + E)
+- 空间复杂度：O(N)`,
+    timeComplexity: "O(N + E)",
+    spaceComplexity: "O(N)",
+    relatedProblems: ["copy-list-with-random-pointer"],
+    solutions: [
+      {
+        name: "DFS（推荐）",
+        code: `function cloneGraph(node) {
+  if (!node) return null;
+
+  const visited = new Map();
+
+  const dfs = (node) => {
+    if (visited.has(node)) {
+      return visited.get(node);
+    }
+
+    const clone = new Node(node.val);
+    visited.set(node, clone);
+
+    for (const neighbor of node.neighbors) {
+      clone.neighbors.push(dfs(neighbor));
+    }
+
+    return clone;
+  };
+
+  return dfs(node);
+}`,
+        explanation: `## DFS 法
+
+### 步骤
+1. 检查节点是否已克隆
+2. 创建克隆节点，存入哈希表
+3. 递归克隆所有邻居
+4. 返回克隆节点`,
+        timeComplexity: "O(N + E)",
+        spaceComplexity: "O(N)",
+      },
+      {
+        name: "BFS",
+        code: `function cloneGraph(node) {
+  if (!node) return null;
+
+  const visited = new Map();
+  const queue = [node];
+  visited.set(node, new Node(node.val));
+
+  while (queue.length > 0) {
+    const curr = queue.shift();
+
+    for (const neighbor of curr.neighbors) {
+      if (!visited.has(neighbor)) {
+        visited.set(neighbor, new Node(neighbor.val));
+        queue.push(neighbor);
+      }
+      visited.get(curr).neighbors.push(visited.get(neighbor));
+    }
+  }
+
+  return visited.get(node);
+}`,
+        explanation: `## BFS 法
+
+### 步骤
+1. 先克隆起始节点
+2. BFS 遍历，遇到新节点就克隆
+3. 处理邻居关系`,
+        timeComplexity: "O(N + E)",
+        spaceComplexity: "O(N)",
+      },
+    ],
+  },
+
+  // 6. 腐烂的橘子 (994)
+  {
+    id: "rotting-oranges",
+    leetcodeId: 994,
+    title: "腐烂的橘子",
+    titleEn: "Rotting Oranges",
+    difficulty: "medium",
+    category: "graph",
+    tags: ["广度优先搜索", "数组", "矩阵"],
+    frontendRelevance: "medium",
+    frontendNote: "BFS层次遍历",
+    description: `在给定的 m x n 网格 grid 中，每个单元格可以有以下三个值之一：
+
+- 值 0 代表空单元格；
+- 值 1 代表新鲜橘子；
+- 值 2 代表腐烂的橘子。
+
+每分钟，腐烂的橘子 周围 4 个方向上相邻 的新鲜橘子都会腐烂。
+
+返回 直到单元格中没有新鲜橘子为止所必须经过的最小分钟数。如果不可能，返回 -1 。`,
+    examples: `**示例 1：**
+\`\`\`
+输入：grid = [[2,1,1],[1,1,0],[0,1,1]]
+输出：4
+解释：需要 4 分钟使所有橘子腐烂
+\`\`\`
+
+**示例 2：**
+\`\`\`
+输入：grid = [[2,1,1],[0,1,1],[1,0,1]]
+输出：-1
+解释：左下角的橘子永远不会腐烂
+\`\`\`
+
+**示例 3：**
+\`\`\`
+输入：grid = [[0,2]]
+输出：0
+解释：没有新鲜橘子
+\`\`\``,
+    constraints: `- \`m == grid.length\`
+- \`n == grid[i].length\`
+- \`1 <= m, n <= 10\`
+- \`grid[i][j]\` 仅为 0、1 或 2`,
+    initialCode: `function orangesRotting(grid) {
+  // 在此处编写代码
+}`,
+    solution: `function orangesRotting(grid) {
+  const m = grid.length, n = grid[0].length;
+  const queue = [];
+  let fresh = 0;
+
+  // 初始化：找到所有腐烂橘子和新鲜橘子数量
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid[i][j] === 2) {
+        queue.push([i, j]);
+      } else if (grid[i][j] === 1) {
+        fresh++;
+      }
+    }
+  }
+
+  if (fresh === 0) return 0;
+
+  const dirs = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+  let minutes = 0;
+
+  while (queue.length > 0 && fresh > 0) {
+    minutes++;
+    const size = queue.length;
+
+    for (let i = 0; i < size; i++) {
+      const [x, y] = queue.shift();
+
+      for (const [dx, dy] of dirs) {
+        const nx = x + dx, ny = y + dy;
+
+        if (nx >= 0 && nx < m && ny >= 0 && ny < n && grid[nx][ny] === 1) {
+          grid[nx][ny] = 2;
+          fresh--;
+          queue.push([nx, ny]);
+        }
+      }
+    }
+  }
+
+  return fresh === 0 ? minutes : -1;
+}`,
+    testCases: [
+      {
+        id: "1",
+        name: "示例1",
+        input: [[[2,1,1],[1,1,0],[0,1,1]]],
+        expected: 4
+      },
+      {
+        id: "2",
+        name: "无法全部腐烂",
+        input: [[[2,1,1],[0,1,1],[1,0,1]]],
+        expected: -1
+      },
+      {
+        id: "3",
+        name: "没有新鲜橘子",
+        input: [[[0,2]]],
+        expected: 0
+      }
+    ],
+    hints: [
+      "多源 BFS：从所有腐烂橘子同时开始",
+      "统计新鲜橘子数量",
+      "每轮 BFS 代表一分钟"
+    ],
+    explanation: `## 解题思路
+
+### 多源 BFS
+
+1. 找到所有腐烂橘子作为 BFS 起点
+2. 统计新鲜橘子数量
+3. BFS 层序遍历，每层代表一分钟
+4. 最后检查是否还有新鲜橘子
+
+### 关键点
+- 多个起点同时开始扩散
+- 用 fresh 计数判断是否全部腐烂
+- 注意边界情况：没有新鲜橘子时返回 0
+
+### 复杂度分析
+- 时间复杂度：O(m × n)
+- 空间复杂度：O(m × n)`,
+    timeComplexity: "O(m × n)",
+    spaceComplexity: "O(m × n)",
+    relatedProblems: ["walls-and-gates", "shortest-path-in-binary-matrix"],
+    solutions: [
+      {
+        name: "多源 BFS（推荐）",
+        code: `function orangesRotting(grid) {
+  const m = grid.length, n = grid[0].length;
+  const queue = [];
+  let fresh = 0;
+
+  // 初始化
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid[i][j] === 2) {
+        queue.push([i, j]);
+      } else if (grid[i][j] === 1) {
+        fresh++;
+      }
+    }
+  }
+
+  if (fresh === 0) return 0;
+
+  const dirs = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+  let minutes = 0;
+
+  while (queue.length > 0 && fresh > 0) {
+    minutes++;
+    const size = queue.length;
+
+    for (let i = 0; i < size; i++) {
+      const [x, y] = queue.shift();
+
+      for (const [dx, dy] of dirs) {
+        const nx = x + dx, ny = y + dy;
+
+        if (nx >= 0 && nx < m && ny >= 0 && ny < n && grid[nx][ny] === 1) {
+          grid[nx][ny] = 2;
+          fresh--;
+          queue.push([nx, ny]);
+        }
+      }
+    }
+  }
+
+  return fresh === 0 ? minutes : -1;
+}`,
+        explanation: `## 多源 BFS
+
+### 关键思想
+所有腐烂橘子同时开始扩散，等价于从一个"超级源点"出发。
+
+### 步骤
+1. 收集所有腐烂橘子入队
+2. 统计新鲜橘子数量
+3. BFS 按层遍历，每层 +1 分钟
+4. 新鲜橘子变腐烂后入队`,
+        timeComplexity: "O(m × n)",
+        spaceComplexity: "O(m × n)",
+      },
+    ],
+  },
+
+  // 7. 课程表 II (210)
+  {
+    id: "course-schedule-ii",
+    leetcodeId: 210,
+    title: "课程表 II",
+    titleEn: "Course Schedule II",
+    difficulty: "medium",
+    category: "graph",
+    tags: ["深度优先搜索", "广度优先搜索", "图", "拓扑排序"],
+    frontendRelevance: "low",
+    frontendNote: "课程表II",
+    description: `现在你总共有 numCourses 门课需要选，记为 0 到 numCourses - 1。给你一个数组 prerequisites ，其中 prerequisites[i] = [ai, bi] ，表示在选修课程 ai 前 必须 先选修 bi 。
+
+例如，想要学习课程 0 ，你需要先完成课程 1 ，我们用一个匹配来表示：[0,1] 。
+
+返回你为了学完所有课程所安排的学习顺序。可能会有多个正确的顺序，你只要返回 任意一种 就可以了。如果不可能完成所有课程，返回 一个空数组 。`,
+    examples: `**示例 1：**
+\`\`\`
+输入：numCourses = 2, prerequisites = [[1,0]]
+输出：[0,1]
+解释：先修课程 0，再修课程 1
+\`\`\`
+
+**示例 2：**
+\`\`\`
+输入：numCourses = 4, prerequisites = [[1,0],[2,0],[3,1],[3,2]]
+输出：[0,1,2,3] 或 [0,2,1,3]
+解释：有多种合法顺序
+\`\`\`
+
+**示例 3：**
+\`\`\`
+输入：numCourses = 1, prerequisites = []
+输出：[0]
+解释：只有一门课
+\`\`\``,
+    constraints: `- \`1 <= numCourses <= 2000\`
+- \`0 <= prerequisites.length <= numCourses * (numCourses - 1)\`
+- \`prerequisites[i].length == 2\`
+- \`0 <= ai, bi < numCourses\`
+- \`ai != bi\`
+- 所有 \`[ai, bi]\` 互不相同`,
+    initialCode: `function findOrder(numCourses, prerequisites) {
+  // 在此处编写代码
+}`,
+    solution: `function findOrder(numCourses, prerequisites) {
+  const inDegree = new Array(numCourses).fill(0);
+  const graph = Array.from({ length: numCourses }, () => []);
+
+  for (const [course, prereq] of prerequisites) {
+    graph[prereq].push(course);
+    inDegree[course]++;
+  }
+
+  const queue = [];
+  for (let i = 0; i < numCourses; i++) {
+    if (inDegree[i] === 0) {
+      queue.push(i);
+    }
+  }
+
+  const result = [];
+
+  while (queue.length > 0) {
+    const course = queue.shift();
+    result.push(course);
+
+    for (const next of graph[course]) {
+      inDegree[next]--;
+      if (inDegree[next] === 0) {
+        queue.push(next);
+      }
+    }
+  }
+
+  return result.length === numCourses ? result : [];
+}`,
+    testCases: [
+      {
+        id: "1",
+        name: "示例1",
+        input: [2, [[1,0]]],
+        expected: [0,1]
+      },
+      {
+        id: "2",
+        name: "示例2",
+        input: [4, [[1,0],[2,0],[3,1],[3,2]]],
+        expected: [0,1,2,3]
+      },
+      {
+        id: "3",
+        name: "无先修课",
+        input: [1, []],
+        expected: [0]
+      }
+    ],
+    hints: [
+      "拓扑排序：BFS（Kahn 算法）或 DFS",
+      "记录入度为 0 的节点",
+      "输出拓扑序列"
+    ],
+    explanation: `## 解题思路
+
+### 拓扑排序（Kahn 算法）
+
+1. 构建邻接表和入度数组
+2. 将入度为 0 的节点入队
+3. BFS：取出节点，减少后继节点入度，入度变 0 则入队
+4. 记录遍历顺序即为拓扑序列
+
+### 关键点
+- 如果最终结果长度不等于课程数，说明有环
+- 入度为 0 表示没有前置依赖
+
+### 复杂度分析
+- 时间复杂度：O(V + E)
+- 空间复杂度：O(V + E)`,
+    timeComplexity: "O(V + E)",
+    spaceComplexity: "O(V + E)",
+    relatedProblems: ["course-schedule", "alien-dictionary"],
+    solutions: [
+      {
+        name: "BFS（Kahn 算法，推荐）",
+        code: `function findOrder(numCourses, prerequisites) {
+  const inDegree = new Array(numCourses).fill(0);
+  const graph = Array.from({ length: numCourses }, () => []);
+
+  for (const [course, prereq] of prerequisites) {
+    graph[prereq].push(course);
+    inDegree[course]++;
+  }
+
+  const queue = [];
+  for (let i = 0; i < numCourses; i++) {
+    if (inDegree[i] === 0) {
+      queue.push(i);
+    }
+  }
+
+  const result = [];
+
+  while (queue.length > 0) {
+    const course = queue.shift();
+    result.push(course);
+
+    for (const next of graph[course]) {
+      inDegree[next]--;
+      if (inDegree[next] === 0) {
+        queue.push(next);
+      }
+    }
+  }
+
+  return result.length === numCourses ? result : [];
+}`,
+        explanation: `## Kahn 算法
+
+### 步骤
+1. 构建图和入度数组
+2. 入度为 0 的节点入队
+3. 取出节点加入结果，更新后继节点入度
+4. 检查结果长度`,
+        timeComplexity: "O(V + E)",
+        spaceComplexity: "O(V + E)",
+      },
+      {
+        name: "DFS（后序遍历）",
+        code: `function findOrder(numCourses, prerequisites) {
+  const graph = Array.from({ length: numCourses }, () => []);
+  for (const [course, prereq] of prerequisites) {
+    graph[prereq].push(course);
+  }
+
+  const visited = new Array(numCourses).fill(0); // 0: 未访问, 1: 访问中, 2: 已完成
+  const result = [];
+
+  const dfs = (node) => {
+    if (visited[node] === 1) return false; // 有环
+    if (visited[node] === 2) return true;  // 已处理
+
+    visited[node] = 1;
+
+    for (const next of graph[node]) {
+      if (!dfs(next)) return false;
+    }
+
+    visited[node] = 2;
+    result.push(node);
+    return true;
+  };
+
+  for (let i = 0; i < numCourses; i++) {
+    if (!dfs(i)) return [];
+  }
+
+  return result.reverse();
+}`,
+        explanation: `## DFS 法
+
+### 思路
+后序遍历的逆序就是拓扑序列。
+
+### 三种状态
+- 0: 未访问
+- 1: 访问中（检测环）
+- 2: 已完成
+
+### 注意
+最后需要反转结果`,
+        timeComplexity: "O(V + E)",
+        spaceComplexity: "O(V + E)",
       },
     ],
   },

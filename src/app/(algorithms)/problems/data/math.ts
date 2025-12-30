@@ -10,6 +10,8 @@ export const mathProblems: Problem[] = [
     difficulty: "easy",
     category: "math",
     tags: ["数学"],
+    frontendRelevance: "low",
+    frontendNote: "回文数，数学",
     description: `给你一个整数 \`x\`，如果 \`x\` 是一个回文整数，返回 \`true\`；否则，返回 \`false\`。
 
 回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。
@@ -195,6 +197,8 @@ x=12, reversed=123, 123/10=12=x，是回文`,
     difficulty: "easy",
     category: "math",
     tags: ["数组", "数学"],
+    frontendRelevance: "low",
+    frontendNote: "加一，数学",
     description: `给定一个由 **整数** 组成的 **非空** 数组所表示的非负整数，在该数的基础上加一。
 
 最高位数字存放在数组的首位，数组中每个元素只存储 **单个** 数字。
@@ -368,6 +372,8 @@ x=12, reversed=123, 123/10=12=x，是回文`,
     difficulty: "medium",
     category: "math",
     tags: ["递归", "数学"],
+    frontendRelevance: "low",
+    frontendNote: "快速幂",
     description: `实现 \`pow(x, n)\`，即计算 \`x\` 的整数 \`n\` 次幂函数（即，\`x^n\`）。`,
     examples: `**示例 1：**
 \`\`\`
@@ -561,6 +567,8 @@ n=13(1101)：
     difficulty: "easy",
     category: "math",
     tags: ["数学", "二分查找"],
+    frontendRelevance: "low",
+    frontendNote: "平方根，二分/牛顿",
     description: `给你一个非负整数 \`x\`，计算并返回 \`x\` 的 **算术平方根**。
 
 由于返回类型是整数，结果只保留 **整数部分**，小数部分将被 **舍去**。

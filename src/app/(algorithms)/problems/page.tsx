@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CATEGORIES, DIFFICULTY_CONFIG } from "./types";
+import { CATEGORIES, DIFFICULTY_CONFIG, FRONTEND_RELEVANCE_CONFIG } from "./types";
 import { getStatsByCategory, getStatsByDifficulty, allProblems } from "./data";
 
 export default function ProblemsPage() {
@@ -130,38 +130,56 @@ export default function ProblemsPage() {
                   <th className="px-4 py-3 font-medium">题号</th>
                   <th className="px-4 py-3 font-medium">题目</th>
                   <th className="px-4 py-3 font-medium">难度</th>
+                  <th className="px-4 py-3 font-medium hidden sm:table-cell">前端</th>
                   <th className="px-4 py-3 font-medium hidden md:table-cell">分类</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-800">
-                {allProblems.map((problem) => (
-                  <tr
-                    key={problem.id}
-                    className="hover:bg-zinc-900/50 transition-colors"
-                  >
-                    <td className="px-4 py-3 text-zinc-400">
-                      {problem.leetcodeId || "-"}
-                    </td>
-                    <td className="px-4 py-3">
-                      <Link
-                        href={`/problems/${problem.id}`}
-                        className="hover:text-green-400 transition-colors"
-                      >
-                        {problem.title}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${DIFFICULTY_CONFIG[problem.difficulty].color} ${DIFFICULTY_CONFIG[problem.difficulty].bg}`}
-                      >
-                        {DIFFICULTY_CONFIG[problem.difficulty].label}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-zinc-400 hidden md:table-cell">
-                      {CATEGORIES.find((c) => c.id === problem.category)?.name}
-                    </td>
-                  </tr>
-                ))}
+                {allProblems.map((problem) => {
+                  const relevanceConfig = problem.frontendRelevance
+                    ? FRONTEND_RELEVANCE_CONFIG[problem.frontendRelevance]
+                    : null;
+
+                  return (
+                    <tr
+                      key={problem.id}
+                      className="hover:bg-zinc-900/50 transition-colors"
+                    >
+                      <td className="px-4 py-3 text-zinc-400">
+                        {problem.leetcodeId || "-"}
+                      </td>
+                      <td className="px-4 py-3">
+                        <Link
+                          href={`/problems/${problem.id}`}
+                          className="hover:text-green-400 transition-colors"
+                        >
+                          {problem.title}
+                        </Link>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span
+                          className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${DIFFICULTY_CONFIG[problem.difficulty].color} ${DIFFICULTY_CONFIG[problem.difficulty].bg}`}
+                        >
+                          {DIFFICULTY_CONFIG[problem.difficulty].label}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 hidden sm:table-cell">
+                        {relevanceConfig && (
+                          <span
+                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${relevanceConfig.color} ${relevanceConfig.bg}`}
+                            title={problem.frontendNote || relevanceConfig.description}
+                          >
+                            <span>{relevanceConfig.icon}</span>
+                            <span>{relevanceConfig.label}</span>
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-zinc-400 hidden md:table-cell">
+                        {CATEGORIES.find((c) => c.id === problem.category)?.name}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

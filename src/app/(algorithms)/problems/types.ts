@@ -54,6 +54,9 @@ export interface Solution {
   spaceComplexity?: string;      // 空间复杂度
 }
 
+// 前端相关度
+export type FrontendRelevance = "high" | "medium" | "low";
+
 // 题目定义
 export interface Problem {
   id: string;                    // 唯一标识，如 "two-sum"
@@ -76,6 +79,8 @@ export interface Problem {
   timeComplexity: string;        // 时间复杂度
   spaceComplexity: string;       // 空间复杂度
   relatedProblems?: string[];    // 相关题目ID
+  frontendRelevance?: FrontendRelevance;  // 前端相关度：high-高频/medium-中等/low-较少涉及
+  frontendNote?: string;         // 前端相关说明
 }
 
 // 分类配置
@@ -111,4 +116,32 @@ export const DIFFICULTY_CONFIG = {
   easy: { label: "简单", color: "text-green-500", bg: "bg-green-500/10", border: "border-green-500/30" },
   medium: { label: "中等", color: "text-amber-500", bg: "bg-amber-500/10", border: "border-amber-500/30" },
   hard: { label: "困难", color: "text-red-500", bg: "bg-red-500/10", border: "border-red-500/30" },
+};
+
+// 前端相关度配置
+export const FRONTEND_RELEVANCE_CONFIG = {
+  high: {
+    label: "高频",
+    description: "前端面试常考",
+    color: "text-blue-400",
+    bg: "bg-blue-500/10",
+    border: "border-blue-500/30",
+    icon: "🔥"
+  },
+  medium: {
+    label: "中等",
+    description: "了解有益",
+    color: "text-purple-400",
+    bg: "bg-purple-500/10",
+    border: "border-purple-500/30",
+    icon: "📚"
+  },
+  low: {
+    label: "较少",
+    description: "前端较少涉及",
+    color: "text-zinc-400",
+    bg: "bg-zinc-500/10",
+    border: "border-zinc-500/30",
+    icon: "📖"
+  },
 };

@@ -16,7 +16,13 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(head:*)"
+      "Bash(head:*)",
+      "Bash(wc:*)",
+      "Bash(npx tsc:*)",
+      "Bash(for file in array-string backtracking binary-search binary-tree bit-manipulation dp-1d dp-multidimensional graph hash-table heap interval linked-list math matrix sliding-window stack two-pointers)",
+      "Bash(do echo \"=== $file ===\" grep \"leetcodeId:\" \"/Users/wangguorong/Study/next/my-app/src/app/\\(algorithms\\)/problems/data/$file.ts\")",
+      "Bash(grep:*)",
+      "Bash(node scripts/add-frontend-relevance.js:*)"
     ],
     "deny": [],
     "ask": []

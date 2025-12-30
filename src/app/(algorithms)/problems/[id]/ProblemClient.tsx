@@ -5,7 +5,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Problem, DIFFICULTY_CONFIG, CATEGORIES, Solution } from "../types";
+import { Problem, DIFFICULTY_CONFIG, CATEGORIES, Solution, FRONTEND_RELEVANCE_CONFIG } from "../types";
 
 // 动态导入 Monaco Editor
 const Editor = dynamic(() => import("@monaco-editor/react"), {
@@ -61,6 +61,7 @@ export default function ProblemClient({ problem }: Props) {
   const [isRunning, setIsRunning] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
   const [selectedSolutionIndex, setSelectedSolutionIndex] = useState(0);
+  const [showSolutionDropdown, setShowSolutionDropdown] = useState(false);
   const [showHints, setShowHints] = useState(false);
   const [currentHintIndex, setCurrentHintIndex] = useState(0);
 
@@ -72,6 +73,7 @@ export default function ProblemClient({ problem }: Props) {
   const [leftWidth, setLeftWidth] = useState(45);
   const [bottomHeight, setBottomHeight] = useState(220);
   const containerRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const isDraggingVertical = useRef(false);
   const isDraggingHorizontal = useRef(false);
 
@@ -197,6 +199,7 @@ export default function ProblemClient({ problem }: Props) {
     setCode(problem.initialCode);
     clearConsole();
     setShowSolution(false);
+    setShowSolutionDropdown(false);
     setSelectedSolutionIndex(0);
     setCurrentHintIndex(0);
   }, [problem.initialCode, clearConsole]);
@@ -252,6 +255,23 @@ export default function ProblemClient({ problem }: Props) {
     };
   }, []);
 
+  // 点击外部关闭下拉菜单
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setShowSolutionDropdown(false);
+      }
+    };
+
+    if (showSolutionDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showSolutionDropdown]);
+
   const passedCount = testResults.filter((r) => r.passed).length;
   const allPassed = testResults.length > 0 && passedCount === testResults.length;
   const categoryInfo = CATEGORIES.find((c) => c.id === problem.category);
@@ -305,7 +325,7 @@ export default function ProblemClient({ problem }: Props) {
             <div className="p-5">
               {/* 标题区 */}
               <div className="mb-4">
-                <div className="flex items-center gap-2 mb-2">
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
                   {problem.leetcodeId && (
                     <span className="text-zinc-500 text-sm">#{problem.leetcodeId}</span>
                   )}
@@ -314,6 +334,15 @@ export default function ProblemClient({ problem }: Props) {
                   >
                     {DIFFICULTY_CONFIG[problem.difficulty].label}
                   </span>
+                  {problem.frontendRelevance && FRONTEND_RELEVANCE_CONFIG[problem.frontendRelevance] && (
+                    <span
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${FRONTEND_RELEVANCE_CONFIG[problem.frontendRelevance].color} ${FRONTEND_RELEVANCE_CONFIG[problem.frontendRelevance].bg}`}
+                      title={problem.frontendNote || FRONTEND_RELEVANCE_CONFIG[problem.frontendRelevance].description}
+                    >
+                      <span>{FRONTEND_RELEVANCE_CONFIG[problem.frontendRelevance].icon}</span>
+                      <span>{FRONTEND_RELEVANCE_CONFIG[problem.frontendRelevance].label}</span>
+                    </span>
+                  )}
                   {allPassed && (
                     <span className="px-2 py-0.5 rounded text-xs font-medium text-green-400 bg-green-500/10">
                       ✓ 已解决
@@ -323,6 +352,9 @@ export default function ProblemClient({ problem }: Props) {
                 <h1 className="text-xl font-bold">{problem.title}</h1>
                 {problem.titleEn && (
                   <p className="text-sm text-zinc-500 mt-1">{problem.titleEn}</p>
+                )}
+                {problem.frontendNote && (
+                  <p className="text-xs text-zinc-500 mt-1 italic">💡 {problem.frontendNote}</p>
                 )}
               </div>
 
@@ -485,7 +517,12 @@ export default function ProblemClient({ problem }: Props) {
               <div className="flex items-center gap-1">
                 {/* 查看答案按钮 */}
                 <button
-                  onClick={() => setShowSolution(!showSolution)}
+                  onClick={() => {
+                    setShowSolution(!showSolution);
+                    if (showSolution) {
+                      setShowSolutionDropdown(false);
+                    }
+                  }}
                   className={`px-2 py-1 text-xs rounded-l transition-colors ${
                     showSolution
                       ? "bg-amber-600 text-white"
@@ -496,27 +533,33 @@ export default function ProblemClient({ problem }: Props) {
                 </button>
                 {/* 解法选择下拉按钮（多解法时显示） */}
                 {allSolutions.length > 1 && showSolution && (
-                  <div className="relative group">
+                  <div className="relative" ref={dropdownRef}>
                     <button
+                      onClick={() => setShowSolutionDropdown(!showSolutionDropdown)}
                       className="px-2 py-1 text-xs bg-amber-600 text-white rounded-r border-l border-amber-500 hover:bg-amber-700 transition-colors"
                     >
                       {allSolutions[selectedSolutionIndex]?.name || "解法"} ▼
                     </button>
-                    <div className="absolute right-0 top-full mt-1 bg-zinc-800 rounded-lg shadow-lg border border-zinc-700 py-1 hidden group-hover:block z-10 min-w-[120px]">
-                      {allSolutions.map((sol, index) => (
-                        <button
-                          key={index}
-                          onClick={() => setSelectedSolutionIndex(index)}
-                          className={`w-full px-3 py-1.5 text-left text-xs transition-colors ${
-                            selectedSolutionIndex === index
-                              ? "bg-green-600 text-white"
-                              : "text-zinc-300 hover:bg-zinc-700"
-                          }`}
-                        >
-                          {sol.name}
-                        </button>
-                      ))}
-                    </div>
+                    {showSolutionDropdown && (
+                      <div className="absolute right-0 top-full mt-1 bg-zinc-800 rounded-lg shadow-lg border border-zinc-700 py-1 z-10 min-w-[140px]">
+                        {allSolutions.map((sol, index) => (
+                          <button
+                            key={index}
+                            onClick={() => {
+                              setSelectedSolutionIndex(index);
+                              setShowSolutionDropdown(false);
+                            }}
+                            className={`w-full px-3 py-2 text-left text-xs transition-colors ${
+                              selectedSolutionIndex === index
+                                ? "bg-green-600 text-white"
+                                : "text-zinc-300 hover:bg-zinc-700"
+                            }`}
+                          >
+                            {sol.name}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
                 {allSolutions.length > 1 && !showSolution && (
