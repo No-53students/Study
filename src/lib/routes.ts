@@ -324,12 +324,27 @@ function formatDisplayName(name: string): string {
     // 算法与数据结构
     stack: "栈 (Stack)",
     queue: "队列 (Queue)",
-    "linked-list": "链表 (LinkedList)",
-    "hash-table": "哈希表 (HashMap)",
-    "binary-tree": "二叉树 (BinaryTree)",
-    sorting: "排序算法",
-    searching: "搜索算法",
+    "linked-list": "链表 (Linked List)",
+    "hash-table": "哈希表 (Hash Table)",
+    "binary-tree": "二叉树 (Binary Tree)",
+    sorting: "排序算法 (Sorting)",
+    searching: "搜索算法 (Searching)",
     "frontend-algorithms": "前端常用算法",
+    // 算法分类
+    "two-pointers": "双指针 (Two Pointers)",
+    "sliding-window": "滑动窗口 (Sliding Window)",
+    backtracking: "回溯 (Backtracking)",
+    graph: "图 (Graph)",
+    heap: "堆 (Heap)",
+    "dynamic-programming": "动态规划 (DP)",
+    "bit-manipulation": "位运算 (Bit)",
+    // 题库相关
+    problems: "算法题库",
+    concepts: "基础概念",
+    templates: "代码模板",
+    roadmap: "学习路线",
+    cases: "实战案例",
+    leetcode: "LeetCode",
     // 编程题
     "interview-questions": "前端编程挑战",
   };

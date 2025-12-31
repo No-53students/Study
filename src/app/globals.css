@@ -278,6 +278,13 @@
   --sidebar-offset: 0px;
 }
 
+/* LeetCode 全屏模式 - 隐藏移动端导航栏和侧边栏 */
+.leetcode-fullscreen header[role="banner"],
+.leetcode-fullscreen aside[role="complementary"],
+.leetcode-fullscreen .bottom-nav-border {
+  display: none !important;
+}
+
 /* 桌面端主内容区域偏移 */
 @media (min-width: 1024px) {
   .main-content {
