@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Link from "next/link";
 import { Problem, DIFFICULTY_CONFIG, CATEGORIES, Category, FrontendRelevance, FRONTEND_RELEVANCE_CONFIG, Solution } from "../types";
-import { allProblems, getProblemsByCategory } from "../data";
+import { allProblems, getProblemsByCategory, getProblemById } from "../data";
 import {
   TwoPointersAnimation,
   LinkedListAnimation,
@@ -92,6 +93,11 @@ function getCompletedProblems(): Set<string> {
 }
 
 export default function LeetCodePage() {
+  // URL 参数支持
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const urlProblemId = searchParams.get('id');
+
   // 移动端检测
   const isMobile = useIsMobile();
   const [mobileView, setMobileView] = useState<MobileView>("list");
@@ -169,6 +175,29 @@ export default function LeetCodePage() {
     setIsLayoutLoaded(true);
   }, []);
 
+  // 处理 URL 参数：如果有 ?id=xxx，自动选中对应题目
+  useEffect(() => {
+    if (urlProblemId && !selectedProblem) {
+      const problem = getProblemById(urlProblemId);
+      if (problem) {
+        // 设置分类筛选
+        setSelectedCategory(problem.category);
+        // 选中题目
+        const savedCode = getStoredCode(problem.id);
+        setCode(savedCode || problem.initialCode);
+        setSelectedProblem(problem);
+        setTestResults([]);
+        setConsoleOutput([]);
+        setShowSolution(false);
+        setSelectedSolutionIndex(0);
+        // 移动端自动切换到描述视图
+        if (isMobile) {
+          setMobileView("description");
+        }
+      }
+    }
+  }, [urlProblemId, selectedProblem, isMobile]);
+
   // 保存布局到 localStorage（防抖）
   useEffect(() => {
     if (!isLayoutLoaded) return;
@@ -241,7 +270,9 @@ export default function LeetCodePage() {
     if (fromMobileList) {
       setMobileView("description");
     }
-  }, []);
+    // 更新 URL（不会触发页面刷新）
+    router.replace(`/problems/leetcode?id=${problem.id}`, { scroll: false });
+  }, [router]);
 
   // 初始化选中第一道题
   useEffect(() => {
@@ -410,7 +441,18 @@ export default function LeetCodePage() {
     }
   }, [code]);
 
-  // 拖拽处理
+  // 拖拽处理 - 使用 ref 存储最新的状态值，避免依赖变化导致事件监听器重复注册
+  const sidebarWidthRef = useRef(sidebarWidth);
+  const sidebarCollapsedRef = useRef(sidebarCollapsed);
+
+  useEffect(() => {
+    sidebarWidthRef.current = sidebarWidth;
+  }, [sidebarWidth]);
+
+  useEffect(() => {
+    sidebarCollapsedRef.current = sidebarCollapsed;
+  }, [sidebarCollapsed]);
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (isDraggingSidebar.current) {
@@ -421,11 +463,13 @@ export default function LeetCodePage() {
       if (isDraggingVertical.current && containerRef.current) {
         setIsDragging(true);
         const rect = containerRef.current.getBoundingClientRect();
-        const effectiveWidth = sidebarCollapsed ? rect.width : rect.width - sidebarWidth;
-        const offset = sidebarCollapsed ? rect.left : rect.left + sidebarWidth;
+        const currentSidebarWidth = sidebarWidthRef.current;
+        const currentSidebarCollapsed = sidebarCollapsedRef.current;
+        const effectiveWidth = currentSidebarCollapsed ? rect.width : rect.width - currentSidebarWidth;
+        const offset = currentSidebarCollapsed ? rect.left : rect.left + currentSidebarWidth;
         const newWidth = ((e.clientX - offset) / effectiveWidth) * 100;
-        // 不限制最小宽度，只限制最大宽度防止编辑器消失
-        setLeftPanelWidth(Math.min(Math.max(newWidth, 0), 90));
+        // 限制最小和最大宽度
+        setLeftPanelWidth(Math.min(Math.max(newWidth, 20), 80));
       }
       if (isDraggingHorizontal.current) {
         setIsDragging(true);
@@ -451,7 +495,7 @@ export default function LeetCodePage() {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [sidebarWidth, sidebarCollapsed]);
+  }, []); // 空依赖，只在组件挂载时注册一次
 
   // 快捷键支持
   useEffect(() => {
@@ -520,18 +564,85 @@ export default function LeetCodePage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </Link>
-            <h1 className="text-base font-semibold">
+            <h1 className="text-base font-semibold truncate max-w-[200px]">
               {mobileView === "list" ? "算法题库" : selectedProblem?.title || "题目"}
             </h1>
           </div>
-          {/* 进度 */}
-          <div className="text-xs text-zinc-400">
-            {completedProblems.size}/{allProblems.length}
+          {/* 上下题切换 + 进度 */}
+          <div className="flex items-center gap-1">
+            <button
+              onClick={goToPrevProblem}
+              disabled={currentProblemIndex <= 0}
+              className="p-2 text-zinc-500 disabled:opacity-30"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <span className="text-xs text-zinc-400 min-w-[40px] text-center">
+              {currentProblemIndex + 1}/{filteredProblems.length}
+            </span>
+            <button
+              onClick={goToNextProblem}
+              disabled={currentProblemIndex >= filteredProblems.length - 1}
+              className="p-2 text-zinc-500 disabled:opacity-30"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
         </header>
 
-        {/* 移动端内容区域 */}
-        <div className="flex-1 overflow-hidden">
+        {/* 顶部 Tab 导航 */}
+        <nav className="flex border-b border-zinc-800 bg-zinc-900 shrink-0">
+          <button
+            onClick={() => setMobileView("list")}
+            className={`flex-1 py-2.5 text-sm font-medium transition-colors border-b-2 ${
+              mobileView === "list"
+                ? "text-green-400 border-green-500"
+                : "text-zinc-500 border-transparent"
+            }`}
+          >
+            题目
+          </button>
+          <button
+            onClick={() => setMobileView("description")}
+            disabled={!selectedProblem}
+            className={`flex-1 py-2.5 text-sm font-medium transition-colors border-b-2 ${
+              mobileView === "description"
+                ? "text-green-400 border-green-500"
+                : "text-zinc-500 border-transparent"
+            } disabled:opacity-30`}
+          >
+            描述
+          </button>
+          <button
+            onClick={() => setMobileView("solution")}
+            disabled={!selectedProblem}
+            className={`flex-1 py-2.5 text-sm font-medium transition-colors border-b-2 ${
+              mobileView === "solution"
+                ? "text-green-400 border-green-500"
+                : "text-zinc-500 border-transparent"
+            } disabled:opacity-30`}
+          >
+            题解
+          </button>
+          <button
+            onClick={() => setMobileView("code")}
+            disabled={!selectedProblem}
+            className={`flex-1 py-2.5 text-sm font-medium transition-colors border-b-2 ${
+              mobileView === "code"
+                ? "text-green-400 border-green-500"
+                : "text-zinc-500 border-transparent"
+            } disabled:opacity-30`}
+          >
+            代码
+          </button>
+        </nav>
+
+        {/* 移动端内容区域 - 添加底部安全距离 */}
+        <div className="flex-1 overflow-hidden pb-safe">
           {/* 题目列表视图 */}
           {mobileView === "list" && (
             <div className="h-full flex flex-col">
@@ -889,76 +1000,6 @@ export default function LeetCodePage() {
             </div>
           )}
         </div>
-
-        {/* 移动端底部导航栏 */}
-        <nav className="flex border-t border-zinc-800 bg-zinc-900 shrink-0 safe-area-inset-bottom">
-          <button
-            onClick={() => setMobileView("list")}
-            className={`flex-1 flex flex-col items-center gap-1 py-3 transition-colors ${
-              mobileView === "list" ? "text-green-400" : "text-zinc-500"
-            }`}
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-            </svg>
-            <span className="text-xs">题目</span>
-          </button>
-          <button
-            onClick={() => setMobileView("description")}
-            disabled={!selectedProblem}
-            className={`flex-1 flex flex-col items-center gap-1 py-3 transition-colors ${
-              mobileView === "description" ? "text-green-400" : "text-zinc-500"
-            } disabled:opacity-30`}
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <span className="text-xs">描述</span>
-          </button>
-          <button
-            onClick={() => setMobileView("solution")}
-            disabled={!selectedProblem}
-            className={`flex-1 flex flex-col items-center gap-1 py-3 transition-colors ${
-              mobileView === "solution" ? "text-green-400" : "text-zinc-500"
-            } disabled:opacity-30`}
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-            </svg>
-            <span className="text-xs">题解</span>
-          </button>
-          <button
-            onClick={() => setMobileView("code")}
-            disabled={!selectedProblem}
-            className={`flex-1 flex flex-col items-center gap-1 py-3 transition-colors ${
-              mobileView === "code" ? "text-green-400" : "text-zinc-500"
-            } disabled:opacity-30`}
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-            </svg>
-            <span className="text-xs">代码</span>
-          </button>
-          {/* 上下题切换 */}
-          <button
-            onClick={goToPrevProblem}
-            disabled={currentProblemIndex <= 0}
-            className="px-4 py-3 text-zinc-500 disabled:opacity-30"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <button
-            onClick={goToNextProblem}
-            disabled={currentProblemIndex >= filteredProblems.length - 1}
-            className="px-4 py-3 text-zinc-500 disabled:opacity-30"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </nav>
       </div>
     );
   }

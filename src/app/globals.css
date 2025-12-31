@@ -57,3 +57,13 @@ body {
     background: #52525b;
   }
 }
+
+/* iOS 安全区域 */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+

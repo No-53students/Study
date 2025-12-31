@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
@@ -17,6 +17,23 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "React 开发教程",
   description: "Next.js 16 + React 19 + React Compiler 示例教程",
+  // 微信/Safari 全屏模式
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "算法学习",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover", // 关键：让内容延伸到安全区域
 };
 
 export default function RootLayout({

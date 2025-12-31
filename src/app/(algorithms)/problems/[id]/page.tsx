@@ -1,6 +1,5 @@
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { getProblemById, getAllProblemIds } from "../data";
-import ProblemClient from "./ProblemClient";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -17,8 +16,9 @@ export default async function ProblemPage({ params }: Props) {
   const problem = getProblemById(id);
 
   if (!problem) {
-    notFound();
+    redirect("/problems");
   }
 
-  return <ProblemClient problem={problem} />;
+  // 重定向到统一的 LeetCode 页面
+  redirect(`/problems/leetcode?id=${id}`);
 }
