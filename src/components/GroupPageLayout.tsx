@@ -54,10 +54,10 @@ export function GroupPageLayout({
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-white to-zinc-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950">
       <main className="px-4 py-6 sm:px-6 sm:py-10 lg:px-8 lg:py-12 pb-safe">
-        {/* 返回链接 - 带动画 */}
+        {/* 返回链接 - 带动画和触摸反馈 */}
         <Link
           href={backHref}
-          className="group inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors mb-6 sm:mb-8 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
+          className="group inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-900 active:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 dark:active:text-zinc-100 transition-colors mb-6 sm:mb-8 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded py-1 -my-1 active:bg-zinc-100 dark:active:bg-zinc-800"
           aria-label={`返回${backLabel}`}
         >
           <svg className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -72,27 +72,27 @@ export function GroupPageLayout({
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-bl from-blue-500/10 via-indigo-500/5 to-transparent rounded-full blur-2xl" aria-hidden="true"/>
           <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-tr from-cyan-500/10 to-transparent rounded-full blur-2xl" aria-hidden="true"/>
 
-          <div className="relative flex items-center gap-4">
+          <div className="relative flex items-start sm:items-center gap-3 sm:gap-4 flex-wrap sm:flex-nowrap">
             {/* 图标容器 */}
-            <div className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 text-3xl sm:text-4xl shadow-lg shadow-blue-500/20 transform hover:scale-105 hover:rotate-3 transition-transform" aria-hidden="true">
+            <div className="flex h-12 w-12 sm:h-14 sm:w-14 lg:h-16 lg:w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 text-2xl sm:text-3xl lg:text-4xl shadow-lg shadow-blue-500/20 shrink-0" aria-hidden="true">
               {icon}
             </div>
 
             <div className="min-w-0 flex-1">
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 truncate">
+              <h1 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 break-words">
                 {title}
               </h1>
-              <p className="mt-1 text-sm sm:text-base text-zinc-500 dark:text-zinc-400 truncate">
+              <p className="mt-0.5 sm:mt-1 text-xs sm:text-sm lg:text-base text-zinc-500 dark:text-zinc-400 line-clamp-2">
                 {subtitle}
               </p>
             </div>
 
             {/* 计数徽章 */}
-            <div className="shrink-0 flex flex-col items-center p-3 rounded-xl bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-800 dark:to-zinc-800/50 border border-zinc-200/50 dark:border-zinc-700/50">
-              <span className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-white" aria-label={`共${routes.length}个教程`}>
+            <div className="shrink-0 flex flex-col items-center p-2 sm:p-3 rounded-xl bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-800 dark:to-zinc-800/50 border border-zinc-200/50 dark:border-zinc-700/50">
+              <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-zinc-900 dark:text-white" aria-label={`共${routes.length}个教程`}>
                 {routes.length}
               </span>
-              <span className="text-xs text-zinc-500 dark:text-zinc-400">教程</span>
+              <span className="text-[10px] sm:text-xs text-zinc-500 dark:text-zinc-400">教程</span>
             </div>
           </div>
         </header>

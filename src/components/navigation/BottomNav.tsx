@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import PWALink from "@/components/PWALink";
 import { useCallback, useEffect, useState } from "react";
 
 interface NavItem {
@@ -158,7 +158,7 @@ export default function BottomNav() {
           const colors = colorConfig[item.color];
 
           return (
-            <Link
+            <PWALink
               key={item.id}
               href={item.path}
               className="flex flex-col items-center justify-center gap-1 relative group active:scale-95 transition-transform duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-zinc-900 rounded-2xl mx-1"
@@ -189,7 +189,7 @@ export default function BottomNav() {
               </div>
 
               {/* 标签 */}
-              <span className={`relative z-10 text-[10px] font-semibold tracking-wide transition-all duration-200 ${
+              <span className={`relative z-10 text-[11px] font-semibold tracking-wide transition-all duration-200 ${
                 active
                   ? colors.text
                   : "text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-600 dark:group-hover:text-zinc-400"
@@ -201,7 +201,7 @@ export default function BottomNav() {
               <div className="absolute inset-0 rounded-2xl overflow-hidden" aria-hidden="true">
                 <div className="absolute inset-0 bg-current opacity-0 group-active:opacity-5 transition-opacity duration-150"/>
               </div>
-            </Link>
+            </PWALink>
           );
         })}
       </div>

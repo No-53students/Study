@@ -102,7 +102,7 @@
   /* ================================
      布局尺寸变量
      ================================ */
-  --sidebar-width: 14rem;
+  --sidebar-width: 18rem;
   --mobile-header-height: 3.5rem;
   --bottom-nav-height: 4rem;
 
@@ -286,6 +286,19 @@
   }
 }
 
+/* 普通页面内容区域左右间隙 */
+.main-content-padded {
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
+
+@media (min-width: 1024px) {
+  .main-content-padded {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
 html,
 body {
   overscroll-behavior: none; /* 禁用下拉刷新 */
@@ -334,6 +347,19 @@ body {
 
 .pt-safe {
   padding-top: env(safe-area-inset-top, 0px);
+}
+
+.pl-safe {
+  padding-left: env(safe-area-inset-left, 0px);
+}
+
+.pr-safe {
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+.px-safe {
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
 }
 
 /* 移动端触摸优化 */

@@ -33,6 +33,15 @@ export default function ProblemsPage() {
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
+            <Link
+              href="/concepts"
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-500/10 text-indigo-400 text-xs sm:text-sm font-medium hover:bg-indigo-500/20 transition-colors"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              <span className="hidden sm:inline">基础概念</span>
+            </Link>
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-800/80 text-xs sm:text-sm text-zinc-300">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"/>
               <span>{totalProblems} 题</span>
@@ -42,8 +51,76 @@ export default function ProblemsPage() {
       </header>
 
       <main className="mx-auto max-w-7xl px-3 sm:px-4 py-4 sm:py-8 pb-safe">
+        {/* 学习路线入口 - 顶部推荐 */}
+        <Link
+          href="/problems/roadmap"
+          className="group mb-6 sm:mb-8 block rounded-xl bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-purple-500/10 border border-blue-500/20 p-4 sm:p-5 hover:border-blue-400/40 hover:shadow-lg hover:shadow-blue-500/10 active:scale-[0.99] transition-all relative overflow-hidden"
+        >
+          <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl"/>
+          <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl"/>
+          <div className="relative flex items-center justify-between">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-2xl sm:text-3xl shadow-lg shadow-blue-500/30">
+                🎯
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="font-bold text-base sm:text-lg group-hover:text-blue-400 transition-colors">
+                    前端工程师必刷50题
+                  </h3>
+                  <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                    推荐路线
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-zinc-400">
+                  系统化学习路线，涵盖面试高频题和前端实战场景
+                </p>
+              </div>
+            </div>
+            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-zinc-500 group-hover:text-blue-400 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
+            </svg>
+          </div>
+        </Link>
+
+        {/* 工具入口 - 模板库和实战案例 */}
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
+          <Link
+            href="/concepts/templates"
+            className="group rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 p-3 sm:p-4 hover:border-purple-400/40 hover:shadow-lg hover:shadow-purple-500/10 active:scale-[0.99] transition-all"
+          >
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 text-xl sm:text-2xl shadow-lg shadow-purple-500/20">
+                📋
+              </div>
+              <div>
+                <h3 className="font-semibold text-sm sm:text-base group-hover:text-purple-400 transition-colors">
+                  解题模板库
+                </h3>
+                <p className="text-xs text-zinc-500">10+ 算法模板</p>
+              </div>
+            </div>
+          </Link>
+          <Link
+            href="/problems/cases"
+            className="group rounded-xl bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 p-3 sm:p-4 hover:border-orange-400/40 hover:shadow-lg hover:shadow-orange-500/10 active:scale-[0.99] transition-all"
+          >
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-red-600 text-xl sm:text-2xl shadow-lg shadow-orange-500/20">
+                💼
+              </div>
+              <div>
+                <h3 className="font-semibold text-sm sm:text-base group-hover:text-orange-400 transition-colors">
+                  前端实战案例
+                </h3>
+                <p className="text-xs text-zinc-500">10+ 真实场景</p>
+              </div>
+            </div>
+          </Link>
+        </div>
+
         {/* 统计概览 - 精美渐变卡片 */}
-        <div className="mb-6 sm:mb-8 grid grid-cols-4 gap-2 sm:gap-4">
+        <div className="mb-6 sm:mb-8 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
           {/* 总题目 - 特殊渐变 */}
           <div className="rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900 border border-zinc-700/50 p-2.5 sm:p-4 relative overflow-hidden group hover:border-zinc-600/50 transition-colors">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity"/>
@@ -90,7 +167,7 @@ export default function ProblemsPage() {
           <h2 className="text-lg sm:text-xl font-bold">题目分类</h2>
           <span className="text-xs text-zinc-500 ml-auto">{CATEGORIES.filter(c => categoryStats[c.id] > 0).length} 个分类</span>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4">
           {CATEGORIES.map((category) => {
             const count = categoryStats[category.id] || 0;
             if (count === 0) return null;

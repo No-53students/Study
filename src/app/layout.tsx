@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SidebarNav, BottomNav } from "@/components/navigation";
 import { getAppRoutes, ROUTE_GROUPS } from "@/lib/routes";
+import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,8 +16,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "React 开发教程",
-  description: "Next.js 16 + React 19 + React Compiler 示例教程",
+  title: "算法学习平台",
+  description: "React 开发教程与 LeetCode 算法题库学习工具",
+  keywords: ["React", "算法", "LeetCode", "前端", "教程", "Hooks"],
+  authors: [{ name: "开发者" }],
   // 微信/Safari 全屏模式
   appleWebApp: {
     capable: true,
@@ -27,14 +30,32 @@ export const metadata: Metadata = {
     telephone: false,
   },
   manifest: "/manifest.json",
+  icons: {
+    icon: [
+      { url: "/icons/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [
+      { url: "/icons/icon-180.png", sizes: "180x180", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+  },
+  other: {
+    "msapplication-TileColor": "#09090b",
+    "msapplication-TileImage": "/icons/icon-144.png",
+  },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  maximumScale: 5, // 允许用户缩放，符合 WCAG 可访问性要求
+  userScalable: true,
   viewportFit: "cover", // 关键：让内容延伸到安全区域
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
+  ],
 };
 
 export default function RootLayout({
@@ -65,9 +86,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-[100dvh] overflow-hidden`}
       >
+        <ServiceWorkerRegistration />
         <SidebarNav groups={sidebarGroups} />
         <BottomNav />
-        <main className="main-content main-content-with-nav h-[100dvh] overflow-y-auto overscroll-contain bg-zinc-50 pt-[var(--safe-area-top)] pb-[var(--safe-area-bottom)] lg:pt-0 lg:pb-0 dark:bg-zinc-950">
+        <main className="main-content main-content-with-nav h-[100dvh] overflow-y-auto overscroll-contain bg-zinc-50 pt-[var(--safe-area-top)] pb-[var(--safe-area-bottom)] dark:bg-zinc-950">
           {children}
         </main>
       </body>

@@ -1030,15 +1030,16 @@ export default function LeetCodePage() {
   // ==================== 桌面端布局 ====================
   return (
     <div ref={containerRef} className={`flex h-[100dvh] bg-zinc-950 text-white ${isDragging ? 'select-none' : ''}`}>
-      {/* 侧边栏折叠时的悬浮按钮 */}
+      {/* 侧边栏折叠时的悬浮按钮 - 小型图标按钮 */}
       {sidebarCollapsed && (
         <button
           onClick={() => setSidebarCollapsed(false)}
-          className="fixed left-4 top-4 z-50 flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg px-3 py-2 text-sm transition-colors shadow-lg"
+          className="fixed left-3 top-3 z-50 flex items-center justify-center w-8 h-8 bg-zinc-800/90 hover:bg-zinc-700 border border-zinc-700 rounded-lg text-sm transition-colors shadow-lg backdrop-blur-sm"
           title="显示侧边栏 (Ctrl+\)"
         >
-          <span>📋</span>
-          <span className="text-zinc-300">题目列表</span>
+          <svg className="w-4 h-4 text-zinc-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
         </button>
       )}
 

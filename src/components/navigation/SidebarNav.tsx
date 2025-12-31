@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import PWALink from "@/components/PWALink";
 import { useState, useEffect, useCallback, useRef } from "react";
 
 interface RouteInfo {
@@ -195,7 +195,7 @@ export default function SidebarNav({ groups }: SidebarNavProps) {
     <>
       {/* 移动端顶部导航栏 - 精致设计 */}
       <header className="fixed left-0 top-0 z-50 flex h-14 w-full items-center justify-between bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border-b border-zinc-200/80 dark:border-zinc-800/80 px-4 pt-[env(safe-area-inset-top)] lg:hidden shadow-sm" role="banner">
-        <Link href="/" className="flex items-center gap-2.5 group" aria-label="返回首页">
+        <PWALink href="/" className="flex items-center gap-2.5 group" aria-label="返回首页">
           <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 text-white shadow-lg shadow-blue-500/25 group-hover:shadow-blue-500/40 transition-shadow duration-300" aria-hidden="true">
             <svg className="w-5 h-5" viewBox="-11 -11 22 22">
               <circle r="2" fill="currentColor"/>
@@ -212,7 +212,7 @@ export default function SidebarNav({ groups }: SidebarNavProps) {
             <span className="text-sm font-bold text-zinc-900 dark:text-white">开发教程</span>
             <span className="text-[10px] text-zinc-500 dark:text-zinc-400">React & 算法</span>
           </div>
-        </Link>
+        </PWALink>
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="flex h-10 w-10 items-center justify-center rounded-xl text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
@@ -238,7 +238,8 @@ export default function SidebarNav({ groups }: SidebarNavProps) {
       {/* 折叠按钮 - 精致悬浮设计 */}
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className={`fixed top-5 z-50 hidden h-7 w-7 items-center justify-center rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 lg:flex group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${isCollapsed ? "left-4" : "left-[15.25rem]"}`}
+        className="fixed top-5 z-50 hidden h-7 w-7 items-center justify-center rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 lg:flex group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        style={{ left: isCollapsed ? "1rem" : "calc(var(--sidebar-width) - 0.75rem)" }}
         aria-label={isCollapsed ? "展开侧边栏" : "收起侧边栏"}
         aria-expanded={!isCollapsed}
       >
@@ -251,14 +252,14 @@ export default function SidebarNav({ groups }: SidebarNavProps) {
       <aside
         id="mobile-sidebar"
         className={`fixed left-0 top-0 z-40 h-[100dvh] flex border-r border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-900 pt-14 lg:pt-0 transition-transform duration-300 ease-out sidebar-shadow ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"} ${isCollapsed ? "lg:-translate-x-full" : "lg:translate-x-0"}`}
-        style={{ width: "16rem" }}
+        style={{ width: "var(--sidebar-width)" }}
         role="complementary"
         aria-label="侧边导航栏"
       >
         {/* 一级导航 - 图标栏 */}
         <div className="w-14 flex flex-col items-center py-4 border-r border-zinc-100 dark:border-zinc-800/80 bg-gradient-to-b from-zinc-50 to-white dark:from-zinc-900 dark:to-zinc-900/50 shrink-0" role="navigation" aria-label="分类导航">
           {/* Logo */}
-          <Link href="/" className="hidden lg:flex mb-5 h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105 transition-all duration-300 group relative overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2" aria-label="返回首页">
+          <PWALink href="/" className="hidden lg:flex mb-5 h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105 transition-all duration-300 group relative overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2" aria-label="返回首页">
             <svg className="w-5 h-5 relative z-10" viewBox="-11 -11 22 22" aria-hidden="true">
               <circle r="2" fill="currentColor"/>
               <g stroke="currentColor" fill="none" strokeWidth="1">
@@ -268,7 +269,7 @@ export default function SidebarNav({ groups }: SidebarNavProps) {
               </g>
             </svg>
             <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent" aria-hidden="true"/>
-          </Link>
+          </PWALink>
 
           {/* 分类图标 */}
           <div className="flex flex-col items-center gap-1.5" role="tablist" aria-label="内容分类">
@@ -326,7 +327,7 @@ export default function SidebarNav({ groups }: SidebarNavProps) {
           <nav key={contentKey} className="flex-1 overflow-y-auto overscroll-contain px-3 py-3 animate-fade-in" aria-label="页面导航">
             {activeCategory === "home" ? (
               <div className="space-y-1">
-                <Link
+                <PWALink
                   href="/"
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                     pathname === "/"
@@ -341,12 +342,12 @@ export default function SidebarNav({ groups }: SidebarNavProps) {
                     </svg>
                   </div>
                   <span>返回首页</span>
-                </Link>
+                </PWALink>
                 <div className="pt-4 pb-2">
                   <p className="px-3 text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">快速入口</p>
                 </div>
                 {groups.slice(0, 4).map((group) => (
-                  <Link
+                  <PWALink
                     key={group.name}
                     href={group.path}
                     className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800/80 transition-all duration-200 group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
@@ -355,7 +356,7 @@ export default function SidebarNav({ groups }: SidebarNavProps) {
                       {group.icon}
                     </div>
                     <span className="truncate group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">{group.title}</span>
-                  </Link>
+                  </PWALink>
                 ))}
               </div>
             ) : activeCategory === "tools" ? (
@@ -382,7 +383,7 @@ export default function SidebarNav({ groups }: SidebarNavProps) {
                       {/* 分组标题 */}
                       <button
                         onClick={() => toggleGroup(group.name)}
-                        className={`flex w-full items-center justify-between px-3 py-2.5 rounded-xl text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                        className={`flex w-full items-center gap-2 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                           hasActiveRoute
                             ? "bg-gradient-to-r from-zinc-100 to-zinc-50 dark:from-zinc-800 dark:to-zinc-800/50 shadow-sm"
                             : "hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
@@ -390,18 +391,16 @@ export default function SidebarNav({ groups }: SidebarNavProps) {
                         aria-expanded={isExpanded}
                         aria-controls={`group-${group.name}`}
                       >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-lg ${hasActiveRoute ? "bg-white dark:bg-zinc-700 shadow-sm" : "bg-zinc-100 dark:bg-zinc-800"} transition-colors`} aria-hidden="true">
-                            {group.icon}
-                          </div>
-                          <div className="flex flex-col items-start min-w-0">
-                            <span className={`truncate ${hasActiveRoute ? "font-semibold text-zinc-900 dark:text-white" : "text-zinc-700 dark:text-zinc-300"}`}>
-                              {group.title}
-                            </span>
-                            <span className="text-[10px] text-zinc-400">{group.routes.length} 个教程</span>
-                          </div>
+                        <div className={`w-8 h-8 shrink-0 rounded-lg flex items-center justify-center text-lg ${hasActiveRoute ? "bg-white dark:bg-zinc-700 shadow-sm" : "bg-zinc-100 dark:bg-zinc-800"} transition-colors`} aria-hidden="true">
+                          {group.icon}
                         </div>
-                        <svg className={`h-4 w-4 text-zinc-400 shrink-0 transition-transform duration-300 ${isExpanded ? "rotate-90" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
+                        <div className="flex-1 min-w-0 text-left">
+                          <div className={`truncate ${hasActiveRoute ? "font-semibold text-zinc-900 dark:text-white" : "text-zinc-700 dark:text-zinc-300"}`}>
+                            {group.title}
+                          </div>
+                          <div className="text-[10px] text-zinc-400">{group.routes.length} 个教程</div>
+                        </div>
+                        <svg className={`h-4 w-4 shrink-0 text-zinc-400 transition-transform duration-300 ${isExpanded ? "rotate-90" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
                         </svg>
                       </button>
@@ -413,26 +412,24 @@ export default function SidebarNav({ groups }: SidebarNavProps) {
                         role="region"
                         aria-labelledby={`group-button-${group.name}`}
                       >
-                        <ul className="ml-5 mt-2 pl-4 border-l-2 border-zinc-200 dark:border-zinc-700 space-y-0.5" role="list">
+                        <ul className="mt-1 space-y-0.5" role="list">
                           {group.routes.map((route, index) => {
                             const isActive = pathname === route.path;
                             return (
                               <li key={route.path} role="listitem">
-                                <Link
+                                <PWALink
                                   href={route.path}
-                                  className={`group flex items-center px-3 py-2 rounded-lg text-[13px] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                                  className={`group flex items-center gap-2 pl-11 pr-3 py-2 rounded-lg text-[13px] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                                     isActive
-                                      ? "bg-gradient-to-r from-blue-500/15 to-indigo-500/10 text-blue-600 font-semibold dark:text-blue-400"
-                                      : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 hover:pl-4 dark:text-zinc-400 dark:hover:text-white dark:hover:bg-zinc-800/60"
+                                      ? "bg-blue-500/10 text-blue-600 font-medium dark:text-blue-400"
+                                      : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-white dark:hover:bg-zinc-800/60"
                                   }`}
                                   style={{ animationDelay: `${index * 30}ms` }}
                                   aria-current={isActive ? "page" : undefined}
                                 >
-                                  {isActive && (
-                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 animate-pulse" aria-hidden="true"/>
-                                  )}
-                                  <span className="block truncate">{route.displayName}</span>
-                                </Link>
+                                  <span className={`w-1 h-1 rounded-full shrink-0 ${isActive ? "bg-blue-500" : "bg-zinc-300 dark:bg-zinc-600"}`} aria-hidden="true"/>
+                                  <span className="truncate">{route.displayName}</span>
+                                </PWALink>
                               </li>
                             );
                           })}
