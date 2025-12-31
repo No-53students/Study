@@ -594,55 +594,8 @@ export default function LeetCodePage() {
           </div>
         </header>
 
-        {/* 顶部 Tab 导航 */}
-        <nav className="flex border-b border-zinc-800 bg-zinc-900 shrink-0">
-          <button
-            onClick={() => setMobileView("list")}
-            className={`flex-1 py-2.5 text-sm font-medium transition-colors border-b-2 ${
-              mobileView === "list"
-                ? "text-green-400 border-green-500"
-                : "text-zinc-500 border-transparent"
-            }`}
-          >
-            题目
-          </button>
-          <button
-            onClick={() => setMobileView("description")}
-            disabled={!selectedProblem}
-            className={`flex-1 py-2.5 text-sm font-medium transition-colors border-b-2 ${
-              mobileView === "description"
-                ? "text-green-400 border-green-500"
-                : "text-zinc-500 border-transparent"
-            } disabled:opacity-30`}
-          >
-            描述
-          </button>
-          <button
-            onClick={() => setMobileView("solution")}
-            disabled={!selectedProblem}
-            className={`flex-1 py-2.5 text-sm font-medium transition-colors border-b-2 ${
-              mobileView === "solution"
-                ? "text-green-400 border-green-500"
-                : "text-zinc-500 border-transparent"
-            } disabled:opacity-30`}
-          >
-            题解
-          </button>
-          <button
-            onClick={() => setMobileView("code")}
-            disabled={!selectedProblem}
-            className={`flex-1 py-2.5 text-sm font-medium transition-colors border-b-2 ${
-              mobileView === "code"
-                ? "text-green-400 border-green-500"
-                : "text-zinc-500 border-transparent"
-            } disabled:opacity-30`}
-          >
-            代码
-          </button>
-        </nav>
-
-        {/* 移动端内容区域 - 添加底部安全距离 */}
-        <div className="flex-1 overflow-hidden pb-safe">
+        {/* 移动端内容区域 */}
+        <div className="flex-1 overflow-hidden">
           {/* 题目列表视图 */}
           {mobileView === "list" && (
             <div className="h-full flex flex-col">
@@ -898,11 +851,15 @@ export default function LeetCodePage() {
                   options={{
                     minimap: { enabled: false },
                     fontSize: 14,
-                    lineNumbers: "on",
+                    lineNumbers: "off",
                     scrollBeyondLastLine: false,
                     wordWrap: "on",
                     automaticLayout: true,
                     tabSize: 2,
+                    folding: false,
+                    glyphMargin: false,
+                    lineDecorationsWidth: 0,
+                    lineNumbersMinChars: 0,
                   }}
                 />
               </div>
@@ -1000,6 +957,53 @@ export default function LeetCodePage() {
             </div>
           )}
         </div>
+
+        {/* 底部 Tab 导航 */}
+        <nav className="flex border-t border-zinc-800 bg-zinc-900 shrink-0 pb-safe">
+          <button
+            onClick={() => setMobileView("list")}
+            className={`flex-1 py-3 text-sm font-medium transition-colors ${
+              mobileView === "list"
+                ? "text-green-400"
+                : "text-zinc-500"
+            }`}
+          >
+            题目
+          </button>
+          <button
+            onClick={() => setMobileView("description")}
+            disabled={!selectedProblem}
+            className={`flex-1 py-3 text-sm font-medium transition-colors ${
+              mobileView === "description"
+                ? "text-green-400"
+                : "text-zinc-500"
+            } disabled:opacity-30`}
+          >
+            描述
+          </button>
+          <button
+            onClick={() => setMobileView("solution")}
+            disabled={!selectedProblem}
+            className={`flex-1 py-3 text-sm font-medium transition-colors ${
+              mobileView === "solution"
+                ? "text-green-400"
+                : "text-zinc-500"
+            } disabled:opacity-30`}
+          >
+            题解
+          </button>
+          <button
+            onClick={() => setMobileView("code")}
+            disabled={!selectedProblem}
+            className={`flex-1 py-3 text-sm font-medium transition-colors ${
+              mobileView === "code"
+                ? "text-green-400"
+                : "text-zinc-500"
+            } disabled:opacity-30`}
+          >
+            代码
+          </button>
+        </nav>
       </div>
     );
   }
