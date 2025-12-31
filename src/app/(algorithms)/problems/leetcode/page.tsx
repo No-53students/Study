@@ -38,7 +38,7 @@ interface ConsoleOutput {
 }
 
 // 移动端视图类型
-type MobileView = "list" | "description" | "solution";
+type MobileView = "list" | "description" | "solution" | "code";
 
 // localStorage keys
 const LAYOUT_KEY = 'leetcode-layout';
@@ -772,6 +772,122 @@ export default function LeetCodePage() {
               )}
             </div>
           )}
+
+          {/* 代码视图 */}
+          {mobileView === "code" && selectedProblem && (
+            <div className="h-full flex flex-col">
+              {/* 代码编辑器 */}
+              <div className="flex-1 min-h-0">
+                <Editor
+                  height="100%"
+                  defaultLanguage="javascript"
+                  value={code}
+                  onChange={(value) => setCode(value || "")}
+                  theme="vs-dark"
+                  options={{
+                    minimap: { enabled: false },
+                    fontSize: 14,
+                    lineNumbers: "on",
+                    scrollBeyondLastLine: false,
+                    wordWrap: "on",
+                    automaticLayout: true,
+                    tabSize: 2,
+                  }}
+                />
+              </div>
+
+              {/* 运行按钮和结果 */}
+              <div className="border-t border-zinc-800 bg-zinc-900">
+                {/* 操作栏 */}
+                <div className="flex items-center gap-2 p-2 border-b border-zinc-800">
+                  <button
+                    onClick={runCode}
+                    disabled={isRunning}
+                    className="flex-1 px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 disabled:opacity-50 text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                  >
+                    {isRunning ? (
+                      <>
+                        <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                        </svg>
+                        运行中...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        运行代码
+                      </>
+                    )}
+                  </button>
+                  <button
+                    onClick={resetCode}
+                    className="px-3 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-sm transition-colors"
+                  >
+                    重置
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (currentSolution?.code) {
+                        setCode(currentSolution.code);
+                      }
+                    }}
+                    className="px-3 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-sm transition-colors"
+                    title="填入参考答案"
+                  >
+                    答案
+                  </button>
+                </div>
+
+                {/* 测试结果 */}
+                <div className="max-h-48 overflow-y-auto p-2">
+                  {testResults.length > 0 ? (
+                    <div className="space-y-2">
+                      {testResults.map((result, index) => (
+                        <div
+                          key={result.id}
+                          className={`p-2 rounded text-xs ${
+                            result.passed ? "bg-green-900/30 border border-green-800" : "bg-red-900/30 border border-red-800"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className={result.passed ? "text-green-400" : "text-red-400"}>
+                              {result.passed ? "✓" : "✗"} 用例 {index + 1}
+                            </span>
+                          </div>
+                          {!result.passed && (
+                            <div className="text-zinc-400 space-y-1">
+                              <div>输入: <code className="text-zinc-300">{result.input}</code></div>
+                              <div>期望: <code className="text-green-400">{result.expected}</code></div>
+                              <div>实际: <code className="text-red-400">{result.actual}</code></div>
+                              {result.error && <div className="text-red-400">错误: {result.error}</div>}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                      {/* 通过率统计 */}
+                      <div className="text-center py-2 text-sm">
+                        {testResults.filter(r => r.passed).length === testResults.length ? (
+                          <span className="text-green-400">🎉 全部通过！</span>
+                        ) : (
+                          <span className="text-zinc-400">
+                            通过 {testResults.filter(r => r.passed).length}/{testResults.length} 个用例
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center text-zinc-500 py-4 text-sm">
+                      点击运行代码查看测试结果
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 移动端底部导航栏 */}
@@ -810,6 +926,18 @@ export default function LeetCodePage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
             <span className="text-xs">题解</span>
+          </button>
+          <button
+            onClick={() => setMobileView("code")}
+            disabled={!selectedProblem}
+            className={`flex-1 flex flex-col items-center gap-1 py-3 transition-colors ${
+              mobileView === "code" ? "text-green-400" : "text-zinc-500"
+            } disabled:opacity-30`}
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+            <span className="text-xs">代码</span>
           </button>
           {/* 上下题切换 */}
           <button
