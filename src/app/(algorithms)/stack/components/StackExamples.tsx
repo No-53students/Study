@@ -45,32 +45,32 @@ function StackVisualization() {
     <div className="rounded-lg border border-zinc-200 p-6 dark:border-zinc-700">
       <h3 className="mb-4 text-lg font-semibold">示例 1: 栈的基本操作</h3>
 
-      <div className="mb-4 flex gap-2">
+      <div className="mb-4 flex flex-wrap gap-2">
         <input
           type="number"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="输入数字"
-          className="w-24 rounded-md border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800"
+          className="w-20 sm:w-24 rounded-md border border-zinc-300 px-2 sm:px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800"
           onKeyDown={(e) => e.key === "Enter" && push()}
         />
         <button
           onClick={push}
-          className="rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
+          className="rounded-md bg-green-600 px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white hover:bg-green-700"
         >
-          Push 入栈
+          Push
         </button>
         <button
           onClick={pop}
-          className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+          className="rounded-md bg-red-600 px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white hover:bg-red-700"
         >
-          Pop 出栈
+          Pop
         </button>
         <button
           onClick={peek}
-          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+          className="rounded-md bg-blue-600 px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white hover:bg-blue-700"
         >
-          Peek 查看
+          Peek
         </button>
       </div>
 
@@ -332,7 +332,7 @@ function BrowserHistory() {
         ))}
       </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-4">
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <div className="mb-2 text-sm font-medium">后退栈 (Back Stack):</div>
           <div className="min-h-[100px] rounded bg-zinc-100 p-2 dark:bg-zinc-800">
@@ -466,7 +466,7 @@ main();`}
         {isRunning ? "执行中..." : "运行代码"}
       </button>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <div className="mb-2 text-sm font-medium">调用栈 (Call Stack):</div>
           <div className="flex min-h-[200px] flex-col-reverse rounded bg-zinc-100 p-2 dark:bg-zinc-800">

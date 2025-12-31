@@ -598,46 +598,16 @@ export default function LeetCodePage() {
   if (isMobile) {
     return (
       <div className="flex flex-col h-[100dvh] bg-zinc-950 text-white">
-        {/* 移动端头部 */}
-        <header className="flex items-center justify-between px-4 py-3 border-b border-zinc-800 bg-zinc-900 shrink-0 pt-[calc(0.75rem+var(--safe-area-top))]">
-          <div className="flex items-center gap-2">
-            <Link href="/problems" className="text-zinc-400 hover:text-white">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </Link>
-            <h1 className="text-base font-semibold truncate max-w-[200px]">
-              {mobileView === "list" ? "算法题库" : selectedProblem?.title || "题目"}
-            </h1>
-          </div>
-          {/* 上下题切换 + 进度 */}
-          <div className="flex items-center gap-1">
-            <button
-              onClick={goToPrevProblem}
-              disabled={currentProblemIndex <= 0}
-              className="p-2 text-zinc-500 disabled:opacity-30"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <span className="text-xs text-zinc-400 min-w-[40px] text-center">
-              {currentProblemIndex + 1}/{filteredProblems.length}
-            </span>
-            <button
-              onClick={goToNextProblem}
-              disabled={currentProblemIndex >= filteredProblems.length - 1}
-              className="p-2 text-zinc-500 disabled:opacity-30"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
-        </header>
-
         {/* 顶部 Tab 导航 */}
-        <nav className="flex border-b border-zinc-800 bg-zinc-900 shrink-0">
+        <nav className="flex border-b border-zinc-800 bg-zinc-900 shrink-0 pt-[var(--safe-area-top)]">
+          <Link
+            href="/problems"
+            className="px-3 py-2.5 text-zinc-400 hover:text-white"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </Link>
           <button
             onClick={() => setMobileView("list")}
             className={`flex-1 py-2.5 text-sm font-medium transition-colors border-b-2 ${

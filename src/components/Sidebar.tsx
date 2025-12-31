@@ -102,25 +102,7 @@ export default function Sidebar({ groups }: SidebarProps) {
   const [expandedGroups, setExpandedGroups] = useState<string[]>(
     groups.map((g) => g.name) // 默认全部展开
   );
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-
-  // 路由变化时关闭移动端菜单
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [pathname]);
-
-  // 防止移动端菜单打开时页面滚动
-  useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isMobileMenuOpen]);
 
   // 同步侧边栏折叠状态到 body class
   useEffect(() => {
@@ -147,41 +129,6 @@ export default function Sidebar({ groups }: SidebarProps) {
 
   return (
     <>
-      {/* 移动端顶部导航栏 */}
-      <header className="fixed left-0 top-0 z-50 flex h-[var(--mobile-header-full)] w-full items-center justify-between border-b border-zinc-200 bg-white px-4 pt-[var(--safe-area-top)] dark:border-zinc-800 dark:bg-zinc-900 lg:hidden">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white font-bold">
-            R
-          </div>
-          <span className="text-base font-semibold text-zinc-900 dark:text-white">
-            React 教程
-          </span>
-        </Link>
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-zinc-600 hover:bg-zinc-100 active:bg-zinc-200 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:active:bg-zinc-700"
-          aria-label={isMobileMenuOpen ? "关闭菜单" : "打开菜单"}
-        >
-          {isMobileMenuOpen ? (
-            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          )}
-        </button>
-      </header>
-
-      {/* 移动端遮罩层 */}
-      {isMobileMenuOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
-
       {/* 桌面端折叠按钮 */}
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
@@ -202,11 +149,11 @@ export default function Sidebar({ groups }: SidebarProps) {
         </svg>
       </button>
 
-      {/* 侧边栏 */}
+      {/* 侧边栏 - 仅桌面端显示 */}
       <aside
-        className={`fixed left-0 top-0 z-40 h-[100dvh] w-64 border-r border-zinc-200 bg-white pt-[var(--safe-area-top)] transition-transform duration-300 dark:border-zinc-800 dark:bg-zinc-900 lg:pt-0 ${
-          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-        } ${isCollapsed ? "lg:-translate-x-full" : "lg:w-[var(--sidebar-width)] lg:translate-x-0"}`}
+        className={`fixed left-0 top-0 z-40 hidden h-[100dvh] w-64 border-r border-zinc-200 bg-white transition-transform duration-300 dark:border-zinc-800 dark:bg-zinc-900 lg:block ${
+          isCollapsed ? "lg:-translate-x-full" : "lg:w-[var(--sidebar-width)] lg:translate-x-0"
+        }`}
       >
         {/* Logo */}
         <div className="flex h-14 items-center border-b border-zinc-200 px-4 dark:border-zinc-800">
@@ -221,7 +168,7 @@ export default function Sidebar({ groups }: SidebarProps) {
         </div>
 
         {/* Navigation */}
-        <nav className="h-[calc(100dvh-3.5rem-var(--safe-area-top))] overflow-y-auto overscroll-contain p-3 pb-[calc(1rem+var(--safe-area-bottom))] lg:h-[calc(100dvh-3.5rem)]">
+        <nav className="h-[calc(100dvh-3.5rem)] overflow-y-auto overscroll-contain p-3 pb-4">
           <ul className="space-y-0.5">
             {/* 首页 */}
             <li>

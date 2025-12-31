@@ -57,12 +57,17 @@ export default function RootLayout({
 
   return (
     <html lang="zh-CN" className="h-full">
+      <head>
+        {/* PWA 全屏模式增强 */}
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-touch-fullscreen" content="yes" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-[100dvh] overflow-hidden`}
       >
         <SidebarNav groups={sidebarGroups} />
         <BottomNav />
-        <main className="main-content main-content-with-nav h-[100dvh] overflow-y-auto overscroll-contain bg-zinc-50 pt-[var(--mobile-header-full)] pb-[var(--safe-area-bottom)] lg:pt-0 lg:pb-0 dark:bg-zinc-950">
+        <main className="main-content main-content-with-nav h-[100dvh] overflow-y-auto overscroll-contain bg-zinc-50 pt-[var(--safe-area-top)] pb-[var(--safe-area-bottom)] lg:pt-0 lg:pb-0 dark:bg-zinc-950">
           {children}
         </main>
       </body>
