@@ -119,7 +119,7 @@ function AllTypesDisplay({
       </p>
       <button
         onClick={() => onAction("clicked!")}
-        className="mt-2 rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700"
+        className="mt-2 rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
       >
         调用 onAction
       </button>
@@ -144,7 +144,7 @@ export function AllTypesExample() {
       />
 
       {log && (
-        <div className="mt-3 rounded-md bg-green-100 p-2 text-sm text-green-800 dark:bg-green-900/30 dark:text-green-200">
+        <div className="mt-3 rounded-md bg-green-100 p-2 text-sm text-green-800 dark:bg-green-900/30 dark:text-green-200 animate-in fade-in duration-300">
           {log}
         </div>
       )}
@@ -188,7 +188,7 @@ function Button({
   return (
     <button
       disabled={disabled}
-      className={`rounded-md font-medium transition-colors ${variantClasses[variant]} ${sizeClasses[size]} ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+      className={`rounded-md font-medium transition-all duration-200 hover:scale-105 active:scale-95 disabled:hover:scale-100 ${variantClasses[variant]} ${sizeClasses[size]} ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
     >
       {label}
     </button>
@@ -263,7 +263,7 @@ interface CardProps {
 
 function Card({ title, content, footer }: CardProps) {
   return (
-    <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
+    <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800 transition-all duration-200 hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-600">
       <h4 className="font-semibold">{title}</h4>
       <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{content}</p>
       {footer && (
@@ -429,21 +429,21 @@ function Counter({ value, onChange, onReset }: CounterProps) {
     <div className="flex items-center gap-3 rounded-md bg-zinc-100 p-4 dark:bg-zinc-800">
       <button
         onClick={() => onChange(value - 1)}
-        className="flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600"
+        className="flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600 transition-all duration-200 hover:scale-110 active:scale-95"
       >
         -
       </button>
       <span className="min-w-[3rem] text-center text-2xl font-bold">{value}</span>
       <button
         onClick={() => onChange(value + 1)}
-        className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-white hover:bg-green-600"
+        className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-white hover:bg-green-600 transition-all duration-200 hover:scale-110 active:scale-95"
       >
         +
       </button>
       {onReset && (
         <button
           onClick={onReset}
-          className="ml-2 rounded bg-zinc-500 px-3 py-1 text-sm text-white hover:bg-zinc-600"
+          className="ml-2 rounded bg-zinc-500 px-3 py-1 text-sm text-white hover:bg-zinc-600 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           重置
         </button>

@@ -2,12 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+
+type DifficultyLevel = "beginner" | "intermediate" | "advanced";
 
 interface RouteInfo {
   path: string;
   name: string;
   displayName: string;
+  difficulty?: DifficultyLevel;
 }
 
 interface RouteGroup {
@@ -22,12 +25,85 @@ interface SidebarProps {
   groups: RouteGroup[];
 }
 
+// 难度分组配置
+const DIFFICULTY_CONFIG: Record<DifficultyLevel, { label: string; color: string }> = {
+  beginner: { label: "入门", color: "text-green-600 dark:text-green-400" },
+  intermediate: { label: "进阶", color: "text-amber-600 dark:text-amber-400" },
+  advanced: { label: "高级", color: "text-rose-600 dark:text-rose-400" },
+};
+
+// 按难度分组的路由列表
+function DifficultyGroupedRoutes({ routes, pathname }: { routes: RouteInfo[]; pathname: string }) {
+  const groupedRoutes = useMemo(() => {
+    const groups: Record<DifficultyLevel | "other", RouteInfo[]> = {
+      beginner: [],
+      intermediate: [],
+      advanced: [],
+      other: [],
+    };
+
+    routes.forEach((route) => {
+      const key = route.difficulty || "other";
+      groups[key].push(route);
+    });
+
+    return groups;
+  }, [routes]);
+
+  const isActive = (path: string) => pathname === path;
+
+  // 简化显示名称
+  const getShortName = (displayName: string) => {
+    // 移除括号内的英文注释，如 "栈 (Stack)" -> "栈"
+    return displayName.replace(/\s*\([^)]+\)$/, "");
+  };
+
+  return (
+    <div className="mt-1 ml-2.5 border-l border-zinc-200 pl-2.5 dark:border-zinc-700">
+      {(["beginner", "intermediate", "advanced", "other"] as const).map((difficulty) => {
+        const routeList = groupedRoutes[difficulty];
+        if (routeList.length === 0) return null;
+
+        const config = difficulty !== "other" ? DIFFICULTY_CONFIG[difficulty] : null;
+
+        return (
+          <div key={difficulty} className="mb-1.5 last:mb-0">
+            {config && (
+              <div className={`px-2 py-0.5 text-[10px] font-medium ${config.color}`}>
+                {config.label}
+              </div>
+            )}
+            <ul className="space-y-px">
+              {routeList.map((route) => (
+                <li key={route.path}>
+                  <Link
+                    href={route.path}
+                    className={`block rounded px-2 py-1 text-[13px] transition-colors truncate ${
+                      isActive(route.path)
+                        ? "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400"
+                        : "text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-500 dark:hover:bg-zinc-800 dark:hover:text-white"
+                    }`}
+                    title={route.displayName}
+                  >
+                    {getShortName(route.displayName)}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function Sidebar({ groups }: SidebarProps) {
   const pathname = usePathname();
   const [expandedGroups, setExpandedGroups] = useState<string[]>(
     groups.map((g) => g.name) // 默认全部展开
   );
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   // 路由变化时关闭移动端菜单
   useEffect(() => {
@@ -46,22 +122,33 @@ export default function Sidebar({ groups }: SidebarProps) {
     };
   }, [isMobileMenuOpen]);
 
-  const toggleGroup = (groupName: string) => {
+  // 同步侧边栏折叠状态到 body class
+  useEffect(() => {
+    if (isCollapsed) {
+      document.body.classList.add("sidebar-collapsed");
+    } else {
+      document.body.classList.remove("sidebar-collapsed");
+    }
+    return () => {
+      document.body.classList.remove("sidebar-collapsed");
+    };
+  }, [isCollapsed]);
+
+  const toggleGroup = useCallback((groupName: string) => {
     setExpandedGroups((prev) =>
       prev.includes(groupName)
         ? prev.filter((n) => n !== groupName)
         : [...prev, groupName]
     );
-  };
+  }, []);
 
-  const isActive = (path: string) => pathname === path;
   const isGroupActive = (group: RouteGroup) =>
     pathname.startsWith(group.path) || group.routes.some((r) => pathname === r.path);
 
   return (
     <>
       {/* 移动端顶部导航栏 */}
-      <header className="fixed left-0 top-0 z-50 flex h-14 w-full items-center justify-between border-b border-zinc-200 bg-white px-4 dark:border-zinc-800 dark:bg-zinc-900 lg:hidden">
+      <header className="fixed left-0 top-0 z-50 flex h-[var(--mobile-header-full)] w-full items-center justify-between border-b border-zinc-200 bg-white px-4 pt-[var(--safe-area-top)] dark:border-zinc-800 dark:bg-zinc-900 lg:hidden">
         <Link href="/" className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white font-bold">
             R
@@ -72,7 +159,7 @@ export default function Sidebar({ groups }: SidebarProps) {
         </Link>
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+          className="flex h-10 w-10 items-center justify-center rounded-lg text-zinc-600 hover:bg-zinc-100 active:bg-zinc-200 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:active:bg-zinc-700"
           aria-label={isMobileMenuOpen ? "关闭菜单" : "打开菜单"}
         >
           {isMobileMenuOpen ? (
@@ -95,38 +182,58 @@ export default function Sidebar({ groups }: SidebarProps) {
         />
       )}
 
+      {/* 桌面端折叠按钮 */}
+      <button
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        className={`fixed top-4 z-50 hidden h-8 w-8 items-center justify-center rounded-full border border-zinc-200 bg-white shadow-sm transition-all duration-300 hover:bg-zinc-50 active:scale-95 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 lg:flex ${
+          isCollapsed ? "left-4" : "left-[calc(var(--sidebar-width)-1rem)]"
+        }`}
+        aria-label={isCollapsed ? "展开侧边栏" : "折叠侧边栏"}
+      >
+        <svg
+          className={`h-4 w-4 text-zinc-600 transition-transform duration-300 dark:text-zinc-400 ${
+            isCollapsed ? "rotate-180" : ""
+          }`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
       {/* 侧边栏 */}
       <aside
-        className={`fixed left-0 top-0 z-50 h-screen w-72 border-r border-zinc-200 bg-white transition-transform duration-300 dark:border-zinc-800 dark:bg-zinc-900 lg:w-64 lg:translate-x-0 lg:z-40 ${
+        className={`fixed left-0 top-0 z-40 h-[100dvh] w-64 border-r border-zinc-200 bg-white pt-[var(--safe-area-top)] transition-transform duration-300 dark:border-zinc-800 dark:bg-zinc-900 lg:pt-0 ${
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        } ${isCollapsed ? "lg:-translate-x-full" : "lg:w-[var(--sidebar-width)] lg:translate-x-0"}`}
       >
         {/* Logo */}
-        <div className="flex h-16 items-center border-b border-zinc-200 px-6 dark:border-zinc-800">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white font-bold">
+        <div className="flex h-14 items-center border-b border-zinc-200 px-4 dark:border-zinc-800">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-blue-600 text-sm text-white font-bold">
               R
             </div>
-            <span className="text-lg font-semibold text-zinc-900 dark:text-white">
+            <span className="text-base font-semibold text-zinc-900 dark:text-white">
               React 教程
             </span>
           </Link>
         </div>
 
         {/* Navigation */}
-        <nav className="h-[calc(100vh-4rem)] overflow-y-auto p-4 pb-20">
-          <ul className="space-y-1">
+        <nav className="h-[calc(100dvh-3.5rem-var(--safe-area-top))] overflow-y-auto overscroll-contain p-3 pb-[calc(1rem+var(--safe-area-bottom))] lg:h-[calc(100dvh-3.5rem)]">
+          <ul className="space-y-0.5">
             {/* 首页 */}
             <li>
               <Link
                 href="/"
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
+                className={`flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-colors ${
                   pathname === "/"
                     ? "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400"
                     : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
                 }`}
               >
-                <span className="text-lg">🏠</span>
+                <span className="text-base">🏠</span>
                 <span>首页</span>
               </Link>
             </li>
@@ -137,18 +244,18 @@ export default function Sidebar({ groups }: SidebarProps) {
                 {/* 一级目录 */}
                 <button
                   onClick={() => toggleGroup(group.name)}
-                  className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors ${
+                  className={`flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-sm transition-colors ${
                     isGroupActive(group)
                       ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-white"
                       : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="text-lg">{group.icon}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">{group.icon}</span>
                     <span>{group.title}</span>
                   </div>
                   <svg
-                    className={`h-4 w-4 transition-transform ${
+                    className={`h-3.5 w-3.5 transition-transform ${
                       expandedGroups.includes(group.name) ? "rotate-90" : ""
                     }`}
                     fill="none"
@@ -164,25 +271,9 @@ export default function Sidebar({ groups }: SidebarProps) {
                   </svg>
                 </button>
 
-                {/* 二级目录 */}
+                {/* 二级目录 - 按难度分组 */}
                 {expandedGroups.includes(group.name) && group.routes.length > 0 && (
-                  <ul className="mt-1 ml-3 space-y-0.5 border-l-2 border-zinc-200 pl-3 dark:border-zinc-700">
-                    {group.routes.map((route) => (
-                      <li key={route.path}>
-                        <Link
-                          href={route.path}
-                          className={`block rounded-lg px-3 py-2 text-sm transition-colors truncate ${
-                            isActive(route.path)
-                              ? "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400"
-                              : "text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-500 dark:hover:bg-zinc-800 dark:hover:text-white"
-                          }`}
-                          title={route.displayName}
-                        >
-                          {route.displayName}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                  <DifficultyGroupedRoutes routes={group.routes} pathname={pathname} />
                 )}
               </li>
             ))}

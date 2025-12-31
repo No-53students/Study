@@ -23,7 +23,10 @@
       "Bash(do echo \"=== $file ===\" grep \"leetcodeId:\" \"/Users/wangguorong/Study/next/my-app/src/app/\\(algorithms\\)/problems/data/$file.ts\")",
       "Bash(grep:*)",
       "Bash(node scripts/add-frontend-relevance.js:*)",
-      "Bash(sort:*)"
+      "Bash(sort:*)",
+      "Bash(node -e:*)",
+      "Bash(node scripts/count-animations.js:*)",
+      "Bash(rm:*)"
     ],
     "deny": [],
     "ask": []

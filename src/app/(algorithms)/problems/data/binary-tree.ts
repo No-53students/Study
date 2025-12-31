@@ -303,6 +303,82 @@ maxDepth(3)
       },
       {
         name: "迭代 BFS（层序遍历）",
+        animation: {
+          type: "tree" as const,
+          title: "二叉树最大深度 - BFS 层序遍历演示",
+          steps: [
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              description: "初始：队列=[3]，depth=0",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["3"], color: "yellow" as const, label: "第1层" }],
+              description: "处理第1层：取出3，depth=1，子节点9,20入队",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [
+                { nodeIds: ["3"], color: "green" as const },
+                { nodeIds: ["9", "20"], color: "yellow" as const, label: "第2层" },
+              ],
+              description: "处理第2层：取出9和20，depth=2，子节点15,7入队",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [
+                { nodeIds: ["3", "9", "20"], color: "green" as const },
+                { nodeIds: ["15", "7"], color: "yellow" as const, label: "第3层" },
+              ],
+              description: "处理第3层：取出15和7，depth=3，无子节点",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["3", "9", "20", "15", "7"], color: "green" as const }],
+              description: "队列为空，最大深度 depth=3 ✓",
+            },
+          ] as TreeStep[],
+        },
         code: `/**
  * 二叉树的最大深度 - BFS 层序遍历
  *
@@ -374,6 +450,99 @@ function maxDepth(root) {
       },
       {
         name: "迭代 DFS（显式栈）",
+        animation: {
+          type: "tree" as const,
+          title: "二叉树最大深度 - 迭代 DFS 演示",
+          steps: [
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              description: "初始：栈=[[3,1]]，maxDepth=0",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              pointers: { "3": ["pop"] },
+              highlights: [{ nodeIds: ["3"], color: "yellow" as const, label: "depth=1" }],
+              description: "弹出[3,1]，maxDepth=1，入栈[9,2]和[20,2]",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [
+                { nodeIds: ["3"], color: "green" as const },
+                { nodeIds: ["9"], color: "yellow" as const, label: "depth=2" },
+              ],
+              description: "弹出[9,2]，maxDepth=2，叶节点无子节点入栈",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [
+                { nodeIds: ["3", "9"], color: "green" as const },
+                { nodeIds: ["20"], color: "yellow" as const, label: "depth=2" },
+              ],
+              description: "弹出[20,2]，入栈[15,3]和[7,3]",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [
+                { nodeIds: ["3", "9", "20"], color: "green" as const },
+                { nodeIds: ["15"], color: "yellow" as const, label: "depth=3" },
+              ],
+              description: "弹出[15,3]，maxDepth=3",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["3", "9", "20", "15", "7"], color: "green" as const }],
+              description: "弹出[7,3]，栈空，最大深度 maxDepth=3 ✓",
+            },
+          ] as TreeStep[],
+        },
         code: `/**
  * 二叉树的最大深度 - 迭代 DFS（显式栈）
  *
@@ -693,6 +862,62 @@ isSameTree(1, 1)
       },
       {
         name: "迭代 BFS",
+        animation: {
+          type: "tree" as const,
+          title: "相同的树 - 迭代 BFS 演示",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              description: "树 p=[1,2,3]，树 q=[1,2,3]。队列=[[1p,1q]]",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["1"], color: "yellow" as const, label: "比较" }],
+              description: "取出[1,1]：p.val=1, q.val=1，相等 ✓ 入队子节点",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [
+                { nodeIds: ["1"], color: "green" as const },
+                { nodeIds: ["2"], color: "yellow" as const, label: "比较" },
+              ],
+              description: "取出[2,2]：p.val=2, q.val=2，相等 ✓",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [
+                { nodeIds: ["1", "2"], color: "green" as const },
+                { nodeIds: ["3"], color: "yellow" as const, label: "比较" },
+              ],
+              description: "取出[3,3]：p.val=3, q.val=3，相等 ✓",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["1", "2", "3"], color: "green" as const }],
+              description: "队列中的[null,null]都跳过，队列空，返回 true ✓",
+            },
+          ] as TreeStep[],
+        },
         code: `/**
  * 相同的树 - 迭代 BFS
  *
@@ -1046,6 +1271,62 @@ invertTree(4):
       },
       {
         name: "迭代 BFS",
+        animation: {
+          type: "tree" as const,
+          title: "翻转二叉树 - 迭代 BFS 演示",
+          steps: [
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 2, id: "2" },
+                { value: 7, id: "7" },
+              ],
+              description: "原始树 [4,2,7]。队列=[4]",
+            },
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 2, id: "2" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["2", "7"], color: "yellow" as const, label: "交换" }],
+              description: "取出4，交换其左右子节点：2 ↔ 7",
+            },
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 7, id: "7" },
+                { value: 2, id: "2" },
+              ],
+              highlights: [
+                { nodeIds: ["4"], color: "green" as const },
+                { nodeIds: ["7"], color: "yellow" as const, label: "处理" },
+              ],
+              description: "取出7（原位置在右），交换其子节点（无子节点）",
+            },
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 7, id: "7" },
+                { value: 2, id: "2" },
+              ],
+              highlights: [
+                { nodeIds: ["4", "7"], color: "green" as const },
+                { nodeIds: ["2"], color: "yellow" as const, label: "处理" },
+              ],
+              description: "取出2（原位置在左），交换其子节点（无子节点）",
+            },
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 7, id: "7" },
+                { value: 2, id: "2" },
+              ],
+              highlights: [{ nodeIds: ["4", "7", "2"], color: "green" as const, label: "完成" }],
+              description: "队列空，翻转完成！结果：4→[7,2]",
+            },
+          ] as TreeStep[],
+        },
         code: `/**
  * 翻转二叉树 - 迭代 BFS（层序遍历）
  *
@@ -1115,6 +1396,62 @@ function invertTree(root) {
       },
       {
         name: "迭代 DFS",
+        animation: {
+          type: "tree" as const,
+          title: "翻转二叉树 - 迭代 DFS 演示",
+          steps: [
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 2, id: "2" },
+                { value: 7, id: "7" },
+              ],
+              description: "原始树 [4,2,7]。栈=[4]",
+            },
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 2, id: "2" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["2", "7"], color: "yellow" as const, label: "交换" }],
+              description: "弹出4，交换左右子节点：2 ↔ 7，入栈[7,2]",
+            },
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 7, id: "7" },
+                { value: 2, id: "2" },
+              ],
+              highlights: [
+                { nodeIds: ["4"], color: "green" as const },
+                { nodeIds: ["2"], color: "yellow" as const, label: "pop" },
+              ],
+              description: "弹出2（栈顶），无子节点需交换",
+            },
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 7, id: "7" },
+                { value: 2, id: "2" },
+              ],
+              highlights: [
+                { nodeIds: ["4", "2"], color: "green" as const },
+                { nodeIds: ["7"], color: "yellow" as const, label: "pop" },
+              ],
+              description: "弹出7，无子节点需交换",
+            },
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 7, id: "7" },
+                { value: 2, id: "2" },
+              ],
+              highlights: [{ nodeIds: ["4", "7", "2"], color: "green" as const, label: "完成" }],
+              description: "栈空，翻转完成！结果：4→[7,2]",
+            },
+          ] as TreeStep[],
+        },
         code: `/**
  * 翻转二叉树 - 迭代 DFS（显式栈）
  *
@@ -1438,6 +1775,47 @@ isMirror(2, 2):
       },
       {
         name: "迭代 BFS",
+        animation: {
+          type: "tree" as const,
+          title: "对称二叉树 - 迭代 BFS 演示",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2L" },
+                { value: 2, id: "2R" },
+              ],
+              description: "树 [1,2,2]。队列=[[2L,2R]]（左右子树配对）",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2L" },
+                { value: 2, id: "2R" },
+              ],
+              highlights: [{ nodeIds: ["2L", "2R"], color: "yellow" as const, label: "比较" }],
+              description: "取出[2L,2R]：值都是2，相等 ✓ 入队子节点配对",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2L" },
+                { value: 2, id: "2R" },
+              ],
+              highlights: [{ nodeIds: ["2L", "2R"], color: "green" as const }],
+              description: "入队[2L.left, 2R.right]和[2L.right, 2R.left]（镜像配对）",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2L" },
+                { value: 2, id: "2R" },
+              ],
+              highlights: [{ nodeIds: ["1", "2L", "2R"], color: "green" as const }],
+              description: "所有[null,null]配对都跳过，队列空，返回 true ✓",
+            },
+          ] as TreeStep[],
+        },
         code: `/**
  * 对称二叉树 - 迭代 BFS
  *
@@ -1633,6 +2011,65 @@ function isSymmetric(root) {
     solutions: [
       {
         name: "递归 + 哈希表（推荐）",
+        animation: {
+          type: "tree" as const,
+          title: "从前序与中序遍历构造二叉树演示",
+          steps: [
+            {
+              nodes: [{ value: 3, id: "3" }],
+              description: "preorder=[3,9,20,15,7], inorder=[9,3,15,20,7]。取pre[0]=3为根",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+              ],
+              highlights: [{ nodeIds: ["3"], color: "green" as const }],
+              description: "中序中3的位置=1，左边[9]是左子树。取pre[1]=9为左子树根",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+              ],
+              highlights: [
+                { nodeIds: ["3", "9"], color: "green" as const },
+                { nodeIds: ["20"], color: "yellow" as const },
+              ],
+              description: "右边[15,20,7]是右子树。取pre[2]=20为右子树根",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [
+                { nodeIds: ["3", "9", "20"], color: "green" as const },
+                { nodeIds: ["15", "7"], color: "yellow" as const },
+              ],
+              description: "中序中20的位置，左边[15]→左子，右边[7]→右子",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["3", "9", "20", "15", "7"], color: "green" as const }],
+              description: "构造完成！树结构：3→[9,20], 20→[15,7]",
+            },
+          ] as TreeStep[],
+        },
         code: `/**
  * 从前序与中序遍历序列构造二叉树 - 递归 + 哈希表
  *
@@ -1744,32 +2181,26 @@ inorder  = [9, 3, 15, 20, 7]
 ### 关键点
 - 先构建左子树，再构建右子树（与前序遍历顺序一致）
 - preIndex 全局递增，自动指向下一个根节点`,
+        timeComplexity: "O(n)",
+        spaceComplexity: "O(n)",
+      },
+      {
+        name: "递归（传递索引）",
         animation: {
           type: "tree" as const,
-          title: "从前序与中序构造二叉树演示",
+          title: "从前序与中序遍历构造二叉树 - 传递索引演示",
           steps: [
             {
-              nodes: [],
-              description: "前序: [3,9,20,15,7]，中序: [9,3,15,20,7]。前序第一个元素3是根",
-            },
-            {
-              nodes: [
-                { value: 3, id: "3" },
-              ],
-              pointers: { "3": ["root"] },
-              highlights: [{ nodeIds: ["3"], color: "green" as const }],
-              description: "创建根节点3。在中序中找到3的位置(索引1)，左边[9]是左子树，右边[15,20,7]是右子树",
+              nodes: [{ value: 3, id: "3" }],
+              description: "preorder=[3,9,20,15,7], inorder=[9,3,15,20,7]。build(0,4,0,4)：根=pre[0]=3",
             },
             {
               nodes: [
                 { value: 3, id: "3" },
                 { value: 9, id: "9" },
               ],
-              highlights: [
-                { nodeIds: ["3"], color: "green" as const },
-                { nodeIds: ["9"], color: "yellow" as const },
-              ],
-              description: "构建左子树：前序下一个元素9。中序左子树[9]只有一个元素，9是叶节点",
+              highlights: [{ nodeIds: ["3"], color: "green" as const }],
+              description: "中序查找3位置=1，leftSize=1。左子树build(1,1,0,0)：根=9",
             },
             {
               nodes: [
@@ -1781,22 +2212,7 @@ inorder  = [9, 3, 15, 20, 7]
                 { nodeIds: ["3", "9"], color: "green" as const },
                 { nodeIds: ["20"], color: "yellow" as const },
               ],
-              description: "构建右子树：前序下一个元素20。在中序右子树[15,20,7]中找20(索引3)，左边[15]右边[7]",
-            },
-            {
-              nodes: [
-                { value: 3, id: "3" },
-                { value: 9, id: "9" },
-                { value: 20, id: "20" },
-                null,
-                null,
-                { value: 15, id: "15" },
-              ],
-              highlights: [
-                { nodeIds: ["3", "9", "20"], color: "green" as const },
-                { nodeIds: ["15"], color: "yellow" as const },
-              ],
-              description: "构建20的左子树：前序下一个元素15。15是叶节点",
+              description: "右子树build(2,4,2,4)：根=pre[2]=20",
             },
             {
               nodes: [
@@ -1809,16 +2225,10 @@ inorder  = [9, 3, 15, 20, 7]
                 { value: 7, id: "7" },
               ],
               highlights: [{ nodeIds: ["3", "9", "20", "15", "7"], color: "green" as const }],
-              description: "构建20的右子树：前序下一个元素7。7是叶节点。构造完成！",
-              visitPath: ["3", "9", "20", "15", "7"],
+              description: "20的左子树build(3,3,2,2)→15，右子树build(4,4,4,4)→7。完成！",
             },
           ] as TreeStep[],
         },
-        timeComplexity: "O(n)",
-        spaceComplexity: "O(n)",
-      },
-      {
-        name: "递归（传递索引）",
         code: `/**
  * 从前序与中序遍历序列构造二叉树 - 递归（传递索引范围）
  *
@@ -2186,6 +2596,79 @@ result = [[3], [9,20], [15,7]]
       },
       {
         name: "DFS + 递归",
+        animation: {
+          type: "tree" as const,
+          title: "二叉树层序遍历 - DFS + 递归演示",
+          steps: [
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              description: "DFS(3, level=0)：result[0]不存在，创建[]，加入3",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["3"], color: "green" as const }, { nodeIds: ["9"], color: "yellow" as const }],
+              description: "DFS(9, level=1)：result[1]不存在，创建[]，加入9",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["3", "9"], color: "green" as const }, { nodeIds: ["20"], color: "yellow" as const }],
+              description: "DFS(20, level=1)：result[1]存在，加入20。result=[[3],[9,20]]",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [
+                { nodeIds: ["3", "9", "20"], color: "green" as const },
+                { nodeIds: ["15", "7"], color: "yellow" as const },
+              ],
+              description: "DFS(15,level=2)和DFS(7,level=2)：result=[[3],[9,20],[15,7]]",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["3", "9", "20", "15", "7"], color: "green" as const }],
+              description: "完成！结果：[[3], [9, 20], [15, 7]]",
+            },
+          ] as TreeStep[],
+        },
         code: `/**
  * 二叉树的层序遍历 - DFS + 递归
  *
@@ -2546,6 +3029,54 @@ function rightSideView(root) {
       },
       {
         name: "DFS（根-右-左）",
+        animation: {
+          type: "tree" as const,
+          title: "二叉树右视图 - DFS（根-右-左）演示",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["1"], color: "yellow" as const }],
+              description: "dfs(1, depth=0)：depth=result.length=0，记录1。result=[1]",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [
+                { nodeIds: ["1"], color: "green" as const },
+                { nodeIds: ["3"], color: "yellow" as const },
+              ],
+              description: "dfs(3, depth=1)：先遍历右子树！depth=1=result.length，记录3",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [
+                { nodeIds: ["1", "3"], color: "green" as const },
+                { nodeIds: ["2"], color: "blue" as const },
+              ],
+              description: "dfs(2, depth=1)：depth=1≠result.length=2，不记录（已有该层）",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["1", "3"], color: "green" as const, label: "右视图" }],
+              description: "完成！右视图 result=[1,3]",
+            },
+          ] as TreeStep[],
+        },
         code: `/**
  * 二叉树的右视图 - DFS（根-右-左）
  *
@@ -2918,6 +3449,53 @@ hasPathSum(5, 22)
       },
       {
         name: "迭代 BFS",
+        animation: {
+          type: "tree" as const,
+          title: "路径总和 - 迭代 BFS 演示",
+          steps: [
+            {
+              nodes: [
+                { value: 5, id: "5" },
+                { value: 4, id: "4" },
+                { value: 8, id: "8" },
+              ],
+              description: "targetSum=12。队列=[[5,5]]（节点,路径和）",
+            },
+            {
+              nodes: [
+                { value: 5, id: "5" },
+                { value: 4, id: "4" },
+                { value: 8, id: "8" },
+              ],
+              highlights: [{ nodeIds: ["5"], color: "green" as const }],
+              description: "取出[5,5]，非叶子。入队[4,9]和[8,13]",
+            },
+            {
+              nodes: [
+                { value: 5, id: "5" },
+                { value: 4, id: "4" },
+                { value: 8, id: "8" },
+              ],
+              highlights: [
+                { nodeIds: ["5"], color: "green" as const },
+                { nodeIds: ["4"], color: "yellow" as const },
+              ],
+              description: "取出[4,9]，是叶子！sum=9≠12，继续",
+            },
+            {
+              nodes: [
+                { value: 5, id: "5" },
+                { value: 4, id: "4" },
+                { value: 8, id: "8" },
+              ],
+              highlights: [
+                { nodeIds: ["5", "4"], color: "green" as const },
+                { nodeIds: ["8"], color: "yellow" as const },
+              ],
+              description: "取出[8,13]，是叶子！sum=13≠12，返回 false",
+            },
+          ] as TreeStep[],
+        },
         code: `/**
  * 路径总和 - 迭代 BFS
  *
@@ -2988,6 +3566,41 @@ function hasPathSum(root, targetSum) {
       },
       {
         name: "迭代 DFS",
+        animation: {
+          type: "tree" as const,
+          title: "路径总和 - 迭代 DFS 演示",
+          steps: [
+            {
+              nodes: [
+                { value: 5, id: "5" },
+                { value: 4, id: "4" },
+                { value: 8, id: "8" },
+              ],
+              description: "targetSum=9。栈=[[5,4]]（节点,剩余值9-5=4）",
+            },
+            {
+              nodes: [
+                { value: 5, id: "5" },
+                { value: 4, id: "4" },
+                { value: 8, id: "8" },
+              ],
+              highlights: [{ nodeIds: ["5"], color: "green" as const }],
+              description: "弹出[5,4]，非叶子。入栈[8,-3]和[4,0]",
+            },
+            {
+              nodes: [
+                { value: 5, id: "5" },
+                { value: 4, id: "4" },
+                { value: 8, id: "8" },
+              ],
+              highlights: [
+                { nodeIds: ["5"], color: "green" as const },
+                { nodeIds: ["4"], color: "yellow" as const },
+              ],
+              description: "弹出[4,0]（栈顶），是叶子！remaining=0，返回 true ✓",
+            },
+          ] as TreeStep[],
+        },
         code: `/**
  * 路径总和 - 迭代 DFS
  *
@@ -3353,6 +3966,59 @@ function lowestCommonAncestor(root, p, q) {
       },
       {
         name: "存储父节点",
+        animation: {
+          type: "tree" as const,
+          title: "二叉树最近公共祖先 - 存储父节点演示",
+          steps: [
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 5, id: "5" },
+                { value: 1, id: "1" },
+              ],
+              description: "查找p=5和q=1的LCA。BFS遍历构建父节点映射",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 5, id: "5" },
+                { value: 1, id: "1" },
+              ],
+              highlights: [{ nodeIds: ["3", "5", "1"], color: "yellow" as const }],
+              description: "parent={5→3, 1→3}。从p=5向上收集祖先",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 5, id: "5" },
+                { value: 1, id: "1" },
+              ],
+              highlights: [{ nodeIds: ["5", "3"], color: "blue" as const, label: "p的祖先" }],
+              description: "p的祖先集合: {5, 3}（包含自身）",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 5, id: "5" },
+                { value: 1, id: "1" },
+              ],
+              highlights: [
+                { nodeIds: ["5", "3"], color: "blue" as const },
+                { nodeIds: ["1"], color: "yellow" as const },
+              ],
+              description: "从q=1向上找：1不在集合中，继续；parent[1]=3在集合中！",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 5, id: "5" },
+                { value: 1, id: "1" },
+              ],
+              highlights: [{ nodeIds: ["3"], color: "green" as const, label: "LCA" }],
+              description: "找到LCA=3 ✓",
+            },
+          ] as TreeStep[],
+        },
         code: `/**
  * 二叉树的最近公共祖先 - 存储父节点法
  *
@@ -3776,6 +4442,56 @@ function maxPathSum(root) {
       },
       {
         name: "递归（返回数组）",
+        animation: {
+          type: "tree" as const,
+          title: "二叉树最大路径和 - 递归（返回数组）演示",
+          steps: [
+            {
+              nodes: [
+                { value: -10, id: "r" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+              ],
+              description: "递归函数返回[贡献值, 子树最大路径和]",
+            },
+            {
+              nodes: [
+                { value: -10, id: "r" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+              ],
+              highlights: [{ nodeIds: ["9"], color: "yellow" as const }],
+              description: "dfs(9)：叶节点，返回[9, 9]",
+            },
+            {
+              nodes: [
+                { value: -10, id: "r" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+              ],
+              highlights: [{ nodeIds: ["9"], color: "green" as const }, { nodeIds: ["20"], color: "yellow" as const }],
+              description: "dfs(20)：假设左=15,右=7。贡献=35，路径和=42。返回[35, 42]",
+            },
+            {
+              nodes: [
+                { value: -10, id: "r" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+              ],
+              highlights: [{ nodeIds: ["r"], color: "yellow" as const }],
+              description: "dfs(-10)：左贡献max(9,0)=9，右贡献max(35,0)=35。路径=-10+9+35=34",
+            },
+            {
+              nodes: [
+                { value: -10, id: "r" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+              ],
+              highlights: [{ nodeIds: ["20"], color: "green" as const, label: "最大=42" }],
+              description: "dfs(-10)返回[25, max(34,9,42)]=[ 25, 42]。最大路径和=42",
+            },
+          ] as TreeStep[],
+        },
         code: `/**
  * 二叉树中的最大路径和 - 递归（返回数组）
  *
@@ -4203,6 +4919,56 @@ function isValidBST(root) {
       },
       {
         name: "中序遍历",
+        animation: {
+          type: "tree" as const,
+          title: "验证 BST - 中序遍历演示",
+          steps: [
+            {
+              nodes: [
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+              ],
+              description: "中序遍历 BST 应该是严格递增的。prev=-∞",
+            },
+            {
+              nodes: [
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["1"], color: "yellow" as const }],
+              description: "中序：先访问左子树。节点1：1>prev(-∞) ✓ prev=1",
+            },
+            {
+              nodes: [
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["1"], color: "green" as const }, { nodeIds: ["2"], color: "yellow" as const }],
+              description: "访问根节点2：2>prev(1) ✓ prev=2",
+            },
+            {
+              nodes: [
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["1", "2"], color: "green" as const }, { nodeIds: ["3"], color: "yellow" as const }],
+              description: "访问右子树3：3>prev(2) ✓ prev=3",
+            },
+            {
+              nodes: [
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["1", "2", "3"], color: "green" as const }],
+              description: "中序序列[1,2,3]严格递增，是有效 BST ✓",
+            },
+          ] as TreeStep[],
+        },
         code: `/**
  * 验证二叉搜索树 - 递归中序遍历
  *
@@ -4295,6 +5061,56 @@ prev = -∞
       },
       {
         name: "迭代中序遍历",
+        animation: {
+          type: "tree" as const,
+          title: "验证 BST - 迭代中序遍历演示",
+          steps: [
+            {
+              nodes: [
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+              ],
+              description: "用栈模拟中序遍历。curr=2，一直向左入栈",
+            },
+            {
+              nodes: [
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["2", "1"], color: "blue" as const, label: "栈" }],
+              description: "入栈2，入栈1，curr=null。栈=[2,1]",
+            },
+            {
+              nodes: [
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["1"], color: "yellow" as const }],
+              description: "弹出1，检查1>prev(-∞) ✓ prev=1，转向右子树(null)",
+            },
+            {
+              nodes: [
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["1"], color: "green" as const }, { nodeIds: ["2"], color: "yellow" as const }],
+              description: "弹出2，检查2>prev(1) ✓ prev=2，转向右子树3",
+            },
+            {
+              nodes: [
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["1", "2"], color: "green" as const }, { nodeIds: ["3"], color: "yellow" as const }],
+              description: "入栈3，弹出3，检查3>prev(2) ✓ 是有效BST！",
+            },
+          ] as TreeStep[],
+        },
         code: `/**
  * 验证二叉搜索树 - 迭代中序遍历
  *
@@ -6476,6 +7292,110 @@ function flatten(root) {
 ### 复杂度
 - 时间：O(n)
 - 空间：O(h)，递归栈`,
+        animation: {
+          type: "tree" as const,
+          title: "二叉树展开为链表 - 递归（反向先序）",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 5, id: "5" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                null,
+                { value: 6, id: "6" },
+              ],
+              description: "树: [1,2,5,3,4,null,6]。反向先序：右→左→根",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 5, id: "5" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                null,
+                { value: 6, id: "6" },
+              ],
+              highlights: [{ nodeIds: ["6"], color: "yellow" as const }],
+              description: "先递归右子树最深处。处理6：prev=null，6.right=null，prev=6",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 5, id: "5" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                null,
+                { value: 6, id: "6" },
+              ],
+              highlights: [
+                { nodeIds: ["5"], color: "yellow" as const },
+                { nodeIds: ["6"], color: "green" as const, label: "prev" },
+              ],
+              description: "处理5：prev=6，5.right=6，prev=5",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 5, id: "5" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                null,
+                { value: 6, id: "6" },
+              ],
+              highlights: [
+                { nodeIds: ["4"], color: "yellow" as const },
+                { nodeIds: ["5"], color: "green" as const, label: "prev" },
+              ],
+              description: "回到左子树。处理4：prev=5，4.right=5，prev=4",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 5, id: "5" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                null,
+                { value: 6, id: "6" },
+              ],
+              highlights: [
+                { nodeIds: ["3"], color: "yellow" as const },
+                { nodeIds: ["4"], color: "green" as const, label: "prev" },
+              ],
+              description: "处理3：prev=4，3.right=4，prev=3",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 5, id: "5" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                null,
+                { value: 6, id: "6" },
+              ],
+              highlights: [
+                { nodeIds: ["2"], color: "yellow" as const },
+                { nodeIds: ["3"], color: "green" as const, label: "prev" },
+              ],
+              description: "处理2：prev=3，2.right=3，prev=2",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                null,
+                { value: 2, id: "2" },
+              ],
+              highlights: [{ nodeIds: ["1", "2"], color: "green" as const }],
+              description: "处理1：prev=2，1.right=2。完成！链表：1→2→3→4→5→6",
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(h)",
       },
@@ -6574,6 +7494,98 @@ function flatten(root) {
 ### 复杂度
 - 时间：O(n)
 - 空间：O(n)，栈空间`,
+        animation: {
+          type: "tree" as const,
+          title: "二叉树展开为链表 - 先序遍历+栈",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 5, id: "5" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                null,
+                { value: 6, id: "6" },
+              ],
+              highlights: [{ nodeIds: ["1"], color: "blue" as const, label: "栈" }],
+              description: "栈=[1]，prev=null。开始先序遍历",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 5, id: "5" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                null,
+                { value: 6, id: "6" },
+              ],
+              highlights: [
+                { nodeIds: ["1"], color: "green" as const, label: "prev" },
+                { nodeIds: ["5", "2"], color: "blue" as const, label: "栈" },
+              ],
+              description: "弹出1，push右5再push左2。栈=[5,2]，prev=1",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 5, id: "5" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                null,
+                { value: 6, id: "6" },
+              ],
+              highlights: [
+                { nodeIds: ["2"], color: "green" as const, label: "prev" },
+                { nodeIds: ["5", "4", "3"], color: "blue" as const, label: "栈" },
+              ],
+              description: "弹出2，1.right=2。push右4再push左3。栈=[5,4,3]",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 5, id: "5" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                null,
+                { value: 6, id: "6" },
+              ],
+              highlights: [
+                { nodeIds: ["3"], color: "green" as const, label: "prev" },
+                { nodeIds: ["5", "4"], color: "blue" as const, label: "栈" },
+              ],
+              description: "弹出3，2.right=3。3无子节点。栈=[5,4]",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 5, id: "5" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                null,
+                { value: 6, id: "6" },
+              ],
+              highlights: [
+                { nodeIds: ["4"], color: "green" as const, label: "prev" },
+                { nodeIds: ["5"], color: "blue" as const, label: "栈" },
+              ],
+              description: "弹出4，3.right=4。4无子节点。栈=[5]",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                null,
+                { value: 2, id: "2" },
+              ],
+              highlights: [{ nodeIds: ["1", "2"], color: "green" as const }],
+              description: "弹出5,6依次处理。最终链表：1→2→3→4→5→6",
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
@@ -6938,6 +7950,66 @@ BFS 遍历时，队列中每个元素携带两个信息：
 ### 复杂度
 - 时间：O(n)
 - 空间：O(n)，最坏情况完全二叉树`,
+        animation: {
+          type: "tree" as const,
+          title: "求根到叶节点数字之和 - BFS演示",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["1"], color: "blue" as const, label: "队列" }],
+              description: "队列=[(1,num=1)]，sum=0。BFS层序遍历",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [
+                { nodeIds: ["1"], color: "yellow" as const },
+                { nodeIds: ["2", "3"], color: "blue" as const, label: "队列" },
+              ],
+              description: "取出(1,1)，非叶子。加入(2,12)和(3,13)。队列=[(2,12),(3,13)]",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [
+                { nodeIds: ["2"], color: "green" as const, label: "叶子:12" },
+                { nodeIds: ["3"], color: "blue" as const, label: "队列" },
+              ],
+              description: "取出(2,12)，是叶子！sum += 12 = 12",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [
+                { nodeIds: ["2"], color: "green" as const },
+                { nodeIds: ["3"], color: "green" as const, label: "叶子:13" },
+              ],
+              description: "取出(3,13)，是叶子！sum += 13 = 25",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["1", "2", "3"], color: "green" as const }],
+              description: "队列空，完成！总和 = 12 + 13 = 25 ✓",
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
@@ -7342,6 +8414,64 @@ reverse 方法更直观：
 ### 复杂度
 - 时间：O(n)
 - 空间：O(n)`,
+        animation: {
+          type: "tree" as const,
+          title: "锯齿形遍历 - BFS+reverse",
+          steps: [
+            {
+              nodes: [
+                { value: 3, id: "1" },
+                { value: 9, id: "2" },
+                { value: 20, id: "3" },
+                null,
+                null,
+                { value: 15, id: "4" },
+                { value: 7, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["1"], color: "blue" as const }],
+              description: "第1层：正常收集[3]，无需reverse",
+            },
+            {
+              nodes: [
+                { value: 3, id: "1" },
+                { value: 9, id: "2" },
+                { value: 20, id: "3" },
+                null,
+                null,
+                { value: 15, id: "4" },
+                { value: 7, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["2", "3"], color: "yellow" as const }],
+              description: "第2层：正常收集[9,20]，需要reverse→[20,9]",
+            },
+            {
+              nodes: [
+                { value: 3, id: "1" },
+                { value: 9, id: "2" },
+                { value: 20, id: "3" },
+                null,
+                null,
+                { value: 15, id: "4" },
+                { value: 7, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["4", "5"], color: "green" as const }],
+              description: "第3层：正常收集[15,7]，无需reverse",
+            },
+            {
+              nodes: [
+                { value: 3, id: "1" },
+                { value: 9, id: "2" },
+                { value: 20, id: "3" },
+                null,
+                null,
+                { value: 15, id: "4" },
+                { value: 7, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["1", "2", "3", "4", "5"], color: "green" as const }],
+              description: "结果: [[3], [20,9], [15,7]] ✓",
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
@@ -7448,6 +8578,64 @@ DFS 遍历时携带层级信息：
 ### 复杂度
 - 时间：O(n)
 - 空间：O(n)，递归栈 + 结果数组`,
+        animation: {
+          type: "tree" as const,
+          title: "锯齿形遍历 - DFS递归",
+          steps: [
+            {
+              nodes: [
+                { value: 3, id: "1" },
+                { value: 9, id: "2" },
+                { value: 20, id: "3" },
+                null,
+                null,
+                { value: 15, id: "4" },
+                { value: 7, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["1"], color: "yellow" as const }],
+              description: "dfs(3, level=0)：偶数层push。result=[[3]]",
+            },
+            {
+              nodes: [
+                { value: 3, id: "1" },
+                { value: 9, id: "2" },
+                { value: 20, id: "3" },
+                null,
+                null,
+                { value: 15, id: "4" },
+                { value: 7, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["2"], color: "yellow" as const }],
+              description: "dfs(9, level=1)：奇数层unshift(9)。result=[[3],[9]]",
+            },
+            {
+              nodes: [
+                { value: 3, id: "1" },
+                { value: 9, id: "2" },
+                { value: 20, id: "3" },
+                null,
+                null,
+                { value: 15, id: "4" },
+                { value: 7, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["3"], color: "yellow" as const }],
+              description: "dfs(20, level=1)：奇数层unshift(20)。result=[[3],[20,9]]",
+            },
+            {
+              nodes: [
+                { value: 3, id: "1" },
+                { value: 9, id: "2" },
+                { value: 20, id: "3" },
+                null,
+                null,
+                { value: 15, id: "4" },
+                { value: 7, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["4", "5"], color: "green" as const }],
+              description: "dfs(15,2)和dfs(7,2)：偶数层push。result=[[3],[20,9],[15,7]] ✓",
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
@@ -7911,6 +9099,67 @@ pathSum(10)：
 ### 复杂度
 - 时间：O(n²) 最坏，O(n log n) 平均
 - 空间：O(n)，递归栈`,
+        animation: {
+          type: "tree" as const,
+          title: "路径总和 III - 双重递归",
+          steps: [
+            {
+              nodes: [
+                { value: 5, id: "1" },
+                { value: 3, id: "2" },
+                { value: 2, id: "3" },
+              ],
+              description: "简化例子：树[5,3,2]，targetSum=8。双重递归：外层遍历起点，内层计数",
+            },
+            {
+              nodes: [
+                { value: 5, id: "1" },
+                { value: 3, id: "2" },
+                { value: 2, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["1"], color: "yellow" as const, label: "起点" }],
+              description: "以5为起点：pathsFromNode(5,8)，5≠8继续向下",
+            },
+            {
+              nodes: [
+                { value: 5, id: "1" },
+                { value: 3, id: "2" },
+                { value: 2, id: "3" },
+              ],
+              highlights: [
+                { nodeIds: ["1", "2"], color: "green" as const, label: "5+3=8 ✓" },
+              ],
+              description: "从5往下到3：5+3=8 ✓ 找到一条路径！count=1",
+            },
+            {
+              nodes: [
+                { value: 5, id: "1" },
+                { value: 3, id: "2" },
+                { value: 2, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["2"], color: "yellow" as const, label: "起点" }],
+              description: "以3为起点：pathsFromNode(3,8)，3≠8，往下没有=5的",
+            },
+            {
+              nodes: [
+                { value: 5, id: "1" },
+                { value: 3, id: "2" },
+                { value: 2, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["3"], color: "yellow" as const, label: "起点" }],
+              description: "以2为起点：pathsFromNode(2,8)，2≠8，无子节点",
+            },
+            {
+              nodes: [
+                { value: 5, id: "1" },
+                { value: 3, id: "2" },
+                { value: 2, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["1", "2"], color: "green" as const }],
+              description: "总共找到1条路径：5→3=8。答案=1 ✓",
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n²)",
         spaceComplexity: "O(n)",
       },
@@ -8273,6 +9522,56 @@ nums = [1, 2, 3, 4]
 ### 复杂度
 - 时间：O(n)
 - 空间：O(log n)`,
+        animation: {
+          type: "tree" as const,
+          title: "有序数组转BST - 中间偏右",
+          steps: [
+            {
+              nodes: [],
+              description: "nums = [1,2,3,4]。中间偏右：mid=(0+3+1)/2=2，选3作根",
+            },
+            {
+              nodes: [{ value: 3, id: "1" }],
+              highlights: [{ nodeIds: ["1"], color: "green" as const, label: "root" }],
+              description: "build(0,3): mid=2，选nums[2]=3作为根节点",
+            },
+            {
+              nodes: [
+                { value: 3, id: "1" },
+                { value: 2, id: "2" },
+                { value: 4, id: "3" },
+              ],
+              highlights: [
+                { nodeIds: ["1"], color: "blue" as const },
+                { nodeIds: ["2", "3"], color: "green" as const },
+              ],
+              description: "build(0,1): mid=1选2。build(3,3): mid=3选4",
+            },
+            {
+              nodes: [
+                { value: 3, id: "1" },
+                { value: 2, id: "2" },
+                { value: 4, id: "3" },
+                { value: 1, id: "4" },
+              ],
+              highlights: [
+                { nodeIds: ["1", "2", "3"], color: "blue" as const },
+                { nodeIds: ["4"], color: "green" as const },
+              ],
+              description: "build(0,0): mid=0选1作为2的左子节点",
+            },
+            {
+              nodes: [
+                { value: 3, id: "1" },
+                { value: 2, id: "2" },
+                { value: 4, id: "3" },
+                { value: 1, id: "4" },
+              ],
+              highlights: [{ nodeIds: ["1", "2", "3", "4"], color: "green" as const }],
+              description: "完成！与偏左结构不同但都是平衡BST ✓",
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(log n)",
       },
@@ -8654,6 +9953,76 @@ function connect(root) {
 ### 复杂度
 - 时间：O(n)
 - 空间：O(1)`,
+        animation: {
+          type: "tree" as const,
+          title: "填充右指针 - O(1)空间",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["1"], color: "yellow" as const, label: "cur" }],
+              description: "cur=1。利用next指针遍历当前层，同时连接下一层",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [
+                { nodeIds: ["1"], color: "blue" as const },
+                { nodeIds: ["2", "3"], color: "green" as const, label: "2→3" },
+              ],
+              description: "遍历1的子节点：tail连接2和3。下一层链表：2→3",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [
+                { nodeIds: ["2"], color: "yellow" as const, label: "cur" },
+                { nodeIds: ["3"], color: "blue" as const },
+              ],
+              description: "cur移到下一层头dummy.next=2。通过next遍历2→3",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [
+                { nodeIds: ["2", "3"], color: "blue" as const },
+                { nodeIds: ["4", "5"], color: "green" as const, label: "4→5" },
+              ],
+              description: "遍历2的子节点4,5。下一层链表：4→5",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["1", "2", "3", "4", "5"], color: "green" as const }],
+              description: "完成！每层形成链表，O(1)空间 ✓",
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
       },
@@ -9105,6 +10474,65 @@ next(): nodes[2]=9, index=3
 ### 复杂度
 - 时间：构造 O(n)，next() O(1)，hasNext() O(1)
 - 空间：O(n)`,
+        animation: {
+          type: "tree" as const,
+          title: "BST迭代器 - 预处理法",
+          steps: [
+            {
+              nodes: [
+                { value: 7, id: "1" },
+                { value: 3, id: "2" },
+                { value: 15, id: "3" },
+              ],
+              description: "BST: [7,3,15]。预处理：先中序遍历存入数组",
+            },
+            {
+              nodes: [
+                { value: 7, id: "1" },
+                { value: 3, id: "2" },
+                { value: 15, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["2"], color: "yellow" as const }],
+              visitPath: ["2"],
+              description: "中序遍历：先访问左子树，nodes=[3]",
+            },
+            {
+              nodes: [
+                { value: 7, id: "1" },
+                { value: 3, id: "2" },
+                { value: 15, id: "3" },
+              ],
+              highlights: [
+                { nodeIds: ["2"], color: "blue" as const },
+                { nodeIds: ["1"], color: "yellow" as const },
+              ],
+              visitPath: ["2", "1"],
+              description: "访问根节点，nodes=[3,7]",
+            },
+            {
+              nodes: [
+                { value: 7, id: "1" },
+                { value: 3, id: "2" },
+                { value: 15, id: "3" },
+              ],
+              highlights: [
+                { nodeIds: ["2", "1"], color: "blue" as const },
+                { nodeIds: ["3"], color: "yellow" as const },
+              ],
+              visitPath: ["2", "1", "3"],
+              description: "访问右子树，nodes=[3,7,15]",
+            },
+            {
+              nodes: [
+                { value: 7, id: "1" },
+                { value: 3, id: "2" },
+                { value: 15, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["1", "2", "3"], color: "green" as const }],
+              description: "预处理完成！next()只需O(1)访问数组",
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(1)",
         spaceComplexity: "O(n)",
       },
@@ -9483,6 +10911,85 @@ count(null) = 0
 ### 复杂度
 - 时间：O(n)
 - 空间：O(log n)，递归栈`,
+        animation: {
+          type: "tree" as const,
+          title: "普通递归计数",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              description: "完全二叉树 [1,2,3,4,5]。递归：count = 1 + 左 + 右",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["4"], color: "green" as const, label: "1" }],
+              description: "countNodes(4)：无子节点，返回1",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [
+                { nodeIds: ["4"], color: "blue" as const },
+                { nodeIds: ["5"], color: "green" as const, label: "1" },
+              ],
+              description: "countNodes(5)：无子节点，返回1",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [
+                { nodeIds: ["2", "4", "5"], color: "green" as const, label: "3" },
+              ],
+              description: "countNodes(2)：1+1+1=3",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [
+                { nodeIds: ["2", "4", "5"], color: "blue" as const },
+                { nodeIds: ["3"], color: "green" as const, label: "1" },
+              ],
+              description: "countNodes(3)：无子节点，返回1",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["1", "2", "3", "4", "5"], color: "green" as const }],
+              description: "countNodes(1)：1+3+1=5 ✓",
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(log n)",
       },
@@ -9614,6 +11121,72 @@ function countNodes(root) {
 ### 复杂度
 - 时间：O(log²n)
 - 空间：O(1)，迭代实现`,
+        animation: {
+          type: "tree" as const,
+          title: "二分查找计数",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              description: "完全二叉树 [1,2,3,4,5]。用二分查找最后一层有多少节点",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["1", "2", "4"], color: "yellow" as const }],
+              description: "计算高度h=2。前h层节点=2²-1=3。最后一层范围[0,3]",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [
+                { nodeIds: ["1", "2", "3"], color: "blue" as const },
+                { nodeIds: ["5"], color: "green" as const, label: "mid=1" },
+              ],
+              description: "二分：mid=1，检查索引1的节点(5)是否存在→存在！left=2",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [
+                { nodeIds: ["1", "2", "3"], color: "blue" as const },
+                { nodeIds: ["4", "5"], color: "yellow" as const },
+              ],
+              description: "二分：mid=2，检查索引2的节点→不存在！right=1",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["1", "2", "3", "4", "5"], color: "green" as const }],
+              description: "left=2。总节点=(2²-1)+2=3+2=5 ✓ O(1)空间！",
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(log²n)",
         spaceComplexity: "O(1)",
       },

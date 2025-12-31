@@ -52,7 +52,7 @@ function Modal({ isOpen, onClose, title, children }: ModalProps) {
         onClick={onClose}
       />
       <div
-        className="relative mx-4 w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-zinc-800"
+        className="relative mx-4 w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-zinc-800 animate-in fade-in zoom-in-95 duration-200"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
@@ -63,7 +63,7 @@ function Modal({ isOpen, onClose, title, children }: ModalProps) {
           </h3>
           <button
             onClick={onClose}
-            className="rounded-full p-1 hover:bg-zinc-100 dark:hover:bg-zinc-700"
+            className="rounded-full p-1 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors duration-200"
           >
             ✕
           </button>
@@ -84,7 +84,7 @@ export function BasicModalExample() {
 
       <button
         onClick={() => setIsOpen(true)}
-        className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+        className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
       >
         打开模态框
       </button>
@@ -97,13 +97,13 @@ export function BasicModalExample() {
         <div className="flex justify-end gap-2">
           <button
             onClick={() => setIsOpen(false)}
-            className="rounded-md bg-zinc-200 px-4 py-2 hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
+            className="rounded-md bg-zinc-200 px-4 py-2 hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600 transition-all duration-200 hover:scale-105 active:scale-95"
           >
             取消
           </button>
           <button
             onClick={() => setIsOpen(false)}
-            className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+            className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
           >
             确定
           </button>
@@ -177,7 +177,7 @@ function Tooltip({ children, content }: TooltipProps) {
         show &&
         createPortal(
           <div
-            className="fixed z-50 max-w-xs rounded-lg bg-zinc-800 px-3 py-2 text-sm text-white shadow-lg"
+            className="fixed z-50 max-w-xs rounded-lg bg-zinc-800 px-3 py-2 text-sm text-white shadow-lg animate-in fade-in zoom-in-95 duration-150"
             style={{
               top: position.top,
               left: position.left,
@@ -250,7 +250,7 @@ function NotificationContainer({
       {notifications.map((notification) => (
         <div
           key={notification.id}
-          className={`flex items-center gap-3 rounded-lg px-4 py-3 shadow-lg transition-all ${
+          className={`flex items-center gap-3 rounded-lg px-4 py-3 shadow-lg transition-all animate-in slide-in-from-right duration-300 ${
             notification.type === "success"
               ? "bg-green-500 text-white"
               : notification.type === "error"
@@ -266,7 +266,7 @@ function NotificationContainer({
           <span>{notification.message}</span>
           <button
             onClick={() => onRemove(notification.id)}
-            className="ml-2 opacity-70 hover:opacity-100"
+            className="ml-2 opacity-70 hover:opacity-100 transition-opacity duration-200"
           >
             ✕
           </button>
@@ -308,19 +308,19 @@ export function NotificationExample() {
       <div className="flex gap-2">
         <button
           onClick={() => addNotification("success")}
-          className="rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700"
+          className="rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           成功通知
         </button>
         <button
           onClick={() => addNotification("error")}
-          className="rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+          className="rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           错误通知
         </button>
         <button
           onClick={() => addNotification("info")}
-          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           信息通知
         </button>
@@ -386,7 +386,7 @@ export function EventBubblingExample() {
                   addClick("Portal 按钮");
                   // e.stopPropagation(); // 取消注释可阻止冒泡
                 }}
-                className="rounded-md bg-green-600 px-3 py-1.5 text-sm text-white hover:bg-green-700"
+                className="rounded-md bg-green-600 px-3 py-1.5 text-sm text-white hover:bg-green-700 transition-all duration-200 hover:scale-105 active:scale-95"
               >
                 点击我
               </button>
@@ -474,7 +474,7 @@ function Dropdown({ trigger, items }: DropdownProps) {
         isOpen &&
         createPortal(
           <div
-            className="fixed z-50 min-w-[160px] rounded-lg border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-800"
+            className="fixed z-50 min-w-[160px] rounded-lg border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-800 animate-in fade-in zoom-in-95 duration-150"
             style={{ top: position.top, left: position.left }}
           >
             {items.map((item, index) => (
@@ -484,7 +484,7 @@ function Dropdown({ trigger, items }: DropdownProps) {
                   item.onClick();
                   setIsOpen(false);
                 }}
-                className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors duration-150"
               >
                 {item.label}
               </button>
@@ -513,7 +513,7 @@ export function DropdownExample() {
       <div className="mb-4 flex items-center gap-4">
         <Dropdown
           trigger={
-            <button className="rounded-md bg-zinc-200 px-4 py-2 hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600">
+            <button className="rounded-md bg-zinc-200 px-4 py-2 hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600 transition-all duration-200 hover:scale-105 active:scale-95">
               操作菜单 ▾
             </button>
           }
@@ -521,7 +521,7 @@ export function DropdownExample() {
         />
 
         {selected && (
-          <span className="text-sm text-zinc-500">
+          <span className="text-sm text-zinc-500 animate-in fade-in duration-200">
             已选择：<strong>{selected}</strong>
           </span>
         )}
@@ -535,7 +535,7 @@ export function DropdownExample() {
         <div className="mt-2">
           <Dropdown
             trigger={
-              <button className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+              <button className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95">
                 在 overflow:hidden 中 ▾
               </button>
             }

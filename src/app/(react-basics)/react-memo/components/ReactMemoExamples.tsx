@@ -51,7 +51,7 @@ export function BasicMemoExample() {
       <div className="mb-4">
         <button
           onClick={() => setCount((c) => c + 1)}
-          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           增加计数: {count}
         </button>
@@ -110,13 +110,13 @@ export function ObjectPropsExample() {
       <div className="mb-4 flex gap-2">
         <button
           onClick={() => setCount((c) => c + 1)}
-          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           计数: {count}
         </button>
         <button
           onClick={() => setColor(color === "blue" ? "red" : "blue")}
-          className="rounded-md bg-zinc-600 px-4 py-2 text-white hover:bg-zinc-700"
+          className="rounded-md bg-zinc-600 px-4 py-2 text-white hover:bg-zinc-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           切换颜色
         </button>
@@ -202,7 +202,7 @@ export function FunctionPropsExample() {
       <div className="mb-4">
         <button
           onClick={() => setCount((c) => c + 1)}
-          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           计数: {count}
         </button>
@@ -298,13 +298,13 @@ export function CustomCompareExample() {
       <div className="mb-4 flex gap-2">
         <button
           onClick={updateTimestamp}
-          className="rounded-md bg-zinc-600 px-4 py-2 text-white hover:bg-zinc-700"
+          className="rounded-md bg-zinc-600 px-4 py-2 text-white hover:bg-zinc-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           只更新时间戳
         </button>
         <button
           onClick={updateName}
-          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           更新名字
         </button>
@@ -364,8 +364,8 @@ const ListItemComponent = memo(function ListItemComponent({
         <span className="text-xs text-zinc-400">#{listItemRenderCount}</span>
         <button
           onClick={() => onToggle(item.id)}
-          className={`rounded px-2 py-1 text-xs text-white ${
-            item.completed ? "bg-zinc-500" : "bg-green-500"
+          className={`rounded px-2 py-1 text-xs text-white transition-all duration-200 hover:scale-105 active:scale-95 ${
+            item.completed ? "bg-zinc-500 hover:bg-zinc-600" : "bg-green-500 hover:bg-green-600"
           }`}
         >
           {item.completed ? "撤销" : "完成"}

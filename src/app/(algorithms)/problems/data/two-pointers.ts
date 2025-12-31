@@ -217,6 +217,46 @@ function isAlphanumeric(char) {
       },
       {
         name: "正则 + 反转",
+        animation: {
+          type: "two-pointers" as const,
+          title: "正则+反转验证回文演示",
+          steps: [
+            {
+              array: ["A", " ", "m", "a", "n"],
+              left: 0,
+              right: 4,
+              highlights: [],
+              description: "s=\"A man\"。先清洗后反转比较",
+            },
+            {
+              array: ["a", "m", "a", "n"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "blue" as const, label: "cleaned" },
+              ],
+              description: "toLowerCase+replace去非字母数字：\"aman\"",
+            },
+            {
+              array: ["n", "a", "m", "a"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "yellow" as const, label: "reversed" },
+              ],
+              description: "split().reverse().join()：\"nama\"",
+            },
+            {
+              array: ["aman", "≠", "nama"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 2], color: "red" as const, label: "不相等" },
+              ],
+              description: "\"aman\"≠\"nama\"，返回false。正则法简洁但需O(n)空间",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 验证回文串 - 正则 + 反转解法
  *
@@ -487,6 +527,55 @@ function twoSum(numbers, target) {
       },
       {
         name: "二分查找",
+        animation: {
+          type: "two-pointers" as const,
+          title: "二分查找两数之和演示",
+          steps: [
+            {
+              array: [2, 7, 11, 15],
+              left: 0,
+              right: 3,
+              highlights: [],
+              description: "numbers=[2,7,11,15], target=9。固定一个数，二分查找另一个",
+            },
+            {
+              array: [2, 7, 11, 15],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "固定2" },
+              ],
+              description: "i=0，固定numbers[0]=2。需要找complement=9-2=7",
+            },
+            {
+              array: [2, 7, 11, 15],
+              left: 1,
+              right: 3,
+              highlights: [
+                { indices: [2], color: "yellow" as const, label: "mid=11" },
+              ],
+              description: "在[7,11,15]中二分查找7。mid=11>7，right=mid-1",
+            },
+            {
+              array: [2, 7, 11, 15],
+              left: 1,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "找到7!" },
+              ],
+              description: "mid=7===7 ✓ 找到！返回[1,2](1-indexed)",
+            },
+            {
+              array: [1, 2],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "结果" },
+              ],
+              description: "结果[1,2] ✓ 二分法O(nlogn)，展示利用有序性的另一种方式",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 两数之和 II - 二分查找解法
  *
@@ -844,6 +933,57 @@ function threeSum(nums) {
       },
       {
         name: "哈希表法",
+        animation: {
+          type: "two-pointers" as const,
+          title: "哈希表法三数之和演示",
+          steps: [
+            {
+              array: [-1, -1, 0, 1, 2],
+              left: 0,
+              right: 4,
+              highlights: [],
+              description: "nums=[-1,-1,0,1,2]。固定一个数，用哈希表找另外两个",
+            },
+            {
+              array: [-1, -1, 0, 1, 2],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "固定-1" },
+              ],
+              description: "i=0，固定nums[0]=-1。用Set存储遍历过的数",
+            },
+            {
+              array: [-1, -1, 0, 1, 2],
+              left: 3,
+              right: 3,
+              highlights: [
+                { indices: [2], color: "yellow" as const, label: "seen有0" },
+                { indices: [3], color: "green" as const, label: "1需要0" },
+              ],
+              description: "j=3(1)，complement=0-1=0。0在seen中 ✓ 找到[-1,0,1]",
+            },
+            {
+              array: [-1, -1, 0, 1, 2],
+              left: 4,
+              right: 4,
+              highlights: [
+                { indices: [1], color: "yellow" as const, label: "seen有-1" },
+                { indices: [4], color: "green" as const, label: "2需要-1" },
+              ],
+              description: "j=4(2)，complement=0-2=-1。-1在seen中 ✓ 找到[-1,-1,2]",
+            },
+            {
+              array: ["[-1,0,1]", "[-1,-1,2]"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "结果" },
+              ],
+              description: "结果[[-1,0,1],[-1,-1,2]] ✓ 哈希表法O(n²)时间O(n)空间",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 三数之和 - 哈希表解法
  *
@@ -1157,6 +1297,55 @@ function maxArea(height) {
       },
       {
         name: "暴力法（不推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "暴力法盛水容器演示",
+          steps: [
+            {
+              array: [1, 8, 6, 2],
+              left: 0,
+              right: 3,
+              highlights: [],
+              description: "height=[1,8,6,2]。暴力枚举所有边的组合",
+            },
+            {
+              array: [1, 8, 6, 2],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "blue" as const, label: "1×1=1" },
+              ],
+              description: "i=0,j=1：min(1,8)×1=1",
+            },
+            {
+              array: [1, 8, 6, 2],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [1, 2], color: "green" as const, label: "6×1=6" },
+              ],
+              description: "i=1,j=2：min(8,6)×1=6 ✓ 最大",
+            },
+            {
+              array: [1, 8, 6, 2],
+              left: 1,
+              right: 3,
+              highlights: [
+                { indices: [1, 3], color: "yellow" as const, label: "2×2=4" },
+              ],
+              description: "i=1,j=3：min(8,2)×2=4",
+            },
+            {
+              array: [6],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "结果" },
+              ],
+              description: "最大容量=6。暴力法O(n²)会超时，仅用于理解",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 盛最多水的容器 - 暴力解法
  *
@@ -1441,6 +1630,64 @@ function isSubsequence(s, t) {
       },
       {
         name: "二分查找（进阶）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "二分查找预处理子序列演示",
+          steps: [
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: 0,
+              right: 5,
+              highlights: [],
+              description: "s=\"abc\", t=\"ahbgdc\"。预处理t中每个字符出现的位置",
+            },
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "a:[0]" },
+                { indices: [1], color: "green" as const, label: "h:[1]" },
+                { indices: [2], color: "yellow" as const, label: "b:[2]" },
+              ],
+              description: "charPos = {a:[0], h:[1], b:[2], g:[3], d:[4], c:[5]}",
+            },
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: 0,
+              right: 5,
+              highlights: [{ indices: [0], color: "green" as const, label: "找到a" }],
+              description: "找'a': prevIndex=-1, 在[0]中二分找>-1的位置，找到0",
+            },
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "已匹配" },
+                { indices: [2], color: "green" as const, label: "找到b" },
+              ],
+              description: "找'b': prevIndex=0, 在[2]中二分找>0的位置，找到2",
+            },
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0, 2], color: "green" as const, label: "已匹配" },
+                { indices: [5], color: "green" as const, label: "找到c" },
+              ],
+              description: "找'c': prevIndex=2, 在[5]中二分找>2的位置，找到5",
+            },
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: 0,
+              right: 5,
+              highlights: [{ indices: [0, 2, 5], color: "green" as const, label: "完整匹配" }],
+              description: "所有字符都找到匹配位置，返回 true",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 判断子序列 - 二分查找解法（进阶）
  *
@@ -1525,6 +1772,67 @@ s = "abc":
       },
       {
         name: "动态规划预处理",
+        animation: {
+          type: "two-pointers" as const,
+          title: "DP预处理子序列演示",
+          steps: [
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: 0,
+              right: 5,
+              highlights: [],
+              description: "s=\"abc\", t=\"ahbgdc\"。预处理dp[i][c]: 从位置i开始字符c首次出现的位置",
+            },
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: 5,
+              right: 5,
+              highlights: [{ indices: [5], color: "blue" as const, label: "pos=5" }],
+              description: "从后往前构建dp表: dp[5]={c:5, 其他:6}",
+            },
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: 0,
+              right: 5,
+              highlights: [{ indices: [0], color: "blue" as const, label: "dp[0]" }],
+              description: "dp[0]={a:0, h:1, b:2, g:3, d:4, c:5}，预处理完成",
+            },
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: 0,
+              right: 5,
+              highlights: [{ indices: [0], color: "green" as const, label: "找a" }],
+              description: "查询: pos=0, 找'a', dp[0]['a']=0, pos=0+1=1",
+            },
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: 1,
+              right: 5,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "已匹配" },
+                { indices: [2], color: "yellow" as const, label: "找b" },
+              ],
+              description: "pos=1, 找'b', dp[1]['b']=2, pos=2+1=3",
+            },
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: 3,
+              right: 5,
+              highlights: [
+                { indices: [0, 2], color: "green" as const, label: "已匹配" },
+                { indices: [5], color: "yellow" as const, label: "找c" },
+              ],
+              description: "pos=3, 找'c', dp[3]['c']=5, pos=5+1=6",
+            },
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: 0,
+              right: 5,
+              highlights: [{ indices: [0, 2, 5], color: "green" as const, label: "匹配成功" }],
+              description: "所有字符都匹配成功，返回 true",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 判断子序列 - 动态规划预处理解法
  *
@@ -1814,6 +2122,60 @@ function moveZeroes(nums) {
       },
       {
         name: "一次遍历交换",
+        animation: {
+          type: "two-pointers" as const,
+          title: "一次遍历交换移动零演示",
+          steps: [
+            {
+              array: [0, 1, 0, 3, 12],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "yellow" as const, label: "是零" }],
+              description: "初始化 slow=0, fast=0。nums[0]=0 是零，跳过",
+            },
+            {
+              array: [0, 1, 0, 3, 12],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [1], color: "green" as const, label: "非零" }],
+              description: "fast=1, nums[1]=1 非零。slow≠fast，交换 nums[0] 和 nums[1]",
+            },
+            {
+              array: [1, 0, 0, 3, 12],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "已处理" },
+                { indices: [2], color: "yellow" as const, label: "是零" },
+              ],
+              description: "交换后 [1,0,0,3,12]，slow=1。fast=2, nums[2]=0 是零，跳过",
+            },
+            {
+              array: [1, 0, 0, 3, 12],
+              left: 1,
+              right: 3,
+              highlights: [{ indices: [3], color: "green" as const, label: "非零" }],
+              description: "fast=3, nums[3]=3 非零。slow≠fast，交换 nums[1] 和 nums[3]",
+            },
+            {
+              array: [1, 3, 0, 0, 12],
+              left: 2,
+              right: 4,
+              highlights: [{ indices: [4], color: "green" as const, label: "非零" }],
+              description: "交换后 [1,3,0,0,12]，slow=2。fast=4, nums[4]=12 非零，交换",
+            },
+            {
+              array: [1, 3, 12, 0, 0],
+              left: 3,
+              right: 5,
+              highlights: [
+                { indices: [0, 1, 2], color: "green" as const, label: "非零" },
+                { indices: [3, 4], color: "red" as const, label: "零" },
+              ],
+              description: "交换后 [1,3,12,0,0]。一次遍历完成！",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 移动零 - 一次遍历交换解法
  *
@@ -2122,6 +2484,58 @@ function sortColors(nums: number[]): void {
       },
       {
         name: "两次遍历计数",
+        animation: {
+          type: "two-pointers" as const,
+          title: "两次遍历计数颜色分类演示",
+          steps: [
+            {
+              array: [2, 0, 2, 1, 1, 0],
+              left: 0,
+              right: 5,
+              highlights: [],
+              description: "输入 [2,0,2,1,1,0]。第一次遍历：统计各颜色数量",
+            },
+            {
+              array: [2, 0, 2, 1, 1, 0],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [1, 5], color: "red" as const, label: "0" },
+                { indices: [3, 4], color: "yellow" as const, label: "1" },
+                { indices: [0, 2], color: "blue" as const, label: "2" },
+              ],
+              description: "统计完成：count0=2, count1=2, count2=2",
+            },
+            {
+              array: [0, 0, 2, 1, 1, 0],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "red" as const, label: "填0" }],
+              description: "第二次遍历：先填充 count0=2 个 0",
+            },
+            {
+              array: [0, 0, 1, 1, 1, 0],
+              left: 2,
+              right: 3,
+              highlights: [
+                { indices: [0, 1], color: "red" as const, label: "0区" },
+                { indices: [2, 3], color: "yellow" as const, label: "填1" },
+              ],
+              description: "再填充 count1=2 个 1",
+            },
+            {
+              array: [0, 0, 1, 1, 2, 2],
+              left: 4,
+              right: 5,
+              highlights: [
+                { indices: [0, 1], color: "red" as const, label: "0区" },
+                { indices: [2, 3], color: "yellow" as const, label: "1区" },
+                { indices: [4, 5], color: "blue" as const, label: "填2" },
+              ],
+              description: "最后填充 count2=2 个 2。完成！[0,0,1,1,2,2]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 颜色分类 - 两次遍历计数解法
  *
@@ -2433,6 +2847,57 @@ function findDuplicate(nums: number[]): number {
       },
       {
         name: "二分查找",
+        animation: {
+          type: "two-pointers" as const,
+          title: "寻找重复数 - 二分查找演示",
+          steps: [
+            {
+              array: [1, 3, 4, 2, 2],
+              left: 1,
+              right: 4,
+              highlights: [],
+              description: "nums=[1,3,4,2,2], n=4。二分数值范围[1,4]，不是索引",
+            },
+            {
+              array: [1, 3, 4, 2, 2],
+              left: 1,
+              right: 4,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "≤2" },
+                { indices: [3, 4], color: "green" as const, label: "≤2" },
+              ],
+              description: "left=1, right=4, mid=2。统计≤2的数: {1,2,2}，共3个",
+            },
+            {
+              array: [1, 3, 4, 2, 2],
+              left: 1,
+              right: 2,
+              highlights: [],
+              description: "count=3 > mid=2，重复数在[1,2]范围。right=mid=2",
+            },
+            {
+              array: [1, 3, 4, 2, 2],
+              left: 1,
+              right: 2,
+              highlights: [{ indices: [0], color: "green" as const, label: "≤1" }],
+              description: "left=1, right=2, mid=1。统计≤1的数: {1}，共1个",
+            },
+            {
+              array: [1, 3, 4, 2, 2],
+              left: 2,
+              right: 2,
+              highlights: [],
+              description: "count=1 = mid=1，重复数在[2,2]范围。left=mid+1=2",
+            },
+            {
+              array: [1, 3, 4, 2, 2],
+              left: 2,
+              right: 2,
+              highlights: [{ indices: [3, 4], color: "red" as const, label: "重复数2" }],
+              description: "left=right=2，找到重复数 2！",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 寻找重复数 - 二分查找解法
  *

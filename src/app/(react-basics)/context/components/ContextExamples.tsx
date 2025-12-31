@@ -145,10 +145,10 @@ function ThemeToggleButton() {
   return (
     <button
       onClick={toggleTheme}
-      className={`rounded-md px-4 py-2 transition-colors ${
+      className={`rounded-md px-4 py-2 transition-all duration-200 hover:scale-105 active:scale-95 ${
         theme === "dark"
-          ? "bg-yellow-500 text-black"
-          : "bg-zinc-800 text-white"
+          ? "bg-yellow-500 text-black hover:bg-yellow-400"
+          : "bg-zinc-800 text-white hover:bg-zinc-700"
       }`}
     >
       {theme === "dark" ? "🌞 切换到亮色" : "🌙 切换到暗色"}
@@ -302,7 +302,7 @@ function ProductList() {
           </div>
           <button
             onClick={() => dispatch({ type: "ADD_ITEM", payload: product })}
-            className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+            className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
           >
             添加
           </button>
@@ -338,7 +338,7 @@ function CartSummary() {
                 onClick={() =>
                   dispatch({ type: "REMOVE_ITEM", payload: item.id })
                 }
-                className="text-red-500 hover:text-red-700"
+                className="text-red-500 hover:text-red-700 transition-all duration-200 hover:scale-110"
               >
                 ✕
               </button>
@@ -350,7 +350,7 @@ function CartSummary() {
         <span className="font-semibold">总计：¥{state.total}</span>
         <button
           onClick={() => dispatch({ type: "CLEAR_CART" })}
-          className="text-sm text-red-500 hover:text-red-700"
+          className="text-sm text-red-500 hover:text-red-700 transition-colors duration-200"
         >
           清空购物车
         </button>
@@ -430,8 +430,8 @@ function Header() {
         </select>
         <button
           onClick={isLoggedIn ? logout : login}
-          className={`rounded px-3 py-1 text-sm text-white ${
-            isLoggedIn ? "bg-red-500" : "bg-blue-500"
+          className={`rounded px-3 py-1 text-sm text-white transition-all duration-200 hover:scale-105 active:scale-95 ${
+            isLoggedIn ? "bg-red-500 hover:bg-red-600" : "bg-blue-500 hover:bg-blue-600"
           }`}
         >
           {isLoggedIn ? texts[language].logout : texts[language].login}

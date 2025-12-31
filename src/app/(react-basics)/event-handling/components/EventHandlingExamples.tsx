@@ -9,15 +9,20 @@ import { useState, useRef } from "react";
 export function BasicClickExample() {
   const [count, setCount] = useState(0);
   const [lastAction, setLastAction] = useState("");
+  const [animating, setAnimating] = useState(false);
 
   const handleClick = () => {
+    setAnimating(true);
     setCount((c) => c + 1);
     setLastAction("单击");
+    setTimeout(() => setAnimating(false), 150);
   };
 
   const handleDoubleClick = () => {
+    setAnimating(true);
     setCount((c) => c + 10);
     setLastAction("双击 (+10)");
+    setTimeout(() => setAnimating(false), 150);
   };
 
   return (
@@ -28,12 +33,12 @@ export function BasicClickExample() {
         <button
           onClick={handleClick}
           onDoubleClick={handleDoubleClick}
-          className="rounded-md bg-blue-600 px-6 py-3 text-white hover:bg-blue-700"
+          className={`rounded-md bg-blue-600 px-6 py-3 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95 ${animating ? 'scale-110' : ''}`}
         >
-          点击计数: {count}
+          点击计数: <span className={`inline-block transition-transform duration-150 ${animating ? 'scale-125 text-yellow-300' : ''}`}>{count}</span>
         </button>
         {lastAction && (
-          <span className="text-sm text-zinc-500">最后操作: {lastAction}</span>
+          <span className="text-sm text-zinc-500 animate-pulse">最后操作: {lastAction}</span>
         )}
       </div>
 
@@ -68,10 +73,15 @@ export function EventParamsExample() {
     { id: 3, name: "Angular" },
   ]);
   const [log, setLog] = useState<string[]>([]);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const handleDelete = (id: number, name: string) => {
-    setItems((items) => items.filter((item) => item.id !== id));
-    setLog((log) => [`删除了: ${name} (id: ${id})`, ...log].slice(0, 5));
+    setDeletingId(id);
+    setTimeout(() => {
+      setItems((items) => items.filter((item) => item.id !== id));
+      setLog((log) => [`删除了: ${name} (id: ${id})`, ...log].slice(0, 5));
+      setDeletingId(null);
+    }, 300);
   };
 
   const handleEdit = (item: Item) => {
@@ -86,19 +96,21 @@ export function EventParamsExample() {
         {items.map((item) => (
           <div
             key={item.id}
-            className="flex items-center justify-between rounded-md bg-zinc-100 px-4 py-2 dark:bg-zinc-800"
+            className={`flex items-center justify-between rounded-md bg-zinc-100 px-4 py-2 dark:bg-zinc-800 transition-all duration-300 ${
+              deletingId === item.id ? 'opacity-0 translate-x-4 scale-95' : 'opacity-100 translate-x-0 scale-100'
+            }`}
           >
             <span>{item.name}</span>
             <div className="flex gap-2">
               <button
                 onClick={() => handleEdit(item)}
-                className="rounded bg-blue-500 px-2 py-1 text-xs text-white hover:bg-blue-600"
+                className="rounded bg-blue-500 px-2 py-1 text-xs text-white hover:bg-blue-600 transition-all duration-200 hover:scale-110 active:scale-95"
               >
                 编辑
               </button>
               <button
                 onClick={() => handleDelete(item.id, item.name)}
-                className="rounded bg-red-500 px-2 py-1 text-xs text-white hover:bg-red-600"
+                className="rounded bg-red-500 px-2 py-1 text-xs text-white hover:bg-red-600 transition-all duration-200 hover:scale-110 active:scale-95"
               >
                 删除
               </button>
@@ -268,7 +280,7 @@ export function PreventDefaultExample() {
           <a
             href="https://google.com"
             onClick={handleLinkClick}
-            className="inline-block rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+            className="inline-block rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
           >
             点击这个链接（不会跳转）
           </a>
@@ -278,19 +290,19 @@ export function PreventDefaultExample() {
           <p className="mb-2 text-sm font-medium">事件冒泡:</p>
           <div
             onClick={handleOuterClick}
-            className="rounded-md bg-zinc-200 p-4 dark:bg-zinc-700"
+            className="rounded-md bg-zinc-200 p-4 dark:bg-zinc-700 transition-all duration-200 hover:bg-zinc-300 dark:hover:bg-zinc-600"
           >
             <p className="mb-2 text-xs text-zinc-500">外层 div（会收到冒泡事件）</p>
             <div className="flex gap-2">
               <button
                 onClick={handleInnerClick}
-                className="rounded bg-green-600 px-3 py-1 text-sm text-white"
+                className="rounded bg-green-600 px-3 py-1 text-sm text-white transition-all duration-200 hover:scale-105 active:scale-95"
               >
                 阻止冒泡
               </button>
               <button
                 onClick={handleInnerClickNoBubble}
-                className="rounded bg-orange-600 px-3 py-1 text-sm text-white"
+                className="rounded bg-orange-600 px-3 py-1 text-sm text-white transition-all duration-200 hover:scale-105 active:scale-95"
               >
                 不阻止冒泡
               </button>
@@ -459,7 +471,7 @@ export function FormEventExample() {
       <form onSubmit={handleSubmit} className="mb-4 space-y-4">
         <div>
           <label className="mb-1 block text-sm font-medium">
-            用户名 {focused === "username" && <span className="text-blue-500">(聚焦中)</span>}
+            用户名 {focused === "username" && <span className="text-blue-500 animate-pulse">(聚焦中)</span>}
           </label>
           <input
             type="text"
@@ -468,9 +480,9 @@ export function FormEventExample() {
             onChange={handleChange}
             onFocus={() => setFocused("username")}
             onBlur={() => setFocused(null)}
-            className={`w-full rounded-md border px-3 py-2 ${
+            className={`w-full rounded-md border px-3 py-2 transition-all duration-200 ${
               focused === "username"
-                ? "border-blue-500 ring-2 ring-blue-200"
+                ? "border-blue-500 ring-2 ring-blue-200 scale-[1.01]"
                 : "border-zinc-300 dark:border-zinc-600"
             } dark:bg-zinc-800`}
           />
@@ -478,7 +490,7 @@ export function FormEventExample() {
 
         <div>
           <label className="mb-1 block text-sm font-medium">
-            邮箱 {focused === "email" && <span className="text-blue-500">(聚焦中)</span>}
+            邮箱 {focused === "email" && <span className="text-blue-500 animate-pulse">(聚焦中)</span>}
           </label>
           <input
             type="email"
@@ -487,9 +499,9 @@ export function FormEventExample() {
             onChange={handleChange}
             onFocus={() => setFocused("email")}
             onBlur={() => setFocused(null)}
-            className={`w-full rounded-md border px-3 py-2 ${
+            className={`w-full rounded-md border px-3 py-2 transition-all duration-200 ${
               focused === "email"
-                ? "border-blue-500 ring-2 ring-blue-200"
+                ? "border-blue-500 ring-2 ring-blue-200 scale-[1.01]"
                 : "border-zinc-300 dark:border-zinc-600"
             } dark:bg-zinc-800`}
           />
@@ -497,17 +509,17 @@ export function FormEventExample() {
 
         <button
           type="submit"
-          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           提交
         </button>
       </form>
 
-      {submitted && (
-        <div className="mb-4 rounded-md bg-green-100 p-3 text-sm text-green-800 dark:bg-green-900/30 dark:text-green-200">
+      <div className={`mb-4 overflow-hidden transition-all duration-300 ${submitted ? 'max-h-20 opacity-100' : 'max-h-0 opacity-0'}`}>
+        <div className="rounded-md bg-green-100 p-3 text-sm text-green-800 dark:bg-green-900/30 dark:text-green-200">
           ✅ 表单已提交！数据: {JSON.stringify(formData)}
         </div>
-      )}
+      </div>
 
       <div className="rounded-md bg-zinc-900 p-4 text-sm">
         <pre className="text-green-400">

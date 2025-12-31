@@ -32,7 +32,7 @@ export function BasicChildrenExample() {
         <Card title="混合 children">
           <h5 className="font-medium">标题</h5>
           <p className="text-sm text-zinc-500">描述文字</p>
-          <button className="mt-2 rounded bg-blue-600 px-3 py-1 text-sm text-white">
+          <button className="mt-2 rounded bg-blue-600 px-3 py-1 text-sm text-white transition-all duration-200 hover:bg-blue-700 hover:scale-105 active:scale-95">
             按钮
           </button>
         </Card>
@@ -140,7 +140,7 @@ function Dialog({ title, children, footer, onClose }: DialogProps) {
         {onClose && (
           <button
             onClick={onClose}
-            className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+            className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-all duration-200 hover:scale-110"
           >
             ✕
           </button>
@@ -165,7 +165,7 @@ export function NamedSlotsExample() {
         <h3 className="mb-4 text-lg font-semibold">示例 3: 具名插槽</h3>
         <button
           onClick={() => setOpen(true)}
-          className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           打开对话框
         </button>
@@ -188,13 +188,13 @@ export function NamedSlotsExample() {
           <>
             <button
               onClick={() => setOpen(false)}
-              className="rounded bg-zinc-200 px-4 py-2 text-sm hover:bg-zinc-300 dark:bg-zinc-700"
+              className="rounded bg-zinc-200 px-4 py-2 text-sm hover:bg-zinc-300 dark:bg-zinc-700 transition-all duration-200 hover:scale-105 active:scale-95"
             >
               取消
             </button>
             <button
               onClick={() => setOpen(false)}
-              className="rounded bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700"
+              className="rounded bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700 transition-all duration-200 hover:scale-105 active:scale-95"
             >
               删除
             </button>
@@ -322,13 +322,13 @@ export function CloneElementExample() {
           Toolbar 组件自动为所有子元素添加统一样式：
         </p>
         <Toolbar>
-          <button className="bg-blue-600 text-white hover:bg-blue-700">
+          <button className="bg-blue-600 text-white hover:bg-blue-700 hover:scale-105 active:scale-95">
             保存
           </button>
-          <button className="bg-green-600 text-white hover:bg-green-700">
+          <button className="bg-green-600 text-white hover:bg-green-700 hover:scale-105 active:scale-95">
             发布
           </button>
-          <button className="bg-zinc-600 text-white hover:bg-zinc-700">
+          <button className="bg-zinc-600 text-white hover:bg-zinc-700 hover:scale-105 active:scale-95">
             取消
           </button>
         </Toolbar>

@@ -11,47 +11,48 @@ type Status = "idle" | "loading" | "success" | "error";
 function StatusDisplay({ status }: { status: Status }) {
   if (status === "loading") {
     return (
-      <div className="flex items-center gap-2 text-blue-600">
-        <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24">
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-            fill="none"
-          />
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-          />
-        </svg>
-        加载中...
+      <div className="flex items-center gap-3 text-blue-600 dark:text-blue-400">
+        <div className="relative">
+          <div className="h-5 w-5 rounded-full border-2 border-blue-200 dark:border-blue-800" />
+          <div className="absolute inset-0 h-5 w-5 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
+        </div>
+        <span className="font-medium">加载中...</span>
       </div>
     );
   }
 
   if (status === "success") {
     return (
-      <div className="flex items-center gap-2 text-green-600">
-        <span>✓</span> 加载成功!
+      <div className="flex items-center gap-2.5 text-emerald-600 dark:text-emerald-400">
+        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white">
+          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <span className="font-medium">加载成功!</span>
       </div>
     );
   }
 
   if (status === "error") {
     return (
-      <div className="flex items-center gap-2 text-red-600">
-        <span>✕</span> 加载失败
+      <div className="flex items-center gap-2.5 text-red-600 dark:text-red-400">
+        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white">
+          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </div>
+        <span className="font-medium">加载失败</span>
       </div>
     );
   }
 
   return (
-    <div className="text-zinc-500">
-      点击按钮开始加载
+    <div className="flex items-center gap-2.5 text-zinc-500 dark:text-zinc-400">
+      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-zinc-200 dark:bg-zinc-700">
+        <div className="h-1.5 w-1.5 rounded-full bg-zinc-400 dark:bg-zinc-500" />
+      </div>
+      <span>点击按钮开始加载</span>
     </div>
   );
 }
@@ -70,7 +71,7 @@ export function IfElseExample() {
     <div className="rounded-lg border border-zinc-200 p-6 dark:border-zinc-700">
       <h3 className="mb-4 text-lg font-semibold">示例 1: if/else 条件渲染</h3>
 
-      <div className="mb-4 rounded-md bg-zinc-100 p-4 dark:bg-zinc-800">
+      <div className="mb-4 rounded-md bg-zinc-100 p-4 dark:bg-zinc-800 transition-all duration-300">
         <StatusDisplay status={status} />
       </div>
 
@@ -78,13 +79,13 @@ export function IfElseExample() {
         <button
           onClick={simulate}
           disabled={status === "loading"}
-          className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 disabled:opacity-50"
+          className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 disabled:opacity-50 transition-all duration-200 hover:scale-105 active:scale-95 disabled:hover:scale-100"
         >
           模拟请求
         </button>
         <button
           onClick={() => setStatus("idle")}
-          className="rounded-md bg-zinc-600 px-4 py-2 text-sm text-white hover:bg-zinc-700"
+          className="rounded-md bg-zinc-600 px-4 py-2 text-sm text-white hover:bg-zinc-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           重置
         </button>
@@ -112,11 +113,11 @@ function UserStatus({ isOnline }: { isOnline: boolean }) {
   return (
     <div className="flex items-center gap-2">
       <span
-        className={`h-3 w-3 rounded-full ${
-          isOnline ? "bg-green-500" : "bg-zinc-400"
+        className={`h-3 w-3 rounded-full transition-all duration-300 ${
+          isOnline ? "bg-green-500 scale-110" : "bg-zinc-400 scale-100"
         }`}
       />
-      <span className={isOnline ? "text-green-600" : "text-zinc-500"}>
+      <span className={`transition-colors duration-300 ${isOnline ? "text-green-600" : "text-zinc-500"}`}>
         {isOnline ? "在线" : "离线"}
       </span>
     </div>
@@ -134,7 +135,7 @@ export function TernaryExample() {
         <UserStatus isOnline={isOnline} />
         <button
           onClick={() => setIsOnline(!isOnline)}
-          className="rounded-md bg-zinc-600 px-3 py-1 text-sm text-white hover:bg-zinc-700"
+          className="rounded-md bg-zinc-600 px-3 py-1 text-sm text-white hover:bg-zinc-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           切换状态
         </button>
@@ -177,7 +178,7 @@ function NotificationBadge({ count }: { count: number }) {
         </svg>
       </button>
       {count > 0 && (
-        <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+        <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white animate-in zoom-in duration-200">
           {count > 99 ? "99+" : count}
         </span>
       )}
@@ -197,14 +198,14 @@ export function LogicalAndExample() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setCount((c) => Math.max(0, c - 1))}
-            className="rounded bg-zinc-600 px-3 py-1 text-white hover:bg-zinc-700"
+            className="rounded bg-zinc-600 px-3 py-1 text-white hover:bg-zinc-700 transition-all duration-200 hover:scale-110 active:scale-95"
           >
             -
           </button>
-          <span className="w-8 text-center">{count}</span>
+          <span className="w-8 text-center font-medium">{count}</span>
           <button
             onClick={() => setCount((c) => c + 1)}
-            className="rounded bg-zinc-600 px-3 py-1 text-white hover:bg-zinc-700"
+            className="rounded bg-zinc-600 px-3 py-1 text-white hover:bg-zinc-700 transition-all duration-200 hover:scale-110 active:scale-95"
           >
             +
           </button>
@@ -306,34 +307,63 @@ function UserProfile({
   // 提前返回处理边界情况
   if (loading) {
     return (
-      <div className="rounded-md bg-zinc-100 p-4 dark:bg-zinc-800">
-        <div className="h-4 w-24 animate-pulse rounded bg-zinc-300 dark:bg-zinc-600" />
-        <div className="mt-2 h-3 w-32 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700" />
+      <div className="rounded-xl bg-gradient-to-r from-zinc-100 to-zinc-50 dark:from-zinc-800 dark:to-zinc-800/80 p-4 border border-zinc-200/50 dark:border-zinc-700/50">
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <div className="h-10 w-10 rounded-full bg-zinc-200 dark:bg-zinc-700 animate-pulse" />
+            <div className="absolute inset-0 rounded-full border-2 border-blue-500/30 border-t-blue-500 animate-spin" />
+          </div>
+          <div className="flex-1 space-y-2">
+            <div className="h-4 w-24 rounded-md bg-zinc-200 dark:bg-zinc-700 animate-pulse" />
+            <div className="h-3 w-32 rounded-md bg-zinc-200 dark:bg-zinc-700 animate-pulse" style={{ animationDelay: '0.1s' }} />
+          </div>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="rounded-md bg-red-100 p-4 text-red-800 dark:bg-red-900/30 dark:text-red-200">
-        错误: {error}
+      <div className="rounded-xl bg-gradient-to-r from-red-50 to-red-50/50 dark:from-red-900/20 dark:to-red-900/10 p-4 border border-red-200/50 dark:border-red-800/30">
+        <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40">
+            <svg className="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </div>
+          <span className="text-red-700 dark:text-red-300 font-medium">错误: {error}</span>
+        </div>
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="rounded-md bg-yellow-100 p-4 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200">
-        用户不存在
+      <div className="rounded-xl bg-gradient-to-r from-amber-50 to-amber-50/50 dark:from-amber-900/20 dark:to-amber-900/10 p-4 border border-amber-200/50 dark:border-amber-800/30">
+        <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/40">
+            <svg className="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+          </div>
+          <span className="text-amber-700 dark:text-amber-300 font-medium">用户不存在</span>
+        </div>
       </div>
     );
   }
 
   // 主要渲染逻辑
   return (
-    <div className="rounded-md bg-green-100 p-4 dark:bg-green-900/30">
-      <p className="font-medium text-green-800 dark:text-green-200">{user.name}</p>
-      <p className="text-sm text-green-600 dark:text-green-400">{user.email}</p>
+    <div className="rounded-xl bg-gradient-to-r from-emerald-50 to-emerald-50/50 dark:from-emerald-900/20 dark:to-emerald-900/10 p-4 border border-emerald-200/50 dark:border-emerald-800/30">
+      <div className="flex items-center gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white font-semibold">
+          {user.name.charAt(0)}
+        </div>
+        <div>
+          <p className="font-semibold text-emerald-800 dark:text-emerald-200">{user.name}</p>
+          <p className="text-sm text-emerald-600 dark:text-emerald-400">{user.email}</p>
+        </div>
+      </div>
     </div>
   );
 }
@@ -357,10 +387,10 @@ export function EarlyReturnExample() {
           <button
             key={s}
             onClick={() => setState(s)}
-            className={`rounded-md px-3 py-1 text-sm ${
+            className={`rounded-md px-3 py-1 text-sm transition-all duration-200 hover:scale-105 active:scale-95 ${
               state === s
-                ? "bg-blue-600 text-white"
-                : "bg-zinc-200 dark:bg-zinc-700"
+                ? "bg-blue-600 text-white shadow-md"
+                : "bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 dark:hover:bg-zinc-600"
             }`}
           >
             {s}
@@ -398,7 +428,7 @@ interface ButtonProps {
 }
 
 function StyledButton({ variant = "primary", size = "md", disabled, children }: ButtonProps) {
-  const baseClasses = "rounded-md font-medium transition-colors";
+  const baseClasses = "rounded-md font-medium transition-all duration-200 hover:scale-105 active:scale-95 disabled:hover:scale-100";
 
   const variantClasses = {
     primary: "bg-blue-600 text-white hover:bg-blue-700",

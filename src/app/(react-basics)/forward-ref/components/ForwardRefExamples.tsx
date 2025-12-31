@@ -57,13 +57,13 @@ export function BasicForwardRefExample() {
       <div className="flex gap-2">
         <button
           onClick={handleFocus}
-          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           聚焦输入框
         </button>
         <button
           onClick={handleClear}
-          className="rounded-md bg-zinc-600 px-4 py-2 text-white hover:bg-zinc-700"
+          className="rounded-md bg-zinc-600 px-4 py-2 text-white hover:bg-zinc-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           清空并聚焦
         </button>
@@ -174,31 +174,31 @@ export function ImperativeHandleExample() {
       <div className="mb-4 flex flex-wrap gap-2">
         <button
           onClick={() => inputRef.current?.focus()}
-          className="rounded-md bg-blue-600 px-3 py-1.5 text-sm text-white hover:bg-blue-700"
+          className="rounded-md bg-blue-600 px-3 py-1.5 text-sm text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           focus()
         </button>
         <button
           onClick={() => inputRef.current?.clear()}
-          className="rounded-md bg-zinc-600 px-3 py-1.5 text-sm text-white hover:bg-zinc-700"
+          className="rounded-md bg-zinc-600 px-3 py-1.5 text-sm text-white hover:bg-zinc-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           clear()
         </button>
         <button
           onClick={() => setOutput(inputRef.current?.getValue() ?? "")}
-          className="rounded-md bg-green-600 px-3 py-1.5 text-sm text-white hover:bg-green-700"
+          className="rounded-md bg-green-600 px-3 py-1.5 text-sm text-white hover:bg-green-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           getValue()
         </button>
         <button
           onClick={() => inputRef.current?.setValue("Hello World!")}
-          className="rounded-md bg-purple-600 px-3 py-1.5 text-sm text-white hover:bg-purple-700"
+          className="rounded-md bg-purple-600 px-3 py-1.5 text-sm text-white hover:bg-purple-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           setValue(&quot;Hello World!&quot;)
         </button>
         <button
           onClick={() => inputRef.current?.shake()}
-          className="rounded-md bg-red-600 px-3 py-1.5 text-sm text-white hover:bg-red-700"
+          className="rounded-md bg-red-600 px-3 py-1.5 text-sm text-white hover:bg-red-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           shake()
         </button>
@@ -294,13 +294,13 @@ export function MultipleRefsExample() {
       <div className="flex gap-2">
         <button
           onClick={() => fieldRef.current?.focusInput()}
-          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           聚焦输入框
         </button>
         <button
           onClick={() => alert(fieldRef.current?.getInputValue())}
-          className="rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700"
+          className="rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           获取值
         </button>
@@ -349,7 +349,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         disabled={disabled || loading}
-        className={`inline-flex items-center justify-center rounded-md font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+        className={`inline-flex items-center justify-center rounded-md font-medium transition-all duration-200 hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
         {...props}
       >
         {loading && (
@@ -467,7 +467,7 @@ export function React19StyleExample() {
 
       <button
         onClick={() => inputRef.current?.focus()}
-        className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+        className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
       >
         聚焦
       </button>

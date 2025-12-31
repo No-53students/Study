@@ -196,7 +196,7 @@ export function TableFragmentExample() {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
+              <tr key={user.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors duration-150">
                 <TableColumns user={user} />
               </tr>
             ))}
@@ -322,7 +322,7 @@ export function ConditionalFragmentExample() {
       <div className="mb-4 flex gap-2">
         <button
           onClick={() => setShowDetails(!showDetails)}
-          className={`rounded-md px-4 py-2 ${
+          className={`rounded-md px-4 py-2 transition-all duration-200 hover:scale-105 active:scale-95 ${
             showDetails
               ? "bg-blue-600 text-white"
               : "bg-zinc-200 text-zinc-800 dark:bg-zinc-700 dark:text-zinc-200"
@@ -332,7 +332,7 @@ export function ConditionalFragmentExample() {
         </button>
         <button
           onClick={() => setShowContact(!showContact)}
-          className={`rounded-md px-4 py-2 ${
+          className={`rounded-md px-4 py-2 transition-all duration-200 hover:scale-105 active:scale-95 ${
             showContact
               ? "bg-blue-600 text-white"
               : "bg-zinc-200 text-zinc-800 dark:bg-zinc-700 dark:text-zinc-200"
@@ -347,16 +347,16 @@ export function ConditionalFragmentExample() {
 
         {showDetails && (
           <>
-            <p className="mt-2 text-zinc-600 dark:text-zinc-300">
+            <p className="mt-2 text-zinc-600 dark:text-zinc-300 animate-in fade-in slide-in-from-top-1 duration-200">
               {userProfile.bio}
             </p>
-            <p className="text-sm text-zinc-500">{userProfile.address}</p>
+            <p className="text-sm text-zinc-500 animate-in fade-in slide-in-from-top-1 duration-200">{userProfile.address}</p>
           </>
         )}
 
         {showContact && (
           <>
-            <div className="mt-3 border-t border-zinc-200 pt-3 dark:border-zinc-700">
+            <div className="mt-3 border-t border-zinc-200 pt-3 dark:border-zinc-700 animate-in fade-in slide-in-from-top-1 duration-200">
               <p className="text-sm">
                 📧 <span className="text-blue-600 dark:text-blue-400">{userProfile.email}</span>
               </p>

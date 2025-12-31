@@ -228,6 +228,61 @@ dp[i] 只依赖 dp[i-1] 和 dp[i-2]
       },
       {
         name: "动态规划 - 数组",
+        animation: {
+          type: "two-pointers" as const,
+          title: "爬楼梯数组DP演示",
+          steps: [
+            {
+              array: ["?", "1", "2", "?", "?", "?"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "dp[1]=1" },
+                { indices: [2], color: "green" as const, label: "dp[2]=2" },
+              ],
+              description: "n=5。初始化 dp[1]=1, dp[2]=2",
+            },
+            {
+              array: ["?", "1", "2", "3", "?", "?"],
+              left: 1,
+              right: 3,
+              highlights: [
+                { indices: [1, 2], color: "blue" as const, label: "依赖" },
+                { indices: [3], color: "green" as const, label: "dp[3]=3" },
+              ],
+              description: "dp[3] = dp[2] + dp[1] = 2 + 1 = 3",
+            },
+            {
+              array: ["?", "1", "2", "3", "5", "?"],
+              left: 2,
+              right: 4,
+              highlights: [
+                { indices: [2, 3], color: "blue" as const, label: "依赖" },
+                { indices: [4], color: "green" as const, label: "dp[4]=5" },
+              ],
+              description: "dp[4] = dp[3] + dp[2] = 3 + 2 = 5",
+            },
+            {
+              array: ["?", "1", "2", "3", "5", "8"],
+              left: 3,
+              right: 5,
+              highlights: [
+                { indices: [3, 4], color: "blue" as const, label: "依赖" },
+                { indices: [5], color: "green" as const, label: "dp[5]=8" },
+              ],
+              description: "dp[5] = dp[4] + dp[3] = 5 + 3 = 8",
+            },
+            {
+              array: ["?", "1", "2", "3", "5", "8"],
+              left: 5,
+              right: 5,
+              highlights: [
+                { indices: [5], color: "green" as const, label: "答案=8" },
+              ],
+              description: "完成！dp[5]=8，爬到第5阶有8种方法",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 爬楼梯 - 动态规划（数组版本）
  *
@@ -298,6 +353,64 @@ dp[5] = dp[4] + dp[3] = 5 + 3 = 8
       },
       {
         name: "递归 + 记忆化",
+        animation: {
+          type: "two-pointers" as const,
+          title: "递归+记忆化演示",
+          steps: [
+            {
+              array: ["?", "?", "?", "?", "?"],
+              left: 4,
+              right: 4,
+              highlights: [{ indices: [4], color: "blue" as const, label: "climb(5)" }],
+              description: "n=5。自顶向下：climb(5) = climb(4) + climb(3)",
+            },
+            {
+              array: ["?", "?", "?", "?", "?"],
+              left: 3,
+              right: 3,
+              highlights: [{ indices: [3], color: "blue" as const, label: "climb(4)" }],
+              description: "递归调用 climb(4) = climb(3) + climb(2)",
+            },
+            {
+              array: ["?", "?", "?", "?", "?"],
+              left: 2,
+              right: 2,
+              highlights: [{ indices: [2], color: "blue" as const, label: "climb(3)" }],
+              description: "递归调用 climb(3) = climb(2) + climb(1)",
+            },
+            {
+              array: ["1", "2", "?", "?", "?"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "1" },
+                { indices: [1], color: "green" as const, label: "2" },
+              ],
+              description: "基础情况：climb(1)=1, climb(2)=2",
+            },
+            {
+              array: ["1", "2", "3", "?", "?"],
+              left: 2,
+              right: 2,
+              highlights: [{ indices: [2], color: "yellow" as const, label: "memo[3]=3" }],
+              description: "climb(3)=1+2=3，存入memo",
+            },
+            {
+              array: ["1", "2", "3", "5", "?"],
+              left: 3,
+              right: 3,
+              highlights: [{ indices: [3], color: "yellow" as const, label: "memo[4]=5" }],
+              description: "climb(4)=3+2=5，存入memo",
+            },
+            {
+              array: ["1", "2", "3", "5", "8"],
+              left: 4,
+              right: 4,
+              highlights: [{ indices: [4], color: "green" as const, label: "8" }],
+              description: "climb(5)=5+3=8。完成！",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 爬楼梯 - 递归 + 记忆化
  *
@@ -642,6 +755,64 @@ dp[i] 只依赖 dp[i-1] 和 dp[i-2]
       },
       {
         name: "动态规划 - 数组",
+        animation: {
+          type: "two-pointers" as const,
+          title: "打家劫舍数组DP演示",
+          steps: [
+            {
+              array: ["2", "7", "9", "3", "1"],
+              left: 0,
+              right: 4,
+              highlights: [],
+              description: "nums=[2,7,9,3,1]。dp[i]=max(dp[i-1], dp[i-2]+nums[i])",
+            },
+            {
+              array: ["2", "?", "?", "?", "?"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "dp[0]=2" }],
+              description: "dp[0]=nums[0]=2，只有一个房屋必偷",
+            },
+            {
+              array: ["2", "7", "?", "?", "?"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [1], color: "green" as const, label: "dp[1]=7" }],
+              description: "dp[1]=max(2,7)=7，两个房屋选金额大的",
+            },
+            {
+              array: ["2", "7", "11", "?", "?"],
+              left: 2,
+              right: 2,
+              highlights: [
+                { indices: [0, 2], color: "blue" as const, label: "偷" },
+                { indices: [2], color: "green" as const, label: "dp[2]=11" },
+              ],
+              description: "dp[2]=max(7, 2+9)=11，偷0和2",
+            },
+            {
+              array: ["2", "7", "11", "11", "?"],
+              left: 3,
+              right: 3,
+              highlights: [{ indices: [3], color: "green" as const, label: "dp[3]=11" }],
+              description: "dp[3]=max(11, 7+3)=11，不偷3更优",
+            },
+            {
+              array: ["2", "7", "11", "11", "12"],
+              left: 4,
+              right: 4,
+              highlights: [{ indices: [4], color: "green" as const, label: "dp[4]=12" }],
+              description: "dp[4]=max(11, 11+1)=12，偷0,2,4",
+            },
+            {
+              array: ["2", "7", "11", "11", "12"],
+              left: 4,
+              right: 4,
+              highlights: [{ indices: [4], color: "green" as const, label: "答案=12" }],
+              description: "完成！最大金额12",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 打家劫舍 - 动态规划（数组版本）
  *
@@ -719,6 +890,64 @@ dp[1] = max(nums[0], nums[1])：
       },
       {
         name: "递归 + 记忆化",
+        animation: {
+          type: "two-pointers" as const,
+          title: "打家劫舍递归演示",
+          steps: [
+            {
+              array: ["2", "7", "9", "3", "1"],
+              left: 4,
+              right: 4,
+              highlights: [{ indices: [4], color: "blue" as const, label: "dp(4)" }],
+              description: "nums=[2,7,9,3,1]。从dp(4)开始：max(dp(3), dp(2)+1)",
+            },
+            {
+              array: ["2", "7", "9", "3", "1"],
+              left: 3,
+              right: 3,
+              highlights: [{ indices: [3], color: "blue" as const, label: "dp(3)" }],
+              description: "递归调用 dp(3) = max(dp(2), dp(1)+3)",
+            },
+            {
+              array: ["2", "7", "9", "3", "1"],
+              left: 2,
+              right: 2,
+              highlights: [{ indices: [2], color: "blue" as const, label: "dp(2)" }],
+              description: "递归调用 dp(2) = max(dp(1), dp(0)+9)",
+            },
+            {
+              array: ["2", "7", "?", "?", "?"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "dp(0)=2" },
+                { indices: [1], color: "green" as const, label: "dp(1)=7" },
+              ],
+              description: "基础情况：dp(0)=2, dp(1)=max(2,7)=7",
+            },
+            {
+              array: ["2", "7", "11", "?", "?"],
+              left: 2,
+              right: 2,
+              highlights: [{ indices: [2], color: "yellow" as const, label: "memo[2]=11" }],
+              description: "dp(2)=max(7, 2+9)=11，存入memo",
+            },
+            {
+              array: ["2", "7", "11", "11", "?"],
+              left: 3,
+              right: 3,
+              highlights: [{ indices: [3], color: "yellow" as const, label: "memo[3]=11" }],
+              description: "dp(3)=max(11, 7+3)=11，存入memo",
+            },
+            {
+              array: ["2", "7", "11", "11", "12"],
+              left: 4,
+              right: 4,
+              highlights: [{ indices: [4], color: "green" as const, label: "12" }],
+              description: "dp(4)=max(11, 11+1)=12。完成！",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 打家劫舍 - 递归 + 记忆化
  *
@@ -1076,6 +1305,61 @@ dp[11] = 3  (用5+5+1)
       },
       {
         name: "递归 + 记忆化",
+        animation: {
+          type: "two-pointers" as const,
+          title: "零钱兑换递归演示",
+          steps: [
+            {
+              array: ["1", "2", "5"],
+              left: 0,
+              right: 2,
+              highlights: [],
+              description: "coins=[1,2,5], amount=11。递归求凑成11的最少硬币数",
+            },
+            {
+              array: ["11", "→", "6", "+", "5"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [2, 4], color: "blue" as const, label: "用5" }],
+              description: "dp(11)可以用5元硬币→dp(6)+1",
+            },
+            {
+              array: ["6", "→", "1", "+", "5"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [2, 4], color: "blue" as const, label: "用5" }],
+              description: "dp(6)可以用5元硬币→dp(1)+1",
+            },
+            {
+              array: ["1", "→", "0", "+", "1"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [2, 4], color: "blue" as const, label: "用1" }],
+              description: "dp(1)可以用1元硬币→dp(0)+1",
+            },
+            {
+              array: ["0"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "dp(0)=0" }],
+              description: "基础情况：dp(0)=0，不需要硬币",
+            },
+            {
+              array: ["dp(1)=1", "dp(6)=2", "dp(11)=3"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [2], color: "green" as const, label: "3" }],
+              description: "回溯：dp(1)=1, dp(6)=2, dp(11)=3",
+            },
+            {
+              array: ["5", "5", "1"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "答案=3" }],
+              description: "完成！11=5+5+1，最少需要3个硬币",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 零钱兑换 - 递归 + 记忆化
  *
@@ -1183,6 +1467,54 @@ dp(6) 可能被 dp(11)→dp(10)→dp(9)→dp(8)→dp(6) 调用
       },
       {
         name: "BFS 广度优先搜索",
+        animation: {
+          type: "two-pointers" as const,
+          title: "零钱兑换BFS演示",
+          steps: [
+            {
+              array: ["1", "2", "5"],
+              left: 0,
+              right: 2,
+              highlights: [],
+              description: "coins=[1,2,5], amount=11。BFS从0开始找最短路径",
+            },
+            {
+              array: ["0"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "起点" }],
+              description: "第0层：queue={0}，steps=0",
+            },
+            {
+              array: ["1", "2", "5"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "blue" as const, label: "第1层" }],
+              description: "第1层：0+{1,2,5}={1,2,5}，steps=1",
+            },
+            {
+              array: ["3", "4", "6", "7", "10"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [0, 1, 2, 3, 4], color: "blue" as const, label: "第2层" }],
+              description: "第2层：{3,4,6,7,10}，steps=2",
+            },
+            {
+              array: ["8", "9", "11", "..."],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [2], color: "green" as const, label: "找到11!" }],
+              description: "第3层：遇到11，steps=3",
+            },
+            {
+              array: ["5", "5", "1"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "答案=3" }],
+              description: "完成！最短路径=3，即5+5+1=11",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 零钱兑换 - BFS 广度优先搜索
  *
@@ -1587,6 +1919,87 @@ num=18: tails=[2,3,7,101] → 替换101 → tails=[2,3,7,18]
       },
       {
         name: "动态规划 - O(n²)",
+        animation: {
+          type: "two-pointers" as const,
+          title: "LIS动态规划O(n²)演示",
+          steps: [
+            {
+              array: ["10", "9", "2", "5", "3", "7"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5], color: "blue" as const, label: "nums" },
+              ],
+              description: "nums=[10,9,2,5,3,7]。dp[i]=以nums[i]结尾的LIS长度",
+            },
+            {
+              array: ["1", "?", "?", "?", "?", "?"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "dp[0]=1" },
+              ],
+              description: "i=0: dp[0]=1。每个元素自己是长度1的子序列",
+            },
+            {
+              array: ["1", "1", "?", "?", "?", "?"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "dp[1]=1" },
+              ],
+              description: "i=1: 9<10，不能接在后面。dp[1]=1",
+            },
+            {
+              array: ["1", "1", "1", "?", "?", "?"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "dp[2]=1" },
+              ],
+              description: "i=2: 2<10,2<9，都不能接。dp[2]=1",
+            },
+            {
+              array: ["1", "1", "1", "2", "?", "?"],
+              left: 2,
+              right: 3,
+              highlights: [
+                { indices: [2], color: "gray" as const, label: "2<5" },
+                { indices: [3], color: "green" as const, label: "dp[3]=2" },
+              ],
+              description: "i=3: 5>2，可接在2后面。dp[3]=dp[2]+1=2",
+            },
+            {
+              array: ["1", "1", "1", "2", "2", "?"],
+              left: 2,
+              right: 4,
+              highlights: [
+                { indices: [2], color: "gray" as const, label: "2<3" },
+                { indices: [4], color: "green" as const, label: "dp[4]=2" },
+              ],
+              description: "i=4: 3>2，可接在2后面。dp[4]=dp[2]+1=2",
+            },
+            {
+              array: ["1", "1", "1", "2", "2", "3"],
+              left: 2,
+              right: 5,
+              highlights: [
+                { indices: [2, 3, 4], color: "gray" as const, label: "都<7" },
+                { indices: [5], color: "green" as const, label: "dp[5]=3" },
+              ],
+              description: "i=5: 7>2,5,3。dp[5]=max(dp[2],dp[3],dp[4])+1=3",
+            },
+            {
+              array: ["1", "1", "1", "2", "2", "3"],
+              left: 5,
+              right: 5,
+              highlights: [
+                { indices: [5], color: "green" as const, label: "max=3" },
+              ],
+              description: "完成！max(dp)=3。LIS长度为3(如2,3,7)",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 最长递增子序列 - 动态规划 O(n²)
  *
@@ -1677,6 +2090,87 @@ dp[2]=2，但 LIS 是 [1,3] 长度为 2
       },
       {
         name: "递归 + 记忆化",
+        animation: {
+          type: "two-pointers" as const,
+          title: "LIS递归+记忆化演示",
+          steps: [
+            {
+              array: ["2", "5", "3", "7"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "blue" as const, label: "nums" },
+              ],
+              description: "nums=[2,5,3,7]。自顶向下：dp(i)=以nums[i]结尾的LIS长度",
+            },
+            {
+              array: ["?", "?", "?", "?"],
+              left: 3,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "dp(3)" },
+              ],
+              description: "求dp(3)。7比前面哪些数大？7>2,5,3，都可以接",
+            },
+            {
+              array: ["?", "?", "?", "?"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "yellow" as const, label: "递归" },
+              ],
+              description: "需要先求dp(0),dp(1),dp(2)",
+            },
+            {
+              array: ["1", "?", "?", "?"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "dp(0)=1" },
+              ],
+              description: "dp(0)=1。2前面没有数",
+            },
+            {
+              array: ["1", "2", "?", "?"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "2<5" },
+                { indices: [1], color: "green" as const, label: "dp(1)=2" },
+              ],
+              description: "dp(1): 5>2，dp(1)=dp(0)+1=2",
+            },
+            {
+              array: ["1", "2", "2", "?"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "2<3" },
+                { indices: [2], color: "green" as const, label: "dp(2)=2" },
+              ],
+              description: "dp(2): 3>2，dp(2)=dp(0)+1=2",
+            },
+            {
+              array: ["1", "2", "2", "3"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2], color: "gray" as const, label: "memo" },
+                { indices: [3], color: "green" as const, label: "dp(3)=3" },
+              ],
+              description: "dp(3)=max(dp(0),dp(1),dp(2))+1=2+1=3",
+            },
+            {
+              array: ["1", "2", "2", "3"],
+              left: 3,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "答案=3" },
+              ],
+              description: "完成！LIS长度=max(memo)=3(如2,5,7或2,3,7)",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 最长递增子序列 - 递归 + 记忆化
  *
@@ -2053,6 +2547,74 @@ dp[8] = true  (dp[4] && "code" ∈ dict)
       },
       {
         name: "递归 + 记忆化",
+        animation: {
+          type: "two-pointers" as const,
+          title: "单词拆分递归演示",
+          steps: [
+            {
+              array: ["l", "e", "e", "t", "c", "o", "d", "e"],
+              left: 0,
+              right: 7,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5, 6, 7], color: "blue" as const, label: "leetcode" },
+              ],
+              description: "s=\"leetcode\", dict=[\"leet\",\"code\"]",
+            },
+            {
+              array: ["l", "e", "e", "t", "c", "o", "d", "e"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "yellow" as const, label: "canBreak(0)" },
+              ],
+              description: "从位置0开始，尝试匹配前缀",
+            },
+            {
+              array: ["l", "e", "e", "t", "c", "o", "d", "e"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "green" as const, label: "leet✓" },
+              ],
+              description: "\"leet\"在字典中！递归检查canBreak(4)",
+            },
+            {
+              array: ["l", "e", "e", "t", "c", "o", "d", "e"],
+              left: 4,
+              right: 4,
+              highlights: [
+                { indices: [4], color: "yellow" as const, label: "canBreak(4)" },
+              ],
+              description: "从位置4开始，尝试匹配前缀",
+            },
+            {
+              array: ["l", "e", "e", "t", "c", "o", "d", "e"],
+              left: 4,
+              right: 7,
+              highlights: [
+                { indices: [4, 5, 6, 7], color: "green" as const, label: "code✓" },
+              ],
+              description: "\"code\"在字典中！递归检查canBreak(8)",
+            },
+            {
+              array: ["l", "e", "e", "t", "c", "o", "d", "e"],
+              left: 8,
+              right: 8,
+              highlights: [],
+              description: "canBreak(8): 到达末尾，返回true!",
+            },
+            {
+              array: ["l", "e", "e", "t", "c", "o", "d", "e"],
+              left: 0,
+              right: 7,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "green" as const, label: "leet" },
+                { indices: [4, 5, 6, 7], color: "green" as const, label: "code" },
+              ],
+              description: "完成！\"leetcode\"可拆分为\"leet\"+\"code\"",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 单词拆分 - 递归 + 记忆化
  *
@@ -2151,6 +2713,78 @@ canBreak(2) 会被多次调用：
       },
       {
         name: "BFS 广度优先搜索",
+        animation: {
+          type: "two-pointers" as const,
+          title: "单词拆分BFS演示",
+          steps: [
+            {
+              array: ["l", "e", "e", "t", "c", "o", "d", "e"],
+              left: 0,
+              right: 7,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5, 6, 7], color: "blue" as const, label: "leetcode" },
+              ],
+              description: "s=\"leetcode\", dict=[\"leet\",\"code\"]。BFS从位置0开始",
+            },
+            {
+              array: ["0", "?", "?", "?", "?", "?", "?", "?", "?"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "起点" },
+              ],
+              description: "节点=位置。queue=[0]，visited={0}",
+            },
+            {
+              array: ["0", "?", "?", "?", "4", "?", "?", "?", "?"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "出队" },
+                { indices: [4], color: "green" as const, label: "入队" },
+              ],
+              description: "从0出发：s[0:4]=\"leet\"在字典中!入队4",
+            },
+            {
+              array: ["0", "?", "?", "?", "4", "?", "?", "?", "?"],
+              left: 4,
+              right: 4,
+              highlights: [
+                { indices: [4], color: "yellow" as const, label: "处理4" },
+              ],
+              description: "queue=[4]。从位置4继续探索",
+            },
+            {
+              array: ["0", "?", "?", "?", "4", "?", "?", "?", "8"],
+              left: 4,
+              right: 8,
+              highlights: [
+                { indices: [4], color: "gray" as const, label: "出队" },
+                { indices: [8], color: "green" as const, label: "入队" },
+              ],
+              description: "从4出发：s[4:8]=\"code\"在字典中!入队8",
+            },
+            {
+              array: ["0", "?", "?", "?", "4", "?", "?", "?", "8"],
+              left: 8,
+              right: 8,
+              highlights: [
+                { indices: [8], color: "green" as const, label: "到达终点!" },
+              ],
+              description: "位置8==s.length，找到拆分路径!",
+            },
+            {
+              array: ["l", "e", "e", "t", "c", "o", "d", "e"],
+              left: 0,
+              right: 7,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "green" as const, label: "leet" },
+                { indices: [4, 5, 6, 7], color: "green" as const, label: "code" },
+              ],
+              description: "完成！路径0→4→8，即\"leet\"+\"code\"",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 单词拆分 - BFS 广度优先搜索
  *
@@ -3078,6 +3712,76 @@ dp[11] = true，可以分割！
       },
       {
         name: "二维 DP（易理解）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "分割等和子集二维DP演示",
+          steps: [
+            {
+              array: ["1", "5", "11", "5"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "blue" as const, label: "sum=22" },
+              ],
+              description: "nums=[1,5,11,5]。sum=22，target=11",
+            },
+            {
+              array: ["T", "F", "F", "F", "F", "F"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "dp[0][0]=T" },
+              ],
+              description: "dp[i][j]=前i个数能否凑出j。dp[i][0]=T(选0个)",
+            },
+            {
+              array: ["T", "T", "F", "F", "F", "F"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "dp[1][1]=T" },
+              ],
+              description: "i=1(num=1): dp[1][1]=dp[0][0]=T，能凑出1",
+            },
+            {
+              array: ["T", "T", "F", "F", "F", "T"],
+              left: 1,
+              right: 5,
+              highlights: [
+                { indices: [5], color: "green" as const, label: "dp[2][5]=T" },
+              ],
+              description: "i=2(num=5): dp[2][5]=T, dp[2][6]=T(1+5)",
+            },
+            {
+              array: ["T", "T", "F", "F", "F", "T"],
+              left: 5,
+              right: 5,
+              highlights: [
+                { indices: [5], color: "yellow" as const, label: "j=11?" },
+              ],
+              description: "i=3(num=11): dp[3][11]=dp[2][0]=T!",
+            },
+            {
+              array: ["T", "T", "F", "F", "F", "T"],
+              left: 5,
+              right: 5,
+              highlights: [
+                { indices: [5], color: "green" as const, label: "dp[3][11]=T" },
+              ],
+              description: "找到！前3个数[1,5,11]可以凑出11(选11)",
+            },
+            {
+              array: ["1", "5", "11", "5"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "[11]" },
+                { indices: [0, 1, 3], color: "blue" as const, label: "[1,5,5]" },
+              ],
+              description: "完成！分割为[11]和[1,5,5]，各sum=11",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 分割等和子集 - 二维 DP（标准 0-1 背包）
  *
@@ -3456,6 +4160,75 @@ i=2: currentSum = max(-2, -1-2) = max(-2, -3) = -2, maxSum = -1
       },
       {
         name: "动态规划（标准写法）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "最大子数组和DP演示",
+          steps: [
+            {
+              array: ["-2", "1", "-3", "4", "-1", "2"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5], color: "blue" as const, label: "nums" },
+              ],
+              description: "nums=[-2,1,-3,4,-1,2]。dp[i]=以nums[i]结尾的最大和",
+            },
+            {
+              array: ["-2", "?", "?", "?", "?", "?"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "dp[0]=-2" },
+              ],
+              description: "dp[0]=-2。maxSum=-2",
+            },
+            {
+              array: ["-2", "1", "?", "?", "?", "?"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "dp[1]=1" },
+              ],
+              description: "dp[1]=max(1,-2+1)=1。重新开始！maxSum=1",
+            },
+            {
+              array: ["-2", "1", "-2", "?", "?", "?"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "gray" as const, label: "dp[2]=-2" },
+              ],
+              description: "dp[2]=max(-3,1-3)=-2。maxSum=1",
+            },
+            {
+              array: ["-2", "1", "-2", "4", "?", "?"],
+              left: 3,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "dp[3]=4" },
+              ],
+              description: "dp[3]=max(4,-2+4)=4。重新开始！maxSum=4",
+            },
+            {
+              array: ["-2", "1", "-2", "4", "3", "5"],
+              left: 3,
+              right: 5,
+              highlights: [
+                { indices: [4, 5], color: "green" as const, label: "继续累加" },
+              ],
+              description: "dp[4]=3, dp[5]=5。maxSum=5",
+            },
+            {
+              array: ["-2", "1", "-2", "4", "3", "5"],
+              left: 3,
+              right: 5,
+              highlights: [
+                { indices: [3, 4, 5], color: "green" as const, label: "最大子数组" },
+              ],
+              description: "完成！max(dp)=5，子数组[4,-1,2]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 最大子数组和 - 动态规划（标准写法）
  *
@@ -3556,6 +4329,78 @@ dp =    [-2, 1, -2, 4,  3, 5, 6,  1, 5]
       },
       {
         name: "分治法",
+        animation: {
+          type: "two-pointers" as const,
+          title: "最大子数组和分治演示",
+          steps: [
+            {
+              array: ["-2", "1", "-3", "4", "-1", "2"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5], color: "blue" as const, label: "nums" },
+              ],
+              description: "nums=[-2,1,-3,4,-1,2]。分治：分成左右两半",
+            },
+            {
+              array: ["-2", "1", "-3", "4", "-1", "2"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "yellow" as const, label: "左半" },
+                { indices: [3, 4, 5], color: "gray" as const, label: "右半" },
+              ],
+              description: "分割：左[-2,1,-3]，右[4,-1,2]，中点=2",
+            },
+            {
+              array: ["-2", "1", "-3", "4", "-1", "2"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "leftMax=1" },
+              ],
+              description: "左半最大=1(子数组[1])",
+            },
+            {
+              array: ["-2", "1", "-3", "4", "-1", "2"],
+              left: 3,
+              right: 5,
+              highlights: [
+                { indices: [3, 4, 5], color: "green" as const, label: "rightMax=5" },
+              ],
+              description: "右半最大=5(子数组[4,-1,2])",
+            },
+            {
+              array: ["-2", "1", "-3", "4", "-1", "2"],
+              left: 2,
+              right: 3,
+              highlights: [
+                { indices: [2], color: "yellow" as const, label: "向左" },
+                { indices: [3], color: "yellow" as const, label: "向右" },
+              ],
+              description: "计算跨越中点：从mid向左、从mid+1向右",
+            },
+            {
+              array: ["-2", "1", "-3", "4", "-1", "2"],
+              left: 1,
+              right: 5,
+              highlights: [
+                { indices: [1, 2], color: "gray" as const, label: "左sum=-2" },
+                { indices: [3, 4, 5], color: "gray" as const, label: "右sum=5" },
+              ],
+              description: "跨越最大=(-2)+5=3。不如右半的5",
+            },
+            {
+              array: ["-2", "1", "-3", "4", "-1", "2"],
+              left: 3,
+              right: 5,
+              highlights: [
+                { indices: [3, 4, 5], color: "green" as const, label: "最大=5" },
+              ],
+              description: "完成！max(左1,右5,跨3)=5，子数组[4,-1,2]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 最大子数组和 - 分治法
  *
@@ -3971,6 +4816,66 @@ dp[12] = min(dp[11]+1, dp[8]+1, dp[3]+1) = 3  (12 = 4+4+4)
       },
       {
         name: "BFS",
+        animation: {
+          type: "two-pointers" as const,
+          title: "完全平方数BFS演示",
+          steps: [
+            {
+              array: ["12"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "n=12" },
+              ],
+              description: "n=12。BFS从12开始，找到0的最短路径",
+            },
+            {
+              array: ["12"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "起点" },
+              ],
+              description: "完全平方数: 1,4,9。queue=[12]，level=0",
+            },
+            {
+              array: ["11", "8", "3"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "yellow" as const, label: "level=1" },
+              ],
+              description: "level=1: 12-1=11, 12-4=8, 12-9=3",
+            },
+            {
+              array: ["10", "7", "2", "7", "4", "4", "2"],
+              left: 0,
+              right: 6,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5, 6], color: "yellow" as const, label: "level=2" },
+              ],
+              description: "level=2: 继续展开。4-4=0!",
+            },
+            {
+              array: ["8", "4", "0"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "找到0!" },
+              ],
+              description: "从8出发: 8-4=4, 4-4=0! level=3",
+            },
+            {
+              array: ["12", "8", "4", "0"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "green" as const, label: "路径" },
+              ],
+              description: "完成！12→8→4→0，需要3个完全平方数(4+4+4)",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 完全平方数 - BFS 广度优先搜索
  *
@@ -4096,6 +5001,75 @@ BFS：可能提前找到答案（如果运气好）
       },
       {
         name: "数学方法（四平方和定理）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "四平方和定理演示",
+          steps: [
+            {
+              array: ["12"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "n=12" },
+              ],
+              description: "n=12。用数学定理直接判断答案",
+            },
+            {
+              array: ["12"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "red" as const, label: "√12≠整数" },
+              ],
+              description: "步骤1: 12不是完全平方数(√12≈3.46)",
+            },
+            {
+              array: ["12", "=", "1²", "+", "?"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [2], color: "yellow" as const, label: "1²=1" },
+              ],
+              description: "步骤2: 检查n=a²+b²。试1²+?=11不是平方",
+            },
+            {
+              array: ["12", "=", "2²", "+", "?"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [2], color: "yellow" as const, label: "2²=4" },
+              ],
+              description: "试2²+?=8不是平方。3²+?=3不是平方",
+            },
+            {
+              array: ["12", "=", "4^a", "×", "(8b+7)?"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [2, 4], color: "yellow" as const, label: "检查" },
+              ],
+              description: "步骤3: 检查n=4^a(8b+7)? 12=4×3,3%8≠7",
+            },
+            {
+              array: ["12", "不是", "4^a(8b+7)"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "答案=3" },
+              ],
+              description: "12不满足4^a(8b+7)形式，所以答案=3",
+            },
+            {
+              array: ["4", "+", "4", "+", "4", "=", "12"],
+              left: 0,
+              right: 6,
+              highlights: [
+                { indices: [0, 2, 4], color: "green" as const, label: "3个" },
+              ],
+              description: "完成！12=4+4+4，需要3个完全平方数",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 完全平方数 - 数学方法（四平方和定理）
  *

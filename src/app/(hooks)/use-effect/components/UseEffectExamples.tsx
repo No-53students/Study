@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 
 export function DocumentTitleExample() {
   const [count, setCount] = useState(0);
+  const [animating, setAnimating] = useState(false);
 
   useEffect(() => {
     document.title = `点击了 ${count} 次`;
@@ -18,17 +19,23 @@ export function DocumentTitleExample() {
     };
   }, [count]);
 
+  const handleClick = () => {
+    setAnimating(true);
+    setCount((c) => c + 1);
+    setTimeout(() => setAnimating(false), 200);
+  };
+
   return (
     <div className="rounded-lg border border-zinc-200 p-6 dark:border-zinc-700">
       <h3 className="mb-4 text-lg font-semibold">示例 1: 修改文档标题</h3>
 
       <div className="mb-4 text-center">
-        <span className="text-4xl font-bold">{count}</span>
+        <span className={`text-4xl font-bold inline-block transition-all duration-200 ${animating ? 'scale-125 text-blue-500' : 'scale-100'}`}>{count}</span>
       </div>
 
       <button
-        onClick={() => setCount((c) => c + 1)}
-        className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+        onClick={handleClick}
+        className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
       >
         点击增加
       </button>
@@ -68,14 +75,14 @@ export function TimerExample() {
       <h3 className="mb-4 text-lg font-semibold">示例 2: 定时器</h3>
 
       <div className="mb-4 text-center">
-        <span className="text-4xl font-bold">{seconds}</span>
+        <span className={`text-4xl font-bold inline-block transition-all duration-300 ${isRunning ? 'text-green-500 animate-pulse' : ''}`}>{seconds}</span>
         <span className="ml-2 text-zinc-500">秒</span>
       </div>
 
       <div className="flex gap-2">
         <button
           onClick={() => setIsRunning(!isRunning)}
-          className={`flex-1 rounded-md px-4 py-2 text-sm font-medium text-white ${
+          className={`flex-1 rounded-md px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] ${
             isRunning
               ? "bg-red-600 hover:bg-red-700"
               : "bg-green-600 hover:bg-green-700"
@@ -88,7 +95,7 @@ export function TimerExample() {
             setIsRunning(false);
             setSeconds(0);
           }}
-          className="rounded-md bg-zinc-200 px-4 py-2 text-sm font-medium hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
+          className="rounded-md bg-zinc-200 px-4 py-2 text-sm font-medium hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           重置
         </button>
@@ -209,9 +216,9 @@ export function DataFetchingExample() {
             <button
               key={id}
               onClick={() => setUserId(id)}
-              className={`rounded-md px-4 py-2 text-sm font-medium ${
+              className={`rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 hover:scale-105 active:scale-95 ${
                 userId === id
-                  ? "bg-blue-600 text-white"
+                  ? "bg-blue-600 text-white shadow-md"
                   : "bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-700"
               }`}
             >
@@ -221,11 +228,14 @@ export function DataFetchingExample() {
         </div>
       </div>
 
-      <div className="rounded-md bg-zinc-100 p-4 dark:bg-zinc-800">
+      <div className={`rounded-md bg-zinc-100 p-4 dark:bg-zinc-800 transition-all duration-300 ${loading ? 'opacity-50' : 'opacity-100'}`}>
         {loading ? (
-          <p className="text-center text-zinc-500">加载中...</p>
+          <div className="flex items-center justify-center gap-2">
+            <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <span className="text-zinc-500">加载中...</span>
+          </div>
         ) : user ? (
-          <div>
+          <div className="animate-in fade-in duration-300">
             <p>
               <strong>姓名：</strong>
               {user.name}

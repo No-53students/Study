@@ -54,10 +54,10 @@ export function ContainerContentExample() {
           title="操作面板"
           footer={
             <div className="flex justify-end gap-2">
-              <button className="rounded bg-zinc-200 px-3 py-1 text-sm dark:bg-zinc-700">
+              <button className="rounded bg-zinc-200 px-3 py-1 text-sm dark:bg-zinc-700 transition-all duration-200 hover:scale-105 active:scale-95 hover:bg-zinc-300 dark:hover:bg-zinc-600">
                 取消
               </button>
-              <button className="rounded bg-blue-600 px-3 py-1 text-sm text-white">
+              <button className="rounded bg-blue-600 px-3 py-1 text-sm text-white transition-all duration-200 hover:scale-105 active:scale-95 hover:bg-blue-700">
                 确认
               </button>
             </div>
@@ -119,7 +119,7 @@ function Alert({ children, type = "info", title }: AlertProps) {
   };
 
   return (
-    <div className={`rounded-lg border p-4 ${styles[type]}`}>
+    <div className={`rounded-lg border p-4 ${styles[type]} transition-all duration-200 hover:shadow-md`}>
       <div className="flex items-start gap-2">
         <span>{icons[type]}</span>
         <div>
@@ -326,10 +326,10 @@ function Tab({ value, children }: { value: string; children: ReactNode }) {
   return (
     <button
       onClick={() => setActiveTab(value)}
-      className={`px-4 py-2 text-sm font-medium transition-colors ${
+      className={`px-4 py-2 text-sm font-medium transition-all duration-200 ${
         isActive
           ? "border-b-2 border-blue-500 text-blue-600"
-          : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
+          : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
       }`}
     >
       {children}
@@ -429,7 +429,7 @@ function Button({
 
   return (
     <button
-      className={`rounded-md font-medium transition-colors ${variants[variant]} ${sizes[size]} ${className}`}
+      className={`rounded-md font-medium transition-all duration-200 hover:scale-105 active:scale-95 ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     >
       {children}

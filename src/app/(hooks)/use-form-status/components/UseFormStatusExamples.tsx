@@ -305,29 +305,17 @@ function LoadingOverlay() {
   if (!pending) return null;
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center rounded-md bg-white/80 dark:bg-zinc-900/80">
+    <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm z-10">
       <div className="text-center">
-        <svg
-          className="mx-auto h-10 w-10 animate-spin text-blue-600"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-            fill="none"
-          />
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-          />
-        </svg>
-        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+        <div className="relative inline-block">
+          <div className="h-12 w-12 rounded-full border-2 border-blue-200 dark:border-blue-900" />
+          <div className="absolute inset-0 h-12 w-12 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
+        </div>
+        <p className="mt-3 text-sm font-medium text-zinc-700 dark:text-zinc-300">
           正在处理...
+        </p>
+        <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+          请稍候
         </p>
       </div>
     </div>

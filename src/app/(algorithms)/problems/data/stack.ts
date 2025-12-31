@@ -262,6 +262,55 @@ s = "(]"
       },
       {
         name: "替换法（不推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "替换法验证括号演示",
+          steps: [
+            {
+              array: ["(", "[", "{", "}", "]", ")"],
+              left: 0,
+              right: 5,
+              highlights: [],
+              description: "s=\"([{}])\"。不断删除成对括号直到字符串为空",
+            },
+            {
+              array: ["(", "[", "{", "}", "]", ")"],
+              left: 2,
+              right: 3,
+              highlights: [
+                { indices: [2, 3], color: "red" as const, label: "删除{}" },
+              ],
+              description: "找到{}，删除。字符串变为\"([])\"",
+            },
+            {
+              array: ["(", "[", "]", ")"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [1, 2], color: "red" as const, label: "删除[]" },
+              ],
+              description: "找到[]，删除。字符串变为\"()\"",
+            },
+            {
+              array: ["(", ")"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "red" as const, label: "删除()" },
+              ],
+              description: "找到()，删除。字符串变为\"\"",
+            },
+            {
+              array: ["true"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "有效" },
+              ],
+              description: "字符串为空 ✓ 括号有效！注意：此法O(n²)不推荐实际使用",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 有效的括号 - 替换法
  *
@@ -569,6 +618,46 @@ path = "/home/user/Documents/../Pictures"
       },
       {
         name: "正则表达式简化",
+        animation: {
+          type: "two-pointers" as const,
+          title: "正则简化路径演示",
+          steps: [
+            {
+              array: ["/", "home", "/", "/", "foo", "/"],
+              left: 0,
+              right: 5,
+              highlights: [],
+              description: "path=\"/home//foo/\"。用正则/\\/+/分割处理多斜杠",
+            },
+            {
+              array: ["home", "foo"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "有效目录" },
+              ],
+              description: "split(/\\/+/).filter(Boolean) → [\"home\",\"foo\"]",
+            },
+            {
+              array: ["stack:", "home", "foo"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [1, 2], color: "green" as const, label: "入栈" },
+              ],
+              description: "遍历parts，home和foo都是有效目录名，入栈",
+            },
+            {
+              array: ["/home/foo"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "结果" },
+              ],
+              description: "\"/\" + stack.join(\"/\") = \"/home/foo\" ✓",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 简化路径 - 正则表达式法
  *
@@ -938,6 +1027,55 @@ class MinStack {
       },
       {
         name: "存储差值",
+        animation: {
+          type: "two-pointers" as const,
+          title: "差值存储法最小栈演示",
+          steps: [
+            {
+              array: ["stack", "min"],
+              left: 0,
+              right: 1,
+              highlights: [],
+              description: "差值法：栈中存储(当前值-最小值)，维护min变量",
+            },
+            {
+              array: ["diff=0", "min=-2"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "push(-2)" },
+              ],
+              description: "push(-2)：首元素差值=0，min=-2",
+            },
+            {
+              array: ["0", "2", "min=-2"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [1], color: "blue" as const, label: "0-(-2)=2" },
+              ],
+              description: "push(0)：diff=0-(-2)=2>0，min不变=-2",
+            },
+            {
+              array: ["0", "2", "-1", "min=-3"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [2], color: "yellow" as const, label: "-3-(-2)=-1" },
+              ],
+              description: "push(-3)：diff=-3-(-2)=-1<0，min更新为-3",
+            },
+            {
+              array: ["0", "2", "min=-2"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "red" as const, label: "恢复min" },
+              ],
+              description: "pop()：diff=-1<0，恢复min=(-3)-(-1)=-2 ✓",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 最小栈 - 差值存储法
  *
@@ -1033,6 +1171,55 @@ diff = 当前值 - 当前最小值
       },
       {
         name: "存储元组",
+        animation: {
+          type: "two-pointers" as const,
+          title: "元组存储法最小栈演示",
+          steps: [
+            {
+              array: ["stack"],
+              left: 0,
+              right: 0,
+              highlights: [],
+              description: "元组法：每个元素存[value, currentMin]",
+            },
+            {
+              array: ["[-2,-2]"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "push(-2)" },
+              ],
+              description: "push(-2)：首元素，stack=[[-2,-2]]",
+            },
+            {
+              array: ["[-2,-2]", "[0,-2]"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "blue" as const, label: "min(-2,0)" },
+              ],
+              description: "push(0)：min(0,-2)=-2，stack=[[-2,-2],[0,-2]]",
+            },
+            {
+              array: ["[-2,-2]", "[0,-2]", "[-3,-3]"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "yellow" as const, label: "新min=-3" },
+              ],
+              description: "push(-3)：min(-3,-2)=-3，stack=[[-2,-2],[0,-2],[-3,-3]]",
+            },
+            {
+              array: ["[-2,-2]", "[0,-2]"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "getMin=-2" },
+              ],
+              description: "pop()后getMin()：返回栈顶[0,-2]的第二个值=-2 ✓",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 最小栈 - 元组存储法
  *
@@ -1391,6 +1578,55 @@ tokens = ["2", "1", "+", "3", "*"]
       },
       {
         name: "Map 映射运算符",
+        animation: {
+          type: "two-pointers" as const,
+          title: "Map映射法求逆波兰表达式演示",
+          steps: [
+            {
+              array: ["ops", "+:add", "-:sub", "*:mul", "/:div"],
+              left: 0,
+              right: 4,
+              highlights: [],
+              description: "用Map存储运算符函数：ops={+:(a,b)=>a+b, ...}",
+            },
+            {
+              array: ["4", "13", "5", "/", "+"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "入栈" },
+              ],
+              description: "\"4\",\"13\"入栈。栈：[4,13]",
+            },
+            {
+              array: ["4", "13", "5", "/", "+"],
+              left: 2,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "入栈" },
+              ],
+              description: "\"5\"入栈。栈：[4,13,5]",
+            },
+            {
+              array: ["4", "13", "5", "/", "+"],
+              left: 3,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "yellow" as const, label: "ops['/'](13,5)" },
+              ],
+              description: "\"/\"：ops['/'](13,5)=Math.trunc(13/5)=2。栈：[4,2]",
+            },
+            {
+              array: ["4", "13", "5", "/", "+"],
+              left: 4,
+              right: 4,
+              highlights: [
+                { indices: [4], color: "yellow" as const, label: "ops['+'](4,2)" },
+              ],
+              description: "\"+\"：ops['+'](4,2)=6。结果=6 ✓ Map法代码更优雅可扩展",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 逆波兰表达式求值 - Map 映射法
  *
@@ -1469,6 +1705,55 @@ const ops = {
       },
       {
         name: "数组模拟栈",
+        animation: {
+          type: "two-pointers" as const,
+          title: "数组模拟栈求逆波兰演示",
+          steps: [
+            {
+              array: ["stack[n]", "top=-1"],
+              left: 0,
+              right: 1,
+              highlights: [],
+              description: "预分配数组，用top指针模拟栈。避免push/pop开销",
+            },
+            {
+              array: ["2", "1", "+", "3", "*"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "++top赋值" },
+              ],
+              description: "数字\"2\",\"1\"：stack[++top]=val。top=1",
+            },
+            {
+              array: ["stack", 2, 1],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "yellow" as const, label: "top--取值" },
+              ],
+              description: "\"+\"：b=stack[top--]=1，stack[top]+=b → stack[0]=3",
+            },
+            {
+              array: ["stack", 3, 3],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "++top" },
+              ],
+              description: "数字\"3\"：stack[++top]=3。top=1",
+            },
+            {
+              array: ["stack", 9],
+              left: 1,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "结果" },
+              ],
+              description: "\"*\"：b=stack[top--]=3，stack[0]*=b=9 ✓ 数组模拟更高效",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 逆波兰表达式求值 - 数组模拟栈（性能优化版）
  *
@@ -1856,6 +2141,55 @@ s = "(1+(4+5+2)-3)+(6+8)"
       },
       {
         name: "递归处理括号",
+        animation: {
+          type: "two-pointers" as const,
+          title: "递归法计算器演示",
+          steps: [
+            {
+              array: ["(", "1", "+", "2", ")", "*", "3"],
+              left: 0,
+              right: 6,
+              highlights: [],
+              description: "s=\"(1+2)*3\"。递归处理括号，遇到(递归，遇到)返回",
+            },
+            {
+              array: ["(", "1", "+", "2", ")"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "递归" },
+              ],
+              description: "遇到'('，递归进入子表达式处理",
+            },
+            {
+              array: ["1", "+", "2"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "yellow" as const, label: "1+2=3" },
+              ],
+              description: "子表达式：1+2=3",
+            },
+            {
+              array: ["(", "1", "+", "2", ")"],
+              left: 4,
+              right: 4,
+              highlights: [
+                { indices: [4], color: "red" as const, label: "返回3" },
+              ],
+              description: "遇到')'，返回子表达式结果3",
+            },
+            {
+              array: ["3", "*", "3"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "green" as const, label: "3*3=9" },
+              ],
+              description: "继续处理：3*3=9 ✓ 递归法逻辑清晰但有调用栈开销",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 基本计算器 - 递归法
  *
@@ -2331,6 +2665,64 @@ currentStr = prevStr + currentStr.repeat(num)
       },
       {
         name: "递归法",
+        animation: {
+          type: "two-pointers" as const,
+          title: "递归法字符串解码演示",
+          steps: [
+            {
+              array: ["2", "[", "a", "b", "]"],
+              left: 0,
+              right: 4,
+              highlights: [],
+              description: "s=\"2[ab]\"。递归处理嵌套括号",
+            },
+            {
+              array: ["2", "[", "a", "b", "]"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "num=2" },
+              ],
+              description: "遇到数字'2'，构建num=2",
+            },
+            {
+              array: ["2", "[", "a", "b", "]"],
+              left: 1,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "yellow" as const, label: "递归" },
+              ],
+              description: "遇到'['，递归调用处理括号内内容",
+            },
+            {
+              array: ["a", "b"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "收集" },
+              ],
+              description: "递归层：收集字母，currentStr=\"ab\"",
+            },
+            {
+              array: ["2", "[", "a", "b", "]"],
+              left: 4,
+              right: 4,
+              highlights: [
+                { indices: [4], color: "red" as const, label: "返回ab" },
+              ],
+              description: "遇到']'，返回\"ab\"。外层：\"ab\".repeat(2)=\"abab\"",
+            },
+            {
+              array: ["a", "b", "a", "b"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "green" as const, label: "结果" },
+              ],
+              description: "解码完成！2[ab] = \"abab\" ✓",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 字符串解码 - 递归法
  *
@@ -2656,6 +3048,58 @@ temperatures = [73, 74, 75, 71, 69, 72, 76, 73]
       },
       {
         name: "暴力法（用于理解）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "暴力法每日温度演示",
+          steps: [
+            {
+              array: [73, 74, 75, 71, 69],
+              left: 0,
+              right: 4,
+              highlights: [],
+              description: "暴力法：对每天，向后遍历找第一个更高温度",
+            },
+            {
+              array: [73, 74, 75, 71, 69],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "i=0,73" },
+                { indices: [1], color: "green" as const, label: "74>73✓" },
+              ],
+              description: "i=0(73)：向后找，74>73 ✓ result[0]=1-0=1",
+            },
+            {
+              array: [73, 74, 75, 71, 69],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [1], color: "blue" as const, label: "i=1,74" },
+                { indices: [2], color: "green" as const, label: "75>74✓" },
+              ],
+              description: "i=1(74)：向后找，75>74 ✓ result[1]=2-1=1",
+            },
+            {
+              array: [73, 74, 75, 71, 69],
+              left: 2,
+              right: 4,
+              highlights: [
+                { indices: [2], color: "blue" as const, label: "i=2,75" },
+                { indices: [3, 4], color: "yellow" as const, label: "71,69<75" },
+              ],
+              description: "i=2(75)：向后找71,69都<75，没有更高 result[2]=0",
+            },
+            {
+              array: [1, 1, 0, 0, 0],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4], color: "green" as const, label: "结果" },
+              ],
+              description: "结果=[1,1,0,0,0]。暴力法O(n²)会超时，仅用于理解",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 每日温度 - 暴力法
  *
@@ -2971,6 +3415,55 @@ heights = [2, 1, 5, 6, 2, 3]
       },
       {
         name: "预计算左右边界",
+        animation: {
+          type: "two-pointers" as const,
+          title: "预计算边界法柱状图最大矩形演示",
+          steps: [
+            {
+              array: [2, 1, 5, 6, 2, 3],
+              left: 0,
+              right: 5,
+              highlights: [],
+              description: "heights=[2,1,5,6,2,3]。分两遍计算每个柱子的左右边界",
+            },
+            {
+              array: ["left", -1, -1, 1, 2, 1, 4],
+              left: 1,
+              right: 6,
+              highlights: [
+                { indices: [1, 2], color: "blue" as const, label: "边界" },
+              ],
+              description: "第一遍→：计算左边界。left=[-1,-1,1,2,1,4]",
+            },
+            {
+              array: ["right", 1, 6, 4, 4, 6, 6],
+              left: 1,
+              right: 6,
+              highlights: [
+                { indices: [1, 2], color: "yellow" as const, label: "边界" },
+              ],
+              description: "第二遍←：计算右边界。right=[1,6,4,4,6,6]",
+            },
+            {
+              array: ["面积", "2×1", "1×6", "5×2", "6×1", "2×4", "3×1"],
+              left: 1,
+              right: 6,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "max=10" },
+              ],
+              description: "第三遍：area[i]=heights[i]×(right[i]-left[i]-1)。max=5×2=10",
+            },
+            {
+              array: [10],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "结果" },
+              ],
+              description: "最大矩形面积=10 ✓ 预计算法逻辑清晰",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 柱状图中最大的矩形 - 预计算边界法
  *

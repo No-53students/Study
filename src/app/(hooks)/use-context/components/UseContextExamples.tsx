@@ -44,13 +44,19 @@ function ThemedBox() {
 
   return (
     <div
-      className={`rounded-md p-4 ${
+      className={`rounded-md p-4 transition-all duration-300 ${
         theme === "light"
           ? "bg-white text-zinc-900 border border-zinc-200"
           : "bg-zinc-800 text-white border border-zinc-600"
       }`}
     >
-      <p>当前主题：{theme === "light" ? "☀️ 浅色" : "🌙 深色"}</p>
+      <p className="flex items-center gap-2">
+        当前主题：
+        <span className={`inline-block transition-transform duration-300 ${theme === "light" ? "" : "rotate-180"}`}>
+          {theme === "light" ? "☀️" : "🌙"}
+        </span>
+        {theme === "light" ? "浅色" : "深色"}
+      </p>
     </div>
   );
 }
@@ -61,7 +67,7 @@ function ThemeToggleButton() {
   return (
     <button
       onClick={toggleTheme}
-      className={`rounded-md px-4 py-2 text-sm font-medium ${
+      className={`rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 hover:scale-105 active:scale-95 ${
         theme === "light"
           ? "bg-zinc-900 text-white"
           : "bg-white text-zinc-900"
@@ -145,14 +151,14 @@ function UserInfo() {
 
   if (!user) {
     return (
-      <div className="rounded-md bg-zinc-100 p-4 text-center text-zinc-500 dark:bg-zinc-800">
+      <div className="rounded-md bg-zinc-100 p-4 text-center text-zinc-500 dark:bg-zinc-800 transition-all duration-300">
         未登录
       </div>
     );
   }
 
   return (
-    <div className="rounded-md bg-green-50 p-4 dark:bg-green-900/20">
+    <div className="rounded-md bg-green-50 p-4 dark:bg-green-900/20 transition-all duration-300 animate-in fade-in">
       <p className="font-medium text-green-800 dark:text-green-200">
         已登录
       </p>
@@ -173,7 +179,7 @@ function LoginButtons() {
     return (
       <button
         onClick={logout}
-        className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+        className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 transition-all duration-200 hover:scale-105 active:scale-95"
       >
         退出登录
       </button>
@@ -186,7 +192,7 @@ function LoginButtons() {
         onClick={() =>
           login({ name: "张三", email: "zhangsan@example.com", role: "user" })
         }
-        className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+        className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
       >
         用户登录
       </button>
@@ -194,7 +200,7 @@ function LoginButtons() {
         onClick={() =>
           login({ name: "管理员", email: "admin@example.com", role: "admin" })
         }
-        className="rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700"
+        className="rounded-md bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 transition-all duration-200 hover:scale-105 active:scale-95"
       >
         管理员登录
       </button>

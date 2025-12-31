@@ -257,6 +257,50 @@ function numIslands(grid) {
       },
       {
         name: "BFS",
+        animation: {
+          type: "two-pointers" as const,
+          title: "BFS沉岛法演示",
+          steps: [
+            {
+              array: ["1", "1", "0", "0", "0"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0, 1], color: "blue" as const, label: "陆地" },
+                { indices: [2, 3, 4], color: "gray" as const, label: "水" },
+              ],
+              description: "网格第一行。找到(0,0)是陆地，开始BFS",
+            },
+            {
+              array: ["1", "1", "0", "0", "0"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "yellow" as const, label: "队列" },
+                { indices: [1], color: "blue" as const, label: "待处理" },
+              ],
+              description: "(0,0)入队并标记为'0'，探索四个方向",
+            },
+            {
+              array: ["0", "0", "0", "0", "0"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "已沉没" },
+              ],
+              description: "BFS完成，整个岛屿被沉没。count=1",
+            },
+            {
+              array: ["1", "0", "1", "0", "1"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0, 2, 4], color: "blue" as const, label: "独立岛" },
+              ],
+              description: "如果有多个独立岛屿，每个都会触发一次BFS。count=岛屿数",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 岛屿数量 - BFS 法
  *
@@ -344,6 +388,50 @@ function numIslands(grid) {
       },
       {
         name: "并查集",
+        animation: {
+          type: "two-pointers" as const,
+          title: "并查集演示",
+          steps: [
+            {
+              array: ["1", "1", "0", "1", "1"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0, 1, 3, 4], color: "blue" as const, label: "陆地" },
+                { indices: [2], color: "gray" as const, label: "水" },
+              ],
+              description: "初始化：每个陆地格子是独立集合。初始集合数=4",
+            },
+            {
+              array: ["1", "1", "0", "1", "1"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "合并" },
+              ],
+              description: "(0,0)和(0,1)相邻且都是陆地，union合并。集合数=3",
+            },
+            {
+              array: ["1", "1", "0", "1", "1"],
+              left: 3,
+              right: 4,
+              highlights: [
+                { indices: [3, 4], color: "green" as const, label: "合并" },
+              ],
+              description: "(0,3)和(0,4)相邻且都是陆地，union合并。集合数=2",
+            },
+            {
+              array: ["1", "1", "0", "1", "1"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "岛1" },
+                { indices: [3, 4], color: "yellow" as const, label: "岛2" },
+              ],
+              description: "遍历完成，统计不同根的数量。岛屿数=2",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 岛屿数量 - 并查集法
  *
@@ -740,6 +828,40 @@ function solve(board) {
       },
       {
         name: "BFS",
+        animation: {
+          type: "two-pointers" as const,
+          title: "BFS边界标记演示",
+          steps: [
+            {
+              array: ["X", "O", "X", "O", "X"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [1, 3], color: "blue" as const, label: "O" },
+                { indices: [0, 2, 4], color: "gray" as const, label: "X" },
+              ],
+              description: "收集边界上的O入队。边界O不会被围绕",
+            },
+            {
+              array: ["X", "#", "X", "#", "X"],
+              left: 1,
+              right: 3,
+              highlights: [
+                { indices: [1, 3], color: "yellow" as const, label: "#安全" },
+              ],
+              description: "BFS标记边界O及其连通区域为'#'",
+            },
+            {
+              array: ["X", "O", "X", "O", "X"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [1, 3], color: "green" as const, label: "恢复O" },
+              ],
+              description: "最后：未标记的O变X，#恢复为O",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 被围绕的区域 - BFS 法
  *
@@ -825,6 +947,49 @@ function solve(board) {
       },
       {
         name: "并查集",
+        animation: {
+          type: "two-pointers" as const,
+          title: "并查集+虚拟节点演示",
+          steps: [
+            {
+              array: ["X", "O", "O", "X"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [1, 2], color: "blue" as const, label: "O" },
+              ],
+              description: "创建虚拟节点dummy，代表'与边界连通'",
+            },
+            {
+              array: ["X", "O", "O", "X"],
+              left: 1,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "yellow" as const, label: "边界O" },
+              ],
+              description: "边界上的O与dummy合并：union(O, dummy)",
+            },
+            {
+              array: ["X", "O", "O", "X"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [1, 2], color: "green" as const, label: "连通" },
+              ],
+              description: "相邻的O互相合并。检查：find(O)==find(dummy)?",
+            },
+            {
+              array: ["X", "O", "X", "X"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "安全" },
+                { indices: [2], color: "red" as const, label: "被围绕" },
+              ],
+              description: "不与dummy连通的O被围绕，变为X",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 被围绕的区域 - 并查集法
  *
@@ -1199,6 +1364,48 @@ function canFinish(numCourses, prerequisites) {
       },
       {
         name: "DFS 检测环",
+        animation: {
+          type: "two-pointers" as const,
+          title: "DFS三色标记演示",
+          steps: [
+            {
+              array: ["0:白", "1:白", "2:白"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "gray" as const, label: "未访问" },
+              ],
+              description: "三色标记：白=未访问，灰=访问中，黑=已完成",
+            },
+            {
+              array: ["0:灰", "1:白", "2:白"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "yellow" as const, label: "访问中" },
+              ],
+              description: "DFS(0)：标记为灰色，表示正在当前路径上",
+            },
+            {
+              array: ["0:灰", "1:灰", "2:白"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "yellow" as const, label: "DFS路径" },
+              ],
+              description: "DFS(1)：0→1。如果再遇到灰色节点=有环！",
+            },
+            {
+              array: ["0:黑", "1:黑", "2:黑"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "green" as const, label: "完成" },
+              ],
+              description: "所有节点都变成黑色，无环。可以完成所有课程",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 课程表 - DFS 检测环
  *
@@ -1585,6 +1792,48 @@ class Trie {
       },
       {
         name: "Map 实现",
+        animation: {
+          type: "two-pointers" as const,
+          title: "Trie Map实现演示",
+          steps: [
+            {
+              array: ["root", "", "", "", ""],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "根节点" },
+              ],
+              description: "初始化：根节点children为空Map",
+            },
+            {
+              array: ["root", "a", "p", "p", "l", "e"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [1, 2, 3, 4, 5], color: "green" as const, label: "插入apple" },
+              ],
+              description: "insert('apple')：逐字符创建节点链",
+            },
+            {
+              array: ["root", "a", "p", "p*", "", ""],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "yellow" as const, label: "isEnd" },
+              ],
+              description: "insert('app')：复用已有节点，标记isEnd=true",
+            },
+            {
+              array: ["a", "p", "p", "l", "e"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4], color: "green" as const, label: "找到" },
+              ],
+              description: "search('apple')：沿路径查找，最后节点isEnd=true则返回true",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * Trie 节点类
  *
@@ -1703,6 +1952,48 @@ _searchPrefix 方法被 search 和 startsWith 共用。`,
       },
       {
         name: "数组实现（固定字符集）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "Trie数组实现演示",
+          steps: [
+            {
+              array: ["[26]", "null", "...", "null"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "children[26]" },
+              ],
+              description: "每个节点有26个槽位，对应a-z。索引=char-'a'",
+            },
+            {
+              array: ["a:0", "p:15", "p:15", "l:11", "e:4"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4], color: "green" as const, label: "插入apple" },
+              ],
+              description: "insert('apple')：children['a'-'a']=children[0]创建节点",
+            },
+            {
+              array: ["[0]", "[15]", "[15]", "[11]", "[4]*"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [4], color: "yellow" as const, label: "isEnd" },
+              ],
+              description: "数组索引访问O(1)，比Map/对象更快",
+            },
+            {
+              array: ["a", "p", "p", "l", "e"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4], color: "green" as const, label: "找到" },
+              ],
+              description: "search：沿数组索引查找，空间换时间",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * Trie 节点类 - 数组实现
  *
@@ -2060,6 +2351,48 @@ function cloneGraph(node) {
       },
       {
         name: "BFS",
+        animation: {
+          type: "two-pointers" as const,
+          title: "BFS克隆图演示",
+          steps: [
+            {
+              array: ["1", "2", "3", "4"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "blue" as const, label: "原图节点" },
+              ],
+              description: "图：1-2-3-4形成环。BFS用队列遍历",
+            },
+            {
+              array: ["1'", "", "", ""],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "克隆1" },
+              ],
+              description: "克隆节点1，存入Map，入队",
+            },
+            {
+              array: ["1'", "2'", "4'", ""],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [1, 2], color: "yellow" as const, label: "入队" },
+              ],
+              description: "处理1的邻居：克隆2和4，入队",
+            },
+            {
+              array: ["1'", "2'", "3'", "4'"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "green" as const, label: "完成" },
+              ],
+              description: "BFS完成，所有节点都已克隆并正确连接",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 克隆图 - BFS 广度优先搜索
  *
@@ -2671,6 +3004,48 @@ function findOrder(numCourses, prerequisites) {
       },
       {
         name: "DFS（后序遍历）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "DFS后序遍历演示",
+          steps: [
+            {
+              array: ["0", "1", "2", "3"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "blue" as const, label: "课程" },
+              ],
+              description: "依赖：0→1,2；1,2→3。DFS后序遍历的逆序=拓扑排序",
+            },
+            {
+              array: ["0", "1", "3", ""],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "yellow" as const, label: "DFS路径" },
+              ],
+              description: "DFS(0)→DFS(1)→DFS(3)，3无后继，加入栈",
+            },
+            {
+              array: ["3", "1", "2", "0"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "green" as const, label: "后序" },
+              ],
+              description: "后序结果栈：[3,1,2,0]，逆序得：[0,2,1,3]",
+            },
+            {
+              array: ["0", "2", "1", "3"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "green" as const, label: "拓扑序" },
+              ],
+              description: "拓扑排序结果：先学0，再学1或2，最后学3",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 课程表 II - DFS 后序遍历
  *

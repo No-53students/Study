@@ -226,6 +226,54 @@ function hammingWeight(n) {
 
 ### 注意
 - 使用 >>> 无符号右移，处理负数`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "逐位检查演示",
+          steps: [
+            {
+              array: ["1", "0", "1", "1"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [3], color: "yellow" as const, label: "检查" }],
+              description: "n=11 (1011)。从最低位开始检查，count=0",
+            },
+            {
+              array: ["1", "0", "1", "1"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [3], color: "green" as const, label: "是1" }],
+              description: "n&1=1011&0001=1 ✓ count=1。然后右移",
+            },
+            {
+              array: ["0", "1", "0", "1"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [3], color: "green" as const, label: "是1" }],
+              description: "n=5 (0101)。n&1=1 ✓ count=2。继续右移",
+            },
+            {
+              array: ["0", "0", "1", "0"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [3], color: "red" as const, label: "是0" }],
+              description: "n=2 (0010)。n&1=0 ✗ count=2。继续右移",
+            },
+            {
+              array: ["0", "0", "0", "1"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [3], color: "green" as const, label: "是1" }],
+              description: "n=1 (0001)。n&1=1 ✓ count=3。右移后n=0，结束",
+            },
+            {
+              array: ["3"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "答案" }],
+              description: "n=0，循环结束。11的二进制有3个1",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(32)",
         spaceComplexity: "O(1)",
       },
@@ -270,6 +318,40 @@ function hammingWeight(n) {
 ### 特点
 - 代码简洁
 - 性能稍差`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "内置函数演示",
+          steps: [
+            {
+              array: ["1", "1"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "blue" as const, label: "n=11" }],
+              description: "n=11。首先用toString(2)转为二进制字符串",
+            },
+            {
+              array: ["1", "0", "1", "1"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0, 2, 3], color: "green" as const, label: "1" }],
+              description: "n.toString(2) = '1011'",
+            },
+            {
+              array: ["1", "1", "1"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "1" }],
+              description: "split('0').join('') = '111'，移除所有0",
+            },
+            {
+              array: ["3"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "答案" }],
+              description: "'111'.length = 3。11的二进制有3个1",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(32)",
         spaceComplexity: "O(32)",
       },
@@ -521,6 +603,61 @@ function singleNumber(nums) {
     if (cnt === 1) return num;
   }
 }`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "哈希表计数演示",
+          steps: [
+            {
+              array: ["4", "1", "2", "1", "2"],
+              left: 0,
+              right: 0,
+              highlights: [],
+              description: "nums=[4,1,2,1,2]。用哈希表统计每个数字出现次数",
+            },
+            {
+              array: ["4", "1", "2", "1", "2"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "4" }],
+              description: "遍历4：count={4:1}",
+            },
+            {
+              array: ["4", "1", "2", "1", "2"],
+              left: 1,
+              right: 1,
+              highlights: [{ indices: [1], color: "blue" as const, label: "1" }],
+              description: "遍历1：count={4:1, 1:1}",
+            },
+            {
+              array: ["4", "1", "2", "1", "2"],
+              left: 2,
+              right: 2,
+              highlights: [{ indices: [2], color: "blue" as const, label: "2" }],
+              description: "遍历2：count={4:1, 1:1, 2:1}",
+            },
+            {
+              array: ["4", "1", "2", "1", "2"],
+              left: 3,
+              right: 3,
+              highlights: [{ indices: [1, 3], color: "yellow" as const, label: "1×2" }],
+              description: "遍历1：count={4:1, 1:2, 2:1}",
+            },
+            {
+              array: ["4", "1", "2", "1", "2"],
+              left: 4,
+              right: 4,
+              highlights: [{ indices: [2, 4], color: "yellow" as const, label: "2×2" }],
+              description: "遍历2：count={4:1, 1:2, 2:2}",
+            },
+            {
+              array: ["4:1", "1:2", "2:2"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "count=1" }],
+              description: "遍历哈希表，找出count=1的数字：4",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 哈希表
 
 ### 思路
@@ -577,6 +714,47 @@ function singleNumber(nums) {
   // 应用公式
   return 2 * sumOfSet - sumOfNums;
 }`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "数学公式法演示",
+          steps: [
+            {
+              array: ["4", "1", "2", "1", "2"],
+              left: 0,
+              right: 4,
+              highlights: [],
+              description: "nums=[4,1,2,1,2]。公式：x = 2×集合和 - 数组和",
+            },
+            {
+              array: ["4", "1", "2"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "blue" as const, label: "集合" }],
+              description: "创建Set去重：{4, 1, 2}",
+            },
+            {
+              array: ["4", "1", "2"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "sum=7" }],
+              description: "集合之和：4 + 1 + 2 = 7",
+            },
+            {
+              array: ["4", "1", "2", "1", "2"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [0, 1, 2, 3, 4], color: "yellow" as const, label: "sum=10" }],
+              description: "数组之和：4 + 1 + 2 + 1 + 2 = 10",
+            },
+            {
+              array: ["2×7", "-", "10", "=", "4"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [4], color: "green" as const, label: "答案" }],
+              description: "x = 2×7 - 10 = 14 - 10 = 4",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 数学方法
 
 ### 思路
@@ -876,6 +1054,54 @@ function singleNumber(nums) {
   // 将无符号32位转为有符号32位
   return result >> 0;
 }`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "按位计数演示",
+          steps: [
+            {
+              array: ["2", "2", "3", "2"],
+              left: 0,
+              right: 3,
+              highlights: [],
+              description: "nums=[2,2,3,2]。二进制：[10,10,11,10]。逐位统计1的个数",
+            },
+            {
+              array: ["0", "0", "1", "0"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [2], color: "green" as const, label: "1" }],
+              description: "第0位：2的第0位=0, 2的=0, 3的=1, 2的=0。count=1",
+            },
+            {
+              array: ["0", "0", "1", "0"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [2], color: "green" as const, label: "1%3≠0" }],
+              description: "1 % 3 = 1 ≠ 0 → 结果第0位是1",
+            },
+            {
+              array: ["1", "1", "1", "1"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0, 1, 2, 3], color: "blue" as const, label: "1" }],
+              description: "第1位：2的第1位=1, 2的=1, 3的=1, 2的=1。count=4",
+            },
+            {
+              array: ["1", "1", "1", "1"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0, 1, 2, 3], color: "green" as const, label: "4%3≠0" }],
+              description: "4 % 3 = 1 ≠ 0 → 结果第1位是1",
+            },
+            {
+              array: ["1", "1"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "green" as const, label: "=3" }],
+              description: "结果 = 11(二进制) = 3。只出现一次的数字是3",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 按位计数
 
 ### 思路
@@ -929,6 +1155,54 @@ function singleNumber(nums) {
     if (cnt === 1) return num;
   }
 }`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "哈希表计数演示",
+          steps: [
+            {
+              array: ["2", "2", "3", "2"],
+              left: 0,
+              right: 3,
+              highlights: [],
+              description: "nums=[2,2,3,2]。用哈希表统计每个数字出现次数",
+            },
+            {
+              array: ["2", "2", "3", "2"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "2" }],
+              description: "遍历2：count={2:1}",
+            },
+            {
+              array: ["2", "2", "3", "2"],
+              left: 1,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "blue" as const, label: "2" }],
+              description: "遍历2：count={2:2}",
+            },
+            {
+              array: ["2", "2", "3", "2"],
+              left: 2,
+              right: 2,
+              highlights: [{ indices: [2], color: "green" as const, label: "3" }],
+              description: "遍历3：count={2:2, 3:1}",
+            },
+            {
+              array: ["2", "2", "3", "2"],
+              left: 3,
+              right: 3,
+              highlights: [{ indices: [0, 1, 3], color: "blue" as const, label: "2" }],
+              description: "遍历2：count={2:3, 3:1}",
+            },
+            {
+              array: ["2:3", "3:1"],
+              left: 1,
+              right: 1,
+              highlights: [{ indices: [1], color: "green" as const, label: "count=1" }],
+              description: "遍历哈希表，找出count=1的数字：3",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 哈希表计数
 
 ### 思路
@@ -1204,6 +1478,61 @@ function countBits(n) {
 
   return ans;
 }`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "最低有效位DP演示",
+          steps: [
+            {
+              array: ["0", "?", "?", "?", "?", "?"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "0" }],
+              description: "n=5。ans[0]=0。公式：ans[i] = ans[i>>1] + (i&1)",
+            },
+            {
+              array: ["0", "1", "?", "?", "?", "?"],
+              left: 1,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "blue" as const, label: "0→1" }],
+              description: "i=1: 1>>1=0, 1&1=1, ans[1]=ans[0]+1=1",
+            },
+            {
+              array: ["0", "1", "1", "?", "?", "?"],
+              left: 2,
+              right: 2,
+              highlights: [{ indices: [1, 2], color: "blue" as const, label: "1→2" }],
+              description: "i=2: 2>>1=1, 2&1=0, ans[2]=ans[1]+0=1",
+            },
+            {
+              array: ["0", "1", "1", "2", "?", "?"],
+              left: 3,
+              right: 3,
+              highlights: [{ indices: [1, 3], color: "blue" as const, label: "1→3" }],
+              description: "i=3: 3>>1=1, 3&1=1, ans[3]=ans[1]+1=2",
+            },
+            {
+              array: ["0", "1", "1", "2", "1", "?"],
+              left: 4,
+              right: 4,
+              highlights: [{ indices: [2, 4], color: "blue" as const, label: "2→4" }],
+              description: "i=4: 4>>1=2, 4&1=0, ans[4]=ans[2]+0=1",
+            },
+            {
+              array: ["0", "1", "1", "2", "1", "2"],
+              left: 5,
+              right: 5,
+              highlights: [{ indices: [2, 5], color: "blue" as const, label: "2→5" }],
+              description: "i=5: 5>>1=2, 5&1=1, ans[5]=ans[2]+1=2",
+            },
+            {
+              array: ["0", "1", "1", "2", "1", "2"],
+              left: 0,
+              right: 5,
+              highlights: [{ indices: [0, 1, 2, 3, 4, 5], color: "green" as const, label: "结果" }],
+              description: "完成！[0,1,1,2,1,2]",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 动态规划 - 最低有效位
 
 ### 思路
@@ -1291,6 +1620,61 @@ function countBits(n) {
 
   return ans;
 }`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "最高有效位DP演示",
+          steps: [
+            {
+              array: ["0", "?", "?", "?", "?", "?"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "0" }],
+              description: "n=5。ans[0]=0, highBit=0。公式：ans[i]=ans[i-highBit]+1",
+            },
+            {
+              array: ["0", "1", "?", "?", "?", "?"],
+              left: 1,
+              right: 1,
+              highlights: [{ indices: [1], color: "yellow" as const, label: "2^0" }],
+              description: "i=1是2的幂，highBit=1。ans[1]=ans[0]+1=1",
+            },
+            {
+              array: ["0", "1", "1", "?", "?", "?"],
+              left: 2,
+              right: 2,
+              highlights: [{ indices: [2], color: "yellow" as const, label: "2^1" }],
+              description: "i=2是2的幂，highBit=2。ans[2]=ans[0]+1=1",
+            },
+            {
+              array: ["0", "1", "1", "2", "?", "?"],
+              left: 3,
+              right: 3,
+              highlights: [{ indices: [1, 3], color: "blue" as const, label: "3-2=1" }],
+              description: "i=3, highBit=2。ans[3]=ans[3-2]+1=ans[1]+1=2",
+            },
+            {
+              array: ["0", "1", "1", "2", "1", "?"],
+              left: 4,
+              right: 4,
+              highlights: [{ indices: [4], color: "yellow" as const, label: "2^2" }],
+              description: "i=4是2的幂，highBit=4。ans[4]=ans[0]+1=1",
+            },
+            {
+              array: ["0", "1", "1", "2", "1", "2"],
+              left: 5,
+              right: 5,
+              highlights: [{ indices: [1, 5], color: "blue" as const, label: "5-4=1" }],
+              description: "i=5, highBit=4。ans[5]=ans[5-4]+1=ans[1]+1=2",
+            },
+            {
+              array: ["0", "1", "1", "2", "1", "2"],
+              left: 0,
+              right: 5,
+              highlights: [{ indices: [0, 1, 2, 3, 4, 5], color: "green" as const, label: "结果" }],
+              description: "完成！[0,1,1,2,1,2]",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 动态规划 - 最高有效位
 
 ### 思路

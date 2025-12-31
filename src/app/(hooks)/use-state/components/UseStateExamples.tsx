@@ -8,31 +8,40 @@ import { useState } from "react";
 
 export function BasicCounterExample() {
   const [count, setCount] = useState(0);
+  const [animate, setAnimate] = useState(false);
+
+  const handleChange = (newCount: number) => {
+    setAnimate(true);
+    setCount(newCount);
+    setTimeout(() => setAnimate(false), 200);
+  };
 
   return (
     <div className="rounded-lg border border-zinc-200 p-6 dark:border-zinc-700">
       <h3 className="mb-4 text-lg font-semibold">示例 1: 基本计数器</h3>
 
       <div className="mb-4 text-center">
-        <span className="text-4xl font-bold">{count}</span>
+        <span className={`text-4xl font-bold inline-block transition-transform duration-200 ${animate ? 'scale-125 text-blue-500' : 'scale-100'}`}>
+          {count}
+        </span>
       </div>
 
       <div className="flex justify-center gap-2">
         <button
-          onClick={() => setCount(count - 1)}
-          className="rounded-md bg-zinc-200 px-4 py-2 text-sm font-medium hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
+          onClick={() => handleChange(count - 1)}
+          className="rounded-md bg-zinc-200 px-4 py-2 text-sm font-medium hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           -1
         </button>
         <button
-          onClick={() => setCount(0)}
-          className="rounded-md bg-zinc-200 px-4 py-2 text-sm font-medium hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
+          onClick={() => handleChange(0)}
+          className="rounded-md bg-zinc-200 px-4 py-2 text-sm font-medium hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           重置
         </button>
         <button
-          onClick={() => setCount(count + 1)}
-          className="rounded-md bg-zinc-200 px-4 py-2 text-sm font-medium hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
+          onClick={() => handleChange(count + 1)}
+          className="rounded-md bg-zinc-200 px-4 py-2 text-sm font-medium hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           +1
         </button>
@@ -190,6 +199,7 @@ export function ArrayStateExample() {
     { id: 2, text: "理解状态更新", completed: false },
   ]);
   const [newTodo, setNewTodo] = useState("");
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const addTodo = () => {
     if (!newTodo.trim()) return;
@@ -209,7 +219,11 @@ export function ArrayStateExample() {
   };
 
   const deleteTodo = (id: number) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+    setDeletingId(id);
+    setTimeout(() => {
+      setTodos(todos.filter((todo) => todo.id !== id));
+      setDeletingId(null);
+    }, 300);
   };
 
   return (
@@ -223,40 +237,48 @@ export function ArrayStateExample() {
           onChange={(e) => setNewTodo(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && addTodo()}
           placeholder="添加新待办..."
-          className="flex-1 rounded-md border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800"
+          className="flex-1 rounded-md border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
         <button
           onClick={addTodo}
-          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           添加
         </button>
       </div>
 
       <div className="space-y-2">
-        {todos.map((todo) => (
+        {todos.map((todo, index) => (
           <div
             key={todo.id}
-            className="flex items-center justify-between rounded-md bg-zinc-100 p-3 dark:bg-zinc-800"
+            className={`flex items-center justify-between rounded-md bg-zinc-100 p-3 dark:bg-zinc-800 transition-all duration-300 ${
+              deletingId === todo.id
+                ? 'opacity-0 translate-x-4 scale-95'
+                : 'opacity-100 translate-x-0 scale-100'
+            }`}
+            style={{
+              animationDelay: `${index * 50}ms`,
+              animation: 'fadeInSlide 0.3s ease-out forwards'
+            }}
           >
             <div className="flex items-center gap-3">
               <input
                 type="checkbox"
                 checked={todo.completed}
                 onChange={() => toggleTodo(todo.id)}
-                className="h-4 w-4 rounded"
+                className="h-4 w-4 rounded cursor-pointer transition-transform duration-200 hover:scale-110"
               />
               <span
-                className={
-                  todo.completed ? "text-zinc-400 line-through" : undefined
-                }
+                className={`transition-all duration-300 ${
+                  todo.completed ? "text-zinc-400 line-through" : ""
+                }`}
               >
                 {todo.text}
               </span>
             </div>
             <button
               onClick={() => deleteTodo(todo.id)}
-              className="rounded px-2 py-1 text-sm text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30"
+              className="rounded px-2 py-1 text-sm text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30 transition-all duration-200 hover:scale-110"
             >
               删除
             </button>

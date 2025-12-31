@@ -62,12 +62,12 @@ function UserCard({ user }: { user: User }) {
   };
 
   return (
-    <div className="flex items-center justify-between rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
+    <div className="flex items-center justify-between rounded-lg border border-zinc-200 p-4 dark:border-zinc-700 transition-all duration-200 hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-600 hover:-translate-y-0.5">
       <div>
         <p className="font-medium">{user.name}</p>
         <p className="text-sm text-zinc-500">{user.email}</p>
       </div>
-      <span className={`rounded-full px-2 py-0.5 text-xs ${roleColors[user.role]}`}>
+      <span className={`rounded-full px-2 py-0.5 text-xs ${roleColors[user.role]} transition-transform duration-200 hover:scale-105`}>
         {user.role}
       </span>
     </div>
@@ -151,19 +151,19 @@ export function FilterSortExample() {
           placeholder="搜索产品..."
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="rounded-md border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800"
+          className="rounded-md border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as "name" | "price")}
-          className="rounded-md border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800"
+          className="rounded-md border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800 transition-all duration-200 focus:ring-2 focus:ring-blue-500"
         >
           <option value="name">按名称</option>
           <option value="price">按价格</option>
         </select>
         <button
           onClick={() => setSortOrder((o) => (o === "asc" ? "desc" : "asc"))}
-          className="rounded-md bg-zinc-600 px-3 py-2 text-sm text-white hover:bg-zinc-700"
+          className="rounded-md bg-zinc-600 px-3 py-2 text-sm text-white hover:bg-zinc-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           {sortOrder === "asc" ? "↑ 升序" : "↓ 降序"}
         </button>
@@ -173,16 +173,17 @@ export function FilterSortExample() {
         {filteredAndSorted.length === 0 ? (
           <p className="py-4 text-center text-zinc-500">没有找到匹配的产品</p>
         ) : (
-          filteredAndSorted.map((product) => (
+          filteredAndSorted.map((product, index) => (
             <div
               key={product.id}
-              className="flex items-center justify-between rounded-md bg-zinc-100 px-4 py-2 dark:bg-zinc-800"
+              className="flex items-center justify-between rounded-md bg-zinc-100 px-4 py-2 dark:bg-zinc-800 transition-all duration-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:translate-x-1"
+              style={{ animationDelay: `${index * 50}ms` }}
             >
               <div>
                 <span className="font-medium">{product.name}</span>
                 <span className="ml-2 text-xs text-zinc-500">{product.category}</span>
               </div>
-              <span className="text-green-600">¥{product.price}</span>
+              <span className="text-green-600 font-medium">¥{product.price}</span>
             </div>
           ))
         )}
@@ -300,9 +301,12 @@ export function KeyImportanceExample() {
     { id: 3, text: "休息一下" },
   ]);
   const [useIndexKey, setUseIndexKey] = useState(false);
+  const [animateAdd, setAnimateAdd] = useState(false);
 
   const addToStart = () => {
+    setAnimateAdd(true);
     setTodos([{ id: nextId++, text: `新任务 ${nextId - 1}` }, ...todos]);
+    setTimeout(() => setAnimateAdd(false), 300);
   };
 
   const shuffle = () => {
@@ -316,21 +320,22 @@ export function KeyImportanceExample() {
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <button
           onClick={addToStart}
-          className="rounded-md bg-green-600 px-3 py-1 text-sm text-white hover:bg-green-700"
+          className="rounded-md bg-green-600 px-3 py-1 text-sm text-white hover:bg-green-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           添加到开头
         </button>
         <button
           onClick={shuffle}
-          className="rounded-md bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+          className="rounded-md bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           随机排序
         </button>
-        <label className="flex items-center gap-2 text-sm">
+        <label className="flex items-center gap-2 text-sm cursor-pointer">
           <input
             type="checkbox"
             checked={useIndexKey}
             onChange={(e) => setUseIndexKey(e.target.checked)}
+            className="rounded transition-transform duration-200 hover:scale-110"
           />
           使用 index 作为 key
         </label>
@@ -340,7 +345,9 @@ export function KeyImportanceExample() {
         {todos.map((todo, index) => (
           <div
             key={useIndexKey ? index : todo.id}
-            className="flex items-center gap-3 rounded-md bg-zinc-100 px-4 py-2 dark:bg-zinc-800"
+            className={`flex items-center gap-3 rounded-md bg-zinc-100 px-4 py-2 dark:bg-zinc-800 transition-all duration-300 ${
+              animateAdd && index === 0 ? 'animate-pulse bg-green-100 dark:bg-green-900/30' : ''
+            }`}
           >
             <span className="text-xs text-zinc-400">
               key={useIndexKey ? index : todo.id}
@@ -348,7 +355,7 @@ export function KeyImportanceExample() {
             <input
               type="text"
               defaultValue={todo.text}
-              className="flex-1 rounded border border-zinc-300 px-2 py-1 text-sm dark:border-zinc-600 dark:bg-zinc-700"
+              className="flex-1 rounded border border-zinc-300 px-2 py-1 text-sm dark:border-zinc-600 dark:bg-zinc-700 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
         ))}
@@ -442,6 +449,8 @@ export function DynamicListExample() {
     { id: 2, text: "项目 2" },
   ]);
   const [newText, setNewText] = useState("");
+  const [removingId, setRemovingId] = useState<number | null>(null);
+  const [movingIndex, setMovingIndex] = useState<number | null>(null);
 
   const addItem = () => {
     if (!newText.trim()) return;
@@ -450,14 +459,22 @@ export function DynamicListExample() {
   };
 
   const removeItem = (id: number) => {
-    setItems(items.filter((item) => item.id !== id));
+    setRemovingId(id);
+    setTimeout(() => {
+      setItems(items.filter((item) => item.id !== id));
+      setRemovingId(null);
+    }, 300);
   };
 
   const moveUp = (index: number) => {
     if (index === 0) return;
-    const newItems = [...items];
-    [newItems[index - 1], newItems[index]] = [newItems[index], newItems[index - 1]];
-    setItems(newItems);
+    setMovingIndex(index);
+    setTimeout(() => {
+      const newItems = [...items];
+      [newItems[index - 1], newItems[index]] = [newItems[index], newItems[index - 1]];
+      setItems(newItems);
+      setMovingIndex(null);
+    }, 150);
   };
 
   return (
@@ -471,11 +488,11 @@ export function DynamicListExample() {
           onChange={(e) => setNewText(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && addItem()}
           placeholder="输入新项目..."
-          className="flex-1 rounded-md border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800"
+          className="flex-1 rounded-md border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800 transition-all duration-200 focus:ring-2 focus:ring-green-500 focus:border-transparent"
         />
         <button
           onClick={addItem}
-          className="rounded-md bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700"
+          className="rounded-md bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           添加
         </button>
@@ -488,12 +505,18 @@ export function DynamicListExample() {
           {items.map((item, index) => (
             <li
               key={item.id}
-              className="flex items-center gap-2 rounded-md bg-zinc-100 px-4 py-2 dark:bg-zinc-800"
+              className={`flex items-center gap-2 rounded-md bg-zinc-100 px-4 py-2 dark:bg-zinc-800 transition-all duration-300 ${
+                removingId === item.id
+                  ? 'opacity-0 translate-x-4 scale-95'
+                  : movingIndex === index
+                  ? '-translate-y-2 scale-105 shadow-lg z-10 relative'
+                  : 'opacity-100 translate-x-0 scale-100'
+              }`}
             >
               <button
                 onClick={() => moveUp(index)}
                 disabled={index === 0}
-                className="text-zinc-400 hover:text-zinc-600 disabled:opacity-30"
+                className="text-zinc-400 hover:text-zinc-600 disabled:opacity-30 transition-all duration-200 hover:scale-125 active:scale-95"
               >
                 ↑
               </button>
@@ -501,7 +524,7 @@ export function DynamicListExample() {
               <span className="text-xs text-zinc-400">id: {item.id}</span>
               <button
                 onClick={() => removeItem(item.id)}
-                className="text-red-500 hover:text-red-700"
+                className="text-red-500 hover:text-red-700 transition-all duration-200 hover:scale-125 active:scale-95"
               >
                 ✕
               </button>

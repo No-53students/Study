@@ -41,21 +41,21 @@ export interface ArrayVisualizerProps {
 }
 
 const colorMap = {
-  blue: { bg: "bg-blue-500", border: "border-blue-600", shadow: "shadow-blue-500/50" },
-  green: { bg: "bg-green-500", border: "border-green-600", shadow: "shadow-green-500/50" },
-  red: { bg: "bg-red-500", border: "border-red-600", shadow: "shadow-red-500/50" },
-  yellow: { bg: "bg-yellow-500", border: "border-yellow-600", shadow: "shadow-yellow-500/50" },
-  purple: { bg: "bg-purple-500", border: "border-purple-600", shadow: "shadow-purple-500/50" },
-  orange: { bg: "bg-orange-500", border: "border-orange-600", shadow: "shadow-orange-500/50" },
-  gray: { bg: "bg-zinc-500", border: "border-zinc-600", shadow: "shadow-zinc-500/50" },
+  blue: { bg: "bg-gradient-to-br from-blue-400 to-blue-600", border: "border-blue-500/50", shadow: "shadow-blue-500/40" },
+  green: { bg: "bg-gradient-to-br from-emerald-400 to-emerald-600", border: "border-emerald-500/50", shadow: "shadow-emerald-500/40" },
+  red: { bg: "bg-gradient-to-br from-rose-400 to-rose-600", border: "border-rose-500/50", shadow: "shadow-rose-500/40" },
+  yellow: { bg: "bg-gradient-to-br from-amber-400 to-amber-600", border: "border-amber-500/50", shadow: "shadow-amber-500/40" },
+  purple: { bg: "bg-gradient-to-br from-violet-400 to-violet-600", border: "border-violet-500/50", shadow: "shadow-violet-500/40" },
+  orange: { bg: "bg-gradient-to-br from-orange-400 to-orange-600", border: "border-orange-500/50", shadow: "shadow-orange-500/40" },
+  gray: { bg: "bg-gradient-to-br from-zinc-500 to-zinc-700", border: "border-zinc-500/50", shadow: "shadow-zinc-500/30" },
 };
 
 const pointerColorMap = {
-  blue: "text-blue-400",
-  green: "text-green-400",
-  red: "text-red-400",
-  yellow: "text-yellow-400",
-  purple: "text-purple-400",
+  blue: "text-blue-400 drop-shadow-[0_0_4px_rgba(59,130,246,0.5)]",
+  green: "text-emerald-400 drop-shadow-[0_0_4px_rgba(52,211,153,0.5)]",
+  red: "text-rose-400 drop-shadow-[0_0_4px_rgba(251,113,133,0.5)]",
+  yellow: "text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.5)]",
+  purple: "text-violet-400 drop-shadow-[0_0_4px_rgba(167,139,250,0.5)]",
 };
 
 const sizeMap = {

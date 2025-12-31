@@ -1,5 +1,5 @@
 import { Problem } from "../types";
-import { LinkedListStep } from "../components/animations";
+import { LinkedListStep, TwoPointersStep } from "../components/animations";
 
 // 链表分类题目
 export const linkedListProblems: Problem[] = [
@@ -236,6 +236,49 @@ k 次后距离为 0，即相遇
       },
       {
         name: "哈希表",
+        animation: {
+          type: "two-pointers" as const,
+          title: "哈希表检测环演示",
+          steps: [
+            {
+              array: ["1", "2", "3", "→2"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "当前" }],
+              description: "链表: 1→2→3→2(环)。seen={}，访问节点1",
+            },
+            {
+              array: ["1", "2", "3", "→2"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "已访问" },
+                { indices: [1], color: "green" as const, label: "当前" },
+              ],
+              description: "seen={1}，访问节点2",
+            },
+            {
+              array: ["1", "2", "3", "→2"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1], color: "gray" as const, label: "已访问" },
+                { indices: [2], color: "green" as const, label: "当前" },
+              ],
+              description: "seen={1,2}，访问节点3",
+            },
+            {
+              array: ["1", "2", "3", "→2"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2], color: "gray" as const, label: "已访问" },
+                { indices: [3], color: "red" as const, label: "重复!" },
+              ],
+              description: "seen={1,2,3}，节点2已在集合中！返回true",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 环形链表 - 哈希表法
  *
@@ -611,6 +654,48 @@ a = n(b + c) - b = (n-1)(b + c) + c
       },
       {
         name: "哈希表",
+        animation: {
+          type: "two-pointers" as const,
+          title: "哈希表找入环点演示",
+          steps: [
+            {
+              array: ["3", "2", "0", "-4", "→2"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "当前" }],
+              description: "链表: 3→2→0→-4→2(环)。seen={}",
+            },
+            {
+              array: ["3", "2", "0", "-4", "→2"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "已访问" },
+                { indices: [1], color: "green" as const, label: "当前" },
+              ],
+              description: "seen={3}，访问节点2",
+            },
+            {
+              array: ["3", "2", "0", "-4", "→2"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "gray" as const, label: "已访问" },
+              ],
+              description: "seen={3,2,0,-4}，继续遍历",
+            },
+            {
+              array: ["3", "2", "0", "-4", "→2"],
+              left: 1,
+              right: 4,
+              highlights: [
+                { indices: [1], color: "red" as const, label: "入环点!" },
+                { indices: [4], color: "yellow" as const, label: "回到2" },
+              ],
+              description: "回到节点2，已在seen中！返回节点2",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 环形链表 II - 哈希表法
  *
@@ -1009,6 +1094,46 @@ null ← 1 ← 2 ← 3
       },
       {
         name: "递归法",
+        animation: {
+          type: "two-pointers" as const,
+          title: "递归反转链表演示",
+          steps: [
+            {
+              array: ["1", "2", "3", "null"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "blue" as const, label: "递归深入" }],
+              description: "链表1→2→3。递归到底部，找到新头节点3",
+            },
+            {
+              array: ["1", "2", "←3"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [1], color: "yellow" as const, label: "当前" },
+                { indices: [2], color: "green" as const, label: "新头" },
+              ],
+              description: "回溯：3.next=2, 2.next=null。得到2←3",
+            },
+            {
+              array: ["1", "←2", "←3"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "yellow" as const, label: "当前" },
+                { indices: [2], color: "green" as const, label: "新头" },
+              ],
+              description: "回溯：2.next=1, 1.next=null。得到1←2←3",
+            },
+            {
+              array: ["null←1", "←2", "←3"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [2], color: "green" as const, label: "返回新头3" }],
+              description: "完成！返回新头节点3，链表变为3→2→1→null",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 反转链表 - 递归法
  *
@@ -1114,6 +1239,47 @@ head.next.next = head  →  3.next = 2
       },
       {
         name: "头插法",
+        animation: {
+          type: "two-pointers" as const,
+          title: "头插法反转链表演示",
+          steps: [
+            {
+              array: ["dummy", "1", "2", "3"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "哨兵" },
+                { indices: [1], color: "green" as const, label: "curr" },
+              ],
+              description: "创建哨兵节点。curr=1，准备头插",
+            },
+            {
+              array: ["dummy", "1", "2", "3"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "插入1" },
+              ],
+              description: "将1插入dummy后。dummy→1",
+            },
+            {
+              array: ["dummy", "2", "1", "3"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1, 2], color: "green" as const, label: "插入2" },
+              ],
+              description: "将2插入dummy后。dummy→2→1",
+            },
+            {
+              array: ["dummy", "3", "2", "1"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [1, 2, 3], color: "green" as const, label: "完成" }],
+              description: "将3插入dummy后。dummy→3→2→1。返回3",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 反转链表 - 头插法
  *
@@ -1487,6 +1653,43 @@ if (list1.val <= list2.val) {
       },
       {
         name: "递归法",
+        animation: {
+          type: "two-pointers" as const,
+          title: "递归合并链表演示",
+          steps: [
+            {
+              array: ["1→2→4", "1→3→4"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "list1" },
+                { indices: [1], color: "green" as const, label: "list2" },
+              ],
+              description: "list1=[1,2,4], list2=[1,3,4]。比较1和1",
+            },
+            {
+              array: ["1", "→", "merge([2,4],[1,3,4])"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "选1" }],
+              description: "1≤1，选list1的1。递归合并剩余",
+            },
+            {
+              array: ["1→1", "→", "merge([2,4],[3,4])"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "选list2的1" }],
+              description: "2>1，选list2的1。继续递归",
+            },
+            {
+              array: ["1→1→2→3→4→4"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "结果" }],
+              description: "递归完成，返回合并后的链表",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 合并两个有序链表 - 递归法
  *
@@ -1832,6 +2035,43 @@ l2: 9 → 9 → 9 → 9             (9999)
       },
       {
         name: "递归法",
+        animation: {
+          type: "two-pointers" as const,
+          title: "递归两数相加演示",
+          steps: [
+            {
+              array: ["2→4→3", "5→6→4"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "l1=342" },
+                { indices: [1], color: "green" as const, label: "l2=465" },
+              ],
+              description: "342+465。递归处理每一位",
+            },
+            {
+              array: ["2+5=7", "carry=0"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "个位" }],
+              description: "个位：2+5+0=7，进位0。递归处理下一位",
+            },
+            {
+              array: ["4+6=10", "carry=1"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "yellow" as const, label: "十位" }],
+              description: "十位：4+6+0=10，保留0，进位1",
+            },
+            {
+              array: ["7→0→8"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "结果" }],
+              description: "百位：3+4+1=8。结果：7→0→8 (807)",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 两数相加 - 递归法
  *
@@ -2208,6 +2448,40 @@ slow.next = slow.next.next  →  跳过节点 4
       },
       {
         name: "两次遍历",
+        animation: {
+          type: "two-pointers" as const,
+          title: "两次遍历删除倒数第N个节点",
+          steps: [
+            {
+              array: ["1", "2", "3", "4", "5"],
+              left: 0,
+              right: 4,
+              highlights: [],
+              description: "链表[1,2,3,4,5]，删除倒数第2个(4)",
+            },
+            {
+              array: ["1", "2", "3", "4", "5"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [0, 1, 2, 3, 4], color: "blue" as const, label: "计数" }],
+              description: "第一次遍历：计算长度L=5",
+            },
+            {
+              array: ["d", "1", "2", "3", "4", "5"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [3], color: "yellow" as const, label: "L-n=3" }],
+              description: "从dummy走L-n=3步，找到节点3(要删除节点的前一个)",
+            },
+            {
+              array: ["1", "2", "3", "5"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0, 1, 2, 3], color: "green" as const, label: "完成" }],
+              description: "删除节点4，3.next=5。结果[1,2,3,5]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 删除链表的倒数第 N 个结点 - 两次遍历法
  *
@@ -2287,6 +2561,40 @@ dummy → 1 → 2 → 3 → 4 → 5
       },
       {
         name: "栈",
+        animation: {
+          type: "two-pointers" as const,
+          title: "栈方法删除倒数第N个节点",
+          steps: [
+            {
+              array: ["d", "1", "2", "3", "4", "5"],
+              left: 0,
+              right: 5,
+              highlights: [{ indices: [0, 1, 2, 3, 4, 5], color: "blue" as const, label: "入栈" }],
+              description: "所有节点入栈：[d,1,2,3,4,5]",
+            },
+            {
+              array: ["d", "1", "2", "3", "4", "5"],
+              left: 0,
+              right: 5,
+              highlights: [{ indices: [4, 5], color: "red" as const, label: "弹出" }],
+              description: "n=2，弹出2个：弹出5，弹出4",
+            },
+            {
+              array: ["d", "1", "2", "3"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [3], color: "yellow" as const, label: "栈顶" }],
+              description: "栈顶3是要删除节点的前一个",
+            },
+            {
+              array: ["1", "2", "3", "5"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0, 1, 2, 3], color: "green" as const, label: "完成" }],
+              description: "删除4，3.next=5。结果[1,2,3,5]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 删除链表的倒数第 N 个结点 - 栈方法
  *
@@ -2712,6 +3020,33 @@ pB 总路程 = b + (a - c) = a + b - c
       },
       {
         name: "哈希表",
+        animation: {
+          type: "two-pointers" as const,
+          title: "哈希表找交点演示",
+          steps: [
+            {
+              array: ["A:4→1", "→8→4→5", "B:5→6→1"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [1], color: "yellow" as const, label: "交点8" }],
+              description: "A和B在节点8相交。先遍历A存入Set",
+            },
+            {
+              array: ["4", "1", "8", "4", "5"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [0, 1, 2, 3, 4], color: "blue" as const, label: "存入Set" }],
+              description: "seen={4,1,8,4,5}(节点引用)",
+            },
+            {
+              array: ["5", "6", "1", "8", "4", "5"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [3], color: "green" as const, label: "找到!" }],
+              description: "遍历B，节点8在Set中！返回8",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 相交链表 - 哈希表法
  *
@@ -2803,6 +3138,40 @@ B: 4 → 2 → 5
       },
       {
         name: "计算长度差",
+        animation: {
+          type: "two-pointers" as const,
+          title: "计算长度差找交点演示",
+          steps: [
+            {
+              array: ["A:5节点", "B:6节点"],
+              left: 0,
+              right: 1,
+              highlights: [],
+              description: "A长5，B长6。长度差=1",
+            },
+            {
+              array: ["B1", "B2", "B3", "B4", "B5", "B6"],
+              left: 1,
+              right: 5,
+              highlights: [{ indices: [0], color: "gray" as const, label: "跳过" }],
+              description: "B先走1步，两链表对齐",
+            },
+            {
+              array: ["A", "→", "→", "交点"],
+              left: 0,
+              right: 0,
+              highlights: [],
+              description: "两指针同步前进",
+            },
+            {
+              array: ["A", "B", "→", "8"],
+              left: 3,
+              right: 3,
+              highlights: [{ indices: [3], color: "green" as const, label: "相遇!" }],
+              description: "两指针在交点8相遇！返回8",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 相交链表 - 计算长度差法
  *
@@ -3264,6 +3633,39 @@ slow 停在 3（中间节点）
       },
       {
         name: "数组 + 双指针",
+        animation: {
+          type: "two-pointers" as const,
+          title: "数组+双指针判断回文",
+          steps: [
+            {
+              array: ["1", "2", "2", "1"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0, 1, 2, 3], color: "blue" as const, label: "转数组" }],
+              description: "链表1→2→2→1转为数组[1,2,2,1]",
+            },
+            {
+              array: ["1", "2", "2", "1"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "L" },
+                { indices: [3], color: "green" as const, label: "R" },
+              ],
+              description: "vals[0]=1 == vals[3]=1 ✓",
+            },
+            {
+              array: ["1", "2", "2", "1"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "L" },
+                { indices: [2], color: "green" as const, label: "R" },
+              ],
+              description: "vals[1]=2 == vals[2]=2 ✓ 是回文!",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 回文链表 - 数组 + 双指针法
  *
@@ -3346,6 +3748,39 @@ vals = [1, 2, 2, 1]
       },
       {
         name: "递归",
+        animation: {
+          type: "two-pointers" as const,
+          title: "递归判断回文链表演示",
+          steps: [
+            {
+              array: ["1", "2", "2", "1"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0, 1, 2, 3], color: "blue" as const, label: "递归深入" }],
+              description: "递归到链表末尾，front指向头",
+            },
+            {
+              array: ["1", "2", "2", "1"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "front" },
+                { indices: [3], color: "green" as const, label: "node" },
+              ],
+              description: "回溯：node=1, front=1 ✓ front前进",
+            },
+            {
+              array: ["1", "2", "2", "1"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "front" },
+                { indices: [2], color: "green" as const, label: "node" },
+              ],
+              description: "回溯：node=2, front=2 ✓ 是回文!",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 回文链表 - 递归法
  *
@@ -3754,6 +4189,33 @@ function deleteDuplicates(head) {
       },
       {
         name: "递归",
+        animation: {
+          type: "two-pointers" as const,
+          title: "递归删除重复元素演示",
+          steps: [
+            {
+              array: ["1", "1", "2", "3", "3"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [0, 1, 2, 3, 4], color: "blue" as const, label: "递归深入" }],
+              description: "递归到链表末尾",
+            },
+            {
+              array: ["1", "1", "2", "3"],
+              left: 3,
+              right: 3,
+              highlights: [{ indices: [3], color: "green" as const, label: "去重" }],
+              description: "回溯：3==3，跳过重复",
+            },
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "结果" }],
+              description: "回溯：1==1，跳过重复。结果[1,2,3]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 删除排序链表中的重复元素 - 递归法
  *
@@ -4190,6 +4652,40 @@ function deleteDuplicates(head) {
       },
       {
         name: "递归",
+        animation: {
+          type: "two-pointers" as const,
+          title: "递归删除重复元素II演示",
+          steps: [
+            {
+              array: ["1", "1", "2", "3", "3"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [0, 1], color: "red" as const, label: "重复" }],
+              description: "1==1，跳过所有1，递归处理后续",
+            },
+            {
+              array: ["2", "3", "3"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0], color: "green" as const, label: "保留" }],
+              description: "2!=3，不重复，保留2",
+            },
+            {
+              array: ["3", "3"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "red" as const, label: "重复" }],
+              description: "3==3，跳过所有3",
+            },
+            {
+              array: ["2"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "结果" }],
+              description: "结果：只保留2",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 删除排序链表中的重复元素 II - 递归法
  *
@@ -4642,6 +5138,40 @@ function rotateRight(head, k) {
       },
       {
         name: "成环再断开",
+        animation: {
+          type: "two-pointers" as const,
+          title: "成环再断开旋转链表",
+          steps: [
+            {
+              array: ["1", "2", "3", "4", "5"],
+              left: 0,
+              right: 4,
+              highlights: [],
+              description: "链表[1,2,3,4,5]，右旋k=2位",
+            },
+            {
+              array: ["1", "2", "3", "4", "5→1"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [4], color: "yellow" as const, label: "成环" }],
+              description: "尾连头形成环。新尾=走len-k=3步",
+            },
+            {
+              array: ["1", "2", "3", "|", "4", "5"],
+              left: 2,
+              right: 3,
+              highlights: [{ indices: [2], color: "red" as const, label: "断开" }],
+              description: "在节点3处断开环",
+            },
+            {
+              array: ["4", "5", "1", "2", "3"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [0, 1, 2, 3, 4], color: "green" as const, label: "结果" }],
+              description: "新头=4。结果[4,5,1,2,3]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 旋转链表 - 成环再断开
  *
@@ -5136,6 +5666,40 @@ smallDummy → 1 → 2 → 2 → 4 → 3 → 5 → null
       },
       {
         name: "单链表原地操作",
+        animation: {
+          type: "two-pointers" as const,
+          title: "单链表原地分隔演示",
+          steps: [
+            {
+              array: ["1", "4", "3", "2", "5", "2"],
+              left: 0,
+              right: 5,
+              highlights: [],
+              description: "链表[1,4,3,2,5,2]，x=3。找第一个>=3的位置",
+            },
+            {
+              array: ["1", "4", "3", "2", "5", "2"],
+              left: 1,
+              right: 5,
+              highlights: [{ indices: [1], color: "yellow" as const, label: "插入点" }],
+              description: "4>=3是插入点。遍历后续找<3的节点",
+            },
+            {
+              array: ["1", "2", "4", "3", "5", "2"],
+              left: 1,
+              right: 5,
+              highlights: [{ indices: [1], color: "green" as const, label: "插入2" }],
+              description: "找到2<3，插入到4前面",
+            },
+            {
+              array: ["1", "2", "2", "4", "3", "5"],
+              left: 0,
+              right: 5,
+              highlights: [{ indices: [0, 1, 2, 3, 4, 5], color: "green" as const, label: "完成" }],
+              description: "再插入最后的2。结果[1,2,2,4,3,5]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 分隔链表 - 单链表原地操作
  *
@@ -7219,6 +7783,39 @@ B' = B.next
     solutions: [
       {
         name: "迭代法",
+        animation: {
+          type: "two-pointers" as const,
+          title: "迭代两两交换节点演示",
+          steps: [
+            {
+              array: ["d", "1", "2", "3", "4"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "prev" },
+                { indices: [1, 2], color: "yellow" as const, label: "交换" },
+              ],
+              description: "prev=dummy，first=1，second=2",
+            },
+            {
+              array: ["d", "2", "1", "3", "4"],
+              left: 2,
+              right: 4,
+              highlights: [
+                { indices: [1, 2], color: "green" as const, label: "已交换" },
+                { indices: [3, 4], color: "yellow" as const, label: "交换" },
+              ],
+              description: "1和2交换完成，继续处理3和4",
+            },
+            {
+              array: ["2", "1", "4", "3"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0, 1, 2, 3], color: "green" as const, label: "完成" }],
+              description: "结果：2→1→4→3",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 两两交换链表中的节点 - 迭代法
  *
@@ -7320,86 +7917,38 @@ prev -> second -> first -> next
 - 交换后：head = 2
 
 使用 dummy 后，直接返回 dummy.next 即可`,
-        animation: {
-          type: "linked-list" as const,
-          title: "两两交换链表节点演示",
-          steps: [
-            {
-              nodes: [
-                { value: 1, id: "1" },
-                { value: 2, id: "2" },
-                { value: 3, id: "3" },
-                { value: 4, id: "4" },
-              ],
-              pointers: { "1": ["head"] },
-              description: "初始链表: 1→2→3→4，两两交换相邻节点",
-            },
-            {
-              nodes: [
-                { value: "D", id: "d" },
-                { value: 1, id: "1" },
-                { value: 2, id: "2" },
-                { value: 3, id: "3" },
-                { value: 4, id: "4" },
-              ],
-              pointers: { "d": ["prev"], "1": ["first"], "2": ["second"] },
-              highlights: [{ nodeIds: ["1", "2"], color: "yellow" as const, label: "待交换" }],
-              description: "定位第一对：prev=dummy, first=1, second=2",
-            },
-            {
-              nodes: [
-                { value: "D", id: "d" },
-                { value: 2, id: "2" },
-                { value: 1, id: "1" },
-                { value: 3, id: "3" },
-                { value: 4, id: "4" },
-              ],
-              pointers: { "d": ["prev"], "1": ["prev更新"] },
-              highlights: [{ nodeIds: ["2", "1"], color: "green" as const, label: "已交换" }],
-              description: "交换完成！执行: first.next=3, second.next=first, prev.next=second。prev 移到 1",
-            },
-            {
-              nodes: [
-                { value: "D", id: "d" },
-                { value: 2, id: "2" },
-                { value: 1, id: "1" },
-                { value: 3, id: "3" },
-                { value: 4, id: "4" },
-              ],
-              pointers: { "1": ["prev"], "3": ["first"], "4": ["second"] },
-              highlights: [{ nodeIds: ["3", "4"], color: "yellow" as const, label: "待交换" }],
-              description: "定位第二对：prev=1, first=3, second=4",
-            },
-            {
-              nodes: [
-                { value: "D", id: "d" },
-                { value: 2, id: "2" },
-                { value: 1, id: "1" },
-                { value: 4, id: "4" },
-                { value: 3, id: "3" },
-              ],
-              pointers: { "3": ["prev"] },
-              highlights: [{ nodeIds: ["4", "3"], color: "green" as const, label: "已交换" }],
-              description: "交换完成！prev.next=null，循环结束",
-            },
-            {
-              nodes: [
-                { value: 2, id: "2" },
-                { value: 1, id: "1" },
-                { value: 4, id: "4" },
-                { value: 3, id: "3" },
-              ],
-              pointers: { "2": ["head"] },
-              highlights: [{ nodeIds: ["2", "1", "4", "3"], color: "green" as const }],
-              description: "完成！结果: 2→1→4→3",
-            },
-          ] as LinkedListStep[],
-        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
       },
       {
         name: "递归法",
+        animation: {
+          type: "two-pointers" as const,
+          title: "递归两两交换节点演示",
+          steps: [
+            {
+              array: ["1", "2", "3", "4"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "yellow" as const, label: "交换" }],
+              description: "交换1和2，递归处理[3,4]",
+            },
+            {
+              array: ["2", "1", "→", "swap([3,4])"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "green" as const, label: "已交换" }],
+              description: "1和2交换完成，递归处理后续",
+            },
+            {
+              array: ["2", "1", "4", "3"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0, 1, 2, 3], color: "green" as const, label: "完成" }],
+              description: "结果：2→1→4→3",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 两两交换链表中的节点 - 递归法
  *
@@ -7783,6 +8332,40 @@ function mergeTwoLists(l1: ListNode | null, l2: ListNode | null): ListNode | nul
       },
       {
         name: "最小堆",
+        animation: {
+          type: "two-pointers" as const,
+          title: "最小堆合并K个链表演示",
+          steps: [
+            {
+              array: ["1→4→5", "1→3→4", "2→6"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "blue" as const, label: "3个链表" }],
+              description: "将3个链表头[1,1,2]加入最小堆",
+            },
+            {
+              array: ["堆:[1,1,2]", "→取出1"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "堆" }],
+              description: "取出最小1，加入结果，将其next(4)入堆",
+            },
+            {
+              array: ["堆:[1,2,4]", "结果:1→1→..."],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [1], color: "green" as const, label: "结果" }],
+              description: "重复取出最小元素...",
+            },
+            {
+              array: ["1→1→2→3→4→4→5→6"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "完成" }],
+              description: "堆空，合并完成！",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 合并 K 个升序链表 - 最小堆法
  *
@@ -7942,6 +8525,33 @@ Step 4: 取出 3(L2)，加入 4(L2.next)
       },
       {
         name: "顺序合并",
+        animation: {
+          type: "two-pointers" as const,
+          title: "顺序合并K个链表演示",
+          steps: [
+            {
+              array: ["1→4→5", "1→3→4", "2→6"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "blue" as const, label: "3个链表" }],
+              description: "依次合并：result=[], 遍历链表",
+            },
+            {
+              array: ["1→1→3→4→4→5", "2→6"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0], color: "green" as const, label: "合并后" }],
+              description: "合并list1和list2得到新链表",
+            },
+            {
+              array: ["1→1→2→3→4→4→5→6"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "完成" }],
+              description: "再合并list3，完成！",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 合并 K 个升序链表 - 顺序合并法
  *

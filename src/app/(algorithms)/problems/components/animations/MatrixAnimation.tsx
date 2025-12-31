@@ -47,8 +47,17 @@ export function MatrixAnimation({
   const [speed, setSpeed] = useState(800);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const step = steps[currentStep];
   const totalSteps = steps.length;
+  const step = steps[currentStep];
+
+  // 如果没有步骤数据，显示空状态
+  if (!step || totalSteps === 0) {
+    return (
+      <div className="rounded-xl border border-zinc-700 bg-zinc-900/80 overflow-hidden p-4">
+        <p className="text-sm text-zinc-500 text-center">暂无动画数据</p>
+      </div>
+    );
+  }
 
   const clearTimer = useCallback(() => {
     if (intervalRef.current) {

@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Sidebar from "@/components/Sidebar";
+import { SidebarNav, BottomNav } from "@/components/navigation";
 import { getAppRoutes, ROUTE_GROUPS } from "@/lib/routes";
 
 const geistSans = Geist({
@@ -56,12 +56,13 @@ export default function RootLayout({
   }));
 
   return (
-    <html lang="zh-CN">
+    <html lang="zh-CN" className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-[100dvh] overflow-hidden`}
       >
-        <Sidebar groups={sidebarGroups} />
-        <main className="min-h-screen bg-zinc-50 pt-14 lg:ml-64 lg:pt-0 dark:bg-zinc-950">
+        <SidebarNav groups={sidebarGroups} />
+        <BottomNav />
+        <main className="main-content main-content-with-nav h-[100dvh] overflow-y-auto overscroll-contain bg-zinc-50 pt-[var(--mobile-header-full)] pb-[var(--safe-area-bottom)] lg:pt-0 lg:pb-0 dark:bg-zinc-950">
           {children}
         </main>
       </body>

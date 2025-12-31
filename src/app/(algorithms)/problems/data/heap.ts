@@ -249,6 +249,48 @@ function findKthLargest(nums, k) {
       },
       {
         name: "最小堆（大小为 k）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "最小堆求第K大演示",
+          steps: [
+            {
+              array: ["3", "2", "1", "5", "6", "4"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5], color: "blue" as const, label: "数组" },
+              ],
+              description: "nums=[3,2,1,5,6,4]，k=2。维护大小为k的最小堆",
+            },
+            {
+              array: ["2", "3", "", "", "", ""],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "堆" },
+              ],
+              description: "加入3,2。堆=[2,3]，大小=2=k",
+            },
+            {
+              array: ["3", "5", "", "", "", ""],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "red" as const, label: "弹出1" },
+              ],
+              description: "加入1,5,6。1<堆顶2跳过，5>2替换2，6>3替换3",
+            },
+            {
+              array: ["5", "6", "", "", "", ""],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "第K大" },
+              ],
+              description: "最终堆=[5,6]，堆顶5就是第2大元素",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 数组中的第K个最大元素 - 最小堆法
  *
@@ -365,6 +407,39 @@ function findKthLargest(nums, k) {
       },
       {
         name: "排序法",
+        animation: {
+          type: "two-pointers" as const,
+          title: "排序法演示",
+          steps: [
+            {
+              array: ["3", "2", "1", "5", "6", "4"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5], color: "blue" as const, label: "原数组" },
+              ],
+              description: "nums=[3,2,1,5,6,4]，k=2。直接排序法",
+            },
+            {
+              array: ["6", "5", "4", "3", "2", "1"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5], color: "yellow" as const, label: "降序" },
+              ],
+              description: "降序排序后：[6,5,4,3,2,1]",
+            },
+            {
+              array: ["6", "5", "4", "3", "2", "1"],
+              left: 1,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "第K大" },
+              ],
+              description: "取第k-1个元素：nums[1]=5，即第2大元素",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 数组中的第K个最大元素 - 排序法
  *
@@ -619,6 +694,48 @@ function topKFrequent(nums, k) {
       },
       {
         name: "最小堆",
+        animation: {
+          type: "two-pointers" as const,
+          title: "最小堆求前K高频演示",
+          steps: [
+            {
+              array: ["1:3", "2:2", "3:1"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "blue" as const, label: "频率" },
+              ],
+              description: "统计频率：1出现3次，2出现2次，3出现1次。k=2",
+            },
+            {
+              array: ["[1,3]", "[2,2]", ""],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "堆" },
+              ],
+              description: "维护大小k的最小堆（按频率）。堆=[2,1]",
+            },
+            {
+              array: ["[1,3]", "[2,2]", ""],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "red" as const, label: "弹出3" },
+              ],
+              description: "加入3:频率1<堆顶2，弹出3，保留高频元素",
+            },
+            {
+              array: ["1", "2"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "结果" },
+              ],
+              description: "堆中剩余元素：[1,2]即为前2高频元素",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 前K个高频元素 - 最小堆法
  *
@@ -725,6 +842,48 @@ function topKFrequent(nums, k) {
       },
       {
         name: "快速选择",
+        animation: {
+          type: "two-pointers" as const,
+          title: "快速选择演示",
+          steps: [
+            {
+              array: ["[1,3]", "[2,2]", "[3,1]"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "blue" as const, label: "频率数组" },
+              ],
+              description: "频率数组：1:3次，2:2次，3:1次。k=2",
+            },
+            {
+              array: ["[1,3]", "[2,2]", "[3,1]"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "yellow" as const, label: "pivot" },
+              ],
+              description: "选择pivot=3:1，按频率分区",
+            },
+            {
+              array: ["[1,3]", "[2,2]", "[3,1]"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "大于pivot" },
+              ],
+              description: "分区后：频率>=1的在左边。前2个即为答案",
+            },
+            {
+              array: ["1", "2"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "结果" },
+              ],
+              description: "返回前k个元素：[1,2]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 前K个高频元素 - 快速选择法
  *
@@ -1228,6 +1387,48 @@ class MedianFinder {
       },
       {
         name: "有序数组 + 二分插入",
+        animation: {
+          type: "two-pointers" as const,
+          title: "有序数组中位数演示",
+          steps: [
+            {
+              array: ["1", "3", "5"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "blue" as const, label: "有序数组" },
+              ],
+              description: "已有有序数组[1,3,5]，要插入4",
+            },
+            {
+              array: ["1", "3", "5"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "yellow" as const, label: "二分" },
+              ],
+              description: "二分查找插入位置：mid=1, data[1]=3<4, left=2",
+            },
+            {
+              array: ["1", "3", "4", "5"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "插入" },
+              ],
+              description: "在位置2插入4，得[1,3,4,5]",
+            },
+            {
+              array: ["1", "3", "4", "5"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [1, 2], color: "green" as const, label: "中位数" },
+              ],
+              description: "偶数个元素：中位数=(3+4)/2=3.5",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 数据流的中位数 - 有序数组法
  *
@@ -1308,6 +1509,39 @@ class MedianFinder {
       },
       {
         name: "暴力排序法",
+        animation: {
+          type: "two-pointers" as const,
+          title: "暴力排序中位数演示",
+          steps: [
+            {
+              array: ["5", "1", "3"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "blue" as const, label: "无序" },
+              ],
+              description: "数据存储无序：[5,1,3]。addNum是O(1)",
+            },
+            {
+              array: ["1", "3", "5"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "yellow" as const, label: "排序" },
+              ],
+              description: "findMedian时排序：[1,3,5]。排序O(nlogn)",
+            },
+            {
+              array: ["1", "3", "5"],
+              left: 1,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "中位数" },
+              ],
+              description: "奇数个元素：中位数=sorted[1]=3",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 数据流的中位数 - 暴力排序法
  *
@@ -1690,6 +1924,48 @@ function findMaximizedCapital(k, w, profits, capital) {
       },
       {
         name: "排序 + 贪心（特殊优化）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "特殊优化版演示",
+          steps: [
+            {
+              array: ["P0:1,0", "P1:2,1", "P2:3,2"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "blue" as const, label: "项目" },
+              ],
+              description: "k=2, w=100。检查：w>=max(capital)?",
+            },
+            {
+              array: ["P0:1", "P1:2", "P2:3"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "green" as const, label: "都可启动" },
+              ],
+              description: "w=100>=2，所有项目都可启动。直接排序利润",
+            },
+            {
+              array: ["3", "2", "1"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "前k大" },
+              ],
+              description: "利润降序：[3,2,1]。取前k=2个：3+2=5",
+            },
+            {
+              array: ["105"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "结果" },
+              ],
+              description: "最终资本=w+5=105。避免了堆操作",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * IPO - 特殊情况优化版
  *
@@ -1790,6 +2066,48 @@ function findMaximizedCapital(k, w, profits, capital) {
       },
       {
         name: "暴力法（小数据）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "暴力法演示",
+          steps: [
+            {
+              array: ["P0:1,0", "P1:2,1", "P2:3,1"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "blue" as const, label: "项目" },
+              ],
+              description: "k=2, w=0。每轮遍历找可启动的最大利润项目",
+            },
+            {
+              array: ["P0:1,0", "P1:2,1", "P2:3,1"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "可启动" },
+              ],
+              description: "第1轮：w=0，只有P0可启动。执行P0，w=1",
+            },
+            {
+              array: ["✓", "P1:2,1", "P2:3,1"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "最大利润" },
+              ],
+              description: "第2轮：w=1，P1和P2可启动。选P2利润最大，w=4",
+            },
+            {
+              array: ["4"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "结果" },
+              ],
+              description: "k轮完成，最终资本=4。暴力法O(kn)适合小数据",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * IPO - 暴力法
  *
@@ -2133,6 +2451,40 @@ function kSmallestPairs(nums1, nums2, k) {
       },
       {
         name: "暴力排序（用于理解）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "暴力排序演示",
+          steps: [
+            {
+              array: ["[1,7]", "[2,4]"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "nums1" },
+                { indices: [1], color: "blue" as const, label: "nums2" },
+              ],
+              description: "nums1=[1,7], nums2=[2,4]，k=2。生成所有数对",
+            },
+            {
+              array: ["(1,2):3", "(1,4):5", "(7,2):9", "(7,4):11"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "yellow" as const, label: "所有对" },
+              ],
+              description: "生成m*n=4个数对，计算每对的和",
+            },
+            {
+              array: ["(1,2):3", "(1,4):5", "(7,2):9", "(7,4):11"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "前k个" },
+              ],
+              description: "按和排序后取前k=2个：[(1,2),(1,4)]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 查找和最小的K对数字 - 暴力法
  *

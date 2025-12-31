@@ -102,6 +102,43 @@ export const mathProblems: Problem[] = [
     solutions: [
       {
         name: "反转一半数字（推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "反转一半数字演示",
+          steps: [
+            {
+              array: ["1", "2", "3", "2", "1"],
+              left: 0,
+              right: 4,
+              highlights: [],
+              description: "x=12321。反转后半部分与前半比较",
+            },
+            {
+              array: ["x=1232", "rev=1"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [1], color: "yellow" as const, label: "取末位" }],
+              description: "rev=0*10+12321%10=1, x=1232",
+            },
+            {
+              array: ["x=123", "rev=12"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [1], color: "yellow" as const, label: "取末位" }],
+              description: "rev=1*10+1232%10=12, x=123",
+            },
+            {
+              array: ["x=12", "rev=123"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "前半" },
+                { indices: [1], color: "green" as const, label: "后半" },
+              ],
+              description: "x<=rev停止。12==123/10? 是回文!",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 回文数 - 反转一半数字法
  *
@@ -166,47 +203,6 @@ function isPalindrome(x) {
   // 奇数位数：x === floor(reversed/10)（如 12321 → x=12, reversed=123）
   return x === reversed || x === Math.floor(reversed / 10);
 }`,
-        animation: {
-          type: "two-pointers" as const,
-          title: "回文数判断演示",
-          steps: [
-            {
-              array: ["1", "2", "3", "2", "1"],
-              left: 0,
-              right: 4,
-              highlights: [],
-              description: "x=12321。只反转后半部分与前半部分比较",
-            },
-            {
-              array: ["1", "2", "3", "2", "1"],
-              left: 0,
-              right: 4,
-              highlights: [{ indices: [0, 1], color: "blue" as const, label: "x" }, { indices: [4], color: "green" as const, label: "reversed" }],
-              description: "x=12321, reversed=0。取最后一位：reversed=0*10+1=1, x=1232",
-            },
-            {
-              array: ["1", "2", "3", "2"],
-              left: 0,
-              right: 3,
-              highlights: [{ indices: [0, 1], color: "blue" as const, label: "x" }, { indices: [3], color: "green" as const, label: "reversed" }],
-              description: "x=1232, reversed=1。取最后一位：reversed=1*10+2=12, x=123",
-            },
-            {
-              array: ["1", "2", "3"],
-              left: 0,
-              right: 2,
-              highlights: [{ indices: [0, 1], color: "blue" as const, label: "x" }, { indices: [2], color: "green" as const, label: "reversed" }],
-              description: "x=123, reversed=12。取最后一位：reversed=12*10+3=123, x=12",
-            },
-            {
-              array: ["1", "2"],
-              left: 0,
-              right: 1,
-              highlights: [{ indices: [0, 1], color: "blue" as const, label: "x=12" }, { indices: [0, 1], color: "green" as const, label: "rev=123" }],
-              description: "x=12 < reversed=123，停止。x(12) === floor(123/10)(12) ✓ 是回文",
-            },
-          ] as TwoPointersStep[],
-        },
         explanation: `## 反转一半数字
 
 ### 思路
@@ -229,6 +225,33 @@ x=12, reversed=123, 123/10=12=x，是回文`,
       },
       {
         name: "字符串反转",
+        animation: {
+          type: "two-pointers" as const,
+          title: "字符串反转判断回文",
+          steps: [
+            {
+              array: ["1", "2", "1"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "blue" as const, label: "原串" }],
+              description: "x=121转为字符串\"121\"",
+            },
+            {
+              array: ["1", "2", "1"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "yellow" as const, label: "反转" }],
+              description: "反转得\"121\"",
+            },
+            {
+              array: ["\"121\"", "==", "\"121\""],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 2], color: "green" as const, label: "相等" }],
+              description: "比较相等，是回文!",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 回文数 - 字符串反转法
  *
@@ -278,6 +301,40 @@ function isPalindrome(x) {
       },
       {
         name: "完全反转数字",
+        animation: {
+          type: "two-pointers" as const,
+          title: "完全反转数字判断回文",
+          steps: [
+            {
+              array: ["x=121", "rev=0"],
+              left: 0,
+              right: 1,
+              highlights: [],
+              description: "保存原数121，开始反转",
+            },
+            {
+              array: ["x=12", "rev=1"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [1], color: "yellow" as const, label: "取末位" }],
+              description: "rev=0*10+121%10=1",
+            },
+            {
+              array: ["x=0", "rev=121"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [1], color: "green" as const, label: "完成" }],
+              description: "rev=12*10+1=121",
+            },
+            {
+              array: ["121", "==", "121"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 2], color: "green" as const, label: "相等" }],
+              description: "121==121，是回文!",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 回文数 - 完全反转数字法
  *
@@ -443,6 +500,36 @@ function isPalindrome(x) {
     solutions: [
       {
         name: "模拟加法（推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "模拟加法演示",
+          steps: [
+            {
+              array: ["1", "2", "9"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [2], color: "yellow" as const, label: "+1" }],
+              description: "digits=[1,2,9]，从最低位9开始",
+            },
+            {
+              array: ["1", "2", "0"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "9→0" },
+                { indices: [1], color: "yellow" as const, label: "进位" },
+              ],
+              description: "9+1=10，该位变0，进位",
+            },
+            {
+              array: ["1", "3", "0"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "完成" }],
+              description: "2+1=3<10，无需进位。结果[1,3,0]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 加一 - 模拟加法
  *
@@ -497,47 +584,6 @@ function plusOne(digits) {
   // [0,0,0] → [1,0,0,0]
   return [1, ...digits];
 }`,
-        animation: {
-          type: "two-pointers" as const,
-          title: "加一演示",
-          steps: [
-            {
-              array: ["9", "9", "9"],
-              left: 0,
-              right: 2,
-              highlights: [{ indices: [2], color: "blue" as const, label: "i=2" }],
-              description: "digits=[9,9,9]。从最低位开始处理。i=2, digits[2]=9",
-            },
-            {
-              array: ["9", "9", "0"],
-              left: 0,
-              right: 2,
-              highlights: [{ indices: [2], color: "green" as const, label: "→0" }, { indices: [1], color: "blue" as const, label: "i=1" }],
-              description: "digits[2]=9，需要进位，变成0。继续处理 i=1",
-            },
-            {
-              array: ["9", "0", "0"],
-              left: 0,
-              right: 2,
-              highlights: [{ indices: [1], color: "green" as const, label: "→0" }, { indices: [0], color: "blue" as const, label: "i=0" }],
-              description: "digits[1]=9，需要进位，变成0。继续处理 i=0",
-            },
-            {
-              array: ["0", "0", "0"],
-              left: 0,
-              right: 2,
-              highlights: [{ indices: [0], color: "green" as const, label: "→0" }],
-              description: "digits[0]=9，需要进位，变成0。循环结束，所有位都是9",
-            },
-            {
-              array: ["1", "0", "0", "0"],
-              left: 0,
-              right: 3,
-              highlights: [{ indices: [0], color: "green" as const, label: "新增1" }],
-              description: "在最前面加1。结果=[1,0,0,0]",
-            },
-          ] as TwoPointersStep[],
-        },
         explanation: `## 模拟加法
 
 ### 思路
@@ -554,6 +600,33 @@ function plusOne(digits) {
       },
       {
         name: "显式进位",
+        animation: {
+          type: "two-pointers" as const,
+          title: "显式进位演示",
+          steps: [
+            {
+              array: ["1", "9", "9"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [2], color: "yellow" as const, label: "carry=1" }],
+              description: "digits=[1,9,9]，carry=1初始",
+            },
+            {
+              array: ["1", "9", "0"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [2], color: "green" as const, label: "9+1=10" }],
+              description: "9+1=10，该位=0，carry=1",
+            },
+            {
+              array: ["2", "0", "0"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "完成" }],
+              description: "处理完所有位。结果[2,0,0]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 加一 - 显式进位法
  *
@@ -624,6 +697,33 @@ function plusOne(digits) {
       },
       {
         name: "BigInt 方法",
+        animation: {
+          type: "two-pointers" as const,
+          title: "BigInt方法演示",
+          steps: [
+            {
+              array: ["9", "9", "9"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "blue" as const, label: "数组" }],
+              description: "[9,9,9].join('')=\"999\"",
+            },
+            {
+              array: ["999n", "+", "1n"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 2], color: "yellow" as const, label: "BigInt" }],
+              description: "BigInt(\"999\")+1n=1000n",
+            },
+            {
+              array: ["1", "0", "0", "0"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0, 1, 2, 3], color: "green" as const, label: "结果" }],
+              description: "\"1000\".split('').map(Number)=[1,0,0,0]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 加一 - BigInt 方法
  *
@@ -916,6 +1016,47 @@ n=13(1101)：
       },
       {
         name: "快速幂-递归",
+        animation: {
+          type: "two-pointers" as const,
+          title: "快速幂递归演示",
+          steps: [
+            {
+              array: ["pow(2,10)"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "调用" }],
+              description: "计算2^10。递归调用pow(2,5)",
+            },
+            {
+              array: ["pow(2,10)", "pow(2,5)"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [1], color: "blue" as const, label: "递归" }],
+              description: "pow(2,5)→递归调用pow(2,2)",
+            },
+            {
+              array: ["pow(2,10)", "pow(2,5)", "pow(2,2)", "pow(2,1)", "pow(2,0)=1"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [4], color: "green" as const, label: "基准" }],
+              description: "继续递归直到n=0，返回1",
+            },
+            {
+              array: ["pow(2,1)=2", "pow(2,2)=4", "pow(2,5)=32", "pow(2,10)=1024"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0, 1, 2, 3], color: "yellow" as const, label: "回溯" }],
+              description: "回溯：1²×2=2, 2²=4, 4²×2=32, 32²=1024",
+            },
+            {
+              array: ["1024"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "结果" }],
+              description: "2^10=1024 ✓",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * Pow(x, n) - 快速幂递归法
  *
@@ -983,6 +1124,40 @@ function myPow(x, n) {
       },
       {
         name: "暴力法（仅作对比）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "暴力法演示",
+          steps: [
+            {
+              array: ["2", "2", "2", "2", "2"],
+              left: 0,
+              right: 4,
+              highlights: [],
+              description: "计算2^5。循环乘5次。result=1",
+            },
+            {
+              array: ["2", "2", "2", "2", "2"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [0], color: "yellow" as const, label: "×2" }],
+              description: "i=0: result=1×2=2",
+            },
+            {
+              array: ["2", "2", "2", "2", "2"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [0, 1], color: "yellow" as const, label: "×2" }],
+              description: "i=1: result=2×2=4",
+            },
+            {
+              array: ["2", "2", "2", "2", "2"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [0, 1, 2, 3, 4], color: "green" as const, label: "完成" }],
+              description: "继续...i=4: result=16×2=32。2^5=32 ✓",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * Pow(x, n) - 暴力法
  *
@@ -1253,6 +1428,47 @@ function mySqrt(x) {
       },
       {
         name: "牛顿迭代法",
+        animation: {
+          type: "two-pointers" as const,
+          title: "牛顿迭代法演示",
+          steps: [
+            {
+              array: ["r=8"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "初始" }],
+              description: "x=8, r=8。公式：r=(r+x/r)/2",
+            },
+            {
+              array: ["r=8", "→", "r=4"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [2], color: "yellow" as const, label: "迭代1" }],
+              description: "r²=64>8。r=(8+8/8)/2=(8+1)/2=4",
+            },
+            {
+              array: ["r=4", "→", "r=3"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [2], color: "yellow" as const, label: "迭代2" }],
+              description: "r²=16>8。r=(4+8/4)/2=(4+2)/2=3",
+            },
+            {
+              array: ["r=3", "→", "r=2"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [2], color: "yellow" as const, label: "迭代3" }],
+              description: "r²=9>8。r=(3+8/3)/2=2.83→2",
+            },
+            {
+              array: ["2"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "结果" }],
+              description: "r²=4<8, 退出循环。sqrt(8)=2 ✓",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * x 的平方根 - 牛顿迭代法
  *
@@ -1323,6 +1539,47 @@ r_new = r - f(r) / f'(r)
       },
       {
         name: "位运算 + 二分",
+        animation: {
+          type: "two-pointers" as const,
+          title: "位运算+二分演示",
+          steps: [
+            {
+              array: ["1", "2", "3", "4", "5", "6", "7", "8"],
+              left: 0,
+              right: 7,
+              highlights: [],
+              description: "x=8。搜索[1,8]。避免溢出：mid<=x/mid",
+            },
+            {
+              array: ["1", "2", "3", "4", "5", "6", "7", "8"],
+              left: 0,
+              right: 7,
+              highlights: [{ indices: [3], color: "blue" as const, label: "mid=4" }],
+              description: "mid=4。4<=8/4=2? 否。right=3",
+            },
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [1], color: "blue" as const, label: "mid=2" }],
+              description: "left=1,right=3。mid=2。2<=8/2=4? 是。ans=2,left=3",
+            },
+            {
+              array: ["3"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "mid=3" }],
+              description: "left=3,right=3。mid=3。3<=8/3=2? 否。right=2",
+            },
+            {
+              array: ["2"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "ans=2" }],
+              description: "left>right, 退出。返回ans=2 ✓",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * x 的平方根 - 位运算优化二分法
  *

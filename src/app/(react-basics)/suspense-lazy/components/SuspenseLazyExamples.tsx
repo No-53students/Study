@@ -123,11 +123,14 @@ function UserProfile() {
 
 function LoadingSkeleton() {
   return (
-    <div className="flex animate-pulse items-center gap-4 rounded-lg bg-zinc-100 p-4 dark:bg-zinc-800">
-      <div className="h-12 w-12 rounded-full bg-zinc-300 dark:bg-zinc-600" />
-      <div className="space-y-2">
-        <div className="h-4 w-24 rounded bg-zinc-300 dark:bg-zinc-600" />
-        <div className="h-3 w-32 rounded bg-zinc-300 dark:bg-zinc-600" />
+    <div className="flex items-center gap-4 rounded-xl bg-gradient-to-r from-zinc-100 to-zinc-50 p-4 dark:from-zinc-800 dark:to-zinc-800/80 border border-zinc-200/50 dark:border-zinc-700/50">
+      <div className="relative">
+        <div className="h-12 w-12 rounded-full bg-zinc-200 dark:bg-zinc-700 animate-pulse" />
+        <div className="absolute inset-0 rounded-full border-2 border-blue-500/30 border-t-blue-500 animate-spin" />
+      </div>
+      <div className="space-y-2.5 flex-1">
+        <div className="h-4 w-24 rounded-md bg-zinc-200 dark:bg-zinc-700 animate-pulse" />
+        <div className="h-3 w-32 rounded-md bg-zinc-200 dark:bg-zinc-700 animate-pulse" style={{ animationDelay: '0.1s' }} />
       </div>
     </div>
   );
@@ -148,7 +151,7 @@ export function BasicSuspenseExample() {
       <div className="mb-4">
         <button
           onClick={handleShow}
-          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           {showUser ? "重新加载用户" : "加载用户数据"}
         </button>
@@ -193,10 +196,14 @@ const LazyTable = lazy(async () => {
 
 function ComponentLoadingFallback({ name }: { name: string }) {
   return (
-    <div className="flex h-40 items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 dark:border-zinc-600">
+    <div className="flex h-40 items-center justify-center rounded-xl border-2 border-dashed border-zinc-300 dark:border-zinc-600 bg-gradient-to-br from-zinc-50 to-white dark:from-zinc-900/50 dark:to-zinc-800/50">
       <div className="text-center">
-        <div className="mb-2 animate-spin text-2xl">⏳</div>
-        <p className="text-sm text-zinc-500">正在加载 {name}...</p>
+        <div className="relative inline-block mb-3">
+          <div className="h-10 w-10 rounded-full border-2 border-zinc-200 dark:border-zinc-700" />
+          <div className="absolute inset-0 h-10 w-10 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
+        </div>
+        <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">正在加载 {name}...</p>
+        <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">请稍候</p>
       </div>
     </div>
   );
@@ -220,9 +227,9 @@ export function LazyLoadingExample() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`rounded-md px-4 py-2 ${
+            className={`rounded-md px-4 py-2 transition-all duration-200 hover:scale-105 active:scale-95 ${
               activeTab === tab.id
-                ? "bg-blue-600 text-white"
+                ? "bg-blue-600 text-white shadow-md"
                 : "bg-zinc-200 text-zinc-800 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-200"
             }`}
           >
@@ -324,10 +331,19 @@ const LazyContent = lazy(async () => {
 function SectionSkeleton({ name, color }: { name: string; color: string }) {
   return (
     <div
-      className={`animate-pulse rounded-lg p-4 ${color}`}
+      className={`rounded-xl p-4 ${color} border border-current/10 shadow-sm`}
     >
-      <div className="h-5 w-32 rounded bg-current opacity-20" />
-      <div className="mt-2 h-3 w-24 rounded bg-current opacity-10" />
+      <div className="flex items-center gap-2 mb-3">
+        <div className="relative">
+          <div className="h-5 w-5 rounded-full bg-current opacity-15" />
+          <div className="absolute inset-0 h-5 w-5 rounded-full border-2 border-current border-t-transparent animate-spin opacity-40" />
+        </div>
+        <div className="h-5 w-24 rounded-md bg-current opacity-20 animate-pulse" />
+      </div>
+      <div className="space-y-2">
+        <div className="h-3 w-full rounded bg-current opacity-10 animate-pulse" />
+        <div className="h-3 w-3/4 rounded bg-current opacity-10 animate-pulse" style={{ animationDelay: '0.1s' }} />
+      </div>
     </div>
   );
 }
@@ -341,7 +357,7 @@ export function NestedSuspenseExample() {
 
       <button
         onClick={() => setKey((k) => k + 1)}
-        className="mb-4 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+        className="mb-4 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
       >
         重新加载所有组件
       </button>
@@ -421,12 +437,12 @@ export function PreloadExample() {
         <button
           onMouseEnter={handleMouseEnter}
           onClick={() => setShowChart(true)}
-          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           {showChart ? "已加载" : "悬停预加载，点击显示"}
         </button>
         {isPreloading && !showChart && (
-          <span className="text-sm text-zinc-500">✨ 正在预加载...</span>
+          <span className="text-sm text-zinc-500 animate-pulse">✨ 正在预加载...</span>
         )}
       </div>
 
@@ -539,9 +555,9 @@ export function TransitionSuspenseExample() {
             key={t}
             onClick={() => handleTabChange(t)}
             disabled={isPending}
-            className={`rounded-md px-4 py-2 transition-opacity ${
+            className={`rounded-md px-4 py-2 transition-all duration-200 hover:scale-105 active:scale-95 disabled:hover:scale-100 ${
               tab === t
-                ? "bg-blue-600 text-white"
+                ? "bg-blue-600 text-white shadow-md"
                 : "bg-zinc-200 text-zinc-800 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-200"
             } ${isPending ? "opacity-50" : ""}`}
           >
@@ -551,7 +567,7 @@ export function TransitionSuspenseExample() {
           </button>
         ))}
         {isPending && (
-          <span className="flex items-center text-sm text-zinc-500">
+          <span className="flex items-center text-sm text-zinc-500 animate-pulse">
             ⏳ 切换中...
           </span>
         )}

@@ -345,6 +345,60 @@ function permute(nums) {
 ### 优点
 - 空间效率更高，不需要 used 数组
 - 直接在原数组上操作`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "全排列交换法演示",
+          steps: [
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "gray" as const, label: "nums" }],
+              description: "nums=[1,2,3]。通过交换元素生成排列，start=0",
+            },
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "固定1" }],
+              description: "swap(0,0)即不交换，固定位置0为1，递归start=1",
+            },
+            {
+              array: ["1", "2", "3"],
+              left: 1,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "已固定" },
+                { indices: [1], color: "blue" as const, label: "固定2" },
+              ],
+              description: "swap(1,1)，固定位置1为2，递归start=2",
+            },
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "[1,2,3]" }],
+              description: "start=3=length，记录[1,2,3]，回溯",
+            },
+            {
+              array: ["1", "3", "2"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "已固定" },
+                { indices: [1, 2], color: "yellow" as const, label: "交换" },
+              ],
+              description: "回溯后swap(1,2)，交换2和3，递归",
+            },
+            {
+              array: ["1", "3", "2"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "[1,3,2]" }],
+              description: "记录[1,3,2]。继续回溯处理其他分支生成全部6个排列",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(n × n!)",
         spaceComplexity: "O(n)",
       },
@@ -435,6 +489,57 @@ function permute(nums) {
 ### 优点
 - 非递归实现，避免栈溢出
 - 思路直观：逐步构建排列`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "全排列迭代法演示",
+          steps: [
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 2,
+              highlights: [],
+              description: "nums=[1,2,3]。迭代法：逐个数字插入已有排列的每个位置",
+            },
+            {
+              array: ["[]"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "gray" as const, label: "初始" }],
+              description: "初始result=[[]]，一个空排列",
+            },
+            {
+              array: ["[1]"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "加入1" }],
+              description: "加入1: 在[]的位置0插入1→[1]。result=[[1]]",
+            },
+            {
+              array: ["[2,1]", "[1,2]"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "位置0" },
+                { indices: [1], color: "green" as const, label: "位置1" },
+              ],
+              description: "加入2: 在[1]的位置0插入→[2,1]，位置1插入→[1,2]",
+            },
+            {
+              array: ["[3,2,1]", "[2,3,1]", "[2,1,3]"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "yellow" as const, label: "从[2,1]" }],
+              description: "加入3到[2,1]: 位置0→[3,2,1]，1→[2,3,1]，2→[2,1,3]",
+            },
+            {
+              array: ["[3,1,2]", "[1,3,2]", "[1,2,3]"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "从[1,2]" }],
+              description: "加入3到[1,2]: 位置0→[3,1,2]，1→[1,3,2]，2→[1,2,3]。共6个",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(n × n!)",
         spaceComplexity: "O(n!)",
       },
@@ -766,6 +871,58 @@ function subsets(nums) {
 ### 优点
 - 思路简洁，代码紧凑
 - 适合元素个数较少的情况`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "子集位运算枚举演示",
+          steps: [
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 2,
+              highlights: [],
+              description: "nums=[1,2,3]。用3位二进制表示选择，枚举0-7",
+            },
+            {
+              array: ["0", "0", "0"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "gray" as const, label: "000→[]" }],
+              description: "mask=0(000): 三位都是0→不选任何→[]",
+            },
+            {
+              array: ["1", "0", "0"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0], color: "green" as const, label: "001→[1]" }],
+              description: "mask=1(001): 第0位是1→选1→[1]",
+            },
+            {
+              array: ["1", "1", "0"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "011→[1,2]" },
+              ],
+              description: "mask=3(011): 第0,1位是1→选1,2→[1,2]",
+            },
+            {
+              array: ["1", "0", "1"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 2], color: "blue" as const, label: "101→[1,3]" },
+              ],
+              description: "mask=5(101): 第0,2位是1→选1,3→[1,3]",
+            },
+            {
+              array: ["1", "1", "1"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "111→[1,2,3]" }],
+              description: "mask=7(111): 三位都是1→全选→[1,2,3]。共8个子集",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(n × 2^n)",
         spaceComplexity: "O(n)",
       },
@@ -851,6 +1008,56 @@ function subsets(nums) {
 ### 优点
 - 非递归实现
 - 思路直观：每个元素选或不选`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "子集迭代法演示",
+          steps: [
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 2,
+              highlights: [],
+              description: "nums=[1,2,3]。迭代法：每个新元素添加到现有子集",
+            },
+            {
+              array: ["[]"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "gray" as const, label: "空集" }],
+              description: "初始result=[[]]，只有空集",
+            },
+            {
+              array: ["[]", "[1]"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [1], color: "green" as const, label: "+1" }],
+              description: "加入1: 复制[]并加1→[1]。result=[[], [1]]",
+            },
+            {
+              array: ["[]", "[1]", "[2]", "[1,2]"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [2, 3], color: "blue" as const, label: "+2" },
+              ],
+              description: "加入2: 复制每个子集并加2。result=[[], [1], [2], [1,2]]",
+            },
+            {
+              array: ["[3]", "[1,3]", "[2,3]", "[1,2,3]"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0, 1, 2, 3], color: "yellow" as const, label: "+3" }],
+              description: "加入3: 复制每个子集并加3→[3],[1,3],[2,3],[1,2,3]",
+            },
+            {
+              array: ["8个子集"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "完成" }],
+              description: "最终8个子集: [], [1], [2], [1,2], [3], [1,3], [2,3], [1,2,3]",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(n × 2^n)",
         spaceComplexity: "O(2^n)",
       },
@@ -1233,6 +1440,54 @@ function letterCombinations(digits) {
 ### 优点
 - 非递归实现
 - 思路清晰，逐步扩展`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "电话号码BFS迭代演示",
+          steps: [
+            {
+              array: ["2", "3"],
+              left: 0,
+              right: 1,
+              highlights: [],
+              description: "digits=\"23\"。BFS迭代：逐层构建组合",
+            },
+            {
+              array: ["\"\""],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "gray" as const, label: "初始" }],
+              description: "初始result=[\"\"]",
+            },
+            {
+              array: ["a", "b", "c"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "第1层" }],
+              description: "处理数字2(abc): \"\"→[\"a\",\"b\",\"c\"]",
+            },
+            {
+              array: ["ad", "ae", "af"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "blue" as const, label: "从a" }],
+              description: "处理数字3: \"a\"→\"ad\",\"ae\",\"af\"",
+            },
+            {
+              array: ["bd", "be", "bf"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "yellow" as const, label: "从b" }],
+              description: "\"b\"→\"bd\",\"be\",\"bf\"",
+            },
+            {
+              array: ["9个组合"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "完成" }],
+              description: "结果: ad,ae,af,bd,be,bf,cd,ce,cf 共9个",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(3^m × 4^n)",
         spaceComplexity: "O(3^m × 4^n)",
       },
@@ -1325,6 +1580,59 @@ function letterCombinations(digits) {
 ### 特点
 - 标准的 BFS 实现
 - 使用队列作为数据结构`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "电话号码队列迭代演示",
+          steps: [
+            {
+              array: ["2", "3"],
+              left: 0,
+              right: 1,
+              highlights: [],
+              description: "digits=\"23\"。队列法：取队首，加字母，入队尾",
+            },
+            {
+              array: ["\"\""],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "gray" as const, label: "队列" }],
+              description: "初始queue=[\"\"]",
+            },
+            {
+              array: ["a", "b", "c"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "队列" }],
+              description: "取出\"\"，追加abc入队。queue=[\"a\",\"b\",\"c\"]",
+            },
+            {
+              array: ["b", "c", "ad", "ae", "af"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0, 1], color: "gray" as const, label: "待处理" },
+                { indices: [2, 3, 4], color: "green" as const, label: "新入队" },
+              ],
+              description: "取出\"a\"，追加def入队→ad,ae,af",
+            },
+            {
+              array: ["c", "ad", "ae", "af", "bd", "be", "bf"],
+              left: 0,
+              right: 6,
+              highlights: [
+                { indices: [5, 6], color: "blue" as const, label: "新入队" },
+              ],
+              description: "取出\"b\"，追加def入队→bd,be,bf",
+            },
+            {
+              array: ["9个组合"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "完成" }],
+              description: "最终queue=[ad,ae,af,bd,be,bf,cd,ce,cf]",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(3^m × 4^n)",
         spaceComplexity: "O(3^m × 4^n)",
       },
@@ -1687,6 +1995,54 @@ function combinationSum(candidates, target) {
 ### 优点
 - 通过排序实现更高效的剪枝
 - 减少无效递归`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "组合总和排序剪枝演示",
+          steps: [
+            {
+              array: ["2", "3", "6", "7"],
+              left: 0,
+              right: 3,
+              highlights: [],
+              description: "candidates=[2,3,6,7], target=7。先排序（已有序）",
+            },
+            {
+              array: ["2"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "选2" }],
+              description: "选2，remaining=5。继续选",
+            },
+            {
+              array: ["2", "2"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "green" as const, label: "2+2" }],
+              description: "再选2，remaining=3。继续",
+            },
+            {
+              array: ["2", "2", "3"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "[2,2,3]=7" }],
+              description: "选3，remaining=0！记录[2,2,3]",
+            },
+            {
+              array: ["7"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "7=7" }],
+              description: "回溯后选7，remaining=0！记录[7]",
+            },
+            {
+              array: ["剪枝"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "red" as const, label: "剪枝" }],
+              description: "选6时remaining=1<6，直接break剪枝。结果:[[2,2,3],[7]]",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(S)",
         spaceComplexity: "O(target)",
       },
@@ -1775,6 +2131,40 @@ function combinationSum(candidates, target) {
 ### 特点
 - 完全背包问题的变体
 - 适合需要记录所有路径的场景`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "组合总和DP演示",
+          steps: [
+            {
+              array: ["dp[0]", "dp[1]", "dp[2]", "dp[3]"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0], color: "green" as const, label: "[[]]" }],
+              description: "candidates=[2,3], target=3。初始dp[0]=[[]]",
+            },
+            {
+              array: ["[[]]", "[]", "[[2]]", "[]"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [2], color: "green" as const, label: "+2" }],
+              description: "处理num=2: dp[2]=dp[0]+2=[[2]]",
+            },
+            {
+              array: ["[[]]", "[]", "[[2]]", "[[3]]"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [3], color: "blue" as const, label: "+3" }],
+              description: "处理num=3: dp[3]=dp[0]+3=[[3]]",
+            },
+            {
+              array: ["[[]]", "[]", "[[2]]", "[[3]]"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [3], color: "green" as const, label: "结果" }],
+              description: "dp[3]=[[3]]。组合总和为3的只有[3]",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(target × n × 组合数)",
         spaceComplexity: "O(target × 组合数)",
       },
@@ -2109,6 +2499,54 @@ function generateParenthesis(n) {
 
 ### 递推公式
 dp[n] = { "(" + dp[j] + ")" + dp[n-1-j] | 0 ≤ j < n }`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "括号生成DP演示",
+          steps: [
+            {
+              array: ["dp[0]", "dp[1]", "dp[2]"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0], color: "gray" as const, label: "[\"\"]" }],
+              description: "n=2。初始dp[0]=[\"\"]（0对括号是空串）",
+            },
+            {
+              array: ["[\"\"]", "[\"()\"]"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [1], color: "green" as const, label: "dp[1]" }],
+              description: "dp[1]: \"(\"+dp[0]+\")\"+dp[0]=\"()\"",
+            },
+            {
+              array: ["j=0", "j=1"],
+              left: 0,
+              right: 1,
+              highlights: [],
+              description: "计算dp[2]: 枚举j=0,1（内部括号对数）",
+            },
+            {
+              array: ["()", "()"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "blue" as const, label: "()()从j=0" }],
+              description: "j=0: \"(\"+\"\"+\")\"+\"()\"=\"()()\"",
+            },
+            {
+              array: ["(())"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "(())从j=1" }],
+              description: "j=1: \"(\"+\"()\"+\")\"+\"\"=\"(())\"",
+            },
+            {
+              array: ["()()", "(())"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "green" as const, label: "结果" }],
+              description: "dp[2]=[\"()()\",\"(())\"]",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(4^n / √n)",
         spaceComplexity: "O(4^n / √n)",
       },
@@ -2203,6 +2641,60 @@ function generateParenthesis(n) {
 ### 特点
 - 递归实现动态规划的思想
 - 更容易理解的分治策略`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "闭合数法演示",
+          steps: [
+            {
+              array: ["f(2)"],
+              left: 0,
+              right: 0,
+              highlights: [],
+              description: "n=2。分治: f(n)=∑(left)right，枚举c=0到n-1",
+            },
+            {
+              array: ["c=0", "c=1"],
+              left: 0,
+              right: 1,
+              highlights: [],
+              description: "c=内部括号对数。c=0: left有0对，right有1对",
+            },
+            {
+              array: ["(", "f(0)", ")", "f(1)"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [1], color: "gray" as const, label: "\"\"" },
+                { indices: [3], color: "blue" as const, label: "\"()\"" },
+              ],
+              description: "c=0: \"(\"+f(0)+\")\"+f(1)=\"(\"+\"\"+\")\"+\"()\"",
+            },
+            {
+              array: ["()()" ],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "c=0结果" }],
+              description: "c=0得到\"()()\"",
+            },
+            {
+              array: ["(", "f(1)", ")", "f(0)"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [1], color: "blue" as const, label: "\"()\"" },
+                { indices: [3], color: "gray" as const, label: "\"\"" },
+              ],
+              description: "c=1: \"(\"+f(1)+\")\"+f(0)=\"(\"+\"()\"+\")\"+\"\"",
+            },
+            {
+              array: ["()()", "(())"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "green" as const, label: "结果" }],
+              description: "f(2)=[\"()()\",\"(())\"]",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(4^n / √n)",
         spaceComplexity: "O(4^n / √n)",
       },
@@ -2619,6 +3111,54 @@ function exist(board, word) {
 ### 优点
 - 不修改原数组
 - 代码结构更清晰`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "DFS+visited数组演示",
+          steps: [
+            {
+              array: ["A", "B", "C", "E"],
+              left: 0,
+              right: 3,
+              highlights: [],
+              description: "使用visited数组标记访问状态，不修改原board",
+            },
+            {
+              array: ["T", "F", "F", "F"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "visited" }],
+              description: "访问(0,0)，visited[0][0]=true",
+            },
+            {
+              array: ["T", "T", "F", "F"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "green" as const, label: "A→B" }],
+              description: "访问(0,1)，visited[0][1]=true。匹配AB",
+            },
+            {
+              array: ["T", "T", "T", "F"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "ABC" }],
+              description: "继续匹配...visited标记路径",
+            },
+            {
+              array: ["T", "F", "F", "F"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "yellow" as const, label: "回溯" }],
+              description: "回溯时: visited[i][j]=false 取消标记",
+            },
+            {
+              array: ["A", "B", "C", "E"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0, 1, 2, 3], color: "gray" as const, label: "原数组不变" }],
+              description: "原数组board保持不变，更安全",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(m × n × 3^L)",
         spaceComplexity: "O(m × n + L)",
       },
@@ -2743,6 +3283,54 @@ function exist(board, word) {
 ### 优点
 - 快速排除不可能的情况
 - 对大规模测试用例效果显著`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "字符频率剪枝演示",
+          steps: [
+            {
+              array: ["A:1", "B:1", "C:2", "E:2"],
+              left: 0,
+              right: 3,
+              highlights: [],
+              description: "统计board字符频率。word=\"ABCCED\"",
+            },
+            {
+              array: ["A:1", "B:1", "C:2", "E:1", "D:1"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [0, 1, 2, 3, 4], color: "green" as const, label: "都存在" }],
+              description: "检查word字符: A,B,C,C,E,D 都在board中存在 ✓",
+            },
+            {
+              array: ["word首:A", "word尾:D"],
+              left: 0,
+              right: 1,
+              highlights: [],
+              description: "比较首尾字符频率: A出现1次, D出现1次",
+            },
+            {
+              array: ["从A开始"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "正向搜索" }],
+              description: "频率相同，从首字符A开始搜索",
+            },
+            {
+              array: ["X", "X", "X", "X"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0, 1, 2, 3], color: "red" as const, label: "快速失败" }],
+              description: "若word含board没有的字符，直接返回false（剪枝）",
+            },
+            {
+              array: ["从稀少字符开始"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "优化" }],
+              description: "若尾字符更稀少，反转word从尾字符开始搜索",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(m × n × 3^L)",
         spaceComplexity: "O(L)",
       },
@@ -3135,6 +3723,50 @@ function partition(s) {
 ### 优点
 - 判断回文 O(1) 时间
 - 适合字符串较长的情况`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "分割回文串DP预处理演示",
+          steps: [
+            {
+              array: ["a", "a", "b"],
+              left: 0,
+              right: 2,
+              highlights: [],
+              description: "s=\"aab\"。先用DP预计算所有子串是否回文",
+            },
+            {
+              array: ["dp[0][0]", "dp[1][1]", "dp[2][2]"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "T T T" }],
+              description: "单字符都是回文: dp[0][0]=dp[1][1]=dp[2][2]=T",
+            },
+            {
+              array: ["dp[0][1]", "dp[1][2]"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "T(aa)" },
+                { indices: [1], color: "red" as const, label: "F(ab)" },
+              ],
+              description: "长度2: dp[0][1]=\"aa\"是回文T, dp[1][2]=\"ab\"不是F",
+            },
+            {
+              array: ["dp[0][2]=F"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "red" as const, label: "aab不是回文" }],
+              description: "长度3: dp[0][2]=\"aab\"不是回文F",
+            },
+            {
+              array: ["查表O(1)"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "dp[i][j]" }],
+              description: "回溯时判断回文只需查dp表，O(1)时间",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(n × 2^n)",
         spaceComplexity: "O(n²)",
       },
@@ -3265,6 +3897,54 @@ function partition(s) {
 ### 特点
 - 自顶向下的动态规划
 - 避免重复计算相同子问题`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "分割回文串记忆化搜索演示",
+          steps: [
+            {
+              array: ["a", "a", "b"],
+              left: 0,
+              right: 2,
+              highlights: [],
+              description: "s=\"aab\"。记忆化: dfs(start)返回从start开始的所有分割方案",
+            },
+            {
+              array: ["dfs(0)"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "调用" }],
+              description: "调用dfs(0)，枚举第一个切割点",
+            },
+            {
+              array: ["dfs(1)", "dfs(2)", "dfs(3)"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [2], color: "green" as const, label: "[[]]" }],
+              description: "dfs(3)=[[]]（空方案表示完成）",
+            },
+            {
+              array: ["dfs(2)"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "[[b]]" }],
+              description: "dfs(2): 'b'是回文，dfs(3)=[[]] → [[\"b\"]]",
+            },
+            {
+              array: ["dfs(1)"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "[[a,b]]" }],
+              description: "dfs(1): 'a'+dfs(2)=[[\"a\",\"b\"]]（缓存结果）",
+            },
+            {
+              array: ["[[a,a,b]]", "[[aa,b]]"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "green" as const, label: "结果" }],
+              description: "dfs(0): 'a'+dfs(1)和'aa'+dfs(2) → 2种方案",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(n × 2^n)",
         spaceComplexity: "O(n × 2^n)",
       },
@@ -3716,6 +4396,54 @@ function solveNQueens(n) {
 - 代码更清晰`,
         timeComplexity: "O(n!)",
         spaceComplexity: "O(n)",
+        animation: {
+          type: "two-pointers" as const,
+          title: "N皇后集合优化演示",
+          steps: [
+            {
+              array: [".", ".", ".", "."],
+              left: 0,
+              right: 3,
+              highlights: [],
+              description: "n=4。使用3个Set：cols(列), diag1(主对角线), diag2(副对角线)",
+            },
+            {
+              array: [".", "Q", ".", "."],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [1], color: "green" as const, label: "row0" }],
+              description: "row0,col1放皇后。cols={1}, diag1={-1}, diag2={1}",
+            },
+            {
+              array: [".", "Q", ".", "Q"],
+              left: 1,
+              right: 3,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "row0" },
+                { indices: [3], color: "blue" as const, label: "row1" },
+              ],
+              description: "row1：col0冲突(diag2)，col1冲突(cols)，col2冲突(diag1)，col3可用！",
+            },
+            {
+              array: ["Q", ".", ".", "."],
+              left: 2,
+              right: 0,
+              highlights: [
+                { indices: [1], color: "gray" as const, label: "row0" },
+                { indices: [3], color: "gray" as const, label: "row1" },
+                { indices: [0], color: "purple" as const, label: "row2" },
+              ],
+              description: "row2,col0可用。继续递归到row3...",
+            },
+            {
+              array: [".", ".", "Q", "."],
+              left: 3,
+              right: 2,
+              highlights: [{ indices: [2], color: "green" as const, label: "row3" }],
+              description: "row3,col2可用。找到解：[.Q..,...Q,Q...,..Q.]。O(1)判断冲突！",
+            },
+          ] as TwoPointersStep[],
+        },
       },
       {
         name: "位运算优化",
@@ -3858,6 +4586,54 @@ function solveNQueens(n) {
 - 适合大规模计算`,
         timeComplexity: "O(n!)",
         spaceComplexity: "O(n)",
+        animation: {
+          type: "two-pointers" as const,
+          title: "N皇后位运算优化演示",
+          steps: [
+            {
+              array: ["1111"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "gray" as const, label: "available" }],
+              description: "n=4。cols=0000,diag1=0000,diag2=0000。available=1111(全部可用)",
+            },
+            {
+              array: ["0010"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "position" }],
+              description: "row0：lowbit取0001(col=0)。放置后：cols=0001, diag1=0010, diag2=0000",
+            },
+            {
+              array: ["1100"],
+              left: 1,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "available" }],
+              description: "row1：occupied=0001|0010|0000=0011。available=1100(col=2,3可用)",
+            },
+            {
+              array: ["0100"],
+              left: 1,
+              right: 2,
+              highlights: [{ indices: [0], color: "green" as const, label: "position" }],
+              description: "选col=2(position=0100)。继续递归...",
+            },
+            {
+              array: ["0000"],
+              left: 2,
+              right: 0,
+              highlights: [{ indices: [0], color: "red" as const, label: "死胡同" }],
+              description: "row2：available=0000(无可用位置)。回溯！",
+            },
+            {
+              array: ["count=2"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "结果" }],
+              description: "位运算完成遍历。n=4共2种解法。位操作比集合更快！",
+            },
+          ] as TwoPointersStep[],
+        },
       },
     ],
   },
@@ -4228,6 +5004,54 @@ function totalNQueens(n) {
 - 常数时间判断冲突`,
         timeComplexity: "O(n!)",
         spaceComplexity: "O(n)",
+        animation: {
+          type: "two-pointers" as const,
+          title: "N皇后II位运算计数演示",
+          steps: [
+            {
+              array: ["1111"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "gray" as const, label: "available" }],
+              description: "n=4。只计数不记录解。初始available=1111，count=0",
+            },
+            {
+              array: ["0001"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "lowbit" }],
+              description: "row0：position=lowbit(1111)=0001。选col=0，递归下一行",
+            },
+            {
+              array: ["1100"],
+              left: 1,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "available" }],
+              description: "row1：cols=0001,diag1=0010,diag2=0000。available=1100",
+            },
+            {
+              array: ["count++"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "找到解" }],
+              description: "继续递归...row=n时count++。找到第一个解！count=1",
+            },
+            {
+              array: ["count++"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "找到解" }],
+              description: "继续搜索...找到第二个解！count=2",
+            },
+            {
+              array: ["2"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "最终" }],
+              description: "搜索完成。返回count=2。位运算：毫秒级完成！",
+            },
+          ] as TwoPointersStep[],
+        },
       },
     ],
   },

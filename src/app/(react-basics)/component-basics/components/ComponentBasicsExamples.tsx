@@ -135,7 +135,7 @@ function Badge({ type }: { type: "online" | "offline" | "busy" }) {
   };
 
   return (
-    <span className={`rounded-full px-2 py-0.5 text-xs text-white ${colors[type]}`}>
+    <span className={`rounded-full px-2 py-0.5 text-xs text-white transition-all duration-200 hover:scale-105 ${colors[type]}`}>
       {labels[type]}
     </span>
   );
@@ -151,7 +151,7 @@ function UserCard({
   status: "online" | "offline" | "busy";
 }) {
   return (
-    <div className="flex items-center justify-between rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
+    <div className="flex items-center justify-between rounded-lg border border-zinc-200 p-4 dark:border-zinc-700 transition-all duration-200 hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-600">
       <div className="flex items-center gap-4">
         <Avatar src="" name={name} />
         <div>
@@ -207,7 +207,7 @@ function LoginStatus({ isLoggedIn, username }: { isLoggedIn: boolean; username?:
     return (
       <div className="rounded-md bg-yellow-100 p-4 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200">
         <p>请登录以继续</p>
-        <button className="mt-2 rounded bg-yellow-600 px-4 py-1 text-sm text-white hover:bg-yellow-700">
+        <button className="mt-2 rounded bg-yellow-600 px-4 py-1 text-sm text-white hover:bg-yellow-700 transition-all duration-200 hover:scale-105 active:scale-95">
           登录
         </button>
       </div>
@@ -217,7 +217,7 @@ function LoginStatus({ isLoggedIn, username }: { isLoggedIn: boolean; username?:
   return (
     <div className="rounded-md bg-green-100 p-4 text-green-800 dark:bg-green-900/30 dark:text-green-200">
       <p>欢迎回来, {username}!</p>
-      <button className="mt-2 rounded bg-green-600 px-4 py-1 text-sm text-white hover:bg-green-700">
+      <button className="mt-2 rounded bg-green-600 px-4 py-1 text-sm text-white hover:bg-green-700 transition-all duration-200 hover:scale-105 active:scale-95">
         退出
       </button>
     </div>
@@ -311,7 +311,7 @@ export function PureComponentExample() {
 
       <button
         onClick={() => forceRender((n) => n + 1)}
-        className="rounded-md bg-zinc-600 px-4 py-2 text-sm text-white hover:bg-zinc-700"
+        className="rounded-md bg-zinc-600 px-4 py-2 text-sm text-white hover:bg-zinc-700 transition-all duration-200 hover:scale-105 active:scale-95"
       >
         强制重新渲染
       </button>
@@ -340,7 +340,7 @@ function FunctionCounter() {
       <p className="text-2xl font-bold text-blue-600">{count}</p>
       <button
         onClick={() => setCount((c) => c + 1)}
-        className="mt-2 rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+        className="mt-2 rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 transition-all duration-200 hover:scale-105 active:scale-95"
       >
         +1
       </button>

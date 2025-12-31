@@ -252,6 +252,40 @@ target = 7, nums = [2,3,1,2,4,3]
       },
       {
         name: "前缀和 + 二分查找",
+        animation: {
+          type: "two-pointers" as const,
+          title: "前缀和+二分查找演示",
+          steps: [
+            {
+              array: ["0", "2", "5", "6", "8", "12", "15"],
+              left: 0,
+              right: 6,
+              highlights: [],
+              description: "nums=[2,3,1,2,4,3],target=7。计算前缀和[0,2,5,6,8,12,15]",
+            },
+            {
+              array: ["0", "2", "5", "6", "8", "12", "15"],
+              left: 0,
+              right: 6,
+              highlights: [{ indices: [0], color: "blue" as const, label: "i=0" }],
+              description: "i=0,prefix[0]=0。找prefix[j]>=0+7=7，二分得j=4(prefix=8)",
+            },
+            {
+              array: ["0", "2", "5", "6", "8", "12", "15"],
+              left: 4,
+              right: 6,
+              highlights: [{ indices: [4], color: "yellow" as const, label: "i=4" }],
+              description: "i=4,prefix[4]=8。找prefix[j]>=8+7=15，二分得j=6(prefix=15)",
+            },
+            {
+              array: ["4", "3"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "green" as const, label: "长度2" }],
+              description: "j-i=6-4=2。子数组[4,3]和=7>=target。最小长度=2",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 长度最小的子数组 - 前缀和 + 二分查找
  *
@@ -571,6 +605,40 @@ s = "abcabcbb"
       },
       {
         name: "滑动窗口 + Set",
+        animation: {
+          type: "two-pointers" as const,
+          title: "滑动窗口+Set演示",
+          steps: [
+            {
+              array: ["p", "w", "w", "k", "e", "w"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "blue" as const, label: "窗口" }],
+              description: "s='pwwkew'。Set记录窗口内字符。Set={p,w}",
+            },
+            {
+              array: ["p", "w", "w", "k", "e", "w"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [2], color: "red" as const, label: "w重复" }],
+              description: "right=2遇到w重复。while删除直到无重复",
+            },
+            {
+              array: ["p", "w", "w", "k", "e", "w"],
+              left: 2,
+              right: 4,
+              highlights: [{ indices: [2, 3, 4], color: "green" as const, label: "wke" }],
+              description: "删除p,w后Set={w}。继续扩展Set={w,k,e}。maxLen=3",
+            },
+            {
+              array: ["wke"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "长度3" }],
+              description: "最长无重复子串='wke'，长度3",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 无重复字符的最长子串 - 滑动窗口 + Set
  *
@@ -634,6 +702,40 @@ s = "pwwkew"
       },
       {
         name: "数组代替哈希表",
+        animation: {
+          type: "two-pointers" as const,
+          title: "数组代替哈希表演示",
+          steps: [
+            {
+              array: ["arr[128]", "初始化-1"],
+              left: 0,
+              right: 1,
+              highlights: [],
+              description: "用128大小数组代替哈希表。arr[charCode]=最后出现位置",
+            },
+            {
+              array: ["a", "b", "c", "a", "b", "c"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "blue" as const, label: "abc" }],
+              description: "arr['a']=0,arr['b']=1,arr['c']=2。窗口[0,2]",
+            },
+            {
+              array: ["a", "b", "c", "a", "b", "c"],
+              left: 1,
+              right: 3,
+              highlights: [{ indices: [3], color: "yellow" as const, label: "更新a" }],
+              description: "right=3遇a。arr['a']=0>=left,left跳到1。arr['a']=3",
+            },
+            {
+              array: ["abc"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "长度3" }],
+              description: "数组访问O(1)真正常数时间。最长=3",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 无重复字符的最长子串 - 数组优化
  *
@@ -1016,6 +1118,33 @@ s = "ADOBECODEBANC", t = "ABC"
       },
       {
         name: "计数器优化",
+        animation: {
+          type: "two-pointers" as const,
+          title: "计数器优化最小覆盖演示",
+          steps: [
+            {
+              array: ["count", "windowCounts"],
+              left: 0,
+              right: 1,
+              highlights: [],
+              description: "用普通对象代替Map。count记录t需求，windowCounts记录窗口",
+            },
+            {
+              array: ["A", "D", "O", "B", "E", "C"],
+              left: 0,
+              right: 5,
+              highlights: [{ indices: [0, 3, 5], color: "green" as const, label: "ABC" }],
+              description: "t='ABC',required=3。扩展直到formed=3",
+            },
+            {
+              array: ["B", "A", "N", "C"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0, 1, 2, 3], color: "green" as const, label: "BANC" }],
+              description: "收缩优化。找到最小覆盖子串'BANC'",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 最小覆盖子串 - 计数器优化
  *
@@ -1428,6 +1557,57 @@ wordLen = 3, wordCount = 2
       },
       {
         name: "暴力匹配",
+        animation: {
+          type: "two-pointers" as const,
+          title: "暴力匹配串联子串演示",
+          steps: [
+            {
+              array: ["bar", "foo", "the", "foo", "bar", "man"],
+              left: 0,
+              right: 5,
+              highlights: [],
+              description: "s=\"barfoothefoobarman\", words=[\"foo\",\"bar\"]。暴力检查每个起点",
+            },
+            {
+              array: ["bar", "foo", "the", "foo", "bar", "man"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "bar✓" },
+                { indices: [1], color: "green" as const, label: "foo✓" },
+              ],
+              description: "起点i=0：取\"bar\"在words中✓，取\"foo\"在words中✓。找到索引0",
+            },
+            {
+              array: ["bar", "foo", "the", "foo", "bar", "man"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [1], color: "yellow" as const, label: "oof?" },
+              ],
+              description: "起点i=1：取\"arf\"不在words中✗。跳过",
+            },
+            {
+              array: ["bar", "foo", "the", "foo", "bar", "man"],
+              left: 3,
+              right: 4,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "foo✓" },
+                { indices: [4], color: "green" as const, label: "bar✓" },
+              ],
+              description: "起点i=9：取\"foo\"✓，取\"bar\"✓。找到索引9",
+            },
+            {
+              array: [0, 9],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "结果" },
+              ],
+              description: "结果: [0, 9] ✓ 完成！暴力法虽慢但逻辑简单",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 串联所有单词的子串 - 暴力匹配
  *
@@ -1796,6 +1976,56 @@ s = "cbaebabacd", p = "abc"
       },
       {
         name: "滑动窗口 + 差异计数优化",
+        animation: {
+          type: "two-pointers" as const,
+          title: "差异计数优化找异位词演示",
+          steps: [
+            {
+              array: ["c", "b", "a", "e", "b", "a", "b", "a", "c", "d"],
+              left: 0,
+              right: 2,
+              highlights: [],
+              description: "s=\"cbaebabacd\", p=\"abc\"。用diff记录不匹配字符数",
+            },
+            {
+              array: ["count[a]=0", "count[b]=0", "count[c]=0"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "green" as const, label: "diff=0" },
+              ],
+              description: "初始窗口\"cba\"与p=\"abc\"。count全为0，diff=0 ✓ 找到索引0",
+            },
+            {
+              array: ["c", "b", "a", "e", "b", "a", "b", "a", "c", "d"],
+              left: 1,
+              right: 3,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "-c" },
+                { indices: [3], color: "yellow" as const, label: "+e" },
+              ],
+              description: "移出c: count[c]=0→-1, diff++。加入e: count[e]=0→1, diff++。diff=2",
+            },
+            {
+              array: ["c", "b", "a", "e", "b", "a", "b", "a", "c", "d"],
+              left: 6,
+              right: 8,
+              highlights: [
+                { indices: [6, 7, 8], color: "green" as const, label: "bac" },
+              ],
+              description: "窗口[6,8]=\"bac\"。count全为0，diff=0 ✓ 找到索引6",
+            },
+            {
+              array: [0, 6],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "结果" },
+              ],
+              description: "结果: [0, 6] ✓ 差异计数法每次移动只需O(1)",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 找到字符串中所有字母异位词 - 差异计数优化
  *
@@ -1889,6 +2119,55 @@ diff = 0 → 找到索引 0
       },
       {
         name: "滑动窗口 + 哈希表",
+        animation: {
+          type: "two-pointers" as const,
+          title: "哈希表法找异位词演示",
+          steps: [
+            {
+              array: ["c", "b", "a", "e", "b", "a", "b", "a", "c", "d"],
+              left: 0,
+              right: 0,
+              highlights: [],
+              description: "s=\"cbaebabacd\", p=\"abc\"。need={a:1,b:1,c:1}, valid统计满足的字符数",
+            },
+            {
+              array: ["c", "b", "a", "e", "b", "a", "b", "a", "c", "d"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "green" as const, label: "cba" },
+              ],
+              description: "窗口=\"cba\"。window={c:1,b:1,a:1}, valid=3=need.size ✓ 找到索引0",
+            },
+            {
+              array: ["c", "b", "a", "e", "b", "a", "b", "a", "c", "d"],
+              left: 1,
+              right: 3,
+              highlights: [
+                { indices: [1, 2, 3], color: "yellow" as const, label: "bae" },
+              ],
+              description: "收缩移出c: valid--。窗口=\"bae\"含e不需要，valid=2≠3",
+            },
+            {
+              array: ["c", "b", "a", "e", "b", "a", "b", "a", "c", "d"],
+              left: 6,
+              right: 8,
+              highlights: [
+                { indices: [6, 7, 8], color: "green" as const, label: "bac" },
+              ],
+              description: "窗口[6,8]=\"bac\"。window={b:1,a:1,c:1}, valid=3 ✓ 找到索引6",
+            },
+            {
+              array: [0, 6],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "结果" },
+              ],
+              description: "结果: [0, 6] ✓ 哈希表法更通用，可处理任意字符",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 找到字符串中所有字母异位词 - 滑动窗口 + 哈希表
  *
@@ -2249,6 +2528,57 @@ nums = [1,3,-1,-3,5,3,6,7], k = 3
       },
       {
         name: "分块 + 预处理",
+        animation: {
+          type: "two-pointers" as const,
+          title: "分块预处理滑动窗口最大值演示",
+          steps: [
+            {
+              array: [1, 3, -1, -3, 5, 3, 6, 7],
+              left: 0,
+              right: 7,
+              highlights: [],
+              description: "nums=[1,3,-1,-3,5,3,6,7], k=3。分成k大小的块预处理",
+            },
+            {
+              array: ["[1,3,-1]", "[-3,5,3]", "[6,7]"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "块1" },
+                { indices: [1], color: "green" as const, label: "块2" },
+                { indices: [2], color: "yellow" as const, label: "块3" },
+              ],
+              description: "分成3块。对每块预处理left[]和right[]数组",
+            },
+            {
+              array: ["left", 1, 3, 3, -3, 5, 5, 6, 7],
+              left: 1,
+              right: 8,
+              highlights: [
+                { indices: [1, 2, 3], color: "blue" as const, label: "块1" },
+              ],
+              description: "left[i]=块起点到i的最大值。块1: [1,3,3]",
+            },
+            {
+              array: ["right", 3, 3, -1, 5, 5, 3, 7, 7],
+              left: 1,
+              right: 8,
+              highlights: [
+                { indices: [4, 5, 6], color: "green" as const, label: "块2" },
+              ],
+              description: "right[i]=i到块终点的最大值。块2: [5,5,3]",
+            },
+            {
+              array: [3, 3, 5, 5, 6, 7],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5], color: "green" as const, label: "结果" },
+              ],
+              description: "窗口[i,i+k-1]的max=max(right[i],left[i+k-1])。结果: [3,3,5,5,6,7] ✓",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 滑动窗口最大值 - 分块预处理
  *
@@ -2344,6 +2674,68 @@ max(right[4], left[6]) = max(5, 6) = 6 ✓
       },
       {
         name: "暴力解法",
+        animation: {
+          type: "two-pointers" as const,
+          title: "暴力法滑动窗口最大值演示",
+          steps: [
+            {
+              array: [1, 3, -1, -3, 5, 3, 6, 7],
+              left: 0,
+              right: 2,
+              highlights: [],
+              description: "nums=[1,3,-1,-3,5,3,6,7], k=3。暴力遍历每个窗口找最大值",
+            },
+            {
+              array: [1, 3, -1, -3, 5, 3, 6, 7],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "blue" as const, label: "窗口1" },
+                { indices: [1], color: "green" as const, label: "max=3" },
+              ],
+              description: "窗口[0,2]=[1,3,-1]。遍历找max=3",
+            },
+            {
+              array: [1, 3, -1, -3, 5, 3, 6, 7],
+              left: 1,
+              right: 3,
+              highlights: [
+                { indices: [1, 2, 3], color: "blue" as const, label: "窗口2" },
+                { indices: [1], color: "green" as const, label: "max=3" },
+              ],
+              description: "窗口[1,3]=[3,-1,-3]。遍历找max=3",
+            },
+            {
+              array: [1, 3, -1, -3, 5, 3, 6, 7],
+              left: 2,
+              right: 4,
+              highlights: [
+                { indices: [2, 3, 4], color: "blue" as const, label: "窗口3" },
+                { indices: [4], color: "green" as const, label: "max=5" },
+              ],
+              description: "窗口[2,4]=[-1,-3,5]。遍历找max=5",
+            },
+            {
+              array: [1, 3, -1, -3, 5, 3, 6, 7],
+              left: 5,
+              right: 7,
+              highlights: [
+                { indices: [5, 6, 7], color: "blue" as const, label: "窗口6" },
+                { indices: [7], color: "green" as const, label: "max=7" },
+              ],
+              description: "窗口[5,7]=[3,6,7]。遍历找max=7",
+            },
+            {
+              array: [3, 3, 5, 5, 6, 7],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5], color: "green" as const, label: "结果" },
+              ],
+              description: "结果: [3,3,5,5,6,7] ✓ 暴力法O(nk)，适用于k较小的情况",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 滑动窗口最大值 - 暴力解法
  *

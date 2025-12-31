@@ -276,6 +276,40 @@ function isValidSudoku(board) {
       },
       {
         name: "位运算优化",
+        animation: {
+          type: "two-pointers" as const,
+          title: "位运算验证数独演示",
+          steps: [
+            {
+              array: ["rows[0]=0", "遇到5"],
+              left: 0,
+              right: 1,
+              highlights: [],
+              description: "用整数的9个bit表示1-9是否出现。初始rows[0]=0",
+            },
+            {
+              array: ["bit=10000", "rows|=bit"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0], color: "yellow" as const, label: "1<<4" }],
+              description: "数字5: bit=1<<4=16(10000)。rows[0]|=16=16",
+            },
+            {
+              array: ["rows=10000", "遇到3"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [1], color: "blue" as const, label: "检查" }],
+              description: "数字3: bit=1<<2=4(100)。rows&4=0，不存在",
+            },
+            {
+              array: ["rows=10100", "再遇5"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [1], color: "red" as const, label: "冲突" }],
+              description: "再遇5: rows&16=16≠0，已存在！返回false",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 有效的数独 - 位运算优化法
  *
@@ -359,6 +393,40 @@ function isValidSudoku(board) {
       },
       {
         name: "数组计数",
+        animation: {
+          type: "two-pointers" as const,
+          title: "数组计数验证数独演示",
+          steps: [
+            {
+              array: ["rows[9][9]", "cols[9][9]", "boxes[9][9]"],
+              left: 0,
+              right: 2,
+              highlights: [],
+              description: "用布尔数组代替Set。rows[i][k]=第i行是否有k+1",
+            },
+            {
+              array: ["[2,5]='7'"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "处理" }],
+              description: "board[2][5]='7'。num=6, boxIndex=1",
+            },
+            {
+              array: ["rows[2][6]", "cols[5][6]", "boxes[1][6]"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "yellow" as const, label: "检查" }],
+              description: "检查rows[2][6]?cols[5][6]?boxes[1][6]? 都是false",
+            },
+            {
+              array: ["true", "true", "true"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "标记" }],
+              description: "全部标记为true。继续遍历其他格子",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 有效的数独 - 数组计数法
  *
@@ -694,6 +762,40 @@ function spiralOrder(matrix) {
       },
       {
         name: "方向数组",
+        animation: {
+          type: "two-pointers" as const,
+          title: "方向数组螺旋遍历演示",
+          steps: [
+            {
+              array: ["→", "↓", "←", "↑"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0], color: "blue" as const, label: "dir=0" }],
+              description: "四方向：右下左上。dirs=[[0,1],[1,0],[0,-1],[-1,0]]",
+            },
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "→" }],
+              description: "(0,0)→(0,2)向右。遇到边界，dir=(0+1)%4=1转向下",
+            },
+            {
+              array: ["6", "9"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "yellow" as const, label: "↓" }],
+              description: "(1,2)→(2,2)向下。遇到边界，dir=2转向左",
+            },
+            {
+              array: ["1→2→3↓6↓9←8←7↑4→5"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "完成" }],
+              description: "继续转向遍历。结果=[1,2,3,6,9,8,7,4,5]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 螺旋矩阵 - 方向数组法
  *
@@ -770,6 +872,40 @@ function spiralOrder(matrix) {
       },
       {
         name: "逐层遍历",
+        animation: {
+          type: "two-pointers" as const,
+          title: "逐层遍历螺旋矩阵演示",
+          steps: [
+            {
+              array: ["层0", "层1"],
+              left: 0,
+              right: 1,
+              highlights: [],
+              description: "3×3矩阵=2层。层数=ceil(min(3,3)/2)=2",
+            },
+            {
+              array: ["1", "2", "3", "6", "9", "8", "7", "4"],
+              left: 0,
+              right: 7,
+              highlights: [{ indices: [0, 1, 2, 3, 4, 5, 6, 7], color: "blue" as const, label: "层0" }],
+              description: "第0层(外圈): top=0,bottom=2,left=0,right=2",
+            },
+            {
+              array: ["5"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "yellow" as const, label: "层1" }],
+              description: "第1层(中心): top=1,bottom=1,left=1,right=1",
+            },
+            {
+              array: ["1", "2", "3", "6", "9", "8", "7", "4", "5"],
+              left: 0,
+              right: 8,
+              highlights: [{ indices: [0, 1, 2, 3, 4, 5, 6, 7, 8], color: "green" as const, label: "完成" }],
+              description: "遍历完所有层。结果=[1,2,3,6,9,8,7,4,5]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 螺旋矩阵 - 逐层遍历法
  *
@@ -1072,6 +1208,40 @@ function rotate(matrix) {
       },
       {
         name: "四角轮换",
+        animation: {
+          type: "two-pointers" as const,
+          title: "四角轮换旋转演示",
+          steps: [
+            {
+              array: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+              left: 0,
+              right: 8,
+              highlights: [{ indices: [0, 2, 6, 8], color: "blue" as const, label: "四角" }],
+              description: "3x3矩阵。每次4个位置循环轮换",
+            },
+            {
+              array: ["①", "↗", "③"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 2], color: "yellow" as const, label: "轮换" }],
+              description: "(0,0)→(0,2)→(2,2)→(2,0)→(0,0)。1→3→9→7→1",
+            },
+            {
+              array: ["7", "2", "1", "4", "5", "6", "9", "8", "3"],
+              left: 0,
+              right: 8,
+              highlights: [{ indices: [0, 2, 6, 8], color: "green" as const, label: "完成" }],
+              description: "四角轮换后：1→右上,3→右下,9→左下,7→左上",
+            },
+            {
+              array: ["7", "4", "1", "8", "5", "2", "9", "6", "3"],
+              left: 0,
+              right: 8,
+              highlights: [{ indices: [1, 3, 5, 7], color: "green" as const, label: "边轮换" }],
+              description: "(0,1)四角轮换：2→6→8→4→2。旋转完成!",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 旋转图像 - 四角轮换法
  *
@@ -1166,6 +1336,33 @@ function rotate(matrix) {
       },
       {
         name: "逐层旋转",
+        animation: {
+          type: "two-pointers" as const,
+          title: "逐层旋转演示",
+          steps: [
+            {
+              array: ["外层", "内层"],
+              left: 0,
+              right: 1,
+              highlights: [],
+              description: "把矩阵看作洋葱，从外向内逐层处理",
+            },
+            {
+              array: ["1", "2", "3", "4", ".", "6", "7", "8", "9"],
+              left: 0,
+              right: 8,
+              highlights: [{ indices: [0, 1, 2, 3, 5, 6, 7, 8], color: "blue" as const, label: "层0" }],
+              description: "3x3矩阵。第0层(外层)：top=0,bottom=2",
+            },
+            {
+              array: ["7", "4", "1", "8", "5", "2", "9", "6", "3"],
+              left: 0,
+              right: 8,
+              highlights: [{ indices: [0, 1, 2, 3, 5, 6, 7, 8], color: "green" as const, label: "旋转完成" }],
+              description: "外层旋转完成。中心元素5不变。结果正确!",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 旋转图像 - 逐层旋转法
  *
@@ -1570,6 +1767,40 @@ function setZeroes(matrix) {
       },
       {
         name: "哈希集合 O(m+n) 空间",
+        animation: {
+          type: "two-pointers" as const,
+          title: "哈希集合矩阵置零演示",
+          steps: [
+            {
+              array: ["1", "1", "1", "1", "0", "1", "1", "1", "1"],
+              left: 0,
+              right: 8,
+              highlights: [{ indices: [4], color: "red" as const, label: "[1][1]=0" }],
+              description: "3x3矩阵。用Set记录需要置零的行和列",
+            },
+            {
+              array: ["zeroRows", "zeroCol"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "blue" as const, label: "记录" }],
+              description: "找到[1][1]=0。zeroRows={1}, zeroCols={1}",
+            },
+            {
+              array: ["1", "0", "1", "0", "0", "0", "1", "0", "1"],
+              left: 0,
+              right: 8,
+              highlights: [{ indices: [1, 3, 4, 5, 7], color: "red" as const, label: "置0" }],
+              description: "第二遍：如果i在zeroRows或j在zeroCols，置0",
+            },
+            {
+              array: ["1", "0", "1", "0", "0", "0", "1", "0", "1"],
+              left: 0,
+              right: 8,
+              highlights: [{ indices: [0, 1, 2, 3, 4, 5, 6, 7, 8], color: "green" as const, label: "完成" }],
+              description: "结果=[[1,0,1],[0,0,0],[1,0,1]]。空间O(m+n)",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 矩阵置零 - 哈希集合法
  *
@@ -1643,6 +1874,33 @@ function setZeroes(matrix) {
       },
       {
         name: "暴力标记",
+        animation: {
+          type: "two-pointers" as const,
+          title: "暴力标记矩阵置零演示",
+          steps: [
+            {
+              array: ["1", "1", "1", "1", "0", "1", "1", "1", "1"],
+              left: 0,
+              right: 8,
+              highlights: [{ indices: [4], color: "red" as const, label: "[1][1]=0" }],
+              description: "用特殊标记MARKER=-1000001标记待置零位置",
+            },
+            {
+              array: ["1", "M", "1", "M", "0", "M", "1", "M", "1"],
+              left: 0,
+              right: 8,
+              highlights: [{ indices: [1, 3, 5, 7], color: "yellow" as const, label: "标记M" }],
+              description: "发现[1][1]=0，标记同行同列非0元素为M",
+            },
+            {
+              array: ["1", "0", "1", "0", "0", "0", "1", "0", "1"],
+              left: 0,
+              right: 8,
+              highlights: [{ indices: [1, 3, 5, 7], color: "green" as const, label: "M→0" }],
+              description: "第二遍：所有M改为0。完成!",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 矩阵置零 - 暴力标记法
  *
@@ -2079,6 +2337,33 @@ function gameOfLife(board) {
       },
       {
         name: "额外数组",
+        animation: {
+          type: "two-pointers" as const,
+          title: "额外数组生命游戏演示",
+          steps: [
+            {
+              array: ["原数组", "→", "副本"],
+              left: 0,
+              right: 2,
+              highlights: [],
+              description: "复制原数组。从副本读取原始状态，更新原数组",
+            },
+            {
+              array: ["0", "1", "0", "0", "0", "1", "1", "1", "1"],
+              left: 0,
+              right: 8,
+              highlights: [{ indices: [1], color: "blue" as const, label: "检查" }],
+              description: "检查副本[0][1]，邻居数=1<2，该活细胞死亡",
+            },
+            {
+              array: ["0", "0", "0", "1", "0", "1", "0", "1", "1"],
+              left: 0,
+              right: 8,
+              highlights: [{ indices: [0, 1, 2, 3, 4, 5, 6, 7, 8], color: "green" as const, label: "更新完成" }],
+              description: "根据副本状态更新原数组。空间O(m×n)",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 生命游戏 - 额外数组法
  *
@@ -2185,6 +2470,40 @@ function gameOfLife(board) {
       },
       {
         name: "位运算优化",
+        animation: {
+          type: "two-pointers" as const,
+          title: "位运算生命游戏演示",
+          steps: [
+            {
+              array: ["bit0=当前", "bit1=下一"],
+              left: 0,
+              right: 1,
+              highlights: [],
+              description: "用二进制位存储状态。第0位=当前，第1位=下一代",
+            },
+            {
+              array: ["01=活→死", "10=死→活", "11=活→活"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "blue" as const, label: "编码" }],
+              description: "状态编码：&1取当前状态，|=2设置下一代为活",
+            },
+            {
+              array: ["1", "01", "0", "01", "0", "01", "11", "11", "11"],
+              left: 0,
+              right: 8,
+              highlights: [{ indices: [6, 7, 8], color: "yellow" as const, label: "|=2" }],
+              description: "第一遍：将活→活的设置高位。如邻居=3则|=2",
+            },
+            {
+              array: ["0", "0", "0", "1", "0", "1", "0", "1", "1"],
+              left: 0,
+              right: 8,
+              highlights: [{ indices: [0, 1, 2, 3, 4, 5, 6, 7, 8], color: "green" as const, label: ">>=1" }],
+              description: "第二遍：全部>>=1，用下一代替换当前。O(1)空间",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 生命游戏 - 位运算优化法
  *
@@ -2518,6 +2837,40 @@ O(m + n) - 最多走 m + n 步`,
       },
       {
         name: "二分查找（每行）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "二分查找搜索矩阵演示",
+          steps: [
+            {
+              array: ["row0", "row1", "row2", "row3", "row4"],
+              left: 0,
+              right: 4,
+              highlights: [],
+              description: "对每行进行二分查找。target=5",
+            },
+            {
+              array: ["1", "4", "7", "11", "15"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [2], color: "blue" as const, label: "mid=7" }],
+              description: "第0行二分：mid=7>5，right=1",
+            },
+            {
+              array: ["1", "4", "7", "11", "15"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0], color: "blue" as const, label: "mid=1" }],
+              description: "mid=1<5, left=1。mid=4<5, left=2。l>r，第0行没找到",
+            },
+            {
+              array: ["2", "5", "8", "12", "19"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [1], color: "green" as const, label: "mid=5" }],
+              description: "第1行二分：mid=5=target，找到!时间O(m×logn)",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 搜索二维矩阵 II - 二分查找法
  *

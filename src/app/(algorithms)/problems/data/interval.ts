@@ -226,6 +226,48 @@ nums = [0,1,2,4,5,7]
       },
       {
         name: "双指针",
+        animation: {
+          type: "two-pointers" as const,
+          title: "双指针汇总区间演示",
+          steps: [
+            {
+              array: ["0", "2", "3", "4", "6", "8", "9"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "left" },
+              ],
+              description: "nums=[0,2,3,4,6,8,9]。left指向区间起点",
+            },
+            {
+              array: ["0", "2", "3", "4", "6", "8", "9"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "'0'" },
+              ],
+              description: "0不连续(0+1≠2)，单独区间'0'。left移到1",
+            },
+            {
+              array: ["0", "2", "3", "4", "6", "8", "9"],
+              left: 1,
+              right: 3,
+              highlights: [
+                { indices: [1, 2, 3], color: "green" as const, label: "'2->4'" },
+              ],
+              description: "2,3,4连续，right扩展到4。生成'2->4'",
+            },
+            {
+              array: ["'0'", "'2->4'", "'6'", "'8->9'"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "green" as const, label: "结果" },
+              ],
+              description: "继续处理得：['0','2->4','6','8->9']",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 汇总区间 - 双指针法
  *
@@ -527,6 +569,48 @@ function merge(intervals) {
       },
       {
         name: "按终点排序",
+        animation: {
+          type: "two-pointers" as const,
+          title: "按终点排序演示",
+          steps: [
+            {
+              array: ["[1,3]", "[2,6]", "[8,10]", "[15,18]"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "blue" as const, label: "区间" },
+              ],
+              description: "按终点排序后，从右往左处理",
+            },
+            {
+              array: ["[1,3]", "[2,6]", "[8,10]", "[15,18]"],
+              left: 3,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "加入" },
+              ],
+              description: "[15,18]加入结果。继续向左",
+            },
+            {
+              array: ["[1,6]", "[8,10]", "[15,18]"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "yellow" as const, label: "合并" },
+              ],
+              description: "[1,3]和[2,6]重叠，合并为[1,6]",
+            },
+            {
+              array: ["[1,6]", "[8,10]", "[15,18]"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "green" as const, label: "结果" },
+              ],
+              description: "最终结果：[[1,6],[8,10],[15,18]]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 合并区间 - 按终点排序法
  *
@@ -605,6 +689,48 @@ function merge(intervals) {
       },
       {
         name: "使用 reduce",
+        animation: {
+          type: "two-pointers" as const,
+          title: "reduce合并演示",
+          steps: [
+            {
+              array: ["[1,4]", "[4,5]"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "blue" as const, label: "区间" },
+              ],
+              description: "intervals=[[1,4],[4,5]]。使用reduce累积",
+            },
+            {
+              array: ["acc:[]", "cur:[1,4]"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "yellow" as const, label: "处理" },
+              ],
+              description: "累积器为空，直接push [1,4]",
+            },
+            {
+              array: ["acc:[[1,4]]", "cur:[4,5]"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "yellow" as const, label: "重叠" },
+              ],
+              description: "[4,5]与[1,4]重叠(4<=4)，合并为[1,5]",
+            },
+            {
+              array: ["[1,5]"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "结果" },
+              ],
+              description: "reduce返回：[[1,5]]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 合并区间 - reduce 函数式写法
  *
@@ -921,6 +1047,39 @@ intervals = [[1,3],[6,9]], newInterval = [2,5]
       },
       {
         name: "二分查找优化",
+        animation: {
+          type: "two-pointers" as const,
+          title: "二分查找优化演示",
+          steps: [
+            {
+              array: ["[1,2]", "[3,5]", "[6,7]", "[8,10]"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "blue" as const, label: "原区间" },
+              ],
+              description: "新区间[4,8]。二分查找第一个重叠位置",
+            },
+            {
+              array: ["[1,2]", "[3,5]", "[6,7]", "[8,10]"],
+              left: 1,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "yellow" as const, label: "二分定位" },
+              ],
+              description: "二分找到索引1：[3,5]终点5>=4，可能重叠",
+            },
+            {
+              array: ["[1,2]", "[3,10]"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "合并" },
+              ],
+              description: "[3,5],[6,7],[8,10]与[4,8]重叠，合并为[3,10]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 插入区间 - 二分查找优化法
  *
@@ -996,6 +1155,39 @@ function insert(intervals, newInterval) {
       },
       {
         name: "先插入后合并",
+        animation: {
+          type: "two-pointers" as const,
+          title: "先插入后合并演示",
+          steps: [
+            {
+              array: ["[1,3]", "[6,9]"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "blue" as const, label: "原区间" },
+              ],
+              description: "新区间[2,5]。先插入到正确位置，再合并",
+            },
+            {
+              array: ["[1,3]", "[2,5]", "[6,9]"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [1], color: "yellow" as const, label: "插入" },
+              ],
+              description: "步骤1：[2,5]起点2<[6,9]起点6，插入到中间",
+            },
+            {
+              array: ["[1,5]", "[6,9]"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "合并" },
+              ],
+              description: "步骤2：[1,3]和[2,5]重叠，合并为[1,5]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 插入区间 - 先插入后合并法
  *
@@ -1313,6 +1505,48 @@ function findMinArrowShots(points) {
       },
       {
         name: "按起点排序",
+        animation: {
+          type: "two-pointers" as const,
+          title: "按起点排序演示",
+          steps: [
+            {
+              array: ["[1,6]", "[2,8]", "[7,12]", "[10,16]"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "blue" as const, label: "气球" },
+              ],
+              description: "按起点排序。维护当前箭的有效射击范围",
+            },
+            {
+              array: ["[1,6]", "[2,8]", "[7,12]", "[10,16]"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "箭1" },
+              ],
+              description: "[1,6]和[2,8]有交集[2,6]，同一支箭可射中",
+            },
+            {
+              array: ["[1,6]", "[2,8]", "[7,12]", "[10,16]"],
+              left: 2,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "yellow" as const, label: "新箭" },
+              ],
+              description: "[7,12]起点7>有效范围6，需要新箭",
+            },
+            {
+              array: ["箭1", "箭2"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "结果" },
+              ],
+              description: "共需2支箭。与按终点排序结果相同",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 用最少数量的箭引爆气球 - 按起点排序（贪心）
  *
@@ -1392,6 +1626,53 @@ function findMinArrowShots(points) {
       },
       {
         name: "区间交集思路",
+        animation: {
+          type: "two-pointers" as const,
+          title: "区间交集思路演示",
+          steps: [
+            {
+              array: ["[10,16]", "[2,8]", "[1,6]", "[7,12]"],
+              left: 0,
+              right: 3,
+              highlights: [],
+              description: "points=[[10,16],[2,8],[1,6],[7,12]]。按起点排序",
+            },
+            {
+              array: ["[1,6]", "[2,8]", "[7,12]", "[10,16]"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "组1" }],
+              description: "排序后。第一组从[1,6]开始，right=6",
+            },
+            {
+              array: ["[1,6]", "[2,8]", "[7,12]", "[10,16]"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "green" as const, label: "组1" }],
+              description: "[2,8]起点2<=6，加入组1。right=min(6,8)=6",
+            },
+            {
+              array: ["[1,6]", "[2,8]", "[7,12]", "[10,16]"],
+              left: 2,
+              right: 2,
+              highlights: [
+                { indices: [0, 1], color: "gray" as const, label: "已处理" },
+                { indices: [2], color: "yellow" as const, label: "新组" },
+              ],
+              description: "[7,12]起点7>6，开始新组。arrows=1",
+            },
+            {
+              array: ["[1,6]", "[2,8]", "[7,12]", "[10,16]"],
+              left: 2,
+              right: 3,
+              highlights: [
+                { indices: [0, 1], color: "gray" as const, label: "已处理" },
+                { indices: [2, 3], color: "green" as const, label: "组2" },
+              ],
+              description: "[10,16]起点10<=12，加入组2。arrows=2",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 用最少数量的箭引爆气球 - 区间交集思路
  *

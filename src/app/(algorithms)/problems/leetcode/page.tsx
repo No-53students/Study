@@ -26,7 +26,13 @@ const Editor = dynamic(() => import("@monaco-editor/react"), {
   ssr: false,
   loading: () => (
     <div className="flex h-full items-center justify-center bg-zinc-900">
-      <div className="text-zinc-400">加载编辑器中...</div>
+      <div className="flex flex-col items-center gap-3">
+        <div className="relative">
+          <div className="h-10 w-10 rounded-full border-2 border-zinc-700" />
+          <div className="absolute inset-0 h-10 w-10 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin" />
+        </div>
+        <span className="text-sm text-zinc-400">加载编辑器中...</span>
+      </div>
     </div>
   ),
 });
@@ -160,6 +166,7 @@ export default function LeetCodePage() {
   // 拖拽状态
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const mainContentRef = useRef<HTMLDivElement>(null);
   const isDraggingSidebar = useRef(false);
   const isDraggingVertical = useRef(false);
   const isDraggingHorizontal = useRef(false);
@@ -443,47 +450,40 @@ export default function LeetCodePage() {
     }
   }, [code]);
 
-  // 拖拽处理 - 使用 ref 存储最新的状态值，避免依赖变化导致事件监听器重复注册
-  const sidebarWidthRef = useRef(sidebarWidth);
-  const sidebarCollapsedRef = useRef(sidebarCollapsed);
-
   useEffect(() => {
-    sidebarWidthRef.current = sidebarWidth;
-  }, [sidebarWidth]);
-
-  useEffect(() => {
-    sidebarCollapsedRef.current = sidebarCollapsed;
-  }, [sidebarCollapsed]);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMove = (clientX: number, clientY: number) => {
       if (isDraggingSidebar.current) {
         setIsDragging(true);
-        const newWidth = e.clientX;
+        const newWidth = clientX;
         setSidebarWidth(Math.min(Math.max(newWidth, 200), 400));
       }
-      if (isDraggingVertical.current && containerRef.current) {
+      if (isDraggingVertical.current && mainContentRef.current) {
         setIsDragging(true);
-        const rect = containerRef.current.getBoundingClientRect();
-        const currentSidebarWidth = sidebarWidthRef.current;
-        const currentSidebarCollapsed = sidebarCollapsedRef.current;
-        const effectiveWidth = currentSidebarCollapsed ? rect.width : rect.width - currentSidebarWidth;
-        const offset = currentSidebarCollapsed ? rect.left : rect.left + currentSidebarWidth;
-        const newWidth = ((e.clientX - offset) / effectiveWidth) * 100;
-        // 限制最小和最大宽度
+        const rect = mainContentRef.current.getBoundingClientRect();
+        // 计算相对于主内容区域的百分比
+        const newWidth = ((clientX - rect.left) / rect.width) * 100;
         setLeftPanelWidth(Math.min(Math.max(newWidth, 20), 80));
       }
-      if (isDraggingHorizontal.current) {
+      if (isDraggingHorizontal.current && mainContentRef.current) {
         setIsDragging(true);
-        const windowHeight = window.innerHeight;
-        const newHeight = windowHeight - e.clientY;
-        // 限制底部面板最大高度为屏幕的 50%
-        const maxHeight = windowHeight * 0.5;
+        const rect = mainContentRef.current.getBoundingClientRect();
+        const newHeight = rect.bottom - clientY;
+        const maxHeight = rect.height * 0.5;
         setBottomHeight(Math.min(Math.max(newHeight, 120), maxHeight));
       }
     };
 
-    const handleMouseUp = () => {
+    const handleMouseMove = (e: MouseEvent) => {
+      handleMove(e.clientX, e.clientY);
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        handleMove(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    };
+
+    const handleEnd = () => {
       isDraggingSidebar.current = false;
       isDraggingVertical.current = false;
       isDraggingHorizontal.current = false;
@@ -491,11 +491,15 @@ export default function LeetCodePage() {
     };
 
     document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("mouseup", handleEnd);
+    document.addEventListener("touchmove", handleTouchMove, { passive: false });
+    document.addEventListener("touchend", handleEnd);
 
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("mouseup", handleEnd);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleEnd);
     };
   }, []); // 空依赖，只在组件挂载时注册一次
 
@@ -571,7 +575,10 @@ export default function LeetCodePage() {
               margin: 0,
               borderRadius: "0.5rem",
               fontSize: "0.75rem",
+              maxWidth: "100%",
+              overflowX: "auto",
             }}
+            wrapLongLines={true}
           >
             {codeString}
           </SyntaxHighlighter>
@@ -590,9 +597,9 @@ export default function LeetCodePage() {
   // ==================== 移动端布局 ====================
   if (isMobile) {
     return (
-      <div className="flex flex-col h-screen bg-zinc-950 text-white">
+      <div className="flex flex-col h-[100dvh] bg-zinc-950 text-white">
         {/* 移动端头部 */}
-        <header className="flex items-center justify-between px-4 py-3 border-b border-zinc-800 bg-zinc-900 shrink-0">
+        <header className="flex items-center justify-between px-4 py-3 border-b border-zinc-800 bg-zinc-900 shrink-0 pt-[calc(0.75rem+var(--safe-area-top))]">
           <div className="flex items-center gap-2">
             <Link href="/problems" className="text-zinc-400 hover:text-white">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -677,7 +684,7 @@ export default function LeetCodePage() {
         </nav>
 
         {/* 移动端内容区域 */}
-        <div className="flex-1 overflow-hidden pb-safe">
+        <div className="flex-1 overflow-hidden pb-[var(--safe-area-bottom)]">
           {/* 题目列表视图 */}
           {mobileView === "list" && (
             <div className="h-full flex flex-col">
@@ -723,7 +730,7 @@ export default function LeetCodePage() {
                 </select>
               </div>
               {/* 题目列表 */}
-              <div className="flex-1 overflow-y-auto">
+              <div className="flex-1 overflow-y-auto overscroll-contain">
                 {filteredProblems.map((problem) => (
                   <button
                     key={problem.id}
@@ -756,7 +763,7 @@ export default function LeetCodePage() {
 
           {/* 题目描述视图 */}
           {mobileView === "description" && selectedProblem && (
-            <div className="h-full overflow-y-auto p-4">
+            <div className="h-full overflow-y-auto overscroll-contain p-4">
               {/* 题目信息 */}
               <div className="mb-4">
                 <div className="flex items-center gap-2 flex-wrap mb-2">
@@ -829,7 +836,7 @@ export default function LeetCodePage() {
 
           {/* 题解视图 */}
           {mobileView === "solution" && selectedProblem && (
-            <div className="h-full overflow-y-auto p-4">
+            <div className="h-full overflow-y-auto overscroll-contain p-4">
               <h2 className="text-lg font-semibold mb-4">解题思路</h2>
 
               {/* 解法选择 */}
@@ -1052,7 +1059,7 @@ export default function LeetCodePage() {
 
   // ==================== 桌面端布局 ====================
   return (
-    <div ref={containerRef} className={`flex h-screen bg-zinc-950 text-white ${isDragging ? 'select-none' : ''}`}>
+    <div ref={containerRef} className={`flex h-[100dvh] bg-zinc-950 text-white ${isDragging ? 'select-none' : ''}`}>
       {/* 侧边栏折叠时的悬浮按钮 */}
       {sidebarCollapsed && (
         <button
@@ -1173,7 +1180,7 @@ export default function LeetCodePage() {
           </div>
 
           {/* 题目列表 */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto overscroll-contain">
             <div className="text-xs text-zinc-500 px-3 py-2 sticky top-0 bg-zinc-900 border-b border-zinc-800">
               {filteredProblems.length} 道题目
             </div>
@@ -1219,17 +1226,20 @@ export default function LeetCodePage() {
       {/* 侧边栏拖拽条 */}
       {!sidebarCollapsed && (
         <div
-          className={`w-1 bg-zinc-800 hover:bg-green-500 cursor-col-resize transition-colors ${isDragging ? 'bg-green-500' : ''}`}
+          className={`w-2 bg-zinc-800 hover:bg-green-500 active:bg-green-600 cursor-col-resize transition-colors touch-none flex items-center justify-center ${isDragging ? 'bg-green-500' : ''}`}
           onMouseDown={() => { isDraggingSidebar.current = true; }}
-        />
+          onTouchStart={(e) => { e.preventDefault(); isDraggingSidebar.current = true; }}
+        >
+          <div className="w-0.5 h-8 bg-zinc-600 rounded-full" />
+        </div>
       )}
 
       {/* 主内容区域 */}
       {selectedProblem ? (
-        <div className="flex-1 flex">
+        <div ref={mainContentRef} className="flex-1 flex min-w-0 overflow-hidden">
           {/* 左侧面板 - 题目描述 */}
           <div
-            className="flex flex-col border-r border-zinc-800 overflow-hidden"
+            className="flex flex-col border-r border-zinc-800 overflow-hidden min-w-0"
             style={{ width: `${leftPanelWidth}%` }}
           >
             {/* 左侧标签栏 */}
@@ -1257,9 +1267,9 @@ export default function LeetCodePage() {
             </div>
 
             {/* 左侧内容 */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto overscroll-contain min-h-0">
               {leftTab === "description" ? (
-                <div className="p-4">
+                <div className="p-4 overflow-hidden">
                   {/* 标题区 */}
                   <div className="mb-4">
                     <div className="flex items-center gap-2 mb-2 flex-wrap">
@@ -1312,7 +1322,7 @@ export default function LeetCodePage() {
                   </div>
 
                   {/* 题目描述 */}
-                  <div className="prose prose-invert prose-sm max-w-none prose-pre:bg-zinc-800 prose-pre:border prose-pre:border-zinc-700 prose-code:text-green-400 prose-code:before:content-none prose-code:after:content-none">
+                  <div className="prose prose-invert prose-sm max-w-none prose-pre:bg-zinc-800 prose-pre:border prose-pre:border-zinc-700 prose-pre:overflow-x-auto prose-pre:max-w-full prose-code:text-green-400 prose-code:before:content-none prose-code:after:content-none [&_pre]:min-w-0 [&_code]:break-all">
                     <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
                       {selectedProblem.description}
                     </ReactMarkdown>
@@ -1468,9 +1478,12 @@ export default function LeetCodePage() {
 
           {/* 垂直分隔线 */}
           <div
-            className={`w-1 bg-zinc-800 hover:bg-green-500 cursor-col-resize transition-colors ${isDragging ? 'bg-green-500' : ''}`}
+            className={`w-2 bg-zinc-800 hover:bg-green-500 active:bg-green-600 cursor-col-resize transition-colors touch-none flex items-center justify-center ${isDragging ? 'bg-green-500' : ''}`}
             onMouseDown={() => { isDraggingVertical.current = true; }}
-          />
+            onTouchStart={(e) => { e.preventDefault(); isDraggingVertical.current = true; }}
+          >
+            <div className="w-0.5 h-8 bg-zinc-600 rounded-full" />
+          </div>
 
           {/* 右侧面板 - 代码编辑器 */}
           <div className="flex-1 flex flex-col min-w-0">
@@ -1595,9 +1608,12 @@ export default function LeetCodePage() {
 
             {/* 水平分隔线 */}
             <div
-              className={`h-1 bg-zinc-800 hover:bg-green-500 cursor-row-resize transition-colors ${isDragging ? 'bg-green-500' : ''}`}
+              className={`h-2 bg-zinc-800 hover:bg-green-500 active:bg-green-600 cursor-row-resize transition-colors touch-none flex items-center justify-center ${isDragging ? 'bg-green-500' : ''}`}
               onMouseDown={() => { isDraggingHorizontal.current = true; }}
-            />
+              onTouchStart={(e) => { e.preventDefault(); isDraggingHorizontal.current = true; }}
+            >
+              <div className="w-8 h-0.5 bg-zinc-600 rounded-full" />
+            </div>
 
             {/* 底部控制台 */}
             <div
@@ -1643,7 +1659,7 @@ export default function LeetCodePage() {
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-3">
+              <div className="flex-1 overflow-y-auto overscroll-contain p-3">
                 {bottomTab === "testcases" ? (
                   <div className="space-y-2">
                     {selectedProblem.testCases.map((tc, index) => {
@@ -1742,8 +1758,13 @@ export default function LeetCodePage() {
       ) : (
         <div className="flex-1 flex items-center justify-center text-zinc-500">
           <div className="text-center">
-            <p className="text-lg mb-2">暂无题目</p>
-            <p className="text-sm">请先添加题目数据</p>
+            <div className="flex h-16 w-16 mx-auto mb-4 items-center justify-center rounded-full bg-zinc-800/50 border border-zinc-700/50">
+              <svg className="w-8 h-8 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+              </svg>
+            </div>
+            <p className="text-lg font-medium text-zinc-400 mb-2">暂无题目</p>
+            <p className="text-sm text-zinc-500">请先添加题目数据</p>
           </div>
         </div>
       )}

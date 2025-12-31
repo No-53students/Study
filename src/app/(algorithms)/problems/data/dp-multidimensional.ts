@@ -221,6 +221,54 @@ function uniquePaths(m, n) {
       },
       {
         name: "动态规划 - 二维数组",
+        animation: {
+          type: "two-pointers" as const,
+          title: "不同路径二维DP演示",
+          steps: [
+            {
+              array: ["1", "1", "1", "1"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "green" as const, label: "第1行初始化" },
+              ],
+              description: "m=3,n=4。初始化：第一行全为1",
+            },
+            {
+              array: ["1", "2", "3", "4"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "边界=1" },
+                { indices: [1], color: "green" as const, label: "1+1=2" },
+                { indices: [2], color: "green" as const, label: "1+2=3" },
+                { indices: [3], color: "green" as const, label: "1+3=4" },
+              ],
+              description: "第2行: dp[i][j]=dp[i-1][j]+dp[i][j-1]",
+            },
+            {
+              array: ["1", "3", "6", "10"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "边界=1" },
+                { indices: [1], color: "green" as const, label: "2+1=3" },
+                { indices: [2], color: "green" as const, label: "3+3=6" },
+                { indices: [3], color: "green" as const, label: "4+6=10" },
+              ],
+              description: "第3行: dp[2][3]=4+6=10",
+            },
+            {
+              array: ["1", "3", "6", "10"],
+              left: 3,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "答案=10" },
+              ],
+              description: "完成！3×4网格有10条不同路径",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 不同路径 - 动态规划二维数组解法
  *
@@ -279,6 +327,57 @@ function uniquePaths(m, n) {
       },
       {
         name: "数学组合公式",
+        animation: {
+          type: "two-pointers" as const,
+          title: "组合数计算演示",
+          steps: [
+            {
+              array: ["m=3", "n=7", "总8步"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "blue" as const, label: "参数" },
+              ],
+              description: "m=3,n=7。需走2步向下+6步向右=8步",
+            },
+            {
+              array: ["C(8,2)", "=8!/(2!×6!)"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "blue" as const, label: "组合公式" },
+              ],
+              description: "问题转化：在8步中选2步向下=C(8,2)",
+            },
+            {
+              array: ["1", "×7", "÷1", "=7"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "result=7" },
+              ],
+              description: "i=1: result=1×(6+1)/1=7",
+            },
+            {
+              array: ["7", "×8", "÷2", "=28"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "result=28" },
+              ],
+              description: "i=2: result=7×(6+2)/2=28",
+            },
+            {
+              array: ["28"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "答案=28" },
+              ],
+              description: "完成！3×7网格有28条不同路径",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 不同路径 - 数学组合公式解法
  *
@@ -576,6 +675,63 @@ function minPathSum(grid) {
       },
       {
         name: "动态规划 - 二维数组",
+        animation: {
+          type: "two-pointers" as const,
+          title: "最小路径和二维DP演示",
+          steps: [
+            {
+              array: ["[1,3,1]", "[1,5,1]", "[4,2,1]"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "blue" as const, label: "grid" },
+              ],
+              description: "grid=[[1,3,1],[1,5,1],[4,2,1]]",
+            },
+            {
+              array: ["1", "4", "5"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "起点=1" },
+                { indices: [1], color: "green" as const, label: "1+3=4" },
+                { indices: [2], color: "green" as const, label: "4+1=5" },
+              ],
+              description: "初始化第一行: dp[0]=[1,4,5]",
+            },
+            {
+              array: ["2", "7", "6"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "1+1=2" },
+                { indices: [1], color: "green" as const, label: "min(4,2)+5=7" },
+                { indices: [2], color: "green" as const, label: "min(5,7)+1=6" },
+              ],
+              description: "第2行: dp[1]=[2,7,6]",
+            },
+            {
+              array: ["6", "8", "7"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "2+4=6" },
+                { indices: [1], color: "green" as const, label: "min(7,6)+2=8" },
+                { indices: [2], color: "green" as const, label: "min(6,8)+1=7" },
+              ],
+              description: "第3行: dp[2]=[6,8,7]",
+            },
+            {
+              array: ["6", "8", "7"],
+              left: 2,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "答案=7" },
+              ],
+              description: "完成！最小路径和=7",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 最小路径和 - 动态规划二维数组解法
  *
@@ -644,6 +800,57 @@ function minPathSum(grid) {
       },
       {
         name: "原地修改（不推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "原地修改演示",
+          steps: [
+            {
+              array: ["[1,3,1]", "[1,5,1]", "[4,2,1]"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "blue" as const, label: "原grid" },
+              ],
+              description: "原始grid=[[1,3,1],[1,5,1],[4,2,1]]",
+            },
+            {
+              array: ["1", "4", "5"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "yellow" as const, label: "修改第1行" },
+              ],
+              description: "修改第一行: grid[0]=[1,4,5]",
+            },
+            {
+              array: ["[1,4,5]", "[2,5,1]", "[6,2,1]"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [1], color: "yellow" as const, label: "修改第1列" },
+              ],
+              description: "修改第一列: 1→2, 4→6",
+            },
+            {
+              array: ["[1,4,5]", "[2,7,6]", "[6,8,7]"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [1, 2], color: "yellow" as const, label: "原地填表" },
+              ],
+              description: "原地填充: grid已被修改",
+            },
+            {
+              array: ["7"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "答案=7" },
+              ],
+              description: "完成！最小路径和=7。注意:原数组已被修改!",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 最小路径和 - 原地修改解法
  *
@@ -945,6 +1152,61 @@ function uniquePathsWithObstacles(obstacleGrid) {
       },
       {
         name: "动态规划 - 二维数组",
+        animation: {
+          type: "two-pointers" as const,
+          title: "不同路径II二维DP演示",
+          steps: [
+            {
+              array: ["[0,0,0]", "[0,1,0]", "[0,0,0]"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [1], color: "red" as const, label: "障碍物" },
+              ],
+              description: "grid=[[0,0,0],[0,1,0],[0,0,0]]。1=障碍物",
+            },
+            {
+              array: ["1", "1", "1"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "green" as const, label: "第1行" },
+              ],
+              description: "初始化第一行: dp[0]=[1,1,1]",
+            },
+            {
+              array: ["1", "0", "1"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "dp=1" },
+                { indices: [1], color: "red" as const, label: "障碍=0" },
+                { indices: [2], color: "green" as const, label: "0+1=1" },
+              ],
+              description: "第2行: 中间障碍物，dp[1][1]=0",
+            },
+            {
+              array: ["1", "1", "2"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "dp=1" },
+                { indices: [1], color: "green" as const, label: "0+1=1" },
+                { indices: [2], color: "green" as const, label: "1+1=2" },
+              ],
+              description: "第3行: dp[2]=[1,1,2]",
+            },
+            {
+              array: ["1", "1", "2"],
+              left: 2,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "答案=2" },
+              ],
+              description: "完成！有2条不同路径绕过障碍物",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 不同路径 II（带障碍物）- 动态规划二维数组解法
  *
@@ -1255,6 +1517,60 @@ function minimumTotal(triangle) {
       },
       {
         name: "动态规划 - 自顶向下",
+        animation: {
+          type: "two-pointers" as const,
+          title: "三角形自顶向下演示",
+          steps: [
+            {
+              array: ["2"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "dp[0]=2" },
+              ],
+              description: "triangle=[[2],[3,4],[6,5,7],[4,1,8,3]]。从顶开始",
+            },
+            {
+              array: ["5", "6"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "2+3=5" },
+                { indices: [1], color: "green" as const, label: "2+4=6" },
+              ],
+              description: "第2层: dp[1]=[5,6]",
+            },
+            {
+              array: ["11", "10", "13"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "5+6=11" },
+                { indices: [1], color: "green" as const, label: "min(5,6)+5=10" },
+                { indices: [2], color: "green" as const, label: "6+7=13" },
+              ],
+              description: "第3层: dp[2]=[11,10,13]",
+            },
+            {
+              array: ["15", "11", "18", "16"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "min=11" },
+              ],
+              description: "第4层: 找最小值=11",
+            },
+            {
+              array: ["11"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "答案=11" },
+              ],
+              description: "完成！最小路径和=11 (2→3→5→1)",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 三角形最小路径和 - 自顶向下 DP 解法
  *
@@ -1324,6 +1640,58 @@ function minimumTotal(triangle) {
       },
       {
         name: "递归 + 记忆化",
+        animation: {
+          type: "two-pointers" as const,
+          title: "三角形递归记忆化演示",
+          steps: [
+            {
+              array: ["dfs(0,0)"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "从顶点开始" },
+              ],
+              description: "从(0,0)开始递归，向下探索",
+            },
+            {
+              array: ["dfs(1,0)", "dfs(1,1)"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "blue" as const, label: "分叉" },
+              ],
+              description: "dfs(0,0)递归到dfs(1,0)和dfs(1,1)",
+            },
+            {
+              array: ["dfs(2,1)", "重复!"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "yellow" as const, label: "子问题重叠" },
+                { indices: [1], color: "red" as const, label: "需要缓存" },
+              ],
+              description: "dfs(1,0)和dfs(1,1)都会调用dfs(2,1)",
+            },
+            {
+              array: ["4", "1", "8", "3"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "green" as const, label: "底层返回" },
+              ],
+              description: "到达底层，开始返回",
+            },
+            {
+              array: ["11"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "答案=11" },
+              ],
+              description: "完成！最小路径和=11。记忆化避免重复计算",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 三角形最小路径和 - 递归 + 记忆化解法
  *
@@ -1656,6 +2024,66 @@ function longestCommonSubsequence(text1, text2) {
       },
       {
         name: "动态规划 - 空间优化",
+        animation: {
+          type: "two-pointers" as const,
+          title: "LCS滚动数组演示",
+          steps: [
+            {
+              array: ["a", "b", "c", "d", "e"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4], color: "blue" as const, label: "text1" },
+              ],
+              description: "text1=\"abcde\",text2=\"ace\"。用滚动数组",
+            },
+            {
+              array: ["0", "0", "0", "0"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "gray" as const, label: "prev初始" },
+              ],
+              description: "prev=[0,0,0,0]表示空串",
+            },
+            {
+              array: ["0", "1", "1", "1"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "a==a" },
+              ],
+              description: "i=1(a): curr=[0,1,1,1]。与ace的a匹配",
+            },
+            {
+              array: ["0", "1", "2", "2"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "c==c" },
+              ],
+              description: "i=3(c): curr=[0,1,2,2]。与ace的c匹配",
+            },
+            {
+              array: ["0", "1", "2", "3"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "e==e" },
+              ],
+              description: "i=5(e): prev=[0,1,2,3]。与ace的e匹配",
+            },
+            {
+              array: ["3"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "答案=3" },
+              ],
+              description: "完成！LCS=\"ace\"，长度=3",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 最长公共子序列 - 滚动数组空间优化解法
  *
@@ -1725,6 +2153,57 @@ function longestCommonSubsequence(text1, text2) {
       },
       {
         name: "递归 + 记忆化",
+        animation: {
+          type: "two-pointers" as const,
+          title: "LCS递归记忆化演示",
+          steps: [
+            {
+              array: ["lcs(2,1)"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "从末尾开始" },
+              ],
+              description: "text1=\"abc\",text2=\"ac\"。从末尾lcs(2,1)开始",
+            },
+            {
+              array: ["c==c", "lcs(1,0)+1"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "匹配" },
+              ],
+              description: "'c'=='c'，递归lcs(1,0)+1",
+            },
+            {
+              array: ["b!=a", "max(lcs(0,0),lcs(1,-1))"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "red" as const, label: "不匹配" },
+              ],
+              description: "'b'!='a'，尝试两个方向",
+            },
+            {
+              array: ["a==a", "lcs(-1,-1)+1=1"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "lcs(0,0)=1" },
+              ],
+              description: "lcs(0,0): 'a'=='a'→1",
+            },
+            {
+              array: ["2"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "答案=2" },
+              ],
+              description: "完成！max(1,0)+1=2。LCS=\"ac\"",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 最长公共子序列 - 递归 + 记忆化解法
  *
@@ -2080,6 +2559,66 @@ function minDistance(word1, word2) {
       },
       {
         name: "动态规划 - 空间优化",
+        animation: {
+          type: "two-pointers" as const,
+          title: "编辑距离滚动数组演示",
+          steps: [
+            {
+              array: ["h", "o", "r", "s", "e"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4], color: "blue" as const, label: "horse" },
+              ],
+              description: "word1=\"horse\",word2=\"ros\"。用滚动数组",
+            },
+            {
+              array: ["0", "1", "2", "3"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "gray" as const, label: "prev" },
+              ],
+              description: "prev=[0,1,2,3]。空串到ros的距离",
+            },
+            {
+              array: ["1", "1", "2", "3"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "删除h" },
+              ],
+              description: "i=1(h): curr=[1,1,2,3]",
+            },
+            {
+              array: ["2", "1", "2", "3"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "o==o" },
+              ],
+              description: "i=2(o): o==o，继承prev[0]=1",
+            },
+            {
+              array: ["3", "2", "1", "2"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "r==r" },
+              ],
+              description: "i=3(r): r==r，dp[3][1]=1",
+            },
+            {
+              array: ["3"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "答案=3" },
+              ],
+              description: "完成！最少操作3次",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 编辑距离 - 滚动数组空间优化解法
  *
@@ -2149,6 +2688,59 @@ function minDistance(word1, word2) {
       },
       {
         name: "递归 + 记忆化",
+        animation: {
+          type: "two-pointers" as const,
+          title: "编辑距离递归演示",
+          steps: [
+            {
+              array: ["dp(5,3)"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "从末尾开始" },
+              ],
+              description: "word1=\"horse\",word2=\"ros\"。从dp(5,3)开始",
+            },
+            {
+              array: ["e!=s", "min(删,插,换)+1"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "red" as const, label: "不匹配" },
+              ],
+              description: "'e'!='s'，尝试三种操作",
+            },
+            {
+              array: ["dp(4,3)", "dp(5,2)", "dp(4,2)"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "yellow" as const, label: "删除" },
+                { indices: [1], color: "yellow" as const, label: "插入" },
+                { indices: [2], color: "yellow" as const, label: "替换" },
+              ],
+              description: "分别递归三个子问题",
+            },
+            {
+              array: ["缓存命中"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "记忆化" },
+              ],
+              description: "重叠子问题使用缓存避免重复计算",
+            },
+            {
+              array: ["3"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "答案=3" },
+              ],
+              description: "完成！最少操作3次",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 编辑距离 - 递归 + 记忆化解法
  *
@@ -2477,6 +3069,58 @@ function maxProfit(prices) {
       },
       {
         name: "动态规划 - 三维数组",
+        animation: {
+          type: "two-pointers" as const,
+          title: "股票III三维DP演示",
+          steps: [
+            {
+              array: ["3", "3", "5", "0", "0", "3", "1", "4"],
+              left: 0,
+              right: 7,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5, 6, 7], color: "blue" as const, label: "prices" },
+              ],
+              description: "prices=[3,3,5,0,0,3,1,4]。最多2次交易",
+            },
+            {
+              array: ["dp[i][k][hold]"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "状态定义" },
+              ],
+              description: "dp[i][k][hold]=第i天,第k次交易,是否持有",
+            },
+            {
+              array: ["0→3", "1→4"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "第1次交易" },
+                { indices: [1], color: "green" as const, label: "第2次交易" },
+              ],
+              description: "第1次:0买3卖获利3。第2次:1买4卖获利3",
+            },
+            {
+              array: ["3+3=6"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "总利润" },
+              ],
+              description: "两次交易总利润=3+3=6",
+            },
+            {
+              array: ["6"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "答案=6" },
+              ],
+              description: "完成！最大利润6",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 买卖股票 III - 三维 DP 解法
  *
@@ -2552,6 +3196,57 @@ function maxProfit(prices) {
       },
       {
         name: "分治法",
+        animation: {
+          type: "two-pointers" as const,
+          title: "股票III分治法演示",
+          steps: [
+            {
+              array: ["3", "3", "5", "0", "0", "3", "1", "4"],
+              left: 0,
+              right: 7,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5, 6, 7], color: "blue" as const, label: "prices" },
+              ],
+              description: "分治思想：分成左右两部分各做一次交易",
+            },
+            {
+              array: ["0", "0", "2", "2", "2", "3", "3", "4"],
+              left: 0,
+              right: 7,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5, 6, 7], color: "green" as const, label: "left[]" },
+              ],
+              description: "left[i]=从第0天到第i天的最大利润",
+            },
+            {
+              array: ["4", "4", "4", "4", "4", "3", "3", "0"],
+              left: 0,
+              right: 7,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5, 6, 7], color: "green" as const, label: "right[]" },
+              ],
+              description: "right[i]=从第i天到最后的最大利润",
+            },
+            {
+              array: ["2+4=6"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "i=2处分割" },
+              ],
+              description: "枚举分割点：left[2]+right[2]=2+4=6",
+            },
+            {
+              array: ["6"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "答案=6" },
+              ],
+              description: "完成！最大利润6",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 买卖股票 III - 分治法
  *
@@ -2874,6 +3569,57 @@ function maxProfit(k, prices) {
       },
       {
         name: "动态规划 - 三维数组",
+        animation: {
+          type: "two-pointers" as const,
+          title: "股票IV三维DP演示",
+          steps: [
+            {
+              array: ["3", "2", "6", "5", "0", "3"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5], color: "blue" as const, label: "prices" },
+              ],
+              description: "prices=[3,2,6,5,0,3],k=2。三维DP解法",
+            },
+            {
+              array: ["dp[i][j][0/1]"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "状态定义" },
+              ],
+              description: "dp[i][j][hold]=第i天,完成j次交易,是否持有",
+            },
+            {
+              array: ["第1次", "2买6卖=4"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "利润4" },
+              ],
+              description: "第一次交易：价格2买入，价格6卖出，利润4",
+            },
+            {
+              array: ["第2次", "0买3卖=3"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "利润3" },
+              ],
+              description: "第二次交易：价格0买入，价格3卖出，利润3",
+            },
+            {
+              array: ["7"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "答案=7" },
+              ],
+              description: "完成！2次交易最大利润=4+3=7",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 买卖股票 IV - 三维 DP 解法
  *
@@ -2956,6 +3702,57 @@ function maxProfit(k, prices) {
       },
       {
         name: "贪心 + 合并区间",
+        animation: {
+          type: "two-pointers" as const,
+          title: "股票IV贪心区间演示",
+          steps: [
+            {
+              array: ["1", "3", "2", "8", "4", "9"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5], color: "blue" as const, label: "prices" },
+              ],
+              description: "prices=[1,3,2,8,4,9],k=2",
+            },
+            {
+              array: ["1→3", "2→8", "4→9"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "green" as const, label: "上升区间" },
+              ],
+              description: "找出所有上升区间：利润2,6,5",
+            },
+            {
+              array: ["2", "6", "5"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "green" as const, label: "profits" },
+              ],
+              description: "3个区间>k=2，需要用DP选最优的k个",
+            },
+            {
+              array: ["6+5=11"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "选最大k个" },
+              ],
+              description: "选择最大的2个区间：6+5=11",
+            },
+            {
+              array: ["11"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "答案=11" },
+              ],
+              description: "完成！最大利润11",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 买卖股票 IV - 贪心 + 合并区间解法
  *
@@ -3284,6 +4081,57 @@ function longestPalindrome(s) {
       },
       {
         name: "动态规划",
+        animation: {
+          type: "two-pointers" as const,
+          title: "回文子串DP演示",
+          steps: [
+            {
+              array: ["b", "a", "b", "a", "d"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4], color: "blue" as const, label: "s" },
+              ],
+              description: "s=\"babad\"。dp[i][j]=s[i..j]是否回文",
+            },
+            {
+              array: ["T", "T", "T", "T", "T"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4], color: "green" as const, label: "dp[i][i]" },
+              ],
+              description: "初始化：单个字符都是回文",
+            },
+            {
+              array: ["F", "F", "F", "F"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "gray" as const, label: "len=2" },
+              ],
+              description: "长度2：相邻字符都不相同，无回文",
+            },
+            {
+              array: ["bab", "aba"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "len=3回文" },
+              ],
+              description: "长度3：\"bab\"和\"aba\"都是回文",
+            },
+            {
+              array: ["bab"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "答案" },
+              ],
+              description: "完成！最长回文子串=\"bab\"或\"aba\"",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 最长回文子串 - 动态规划解法
  *
@@ -3375,6 +4223,57 @@ function longestPalindrome(s) {
       },
       {
         name: "Manacher 算法",
+        animation: {
+          type: "two-pointers" as const,
+          title: "Manacher算法演示",
+          steps: [
+            {
+              array: ["b", "a", "b", "a", "d"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4], color: "blue" as const, label: "s" },
+              ],
+              description: "s=\"babad\"。Manacher算法O(n)时间",
+            },
+            {
+              array: ["#", "b", "#", "a", "#", "b", "#", "a", "#", "d", "#"],
+              left: 0,
+              right: 10,
+              highlights: [
+                { indices: [0, 2, 4, 6, 8, 10], color: "gray" as const, label: "#" },
+              ],
+              description: "预处理：插入#统一奇偶长度",
+            },
+            {
+              array: ["0", "1", "0", "3", "0", "3", "0", "1", "0", "1", "0"],
+              left: 0,
+              right: 10,
+              highlights: [
+                { indices: [3, 5], color: "green" as const, label: "半径=3" },
+              ],
+              description: "p[i]=以i为中心的回文半径",
+            },
+            {
+              array: ["center", "right"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "边界" },
+              ],
+              description: "利用对称性加速：镜像位置可复用",
+            },
+            {
+              array: ["bab"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "答案" },
+              ],
+              description: "完成！最长回文=\"bab\"(或\"aba\")",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 最长回文子串 - Manacher 算法 (O(n) 最优解)
  *
@@ -3740,6 +4639,66 @@ function longestValidParentheses(s) {
       },
       {
         name: "使用栈",
+        animation: {
+          type: "two-pointers" as const,
+          title: "栈解法演示",
+          steps: [
+            {
+              array: [")", "(", ")", "(", ")", ")"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5], color: "blue" as const, label: "s" },
+              ],
+              description: "s=\")()())\"。栈初始为[-1]作为边界",
+            },
+            {
+              array: [")", "(", ")", "(", ")", ")"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "red" as const, label: ")" },
+              ],
+              description: "i=0遇到')'，pop后栈空，push(0)作为新边界。栈=[0]",
+            },
+            {
+              array: [")", "(", ")", "(", ")", ")"],
+              left: 1,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "yellow" as const, label: "(" },
+              ],
+              description: "i=1遇到'('，push(1)。栈=[0,1]",
+            },
+            {
+              array: [")", "(", ")", "(", ")", ")"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [1, 2], color: "green" as const, label: "匹配()" },
+              ],
+              description: "i=2遇到')'，pop得1，栈不空。len=2-0=2。maxLen=2",
+            },
+            {
+              array: [")", "(", ")", "(", ")", ")"],
+              left: 3,
+              right: 4,
+              highlights: [
+                { indices: [1, 2, 3, 4], color: "green" as const, label: "()()" },
+              ],
+              description: "i=4遇到')'匹配i=3的'('。len=4-0=4。maxLen=4",
+            },
+            {
+              array: [")", "(", ")", "(", ")", ")"],
+              left: 1,
+              right: 4,
+              highlights: [
+                { indices: [1, 2, 3, 4], color: "green" as const, label: "结果" },
+              ],
+              description: "最长有效括号长度为4",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 最长有效括号 - 使用栈解法
  *
@@ -3843,6 +4802,66 @@ function longestValidParentheses(s) {
       },
       {
         name: "双向扫描（空间优化）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "双向扫描演示",
+          steps: [
+            {
+              array: [")", "(", ")", "(", ")", ")"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5], color: "blue" as const, label: "s" },
+              ],
+              description: "s=\")()())\"。用left/right计数器，O(1)空间",
+            },
+            {
+              array: [")", "(", ")", "(", ")", ")"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "red" as const, label: ")" },
+              ],
+              description: "从左到右扫描：i=0遇到')'，R=1>L=0，重置计数器",
+            },
+            {
+              array: [")", "(", ")", "(", ")", ")"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [1, 2], color: "green" as const, label: "L=R=1" },
+              ],
+              description: "i=1-2: L=R=1，找到有效括号，maxLen=2*1=2",
+            },
+            {
+              array: [")", "(", ")", "(", ")", ")"],
+              left: 1,
+              right: 4,
+              highlights: [
+                { indices: [1, 2, 3, 4], color: "green" as const, label: "L=R=2" },
+              ],
+              description: "i=3-4: L=R=2，找到有效括号，maxLen=2*2=4",
+            },
+            {
+              array: [")", "(", ")", "(", ")", ")"],
+              left: 5,
+              right: 5,
+              highlights: [
+                { indices: [5], color: "red" as const, label: ")" },
+              ],
+              description: "i=5: R=3>L=2，重置。从左到右完成，maxLen=4",
+            },
+            {
+              array: [")", "(", ")", "(", ")", ")"],
+              left: 1,
+              right: 4,
+              highlights: [
+                { indices: [1, 2, 3, 4], color: "green" as const, label: "结果" },
+              ],
+              description: "从右到左扫描结果一致。最终答案：4",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 最长有效括号 - 双向扫描（空间最优）
  *
