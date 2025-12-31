@@ -1973,16 +1973,39 @@ triangle[i][j] = triangle[i-1][j-1] + triangle[i-1][j]
     solutions: [
       {
         name: "动态规划（推荐）",
-        code: `function generate(numRows) {
+        code: `/**
+ * 杨辉三角 - 动态规划
+ *
+ * 核心思想：
+ * 杨辉三角每个位置的值 = 上一行左上方的值 + 上一行正上方的值
+ * 即 triangle[i][j] = triangle[i-1][j-1] + triangle[i-1][j]
+ *
+ * 边界条件：
+ * - 每行的第一个和最后一个元素都是 1
+ * - 第 i 行有 i+1 个元素（从 0 开始计数）
+ *
+ * 时间复杂度：O(n²) - 共 1+2+3+...+n = n(n+1)/2 个元素
+ * 空间复杂度：O(1) - 不计算输出数组
+ */
+function generate(numRows) {
+  // 存储最终结果的二维数组
   const result = [];
 
+  // 逐行生成杨辉三角
   for (let i = 0; i < numRows; i++) {
+    // 创建第 i 行，长度为 i+1，初始值全为 1
+    // 这样首尾元素自动就是 1，只需计算中间元素
     const row = new Array(i + 1).fill(1);
 
+    // 计算中间元素（从第 3 行开始才有中间元素）
+    // j 从 1 到 i-1，即跳过首尾的 1
     for (let j = 1; j < i; j++) {
+      // 当前位置 = 上一行的 [j-1] + [j]
+      // 例如：第 3 行的 2 = 第 2 行的 1 + 1
       row[j] = result[i - 1][j - 1] + result[i - 1][j];
     }
 
+    // 将当前行加入结果
     result.push(row);
   }
 
@@ -1991,12 +2014,55 @@ triangle[i][j] = triangle[i-1][j-1] + triangle[i-1][j]
         explanation: `## 动态规划法
 
 ### 核心思想
-每行基于上一行计算。
 
-### 处理流程
-1. 初始化当前行全为 1
-2. 中间元素用公式计算
-3. 将当前行加入结果`,
+\`\`\`
+杨辉三角的数学规律：
+1. 每行首尾都是 1
+2. 中间元素 = 左上 + 右上
+3. 第 n 行有 n 个数（从 1 开始计数）
+\`\`\`
+
+### 杨辉三角的结构
+
+\`\`\`
+        1           第 0 行：1 个元素
+       1 1          第 1 行：2 个元素
+      1 2 1         第 2 行：3 个元素
+     1 3 3 1        第 3 行：4 个元素
+    1 4 6 4 1       第 4 行：5 个元素
+
+triangle[2][1] = 2 = triangle[1][0] + triangle[1][1] = 1 + 1
+triangle[4][2] = 6 = triangle[3][1] + triangle[3][2] = 3 + 3
+\`\`\`
+
+### DP 推导
+
+\`\`\`
+状态：triangle[i][j] = 第 i 行第 j 个数的值
+转移：triangle[i][j] = triangle[i-1][j-1] + triangle[i-1][j]
+边界：triangle[i][0] = triangle[i][i] = 1
+方向：从上到下，从左到右
+答案：整个 triangle 数组
+\`\`\`
+
+### 执行过程
+
+\`\`\`
+numRows = 5
+
+i=0: row = [1]
+i=1: row = [1, 1]
+i=2: row = [1, 1+1=2, 1]
+i=3: row = [1, 1+2=3, 2+1=3, 1]
+i=4: row = [1, 1+3=4, 3+3=6, 3+1=4, 1]
+
+结果：[[1],[1,1],[1,2,1],[1,3,3,1],[1,4,6,4,1]]
+\`\`\`
+
+### 复杂度分析
+
+- 时间：O(n²) - 生成 n(n+1)/2 个元素
+- 空间：O(1) - 除输出外无额外空间`,
         timeComplexity: "O(n²)",
         spaceComplexity: "O(1)",
       },
@@ -2098,21 +2164,54 @@ minProd = min(num, minProd * num)
     solutions: [
       {
         name: "动态规划（推荐）",
-        code: `function maxProduct(nums) {
+        code: `/**
+ * 乘积最大子数组 - 动态规划
+ *
+ * 核心思想：
+ * 与最大子数组和不同，乘积有一个特殊性质：负负得正！
+ * 所以我们需要同时维护以当前位置结尾的 最大乘积 和 最小乘积。
+ *
+ * 为什么需要最小乘积？
+ * - 当遇到负数时，最小乘积（可能是负数）乘以负数会变成最大乘积
+ * - 例如：[-2, 3, -4]，当遍历到 -4 时，之前的最小乘积 -6 乘以 -4 = 24
+ *
+ * 状态定义：
+ * - maxProd：以当前元素结尾的最大乘积
+ * - minProd：以当前元素结尾的最小乘积
+ *
+ * 状态转移（遇到负数时交换 max 和 min）：
+ * - maxProd = max(num, maxProd * num)
+ * - minProd = min(num, minProd * num)
+ *
+ * 时间复杂度：O(n) - 单次遍历
+ * 空间复杂度：O(1) - 只用常数变量
+ */
+function maxProduct(nums) {
+  // maxProd：以当前位置结尾的子数组的最大乘积
   let maxProd = nums[0];
+  // minProd：以当前位置结尾的子数组的最小乘积（用于处理负数）
   let minProd = nums[0];
+  // result：全局最大乘积
   let result = nums[0];
 
+  // 从第二个元素开始遍历
   for (let i = 1; i < nums.length; i++) {
     const num = nums[i];
 
+    // 关键技巧：如果当前数是负数，交换 maxProd 和 minProd
+    // 因为负数会使大的变小、小的变大
+    // 交换后，原来的 minProd（最小负数）乘以负数会变成最大正数
     if (num < 0) {
       [maxProd, minProd] = [minProd, maxProd];
     }
 
+    // 状态转移：
+    // 要么从当前位置重新开始（num 本身）
+    // 要么接在前面的子数组后面（maxProd/minProd * num）
     maxProd = Math.max(num, maxProd * num);
     minProd = Math.min(num, minProd * num);
 
+    // 更新全局最大值
     result = Math.max(result, maxProd);
   }
 
@@ -2121,13 +2220,95 @@ minProd = min(num, minProd * num)
         explanation: `## 动态规划法
 
 ### 核心思想
-同时维护最大和最小乘积。
 
-### 为什么需要最小值？
-因为负数会使最小变最大。
+\`\`\`
+乘积与求和的关键区别：负负得正！
+
+例如：nums = [-2, 3, -4]
+- 如果只维护最大乘积：
+  位置 0: max = -2
+  位置 1: max = max(-2*3, 3) = 3
+  位置 2: max = max(3*-4, -4) = -4  ❌ 错误！
+
+- 同时维护最大和最小乘积：
+  位置 0: max = -2, min = -2
+  位置 1: max = 3,  min = -6
+  位置 2: 遇到负数，交换 → max = -6, min = 3
+         max = max(-6*-4, -4) = 24  ✓ 正确！
+\`\`\`
+
+### 为什么需要最小乘积？
+
+\`\`\`
+三种情况可能产生最大乘积：
+
+1. 正数 × 正数 → 需要之前的最大乘积
+2. 负数 × 负数 → 需要之前的最小乘积（可能是负数）
+3. 当前数本身（重新开始）
+
+所以必须同时维护 max 和 min！
+\`\`\`
 
 ### 交换技巧
-遇到负数时交换 max 和 min。`,
+
+\`\`\`
+当 nums[i] < 0 时：
+- maxProd * nums[i] 会变成很小的数（负数）
+- minProd * nums[i] 会变成很大的数（正数）
+
+所以在计算前先交换，让逻辑更清晰：
+if (num < 0) swap(maxProd, minProd)
+\`\`\`
+
+### 执行过程
+
+\`\`\`
+nums = [2, 3, -2, 4]
+
+初始：maxProd = 2, minProd = 2, result = 2
+
+i=1, num=3 (正数，不交换)：
+  maxProd = max(3, 2*3) = 6
+  minProd = min(3, 2*3) = 3
+  result = max(2, 6) = 6
+
+i=2, num=-2 (负数，交换)：
+  交换后：maxProd = 3, minProd = 6
+  maxProd = max(-2, 3*-2) = -2
+  minProd = min(-2, 6*-2) = -12
+  result = max(6, -2) = 6
+
+i=3, num=4 (正数，不交换)：
+  maxProd = max(4, -2*4) = 4
+  minProd = min(4, -12*4) = -48
+  result = max(6, 4) = 6
+
+答案：6（子数组 [2, 3]）
+\`\`\`
+
+### 处理零的情况
+
+\`\`\`
+nums = [-2, 0, -1]
+
+i=0: max = -2, min = -2, result = -2
+i=1, num=0:
+  max = max(0, -2*0) = 0
+  min = min(0, -2*0) = 0
+  result = max(-2, 0) = 0
+i=2, num=-1:
+  交换后：max = 0, min = 0
+  max = max(-1, 0*-1) = 0
+  min = min(-1, 0*-1) = -1
+  result = max(0, 0) = 0
+
+零会"切断"乘积链，相当于重新开始！
+\`\`\`
+
+### 复杂度分析
+
+- 时间：O(n) - 单次遍历
+- 空间：O(1) - 常数变量`,
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
       },
@@ -2230,76 +2411,243 @@ dp[j] = dp[j] || dp[j - num]
     solutions: [
       {
         name: "一维 DP（推荐）",
-        code: `function canPartition(nums) {
+        code: `/**
+ * 分割等和子集 - 一维 DP（0-1 背包空间优化）
+ *
+ * 核心思想：
+ * 问题转化：能否将数组分成两个和相等的子集？
+ * → 等价于：能否从数组中选出若干元素，使其和 = 总和 / 2？
+ * → 这是经典的 0-1 背包问题！
+ *
+ * 0-1 背包类比：
+ * - 背包容量 = sum / 2
+ * - 物品重量 = nums[i]
+ * - 目标：能否恰好装满背包？
+ *
+ * 状态定义：dp[j] = 能否选出若干元素使得和为 j
+ * 状态转移：dp[j] = dp[j] || dp[j - num]
+ *           （不选当前元素）||（选当前元素）
+ *
+ * 关键：从后往前遍历 j，避免同一元素被重复使用（0-1 背包特性）
+ *
+ * 时间复杂度：O(n × target) - n 个元素，每个元素遍历 target 次
+ * 空间复杂度：O(target) - 一维 dp 数组
+ */
+function canPartition(nums) {
+  // 计算数组总和
   const sum = nums.reduce((a, b) => a + b, 0);
 
+  // 如果总和是奇数，不可能分成两个相等的子集
   if (sum % 2 !== 0) return false;
 
+  // 目标值：总和的一半
   const target = sum / 2;
+
+  // dp[j] 表示能否选出若干元素使得和为 j
+  // 初始化为 false
   const dp = new Array(target + 1).fill(false);
+  // 基础情况：和为 0 总是可达的（不选任何元素）
   dp[0] = true;
 
+  // 遍历每个元素（相当于遍历每个物品）
   for (const num of nums) {
+    // 从后往前遍历！这是 0-1 背包的关键
+    // 如果从前往后，同一个 num 可能被重复使用
     for (let j = target; j >= num; j--) {
+      // dp[j] = dp[j] || dp[j - num]
+      // 不选 num：dp[j] 保持不变
+      // 选 num：如果 dp[j - num] 为 true，则 dp[j] 也为 true
       dp[j] = dp[j] || dp[j - num];
     }
   }
 
+  // 返回能否恰好凑出 target
   return dp[target];
 }`,
-        explanation: `## 一维 DP
+        explanation: `## 一维 DP（0-1 背包空间优化）
 
-### 核心思想
-空间优化的 0-1 背包。
+### 问题转化
 
-### 关键点
-1. 总和必须是偶数
-2. 从后往前遍历
-3. dp[0] = true 表示和为 0 总是可达`,
+\`\`\`
+原问题：能否将数组分成两个和相等的子集？
+
+转化分析：
+- 如果能分成两个和相等的子集
+- 那么每个子集的和 = 总和 / 2
+- 所以问题变成：能否选出若干元素使和 = sum/2？
+
+这就是经典的 0-1 背包问题！
+\`\`\`
+
+### 0-1 背包类比
+
+\`\`\`
+背包问题           本题
+────────          ────────
+背包容量           sum / 2
+物品重量           nums[i]
+能否恰好装满？     能否选出元素和 = target？
+\`\`\`
+
+### 为什么从后往前遍历？
+
+\`\`\`
+从前往后的问题：同一元素被重复使用
+
+例：nums = [1, 5], target = 2
+dp = [true, false, false]
+
+从前往后处理 num=1：
+  j=1: dp[1] = dp[1] || dp[0] = true
+  j=2: dp[2] = dp[2] || dp[1] = true  ← 错误！1 被用了两次
+
+从后往前处理 num=1：
+  j=2: dp[2] = dp[2] || dp[1] = false
+  j=1: dp[1] = dp[1] || dp[0] = true  ← 正确！
+\`\`\`
+
+### 执行过程
+
+\`\`\`
+nums = [1, 5, 11, 5], sum = 22, target = 11
+
+初始 dp = [T, F, F, F, F, F, F, F, F, F, F, F]
+          0  1  2  3  4  5  6  7  8  9  10 11
+
+处理 num=1（从后往前）：
+  j=1: dp[1] = dp[1] || dp[0] = T
+  dp = [T, T, F, F, F, F, F, F, F, F, F, F]
+
+处理 num=5（从后往前）：
+  j=6: dp[6] = dp[6] || dp[1] = T
+  j=5: dp[5] = dp[5] || dp[0] = T
+  dp = [T, T, F, F, F, T, T, F, F, F, F, F]
+
+处理 num=11（从后往前）：
+  j=11: dp[11] = dp[11] || dp[0] = T  ← 找到！
+  ...
+  dp = [T, T, F, F, F, T, T, F, F, F, F, T]
+
+dp[11] = true，可以分割！
+\`\`\`
+
+### 复杂度分析
+
+- 时间：O(n × target)
+- 空间：O(target) - 比二维优化很多！`,
         timeComplexity: "O(n × target)",
         spaceComplexity: "O(target)",
       },
       {
         name: "二维 DP（易理解）",
-        code: `function canPartition(nums) {
+        code: `/**
+ * 分割等和子集 - 二维 DP（标准 0-1 背包）
+ *
+ * 核心思想：
+ * 用二维数组表示状态，更容易理解 0-1 背包的本质。
+ * dp[i][j] = 前 i 个数能否选出若干数使和为 j
+ *
+ * 状态转移：
+ * - 不选第 i 个数：dp[i][j] = dp[i-1][j]
+ * - 选第 i 个数：dp[i][j] = dp[i-1][j-num]（前提：j >= num）
+ * - 综合：dp[i][j] = dp[i-1][j] || dp[i-1][j-num]
+ *
+ * 时间复杂度：O(n × target)
+ * 空间复杂度：O(n × target) - 二维 dp 数组
+ */
+function canPartition(nums) {
+  // 计算总和
   const sum = nums.reduce((a, b) => a + b, 0);
 
+  // 奇数无法等分
   if (sum % 2 !== 0) return false;
 
   const n = nums.length;
   const target = sum / 2;
+
+  // dp[i][j] = 前 i 个数能否选出若干数使和为 j
+  // 创建 (n+1) × (target+1) 的二维数组
   const dp = Array.from({ length: n + 1 }, () => new Array(target + 1).fill(false));
 
-  // 和为 0 总是可达
+  // 基础情况：和为 0 总是可达（不选任何数）
   for (let i = 0; i <= n; i++) {
     dp[i][0] = true;
   }
 
+  // 遍历每个数（物品）
   for (let i = 1; i <= n; i++) {
-    const num = nums[i - 1];
+    const num = nums[i - 1];  // 当前数（注意索引偏移）
+
+    // 遍历每个目标和（背包容量）
     for (let j = 1; j <= target; j++) {
       if (j < num) {
+        // 当前数太大，无法选择，只能不选
         dp[i][j] = dp[i - 1][j];
       } else {
+        // 可以选或不选
+        // 不选：dp[i-1][j]
+        // 选：dp[i-1][j-num]（前 i-1 个数凑出 j-num，再加上 num）
         dp[i][j] = dp[i - 1][j] || dp[i - 1][j - num];
       }
     }
   }
 
+  // 前 n 个数能否凑出 target
   return dp[n][target];
 }`,
-        explanation: `## 二维 DP
+        explanation: `## 二维 DP（标准 0-1 背包）
 
 ### 状态定义
+
+\`\`\`
 dp[i][j] = 前 i 个数能否选出若干数使和为 j
 
-### 状态转移
-- 不选第 i 个数：dp[i-1][j]
-- 选第 i 个数：dp[i-1][j-num]
+例：dp[3][5] = true 表示前 3 个数能选出若干数凑出和为 5
+\`\`\`
 
-### 特点
-- 更容易理解
-- 空间复杂度 O(n × target)`,
+### 状态转移
+
+\`\`\`
+对于第 i 个数 nums[i-1]，有两种选择：
+
+1. 不选它：dp[i][j] = dp[i-1][j]
+   （不用这个数，看前 i-1 个数能否凑出 j）
+
+2. 选它（前提 j >= num）：dp[i][j] = dp[i-1][j-num]
+   （用这个数，看前 i-1 个数能否凑出 j-num）
+
+综合：dp[i][j] = dp[i-1][j] || dp[i-1][j-num]
+\`\`\`
+
+### DP 表格示例
+
+\`\`\`
+nums = [1, 5, 11, 5], target = 11
+
+     j:  0   1   2   3   4   5   6   7   8   9  10  11
+i=0:    [T] [F] [F] [F] [F] [F] [F] [F] [F] [F] [F] [F]
+i=1(1): [T] [T] [F] [F] [F] [F] [F] [F] [F] [F] [F] [F]
+i=2(5): [T] [T] [F] [F] [F] [T] [T] [F] [F] [F] [F] [F]
+i=3(11):[T] [T] [F] [F] [F] [T] [T] [F] [F] [F] [F] [T]
+i=4(5): [T] [T] [F] [F] [F] [T] [T] [F] [F] [F] [T] [T]
+
+dp[4][11] = T，可以分割！
+子集：[1, 5, 5] 和 [11]
+\`\`\`
+
+### 与一维 DP 对比
+
+\`\`\`
+二维 DP：更容易理解，空间 O(n × target)
+一维 DP：空间优化后，只需 O(target)
+
+一维是二维的滚动优化，每一行只依赖上一行
+\`\`\`
+
+### 复杂度分析
+
+- 时间：O(n × target)
+- 空间：O(n × target)`,
         timeComplexity: "O(n × target)",
         spaceComplexity: "O(n × target)",
       },
@@ -2391,85 +2739,269 @@ dp[i][j] = 前 i 个数能否选出若干数使和为 j
     solutions: [
       {
         name: "Kadane 算法（推荐）",
-        code: `function maxSubArray(nums) {
+        code: `/**
+ * 最大子数组和 - Kadane 算法（空间优化的 DP）
+ *
+ * 核心思想：
+ * Kadane 算法是动态规划的空间优化版本，只用两个变量：
+ * - currentSum：以当前元素结尾的最大子数组和
+ * - maxSum：全局最大子数组和
+ *
+ * 对于每个位置 i，有两个选择：
+ * 1. 加入前面的子数组：currentSum + nums[i]
+ * 2. 从当前位置重新开始：nums[i]
+ *
+ * 选择较大的那个作为新的 currentSum。
+ *
+ * 直觉理解：
+ * 如果前面的累加和是负数，还不如直接丢弃，从当前位置重新开始！
+ *
+ * 时间复杂度：O(n) - 单次遍历
+ * 空间复杂度：O(1) - 只用常数变量
+ */
+function maxSubArray(nums) {
+  // maxSum：记录全局最大子数组和
   let maxSum = nums[0];
+  // currentSum：记录以当前元素结尾的最大子数组和
   let currentSum = nums[0];
 
+  // 从第二个元素开始遍历
   for (let i = 1; i < nums.length; i++) {
-    // 要么加入当前子数组，要么从当前位置重新开始
+    // 核心决策：要么加入前面的子数组，要么从当前位置重新开始
+    // 如果 currentSum < 0，还不如直接从 nums[i] 重新开始
     currentSum = Math.max(nums[i], currentSum + nums[i]);
+    // 更新全局最大值
     maxSum = Math.max(maxSum, currentSum);
   }
 
   return maxSum;
 }`,
-        explanation: `## Kadane 算法
+        explanation: `## Kadane 算法（空间优化的 DP）
 
-### 思路
-1. currentSum 记录以当前元素结尾的最大子数组和
-2. 每个位置选择：加入前面的子数组 or 重新开始
-3. maxSum 记录全局最大值
+### 核心思想
 
-### 要点
-- 时间 O(n)，空间 O(1)
-- 最经典的动态规划空间优化`,
+\`\`\`
+关键洞察：如果前面的累加和是负数，还不如丢弃！
+
+例如：nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+
+遍历到 4 时，前面的累加和是 -2 + 1 - 3 = -4
+-4 + 4 = 0 < 4
+所以从 4 重新开始更好！
+\`\`\`
+
+### 算法本质
+
+\`\`\`
+Kadane 算法本质是 DP 的空间优化：
+
+原始 DP：dp[i] = max(nums[i], dp[i-1] + nums[i])
+优化后：currentSum = max(nums[i], currentSum + nums[i])
+
+因为 dp[i] 只依赖 dp[i-1]，所以只需一个变量！
+\`\`\`
+
+### 执行过程
+
+\`\`\`
+nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+
+i=0: currentSum = -2, maxSum = -2
+i=1: currentSum = max(1, -2+1) = max(1, -1) = 1, maxSum = 1
+i=2: currentSum = max(-3, 1-3) = max(-3, -2) = -2, maxSum = 1
+i=3: currentSum = max(4, -2+4) = max(4, 2) = 4, maxSum = 4
+i=4: currentSum = max(-1, 4-1) = max(-1, 3) = 3, maxSum = 4
+i=5: currentSum = max(2, 3+2) = max(2, 5) = 5, maxSum = 5
+i=6: currentSum = max(1, 5+1) = max(1, 6) = 6, maxSum = 6
+i=7: currentSum = max(-5, 6-5) = max(-5, 1) = 1, maxSum = 6
+i=8: currentSum = max(4, 1+4) = max(4, 5) = 5, maxSum = 6
+
+答案：6（子数组 [4, -1, 2, 1]）
+\`\`\`
+
+### 处理全负数数组
+
+\`\`\`
+nums = [-3, -1, -2]
+
+i=0: currentSum = -3, maxSum = -3
+i=1: currentSum = max(-1, -3-1) = max(-1, -4) = -1, maxSum = -1
+i=2: currentSum = max(-2, -1-2) = max(-2, -3) = -2, maxSum = -1
+
+答案：-1（选最大的那个负数）
+\`\`\`
+
+### 复杂度分析
+
+- 时间：O(n) - 只需一次遍历
+- 空间：O(1) - 只用两个变量`,
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
       },
       {
         name: "动态规划（标准写法）",
-        code: `function maxSubArray(nums) {
+        code: `/**
+ * 最大子数组和 - 动态规划（标准写法）
+ *
+ * 核心思想：
+ * 定义 dp[i] 为以 nums[i] 结尾的最大子数组和。
+ * 注意：必须以 nums[i] 结尾！这是关键。
+ *
+ * 状态转移：
+ * dp[i] = max(nums[i], dp[i-1] + nums[i])
+ *
+ * 两种选择：
+ * - nums[i]：从当前位置重新开始（放弃前面的子数组）
+ * - dp[i-1] + nums[i]：接在前面的子数组后面
+ *
+ * 答案：max(dp[i]) for all i
+ * 注意：答案不是 dp[n-1]！因为最大子数组不一定以最后一个元素结尾。
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(n) - dp 数组
+ */
+function maxSubArray(nums) {
   const n = nums.length;
+  // dp[i] = 以 nums[i] 结尾的最大子数组和
   const dp = new Array(n);
+  // 基础情况：第一个元素自成一个子数组
   dp[0] = nums[0];
+  // 记录全局最大值
   let maxSum = dp[0];
 
+  // 从第二个元素开始
   for (let i = 1; i < n; i++) {
+    // 状态转移：要么从当前位置开始，要么接在前面后面
     dp[i] = Math.max(nums[i], dp[i - 1] + nums[i]);
+    // 更新全局最大值
     maxSum = Math.max(maxSum, dp[i]);
   }
 
   return maxSum;
 }`,
-        explanation: `## 动态规划
+        explanation: `## 动态规划（标准写法）
 
 ### 状态定义
+
+\`\`\`
 dp[i] = 以 nums[i] 结尾的最大子数组和
 
-### 状态转移
-dp[i] = max(nums[i], dp[i-1] + nums[i])
+关键：必须以 nums[i] 结尾！
 
-### 特点
-- 更容易理解
-- 空间 O(n)，可优化为 O(1)`,
+这样定义的好处：
+- 保证子数组是连续的
+- 状态转移只需考虑是否连接前一个状态
+\`\`\`
+
+### DP 五要素
+
+\`\`\`
+1. 状态：dp[i] = 以 nums[i] 结尾的最大和
+2. 转移：dp[i] = max(nums[i], dp[i-1] + nums[i])
+3. 初始：dp[0] = nums[0]
+4. 方向：从左到右
+5. 答案：max(dp[i])（不是 dp[n-1]！）
+\`\`\`
+
+### 为什么答案是 max(dp) 而不是 dp[n-1]？
+
+\`\`\`
+例：nums = [2, 1, -5, 4, -2]
+
+dp[0] = 2
+dp[1] = max(1, 2+1) = 3  ← 最大！
+dp[2] = max(-5, 3-5) = -2
+dp[3] = max(4, -2+4) = 4
+dp[4] = max(-2, 4-2) = 2
+
+最大子数组和 = max(dp) = 3，不是 dp[4] = 2
+最大子数组是 [2, 1]，不以最后一个元素结尾！
+\`\`\`
+
+### 执行过程可视化
+
+\`\`\`
+nums =  [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+dp =    [-2, 1, -2, 4,  3, 5, 6,  1, 5]
+                      ↑           ↑
+                    max          max
+                  子数组       子数组
+                  [4]      [4,-1,2,1]
+
+最终答案 = max(dp) = 6
+\`\`\`
+
+### 复杂度分析
+
+- 时间：O(n)
+- 空间：O(n) - 可优化为 O(1)`,
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
       {
         name: "分治法",
-        code: `function maxSubArray(nums) {
+        code: `/**
+ * 最大子数组和 - 分治法
+ *
+ * 核心思想：
+ * 将数组分成左右两半，最大子数组只有三种可能：
+ * 1. 完全在左半部分
+ * 2. 完全在右半部分
+ * 3. 跨越中点（左右都有一部分）
+ *
+ * 递归求解左右两半，再计算跨越中点的最大和，取三者最大值。
+ *
+ * 跨越中点的计算：
+ * - 从中点向左找最大和（必须包含 mid）
+ * - 从中点向右找最大和（必须包含 mid+1）
+ * - 两者相加
+ *
+ * 时间复杂度：O(n log n) - T(n) = 2T(n/2) + O(n)
+ * 空间复杂度：O(log n) - 递归栈深度
+ */
+function maxSubArray(nums) {
+  // 调用辅助函数，传入数组和边界
   return maxSubArrayHelper(nums, 0, nums.length - 1);
 }
 
+/**
+ * 递归辅助函数
+ * @param {number[]} nums - 原数组
+ * @param {number} left - 左边界
+ * @param {number} right - 右边界
+ * @returns {number} - [left, right] 范围内的最大子数组和
+ */
 function maxSubArrayHelper(nums, left, right) {
+  // 基础情况：只有一个元素
   if (left === right) {
     return nums[left];
   }
 
+  // 找中点
   const mid = Math.floor((left + right) / 2);
 
-  // 左半部分最大子数组和
+  // 递归求解左半部分的最大子数组和
   const leftMax = maxSubArrayHelper(nums, left, mid);
-  // 右半部分最大子数组和
+  // 递归求解右半部分的最大子数组和
   const rightMax = maxSubArrayHelper(nums, mid + 1, right);
-  // 跨越中点的最大子数组和
+  // 计算跨越中点的最大子数组和
   const crossMax = maxCrossingSum(nums, left, mid, right);
 
+  // 返回三者中的最大值
   return Math.max(leftMax, rightMax, crossMax);
 }
 
+/**
+ * 计算跨越中点的最大子数组和
+ * @param {number[]} nums - 原数组
+ * @param {number} left - 左边界
+ * @param {number} mid - 中点
+ * @param {number} right - 右边界
+ * @returns {number} - 跨越中点的最大和
+ */
 function maxCrossingSum(nums, left, mid, right) {
-  // 从中点向左扩展
+  // 从中点向左扩展，找到左半部分的最大和
+  // 必须包含 nums[mid]
   let leftSum = -Infinity;
   let sum = 0;
   for (let i = mid; i >= left; i--) {
@@ -2477,7 +3009,8 @@ function maxCrossingSum(nums, left, mid, right) {
     leftSum = Math.max(leftSum, sum);
   }
 
-  // 从中点向右扩展
+  // 从中点向右扩展，找到右半部分的最大和
+  // 必须包含 nums[mid + 1]
   let rightSum = -Infinity;
   sum = 0;
   for (let i = mid + 1; i <= right; i++) {
@@ -2485,24 +3018,80 @@ function maxCrossingSum(nums, left, mid, right) {
     rightSum = Math.max(rightSum, sum);
   }
 
+  // 返回跨越中点的总和
   return leftSum + rightSum;
 }`,
         explanation: `## 分治法
 
-### 思路
-将数组分成两半，最大子数组要么在：
-1. 左半部分
-2. 右半部分
-3. 跨越中点
+### 核心思想
+
+\`\`\`
+将问题分解为三个子问题：
+
+最大子数组在哪里？
+1. 完全在左半部分 → 递归求解
+2. 完全在右半部分 → 递归求解
+3. 跨越中点 → 单独计算
+\`\`\`
+
+### 分治示意图
+
+\`\`\`
+nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+
+             [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+                        /    \\
+           [-2, 1, -3, 4]    [-1, 2, 1, -5, 4]
+              /    \\              /    \\
+          [-2, 1] [-3, 4]    [-1, 2] [1, -5, 4]
+            ...     ...        ...     ...
+
+三种情况：
+- 左半部分最大：在 [-2, 1, -3, 4] 中
+- 右半部分最大：在 [-1, 2, 1, -5, 4] 中
+- 跨越中点：... 4, -1 ... 必须包含 4 和 -1
+\`\`\`
 
 ### 跨越中点的计算
-- 从中点向左找最大和
-- 从中点向右找最大和
-- 两者相加
 
-### 复杂度
-- 时间 O(n log n)
-- 空间 O(log n) 递归栈`,
+\`\`\`
+mid = 3 (元素 4)
+
+向左扩展（必须包含 nums[3]=4）：
+  i=3: sum=4, leftSum=4
+  i=2: sum=4-3=1, leftSum=4
+  i=1: sum=1+1=2, leftSum=4
+  i=0: sum=2-2=0, leftSum=4
+  → leftSum = 4
+
+向右扩展（必须包含 nums[4]=-1）：
+  i=4: sum=-1, rightSum=-1
+  i=5: sum=-1+2=1, rightSum=1
+  i=6: sum=1+1=2, rightSum=2
+  i=7: sum=2-5=-3, rightSum=2
+  i=8: sum=-3+4=1, rightSum=2
+  → rightSum = 2
+
+跨越中点的最大和 = 4 + 2 = 6
+\`\`\`
+
+### 时间复杂度分析
+
+\`\`\`
+递推关系：T(n) = 2T(n/2) + O(n)
+
+根据主定理（Master Theorem）：
+- a = 2, b = 2, d = 1
+- a = b^d
+- T(n) = O(n log n)
+
+不如 Kadane 算法的 O(n)，但展示了分治思想！
+\`\`\`
+
+### 复杂度分析
+
+- 时间：O(n log n)
+- 空间：O(log n) - 递归栈深度`,
         timeComplexity: "O(n log n)",
         spaceComplexity: "O(log n)",
       },
@@ -2584,57 +3173,163 @@ function maxCrossingSum(nums, left, mid, right) {
     solutions: [
       {
         name: "动态规划（推荐）",
-        code: `function numSquares(n) {
+        code: `/**
+ * 完全平方数 - 动态规划（完全背包）
+ *
+ * 核心思想：
+ * 将问题看作完全背包问题：
+ * - 背包容量 = n
+ * - 物品 = 所有完全平方数 (1, 4, 9, 16, ...)
+ * - 每个物品可以使用无限次（完全背包）
+ * - 目标：恰好装满背包所需的最少物品数
+ *
+ * 状态定义：dp[i] = 和为 i 的完全平方数的最少数量
+ * 状态转移：dp[i] = min(dp[i - j*j] + 1) for all j*j <= i
+ *
+ * 时间复杂度：O(n × √n) - 外层 n，内层 √n 个完全平方数
+ * 空间复杂度：O(n) - dp 数组
+ */
+function numSquares(n) {
+  // dp[i] = 和为 i 的完全平方数的最少数量
+  // 初始化为 Infinity，表示还未计算
   const dp = new Array(n + 1).fill(Infinity);
+  // 基础情况：和为 0 不需要任何完全平方数
   dp[0] = 0;
 
+  // 遍历每个目标和 i
   for (let i = 1; i <= n; i++) {
+    // 尝试每个可能的完全平方数 j*j
+    // j 从 1 开始，直到 j*j <= i
     for (let j = 1; j * j <= i; j++) {
+      // 选择 j*j 这个完全平方数
+      // dp[i - j*j] + 1：先凑出 i - j*j，再加一个 j*j
       dp[i] = Math.min(dp[i], dp[i - j * j] + 1);
     }
   }
 
   return dp[n];
 }`,
-        explanation: `## 动态规划
+        explanation: `## 动态规划（完全背包）
 
-### 思路
-类似完全背包问题，每个完全平方数可以使用无限次。
+### 问题转化
 
-### 状态转移
-dp[i] = min(dp[i - j*j] + 1) 对于所有 j*j <= i
+\`\`\`
+原问题：n 最少能拆成几个完全平方数之和？
 
-### 要点
-- 初始化 dp[0] = 0
-- 其他初始化为 Infinity`,
+转化为完全背包：
+- 背包容量：n
+- 物品：1, 4, 9, 16, 25, ... (完全平方数)
+- 每个物品可用无限次
+- 目标：恰好装满背包的最少物品数
+\`\`\`
+
+### DP 五要素
+
+\`\`\`
+1. 状态：dp[i] = 和为 i 的完全平方数的最少数量
+2. 转移：dp[i] = min(dp[i - j²] + 1) for j² ≤ i
+3. 初始：dp[0] = 0，其他为 Infinity
+4. 方向：从小到大
+5. 答案：dp[n]
+\`\`\`
+
+### 状态转移解释
+
+\`\`\`
+dp[12] 怎么算？
+
+可以由以下状态转移而来：
+- dp[12 - 1] + 1 = dp[11] + 1  (选 1)
+- dp[12 - 4] + 1 = dp[8] + 1   (选 4)
+- dp[12 - 9] + 1 = dp[3] + 1   (选 9)
+
+取最小值！
+\`\`\`
+
+### 执行过程
+
+\`\`\`
+n = 12
+
+dp[0] = 0
+dp[1] = dp[0] + 1 = 1       (1 = 1)
+dp[2] = dp[1] + 1 = 2       (2 = 1+1)
+dp[3] = dp[2] + 1 = 3       (3 = 1+1+1)
+dp[4] = min(dp[3]+1, dp[0]+1) = 1  (4 = 4)
+dp[5] = min(dp[4]+1, dp[1]+1) = 2  (5 = 4+1)
+dp[6] = min(dp[5]+1, dp[2]+1) = 3  (6 = 4+1+1)
+dp[7] = min(dp[6]+1, dp[3]+1) = 4  (7 = 4+1+1+1)
+dp[8] = min(dp[7]+1, dp[4]+1) = 2  (8 = 4+4)
+dp[9] = min(dp[8]+1, dp[5]+1, dp[0]+1) = 1  (9 = 9)
+dp[10] = min(dp[9]+1, dp[6]+1, dp[1]+1) = 2  (10 = 9+1)
+dp[11] = min(dp[10]+1, dp[7]+1, dp[2]+1) = 3  (11 = 9+1+1)
+dp[12] = min(dp[11]+1, dp[8]+1, dp[3]+1) = 3  (12 = 4+4+4)
+
+答案：3
+\`\`\`
+
+### 与零钱兑换对比
+
+\`\`\`
+零钱兑换：coins = [1, 2, 5], amount = 11
+完全平方数：coins = [1, 4, 9, 16, ...], amount = n
+
+本质是同一类问题！
+\`\`\`
+
+### 复杂度分析
+
+- 时间：O(n × √n) - 完全平方数个数是 √n
+- 空间：O(n)`,
         timeComplexity: "O(n × √n)",
         spaceComplexity: "O(n)",
       },
       {
         name: "BFS",
-        code: `function numSquares(n) {
+        code: `/**
+ * 完全平方数 - BFS 广度优先搜索
+ *
+ * 核心思想：
+ * 将问题转化为图的最短路径问题：
+ * - 节点：0 到 n 的所有整数
+ * - 边：如果 i - j² >= 0，则 i 到 i - j² 有边（权重为 1）
+ * - 目标：从 n 到 0 的最短路径长度
+ *
+ * BFS 的特点：第一次到达目标节点时，路径长度一定是最短的。
+ *
+ * 时间复杂度：O(n × √n) - 每个节点最多入队一次，每个节点有 √n 条边
+ * 空间复杂度：O(n) - visited 集合 + 队列
+ */
+function numSquares(n) {
+  // 预计算所有可能用到的完全平方数
   const squares = [];
   for (let i = 1; i * i <= n; i++) {
     squares.push(i * i);
   }
 
-  const queue = [n];
-  const visited = new Set([n]);
-  let level = 0;
+  // BFS 初始化
+  const queue = [n];        // 从 n 开始
+  const visited = new Set([n]);  // 记录已访问的节点
+  let level = 0;            // 当前层数（即使用的完全平方数个数）
 
   while (queue.length > 0) {
-    level++;
+    level++;  // 进入下一层
     const size = queue.length;
 
+    // 遍历当前层的所有节点
     for (let i = 0; i < size; i++) {
       const curr = queue.shift();
 
+      // 尝试减去每个完全平方数
       for (const sq of squares) {
         const next = curr - sq;
 
+        // 如果恰好减到 0，找到答案！
         if (next === 0) return level;
+        // 如果 next < 0，后面的完全平方数更大，都不用尝试了
         if (next < 0) break;
 
+        // 如果未访问过，加入队列
         if (!visited.has(next)) {
           visited.add(next);
           queue.push(next);
@@ -2645,61 +3340,209 @@ dp[i] = min(dp[i - j*j] + 1) 对于所有 j*j <= i
 
   return level;
 }`,
-        explanation: `## BFS
+        explanation: `## BFS 广度优先搜索
 
-### 思路
-把问题看作图的最短路径问题：
-- 节点：0 到 n 的整数
-- 边：两数相差一个完全平方数
-- 求 n 到 0 的最短路径
+### 问题建模
 
-### 特点
-- 可以提前终止
-- 空间占用较大`,
+\`\`\`
+将问题看作图的最短路径：
+
+节点：0, 1, 2, ..., n
+边：如果 i - j² >= 0，则 i → i - j² 有边
+
+例：n = 12
+12 → 11 (减 1)
+12 → 8  (减 4)
+12 → 3  (减 9)
+
+目标：找 n → 0 的最短路径
+\`\`\`
+
+### 为什么用 BFS？
+
+\`\`\`
+BFS 的核心特性：
+每条边权重相同时，BFS 第一次到达目标就是最短路径！
+
+因为 BFS 是"层序遍历"：
+- 第 1 层：减去 1 个完全平方数能到达的所有数
+- 第 2 层：减去 2 个完全平方数能到达的所有数
+- ...
+
+第一次到达 0 时，所在的层数就是答案！
+\`\`\`
+
+### 执行过程
+
+\`\`\`
+n = 12, squares = [1, 4, 9]
+
+level=1: queue=[12]
+  12-1=11, 12-4=8, 12-9=3
+  queue=[11, 8, 3]
+
+level=2: queue=[11, 8, 3]
+  11→[10,7,2], 8→[7,4], 3→[2]
+  queue=[10, 7, 2, 4]  (去重)
+
+level=3: queue=[10, 7, 2, 4]
+  10→[9,6,1], 7→[6,3], 2→[1], 4→[3,0]
+                                    ↑
+                              找到 0！
+
+答案：3
+\`\`\`
+
+### 与 DP 对比
+
+\`\`\`
+DP：必须计算所有 dp[0] 到 dp[n]
+BFS：可能提前找到答案（如果运气好）
+
+但最坏情况下，两者复杂度相同。
+\`\`\`
+
+### 复杂度分析
+
+- 时间：O(n × √n)
+- 空间：O(n)`,
         timeComplexity: "O(n × √n)",
         spaceComplexity: "O(n)",
       },
       {
         name: "数学方法（四平方和定理）",
-        code: `function numSquares(n) {
+        code: `/**
+ * 完全平方数 - 数学方法（四平方和定理）
+ *
+ * 核心思想：
+ * 利用数学定理直接判断答案：
+ *
+ * 拉格朗日四平方和定理：
+ * 任何正整数都可以表示为最多 4 个完全平方数之和。
+ *
+ * 勒让德三平方和定理：
+ * 一个正整数 n 可以表示为 3 个完全平方数之和，当且仅当
+ * n 不是 4^a(8b+7) 的形式。
+ *
+ * 判断逻辑：
+ * 1. 如果 n 是完全平方数 → 返回 1
+ * 2. 如果 n = a² + b² → 返回 2
+ * 3. 如果 n = 4^a(8b+7) → 返回 4
+ * 4. 否则 → 返回 3
+ *
+ * 时间复杂度：O(√n) - 检查两数之和
+ * 空间复杂度：O(1)
+ */
+function numSquares(n) {
   // 检查是否是完全平方数
   if (isSquare(n)) return 1;
 
   // 检查是否能表示为两个完全平方数之和
+  // 枚举第一个完全平方数 i*i
   for (let i = 1; i * i <= n; i++) {
+    // 如果 n - i*i 也是完全平方数，则 n = i² + (√(n-i²))²
     if (isSquare(n - i * i)) return 2;
   }
 
   // 检查是否满足 4^a(8b+7) 的形式
-  // 根据四平方和定理，此形式只能用 4 个完全平方数表示
+  // 根据勒让德三平方和定理，此形式只能用 4 个完全平方数表示
   let temp = n;
+  // 不断除以 4，去掉 4^a 因子
   while (temp % 4 === 0) {
     temp /= 4;
   }
+  // 检查剩余部分是否是 8b+7 的形式（即模 8 余 7）
   if (temp % 8 === 7) return 4;
 
   // 否则是 3 个
   return 3;
 }
 
+/**
+ * 检查 n 是否是完全平方数
+ * @param {number} n - 待检查的数
+ * @returns {boolean} - 是否是完全平方数
+ */
 function isSquare(n) {
+  // 计算平方根并取整
   const sqrt = Math.floor(Math.sqrt(n));
+  // 检查平方根的平方是否等于 n
   return sqrt * sqrt === n;
 }`,
-        explanation: `## 数学方法
+        explanation: `## 数学方法（四平方和定理）
 
-### 四平方和定理
+### 数学定理
+
+\`\`\`
+拉格朗日四平方和定理（1770年）：
 任何正整数都可以表示为最多 4 个完全平方数之和。
 
-### 判断逻辑
-1. 如果 n 是完全平方数，返回 1
-2. 如果 n = a² + b²，返回 2
-3. 如果 n = 4^a(8b+7)，返回 4
-4. 否则返回 3
+即：对于任意正整数 n，存在 a, b, c, d 使得
+n = a² + b² + c² + d²
 
-### 特点
-- 时间复杂度 O(√n)
-- 最优解法`,
+例：7 = 1² + 1² + 1² + 2² = 1 + 1 + 1 + 4
+\`\`\`
+
+### 勒让德三平方和定理
+
+\`\`\`
+一个正整数 n 可以表示为 3 个完全平方数之和，当且仅当
+n 不是 4^a(8b+7) 的形式。
+
+换言之，如果 n = 4^a(8b+7)，则 n 需要 4 个完全平方数。
+
+例：7 = 4⁰(8×0+7) = 8×0+7
+7 mod 8 = 7，所以 7 需要 4 个完全平方数
+验证：7 = 1+1+1+4 = 1²+1²+1²+2² ✓
+\`\`\`
+
+### 判断逻辑
+
+\`\`\`
+优先级从高到低：
+
+1. n 是完全平方数？ → 返回 1
+   例：16 = 4² → 返回 1
+
+2. n = a² + b²？ → 返回 2
+   例：13 = 4 + 9 = 2² + 3² → 返回 2
+
+3. n = 4^a(8b+7)？ → 返回 4
+   例：7 mod 8 = 7 → 返回 4
+
+4. 否则 → 返回 3
+   例：12 → 返回 3 (12 = 4+4+4)
+\`\`\`
+
+### 执行示例
+
+\`\`\`
+n = 12:
+1. 12 是完全平方数？√12 ≈ 3.46，不是
+2. 12 = a² + b²？
+   - 12 - 1 = 11，不是完全平方数
+   - 12 - 4 = 8，不是完全平方数
+   - 12 - 9 = 3，不是完全平方数
+   不满足
+3. 12 = 4^a(8b+7)？
+   - 12 % 4 = 0，除以 4 → 3
+   - 3 % 8 = 3 ≠ 7
+   不满足
+4. 返回 3
+
+n = 7:
+1. 7 不是完全平方数
+2. 7 = a² + b²？都不满足
+3. 7 % 8 = 7，满足！
+4. 返回 4
+\`\`\`
+
+### 复杂度分析
+
+- 时间：O(√n) - 只需检查两数之和
+- 空间：O(1) - 常数空间
+
+这是最优解法！`,
         timeComplexity: "O(√n)",
         spaceComplexity: "O(1)",
       },
