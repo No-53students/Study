@@ -6,6 +6,16 @@ import dynamic from "next/dynamic";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Problem, DIFFICULTY_CONFIG, CATEGORIES, Solution, FRONTEND_RELEVANCE_CONFIG } from "../types";
+import {
+  TwoPointersAnimation,
+  LinkedListAnimation,
+  TreeAnimation,
+  MatrixAnimation,
+  type TwoPointersStep,
+  type LinkedListStep,
+  type TreeStep,
+  type MatrixStep,
+} from "../components/animations";
 
 // 动态导入 Monaco Editor
 const Editor = dynamic(() => import("@monaco-editor/react"), {
@@ -467,6 +477,38 @@ export default function ProblemClient({ problem }: Props) {
                       {currentSolution.spaceComplexity || problem.spaceComplexity}
                     </span>
                   </div>
+                </div>
+              )}
+
+              {/* 动画演示 */}
+              {currentSolution?.animation && (
+                <div className="mb-6">
+                  {currentSolution.animation.type === "two-pointers" && (
+                    <TwoPointersAnimation
+                      steps={currentSolution.animation.steps as TwoPointersStep[]}
+                      title={currentSolution.animation.title || "双指针演示"}
+                      leftLabel={(currentSolution.animation.config?.leftLabel as string) || "left"}
+                      rightLabel={(currentSolution.animation.config?.rightLabel as string) || "right"}
+                    />
+                  )}
+                  {currentSolution.animation.type === "linked-list" && (
+                    <LinkedListAnimation
+                      steps={currentSolution.animation.steps as LinkedListStep[]}
+                      title={currentSolution.animation.title || "链表演示"}
+                    />
+                  )}
+                  {currentSolution.animation.type === "tree" && (
+                    <TreeAnimation
+                      steps={currentSolution.animation.steps as TreeStep[]}
+                      title={currentSolution.animation.title || "二叉树演示"}
+                    />
+                  )}
+                  {currentSolution.animation.type === "matrix" && (
+                    <MatrixAnimation
+                      steps={currentSolution.animation.steps as MatrixStep[]}
+                      title={currentSolution.animation.title || "矩阵演示"}
+                    />
+                  )}
                 </div>
               )}
 

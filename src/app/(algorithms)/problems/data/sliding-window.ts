@@ -1,4 +1,5 @@
 import { Problem } from "../types";
+import { TwoPointersStep } from "../components/animations";
 
 // 滑动窗口分类题目
 export const slidingWindowProblems: Problem[] = [
@@ -137,6 +138,90 @@ function minSubArrayLen(target, nums) {
   // 如果没找到满足条件的子数组，返回 0
   return minLen === Infinity ? 0 : minLen;
 }`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "长度最小的子数组 - 滑动窗口演示",
+          config: { leftLabel: "left", rightLabel: "right" },
+          steps: [
+            {
+              array: [2, 3, 1, 2, 4, 3],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "窗口" }],
+              description: "target=7。扩展：right=0，加入 2，sum=2 < 7，继续扩展",
+            },
+            {
+              array: [2, 3, 1, 2, 4, 3],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "blue" as const, label: "窗口" }],
+              description: "扩展：right=1，加入 3，sum=5 < 7，继续扩展",
+            },
+            {
+              array: [2, 3, 1, 2, 4, 3],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "blue" as const, label: "窗口" }],
+              description: "扩展：right=2，加入 1，sum=6 < 7，继续扩展",
+            },
+            {
+              array: [2, 3, 1, 2, 4, 3],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0, 1, 2, 3], color: "green" as const, label: "满足!" }],
+              description: "扩展：right=3，加入 2，sum=8 >= 7！minLen=4，开始收缩",
+            },
+            {
+              array: [2, 3, 1, 2, 4, 3],
+              left: 1,
+              right: 3,
+              highlights: [{ indices: [1, 2, 3], color: "green" as const, label: "满足!" }],
+              description: "收缩：left=1，移除 2，sum=6 < 7。minLen 仍为 4",
+            },
+            {
+              array: [2, 3, 1, 2, 4, 3],
+              left: 1,
+              right: 4,
+              highlights: [{ indices: [1, 2, 3, 4], color: "green" as const, label: "满足!" }],
+              description: "扩展：right=4，加入 4，sum=10 >= 7！minLen=4，收缩",
+            },
+            {
+              array: [2, 3, 1, 2, 4, 3],
+              left: 2,
+              right: 4,
+              highlights: [{ indices: [2, 3, 4], color: "green" as const, label: "满足!" }],
+              description: "收缩：left=2，移除 3，sum=7 >= 7！minLen=3，继续收缩",
+            },
+            {
+              array: [2, 3, 1, 2, 4, 3],
+              left: 3,
+              right: 4,
+              highlights: [{ indices: [3, 4], color: "green" as const, label: "满足!" }],
+              description: "收缩：left=3，移除 1，sum=6 < 7。minLen=2 更新！",
+            },
+            {
+              array: [2, 3, 1, 2, 4, 3],
+              left: 3,
+              right: 5,
+              highlights: [{ indices: [3, 4, 5], color: "green" as const, label: "满足!" }],
+              description: "扩展：right=5，加入 3，sum=9 >= 7！minLen=3，收缩",
+            },
+            {
+              array: [2, 3, 1, 2, 4, 3],
+              left: 4,
+              right: 5,
+              highlights: [{ indices: [4, 5], color: "green" as const, label: "最优!" }],
+              description: "收缩：left=4，移除 2，sum=7 >= 7！minLen=2（不变），继续收缩",
+            },
+            {
+              array: [2, 3, 1, 2, 4, 3],
+              left: 5,
+              right: 5,
+              highlights: [{ indices: [4, 5], color: "red" as const, label: "答案" }],
+              description: "完成！最小长度 = 2，对应子数组 [4,3]，和为 7",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 滑动窗口
 
 ### 核心思想
@@ -382,6 +467,81 @@ function lengthOfLongestSubstring(s) {
 
   return maxLen;
 }`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "无重复字符的最长子串 - 滑动窗口演示",
+          config: { leftLabel: "left", rightLabel: "right" },
+          steps: [
+            {
+              array: ["a", "b", "c", "a", "b", "c", "b", "b"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "窗口" }],
+              description: "right=0，字符 'a' 不在窗口中，加入。窗口=\"a\"，maxLen=1",
+            },
+            {
+              array: ["a", "b", "c", "a", "b", "c", "b", "b"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "green" as const, label: "窗口" }],
+              description: "right=1，字符 'b' 不在窗口中，加入。窗口=\"ab\"，maxLen=2",
+            },
+            {
+              array: ["a", "b", "c", "a", "b", "c", "b", "b"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "最优" }],
+              description: "right=2，字符 'c' 不在窗口中，加入。窗口=\"abc\"，maxLen=3",
+            },
+            {
+              array: ["a", "b", "c", "a", "b", "c", "b", "b"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0], color: "red" as const, label: "重复" },
+                { indices: [3], color: "yellow" as const, label: "当前" },
+              ],
+              description: "right=3，字符 'a' 在位置 0，在窗口内！left 跳到 0+1=1",
+            },
+            {
+              array: ["a", "b", "c", "a", "b", "c", "b", "b"],
+              left: 1,
+              right: 3,
+              highlights: [{ indices: [1, 2, 3], color: "green" as const, label: "窗口" }],
+              description: "left=1，窗口=\"bca\"，maxLen=3（不变）",
+            },
+            {
+              array: ["a", "b", "c", "a", "b", "c", "b", "b"],
+              left: 2,
+              right: 4,
+              highlights: [{ indices: [2, 3, 4], color: "green" as const, label: "窗口" }],
+              description: "right=4，'b' 在位置 1，在窗口内！left 跳到 2。窗口=\"cab\"",
+            },
+            {
+              array: ["a", "b", "c", "a", "b", "c", "b", "b"],
+              left: 3,
+              right: 5,
+              highlights: [{ indices: [3, 4, 5], color: "green" as const, label: "窗口" }],
+              description: "right=5，'c' 在位置 2，在窗口内！left 跳到 3。窗口=\"abc\"",
+            },
+            {
+              array: ["a", "b", "c", "a", "b", "c", "b", "b"],
+              left: 5,
+              right: 6,
+              highlights: [{ indices: [5, 6], color: "green" as const, label: "窗口" }],
+              description: "right=6，'b' 在位置 4，在窗口内！left 跳到 5。窗口=\"cb\"",
+            },
+            {
+              array: ["a", "b", "c", "a", "b", "c", "b", "b"],
+              left: 7,
+              right: 7,
+              highlights: [
+                { indices: [0, 1, 2], color: "purple" as const, label: "答案" },
+              ],
+              description: "right=7，'b' 在位置 6，在窗口内！left 跳到 7。完成！maxLen=3",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 滑动窗口 + 哈希表
 
 ### 核心思想
@@ -771,6 +931,86 @@ s = "ADOBECODEBANC", t = "ABC"
 - 需要 2 个 A，not 2 种字符
 - 只有当 window['A'] === 2 时，才算满足 A 的要求
 - 所以 valid 记录的是"已满足要求的字符种类数"`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "最小覆盖子串演示",
+          steps: [
+            {
+              array: ["A", "D", "O", "B", "E", "C", "O", "D", "E", "B", "A", "N", "C"],
+              left: 0,
+              right: 0,
+              highlights: [],
+              description: "s=\"ADOBECODEBANC\", t=\"ABC\"。需找包含ABC的最小子串",
+            },
+            {
+              array: ["A", "D", "O", "B", "E", "C", "O", "D", "E", "B", "A", "N", "C"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "A" }],
+              description: "right=0, 'A'在need中。window={A:1}, valid=1/3",
+            },
+            {
+              array: ["A", "D", "O", "B", "E", "C", "O", "D", "E", "B", "A", "N", "C"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0], color: "green" as const },
+                { indices: [3], color: "green" as const, label: "B" },
+              ],
+              description: "right=3, 'B'在need中。window={A:1,B:1}, valid=2/3",
+            },
+            {
+              array: ["A", "D", "O", "B", "E", "C", "O", "D", "E", "B", "A", "N", "C"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0], color: "green" as const },
+                { indices: [3], color: "green" as const },
+                { indices: [5], color: "green" as const, label: "C" },
+              ],
+              description: "right=5, 'C'在need中。valid=3=need.size! 窗口满足",
+            },
+            {
+              array: ["A", "D", "O", "B", "E", "C", "O", "D", "E", "B", "A", "N", "C"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0, 5], color: "yellow" as const },
+                { indices: [1, 2, 3, 4], color: "blue" as const },
+              ],
+              description: "当前最小窗口: \"ADOBEC\"(长度6)。尝试收缩左边界",
+            },
+            {
+              array: ["A", "D", "O", "B", "E", "C", "O", "D", "E", "B", "A", "N", "C"],
+              left: 1,
+              right: 5,
+              highlights: [{ indices: [0], color: "red" as const, label: "移出A" }],
+              description: "移出'A', valid=2<3，窗口不再满足，停止收缩",
+            },
+            {
+              array: ["A", "D", "O", "B", "E", "C", "O", "D", "E", "B", "A", "N", "C"],
+              left: 5,
+              right: 10,
+              highlights: [
+                { indices: [5], color: "blue" as const },
+                { indices: [9], color: "green" as const, label: "B" },
+                { indices: [10], color: "green" as const, label: "A" },
+              ],
+              description: "继续扩展...right=10找到'A', valid=3再次满足",
+            },
+            {
+              array: ["A", "D", "O", "B", "E", "C", "O", "D", "E", "B", "A", "N", "C"],
+              left: 9,
+              right: 12,
+              highlights: [
+                { indices: [9, 10], color: "green" as const },
+                { indices: [11], color: "blue" as const },
+                { indices: [12], color: "green" as const },
+              ],
+              description: "最终找到: \"BANC\"(长度4) ✓ 这是最小覆盖子串",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(m + n)",
         spaceComplexity: "O(k)",
       },
@@ -1109,6 +1349,80 @@ wordLen = 3, wordCount = 2
 - 外层循环：wordLen 次
 - 内层循环：n/wordLen 次
 - 总时间：O(n)（但常数因子较大）`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "串联所有单词的子串演示",
+          steps: [
+            {
+              array: ["bar", "foo", "the", "foo", "bar", "man"],
+              left: 0,
+              right: 0,
+              highlights: [],
+              description: "s=\"barfoothefoobarman\", words=[\"foo\",\"bar\"]。每3字符为一词",
+            },
+            {
+              array: ["bar", "foo", "the", "foo", "bar", "man"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "bar" }],
+              description: "起点0: right=0, 'bar'在words中。window={bar:1}, count=1",
+            },
+            {
+              array: ["bar", "foo", "the", "foo", "bar", "man"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "green" as const },
+                { indices: [1], color: "green" as const, label: "foo" },
+              ],
+              description: "right=1, 'foo'在words中。count=2=wordCount! 找到位置0",
+            },
+            {
+              array: ["bar", "foo", "the", "foo", "bar", "man"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "yellow" as const },
+                { indices: [1], color: "yellow" as const },
+              ],
+              description: "结果[0]: \"barfoo\" ✓ 是words的一种排列",
+            },
+            {
+              array: ["bar", "foo", "the", "foo", "bar", "man"],
+              left: 1,
+              right: 2,
+              highlights: [{ indices: [2], color: "red" as const, label: "the" }],
+              description: "right=2, 'the'不在words中！重置窗口，left=3",
+            },
+            {
+              array: ["bar", "foo", "the", "foo", "bar", "man"],
+              left: 3,
+              right: 3,
+              highlights: [{ indices: [3], color: "green" as const, label: "foo" }],
+              description: "left=3: right=3, 'foo'在words中。window={foo:1}",
+            },
+            {
+              array: ["bar", "foo", "the", "foo", "bar", "man"],
+              left: 3,
+              right: 4,
+              highlights: [
+                { indices: [3], color: "green" as const },
+                { indices: [4], color: "green" as const, label: "bar" },
+              ],
+              description: "right=4, 'bar'在words中。count=2! 找到位置9 (索引3×3)",
+            },
+            {
+              array: ["bar", "foo", "the", "foo", "bar", "man"],
+              left: 3,
+              right: 4,
+              highlights: [
+                { indices: [3], color: "yellow" as const },
+                { indices: [4], color: "yellow" as const },
+              ],
+              description: "结果[0,9]: \"foobar\" ✓ 完成！找到所有串联子串起始位置",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(n × wordLen)",
         spaceComplexity: "O(m × wordLen)",
       },
@@ -1396,6 +1710,87 @@ s = "cbaebabacd", p = "abc"
 ### 复杂度分析
 - 时间：O(n × 26) ≈ O(n)，每次窗口移动需要 O(26) 比较
 - 空间：O(1)，只用固定大小的数组`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "找到字符串中所有字母异位词演示",
+          steps: [
+            {
+              array: ["c", "b", "a", "e", "b", "a", "b", "a", "c", "d"],
+              left: 0,
+              right: 2,
+              highlights: [],
+              description: "s=\"cbaebabacd\", p=\"abc\"。找所有p的异位词位置",
+            },
+            {
+              array: ["c", "b", "a", "e", "b", "a", "b", "a", "c", "d"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "c" },
+                { indices: [1], color: "green" as const, label: "b" },
+                { indices: [2], color: "green" as const, label: "a" },
+              ],
+              description: "窗口[0,2]=\"cba\"。count=[a:1,b:1,c:1]=pCount ✓ 找到索引0",
+            },
+            {
+              array: ["c", "b", "a", "e", "b", "a", "b", "a", "c", "d"],
+              left: 1,
+              right: 3,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "-c" },
+                { indices: [3], color: "yellow" as const, label: "+e" },
+              ],
+              description: "窗口右移：移出c，加入e。\"bae\"含e不含c，不匹配",
+            },
+            {
+              array: ["c", "b", "a", "e", "b", "a", "b", "a", "c", "d"],
+              left: 4,
+              right: 6,
+              highlights: [
+                { indices: [4], color: "yellow" as const },
+                { indices: [5], color: "yellow" as const },
+                { indices: [6], color: "yellow" as const },
+              ],
+              description: "窗口[4,6]=\"bab\"。count=[a:1,b:2,c:0]，b多了，不匹配",
+            },
+            {
+              array: ["c", "b", "a", "e", "b", "a", "b", "a", "c", "d"],
+              left: 6,
+              right: 8,
+              highlights: [
+                { indices: [6], color: "green" as const, label: "b" },
+                { indices: [7], color: "green" as const, label: "a" },
+                { indices: [8], color: "green" as const, label: "c" },
+              ],
+              description: "窗口[6,8]=\"bac\"。count=[a:1,b:1,c:1]=pCount ✓ 找到索引6",
+            },
+            {
+              array: ["c", "b", "a", "e", "b", "a", "b", "a", "c", "d"],
+              left: 7,
+              right: 9,
+              highlights: [
+                { indices: [7], color: "yellow" as const },
+                { indices: [8], color: "yellow" as const },
+                { indices: [9], color: "yellow" as const, label: "+d" },
+              ],
+              description: "窗口[7,9]=\"acd\"。含d不含b，不匹配。遍历结束",
+            },
+            {
+              array: ["c", "b", "a", "e", "b", "a", "b", "a", "c", "d"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const },
+                { indices: [1], color: "green" as const },
+                { indices: [2], color: "green" as const },
+                { indices: [6], color: "green" as const },
+                { indices: [7], color: "green" as const },
+                { indices: [8], color: "green" as const },
+              ],
+              description: "结果: [0, 6] ✓ \"cba\"和\"bac\"都是\"abc\"的异位词",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
       },
@@ -1763,6 +2158,92 @@ nums = [1,3,-1,-3,5,3,6,7], k = 3
 ### 队列存储索引的好处
 1. 可以判断元素是否超出窗口范围
 2. 通过索引可以获取对应的值`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "滑动窗口最大值演示",
+          steps: [
+            {
+              array: [1, 3, -1, -3, 5, 3, 6, 7],
+              left: 0,
+              right: 2,
+              highlights: [],
+              description: "nums=[1,3,-1,-3,5,3,6,7], k=3。用单调递减队列维护最大值",
+            },
+            {
+              array: [1, 3, -1, -3, 5, 3, 6, 7],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "1" }],
+              description: "i=0: push(0)。deque=[0](值:[1])",
+            },
+            {
+              array: [1, 3, -1, -3, 5, 3, 6, 7],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "red" as const, label: "pop" },
+                { indices: [1], color: "green" as const, label: "3" },
+              ],
+              description: "i=1: 3>1，pop(0)，push(1)。deque=[1](值:[3])",
+            },
+            {
+              array: [1, 3, -1, -3, 5, 3, 6, 7],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "max" },
+                { indices: [2], color: "yellow" as const, label: "-1" },
+              ],
+              description: "i=2: -1<3，push(2)。deque=[1,2]。窗口形成，max=3",
+            },
+            {
+              array: [1, 3, -1, -3, 5, 3, 6, 7],
+              left: 1,
+              right: 3,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "max" },
+                { indices: [3], color: "yellow" as const, label: "-3" },
+              ],
+              description: "i=3: -3<-1，push(3)。deque=[1,2,3]。max=3",
+            },
+            {
+              array: [1, 3, -1, -3, 5, 3, 6, 7],
+              left: 2,
+              right: 4,
+              highlights: [
+                { indices: [1], color: "red" as const },
+                { indices: [2], color: "red" as const },
+                { indices: [3], color: "red" as const },
+                { indices: [4], color: "green" as const, label: "5=max" },
+              ],
+              description: "i=4: 5>所有，pop三个，push(4)。deque=[4]。max=5",
+            },
+            {
+              array: [1, 3, -1, -3, 5, 3, 6, 7],
+              left: 3,
+              right: 5,
+              highlights: [
+                { indices: [4], color: "green" as const, label: "max" },
+                { indices: [5], color: "yellow" as const, label: "3" },
+              ],
+              description: "i=5: 3<5，push(5)。deque=[4,5]。max=5",
+            },
+            {
+              array: [1, 3, -1, -3, 5, 3, 6, 7],
+              left: 4,
+              right: 6,
+              highlights: [{ indices: [6], color: "green" as const, label: "6=max" }],
+              description: "i=6: 6>5,3，pop两个。deque=[6]。max=6",
+            },
+            {
+              array: [1, 3, -1, -3, 5, 3, 6, 7],
+              left: 5,
+              right: 7,
+              highlights: [{ indices: [7], color: "green" as const, label: "7=max" }],
+              description: "i=7: 7>6，pop。deque=[7]。max=7。结果:[3,3,5,5,6,7] ✓",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(k)",
       },

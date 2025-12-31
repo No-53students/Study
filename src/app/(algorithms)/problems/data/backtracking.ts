@@ -1,4 +1,5 @@
 import { Problem } from "../types";
+import { TwoPointersStep } from "../components/animations";
 
 export const backtrackingProblems: Problem[] = [
   // 1. 全排列 (46)
@@ -188,6 +189,68 @@ function permute(nums) {
  * 6. path=[1,3], 选择2 → path=[1,3,2] ✓ 记录结果
  * ...以此类推
  */`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "全排列回溯演示",
+          steps: [
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0, 1, 2], color: "gray" as const, label: "待选择" },
+              ],
+              description: "nums=[1,2,3]。开始回溯，path=[], used=[F,F,F]",
+            },
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "选择1" },
+              ],
+              description: "选择1加入path。path=[1], used=[T,F,F]",
+            },
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "已选" },
+                { indices: [1], color: "blue" as const, label: "选择2" },
+              ],
+              description: "选择2加入path。path=[1,2], used=[T,T,F]",
+            },
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "green" as const, label: "[1,2,3]" },
+              ],
+              description: "选择3，path=[1,2,3]完整！记录结果，回溯",
+            },
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "已选" },
+                { indices: [2], color: "blue" as const, label: "选择3" },
+              ],
+              description: "回溯到path=[1]，选择3。path=[1,3]",
+            },
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 2, 1], color: "green" as const, label: "[1,3,2]" },
+              ],
+              description: "选择2，path=[1,3,2]完整！共生成6个排列",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 回溯 + used数组
 
 ### 思路
@@ -539,6 +602,65 @@ function subsets(nums) {
  * - 保证只向后选择，不回头
  * - 避免产生重复子集（如 [1,2] 和 [2,1]）
  */`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "子集回溯演示",
+          steps: [
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 0,
+              highlights: [],
+              description: "nums=[1,2,3]。开始回溯，path=[]，记录空集[]",
+            },
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "[1]" },
+              ],
+              description: "选择1，path=[1]，记录[1]",
+            },
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "[1,2]" },
+              ],
+              description: "选择2，path=[1,2]，记录[1,2]",
+            },
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "green" as const, label: "[1,2,3]" },
+              ],
+              description: "选择3，path=[1,2,3]，记录[1,2,3]",
+            },
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "已选" },
+                { indices: [2], color: "blue" as const, label: "选择3" },
+              ],
+              description: "回溯到[1]，跳过2，选择3。path=[1,3]，记录[1,3]",
+            },
+            {
+              array: ["1", "2", "3"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [1, 2], color: "blue" as const, label: "[2,3]" },
+              ],
+              description: "回溯到[]，选择2再选3。记录[2],[2,3],[3]。共8个子集",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 回溯法
 
 ### 思路
@@ -936,6 +1058,67 @@ function letterCombinations(digits) {
  * - 原字符串 path 不变，递归返回后自动"回溯"
  * - 这是一种隐式回溯的技巧
  */`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "电话号码字母组合回溯演示",
+          steps: [
+            {
+              array: ["2", "3"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "abc" },
+                { indices: [1], color: "gray" as const, label: "def" },
+              ],
+              description: "digits=\"23\"。2→abc, 3→def。开始回溯，path=\"\"",
+            },
+            {
+              array: ["a", "b", "c"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "选a" },
+              ],
+              description: "处理数字2，选择字母'a'。path=\"a\"",
+            },
+            {
+              array: ["d", "e", "f"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "选d" },
+              ],
+              description: "处理数字3，选择字母'd'。path=\"ad\"，记录结果",
+            },
+            {
+              array: ["d", "e", "f"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "选e" },
+              ],
+              description: "选择字母'e'。path=\"ae\"，记录结果",
+            },
+            {
+              array: ["a", "b", "c"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "blue" as const, label: "选b" },
+              ],
+              description: "回溯，选择字母'b'。继续处理数字3...",
+            },
+            {
+              array: ["a", "d"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "结果9个" },
+              ],
+              description: "共生成9个组合: ad,ae,af,bd,be,bf,cd,ce,cf",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 回溯法
 
 ### 思路
@@ -1341,6 +1524,68 @@ function combinationSum(candidates, target) {
  * 为什么使用 start 参数？
  * - 保证只向后选择，避免 [2,3] 和 [3,2] 重复
  */`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "组合总和回溯演示",
+          steps: [
+            {
+              array: ["2", "3", "6", "7"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "gray" as const, label: "candidates" },
+              ],
+              description: "candidates=[2,3,6,7], target=7。开始回溯，remaining=7",
+            },
+            {
+              array: ["2", "3", "6", "7"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "选2" },
+              ],
+              description: "选择2，path=[2], remaining=7-2=5",
+            },
+            {
+              array: ["2", "3", "6", "7"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "再选2" },
+              ],
+              description: "可重复选择2，path=[2,2], remaining=5-2=3",
+            },
+            {
+              array: ["2", "3", "6", "7"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "2+2" },
+                { indices: [1], color: "green" as const, label: "选3" },
+              ],
+              description: "选择3，path=[2,2,3], remaining=3-3=0 ✓ 记录结果",
+            },
+            {
+              array: ["2", "3", "6", "7"],
+              left: 3,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "选7" },
+              ],
+              description: "回溯到start=0，选择7，path=[7], remaining=0 ✓ 记录结果",
+            },
+            {
+              array: ["2", "3", "6", "7"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 0, 1], color: "red" as const, label: "[2,2,3]" },
+                { indices: [3], color: "red" as const, label: "[7]" },
+              ],
+              description: "找到2个组合: [2,2,3] 和 [7]",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 回溯法
 
 ### 思路
@@ -1707,6 +1952,64 @@ function generateParenthesis(n) {
  * n=2: 2  ["(())", "()()"]
  * n=3: 5  ["((()))", "(()())", "(())()", "()(())", "()()()"]
  */`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "括号生成回溯演示",
+          steps: [
+            {
+              array: ["(", "(", ")", "(", ")", ")"],
+              left: 0,
+              right: 0,
+              highlights: [],
+              description: "n=3，生成3对有效括号。开始回溯，str=\"\", open=0, close=0",
+            },
+            {
+              array: ["(", "", "", "", "", ""],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "加(" },
+              ],
+              description: "open<3，可加'('。str=\"(\", open=1, close=0",
+            },
+            {
+              array: ["(", "(", "", "", "", ""],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "((" },
+              ],
+              description: "open<3，继续加'('。str=\"((\", open=2, close=0",
+            },
+            {
+              array: ["(", "(", "(", "", "", ""],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "green" as const, label: "(((" },
+              ],
+              description: "open<3，加'('。str=\"(((\", open=3, close=0",
+            },
+            {
+              array: ["(", "(", "(", ")", ")", ")"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5], color: "green" as const, label: "((()))" },
+              ],
+              description: "open=3无法再加'('，只能加')'。str=\"((()))\" ✓ 记录",
+            },
+            {
+              array: ["(", ")", "(", ")", "(", ")"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5], color: "blue" as const, label: "()()()" },
+              ],
+              description: "回溯生成其他组合...共5种: ((())), (()()), (())(), ()(()), ()()()",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 回溯法
 
 ### 思路
@@ -2135,6 +2438,69 @@ function exist(board, word) {
  * - 但来的方向不能再走回去（已标记为 '#'）
  * - 所以实际只有3个选择
  */`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "单词搜索DFS演示",
+          steps: [
+            {
+              array: ["A", "B", "C", "E"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "A" },
+              ],
+              description: "word=\"ABCCED\"。从(0,0)='A'开始，匹配word[0]='A' ✓",
+            },
+            {
+              array: ["A", "B", "C", "E"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "#" },
+                { indices: [1], color: "green" as const, label: "B" },
+              ],
+              description: "标记A为'#'。向右搜索(0,1)='B'，匹配word[1]='B' ✓",
+            },
+            {
+              array: ["A", "B", "C", "E"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1], color: "blue" as const, label: "已访问" },
+                { indices: [2], color: "green" as const, label: "C" },
+              ],
+              description: "向右搜索(0,2)='C'，匹配word[2]='C' ✓",
+            },
+            {
+              array: ["S", "F", "C", "S"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "C" },
+              ],
+              description: "向下搜索(1,2)='C'，匹配word[3]='C' ✓",
+            },
+            {
+              array: ["A", "D", "E", "E"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "E" },
+                { indices: [1], color: "blue" as const, label: "D" },
+              ],
+              description: "向下(2,2)='E'匹配word[4]，向左(2,1)='D'匹配word[5] ✓",
+            },
+            {
+              array: ["A", "B", "C", "C", "E", "D"],
+              left: 0,
+              right: 5,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5], color: "green" as const, label: "ABCCED" },
+              ],
+              description: "找到完整路径: A→B→C→C→E→D，返回true",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## DFS + 原地标记
 
 ### 思路
@@ -2584,6 +2950,70 @@ function partition(s) {
  * - 每个间隙可以选择切或不切
  * - 最多 2^(n-1) 种分割方式
  */`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "分割回文串回溯演示",
+          steps: [
+            {
+              array: ["a", "a", "b"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0, 1, 2], color: "gray" as const, label: "aab" },
+              ],
+              description: "s=\"aab\"。开始回溯，start=0，path=[]",
+            },
+            {
+              array: ["a", "a", "b"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "a是回文" },
+              ],
+              description: "尝试s[0..0]=\"a\"，是回文 ✓。path=[\"a\"]，递归start=1",
+            },
+            {
+              array: ["a", "a", "b"],
+              left: 1,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "a" },
+                { indices: [1], color: "green" as const, label: "a是回文" },
+              ],
+              description: "尝试s[1..1]=\"a\"，是回文 ✓。path=[\"a\",\"a\"]，递归start=2",
+            },
+            {
+              array: ["a", "a", "b"],
+              left: 2,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "a" },
+                { indices: [1], color: "blue" as const, label: "a" },
+                { indices: [2], color: "green" as const, label: "b是回文" },
+              ],
+              description: "s[2..2]=\"b\"是回文 ✓。path=[\"a\",\"a\",\"b\"]，记录结果！",
+            },
+            {
+              array: ["a", "a", "b"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "aa是回文" },
+              ],
+              description: "回溯。尝试s[0..1]=\"aa\"，是回文 ✓。path=[\"aa\"]",
+            },
+            {
+              array: ["a", "a", "b"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1], color: "blue" as const, label: "aa" },
+                { indices: [2], color: "green" as const, label: "b" },
+              ],
+              description: "s[2..2]=\"b\"是回文。path=[\"aa\",\"b\"] ✓。共2种分割方案",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 回溯法
 
 ### 思路
@@ -3086,6 +3516,64 @@ function solveNQueens(n) {
  * - 当前行下方还没有皇后
  * - 所以只需要检查上方的冲突
  */`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "N皇后回溯演示",
+          steps: [
+            {
+              array: [".", ".", ".", "."],
+              left: 0,
+              right: 0,
+              highlights: [],
+              description: "n=4。4×4棋盘，放置4个互不攻击的皇后。从第0行开始",
+            },
+            {
+              array: [".", "Q", ".", "."],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "Q" },
+              ],
+              description: "row=0，尝试col=1。放置皇后，board[0][1]='Q'",
+            },
+            {
+              array: [".", ".", ".", "Q"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "Q" },
+              ],
+              description: "row=1，col=0/1/2都冲突。放置col=3，board[1][3]='Q'",
+            },
+            {
+              array: ["Q", ".", ".", "."],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "Q" },
+              ],
+              description: "row=2，col=0无冲突。放置board[2][0]='Q'",
+            },
+            {
+              array: [".", ".", "Q", "."],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "Q" },
+              ],
+              description: "row=3，col=2无冲突。放置board[3][2]='Q'。找到解！",
+            },
+            {
+              array: [".Q..", "...Q", "Q...", "..Q."],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "green" as const, label: "解法1" },
+              ],
+              description: "解法1: [\".Q..\",\"...Q\",\"Q...\",\"..Q.\"]。共2种解法",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 回溯 + 逐行检查
 
 ### 思路
@@ -3470,29 +3958,55 @@ function solveNQueens(n) {
     solutions: [
       {
         name: "回溯 + 集合",
-        code: `function totalNQueens(n) {
-  let count = 0;
-  const cols = new Set();
-  const diag1 = new Set();
-  const diag2 = new Set();
+        code: `/**
+ * N 皇后 II - 回溯 + 集合
+ *
+ * 核心思想：
+ * 与 N 皇后问题 (51) 相同的回溯策略
+ * 区别在于只需要计数，不需要记录具体的棋盘布局
+ *
+ * 简化点：
+ * - 不需要维护 board 数组
+ * - 找到解时直接 count++
+ * - 代码更简洁，空间更省
+ *
+ * 时间复杂度：O(n!) - 与 N 皇后问题相同
+ * 空间复杂度：O(n) - 三个集合 + 递归栈
+ */
+function totalNQueens(n) {
+  let count = 0;  // 解的数量
 
+  // 三个集合记录占用状态
+  const cols = new Set();   // 已占用的列
+  const diag1 = new Set();  // 已占用的主对角线（row - col）
+  const diag2 = new Set();  // 已占用的副对角线（row + col）
+
+  /**
+   * 回溯函数：在第 row 行放置皇后
+   */
   const backtrack = (row) => {
+    // 结束条件：成功放置了 n 个皇后
     if (row === n) {
-      count++;
+      count++;  // 找到一个有效解
       return;
     }
 
+    // 尝试当前行的每一列
     for (let col = 0; col < n; col++) {
+      // O(1) 冲突检测
       if (cols.has(col) || diag1.has(row - col) || diag2.has(row + col)) {
-        continue;
+        continue;  // 有冲突，跳过
       }
 
+      // 做选择：标记占用
       cols.add(col);
       diag1.add(row - col);
       diag2.add(row + col);
 
+      // 递归：处理下一行
       backtrack(row + 1);
 
+      // 撤销选择：取消占用
       cols.delete(col);
       diag1.delete(row - col);
       diag2.delete(row + col);
@@ -3501,7 +4015,91 @@ function solveNQueens(n) {
 
   backtrack(0);
   return count;
-}`,
+}
+
+/**
+ * N 皇后问题解的数量（已知结论）：
+ *
+ * n  |  解的数量
+ * ---|----------
+ * 1  |     1
+ * 2  |     0
+ * 3  |     0
+ * 4  |     2
+ * 5  |    10
+ * 6  |     4
+ * 7  |    40
+ * 8  |    92
+ * 9  |   352
+ * 10 |   724
+ * 11 |  2680
+ * 12 | 14200
+ *
+ * 与 N 皇后问题的区别：
+ * ┌────────────────┬─────────────────┬─────────────────┐
+ * │                │ N 皇后 (51)     │ N 皇后 II (52)  │
+ * ├────────────────┼─────────────────┼─────────────────┤
+ * │ 返回值         │ 所有解的棋盘    │ 解的数量        │
+ * │ board 数组     │ 需要            │ 不需要          │
+ * │ 结果存储       │ result.push()   │ count++         │
+ * │ 空间复杂度     │ O(n × 解数)     │ O(n)            │
+ * └────────────────┴─────────────────┴─────────────────┘
+ *
+ * 适用场景：
+ * - 只需要知道解的个数，不需要具体解法时
+ * - 作为验证其他算法的基准测试
+ */`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "N皇后II计数回溯演示",
+          steps: [
+            {
+              array: [".", ".", ".", "."],
+              left: 0,
+              right: 0,
+              highlights: [],
+              description: "n=4。统计4皇后有多少种解法。只计数不记录棋盘。count=0",
+            },
+            {
+              array: ["Q", ".", ".", "."],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "row0" }],
+              description: "第0行：尝试col=0放置皇后。标记cols={0}, diag1={0}, diag2={0}",
+            },
+            {
+              array: ["Q", ".", "Q", "."],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "row0" },
+                { indices: [2], color: "blue" as const, label: "row1" },
+              ],
+              description: "第1行：col=0,1冲突，尝试col=2。继续递归...",
+            },
+            {
+              array: [".", "Q", ".", "."],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [1], color: "green" as const, label: "row0" }],
+              description: "回溯后尝试：第0行col=1。找到第一个解，count=1",
+            },
+            {
+              array: [".", ".", "Q", "."],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [2], color: "green" as const, label: "row0" }],
+              description: "继续回溯：第0行col=2。找到第二个解，count=2",
+            },
+            {
+              array: ["2"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "答案" }],
+              description: "遍历完成。n=4的N皇后问题共有2种解法",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 集合法
 
 ### 核心思想
@@ -3514,35 +4112,105 @@ function solveNQueens(n) {
       },
       {
         name: "位运算优化",
-        code: `function totalNQueens(n) {
-  let count = 0;
+        code: `/**
+ * N 皇后 II - 位运算优化
+ *
+ * 核心思想：
+ * 用位运算代替集合操作，达到极致的性能优化
+ * 这是 N 皇后计数问题的最优解法
+ *
+ * 位表示法：
+ * - cols：已占用列的二进制表示
+ * - diag1：主对角线占用（每行左移传递）
+ * - diag2：副对角线占用（每行右移传递）
+ *
+ * 关键技巧：
+ * 1. ~(cols | diag1 | diag2) & mask：获取所有可用位置
+ * 2. x & -x：取出最低位的 1（lowbit）
+ * 3. x & (x-1)：清除最低位的 1
+ *
+ * 时间复杂度：O(n!) - 但常数因子极小
+ * 空间复杂度：O(n) - 只有递归栈
+ */
+function totalNQueens(n) {
+  let count = 0;  // 解的数量
 
+  /**
+   * 位运算回溯
+   * @param row - 当前行号
+   * @param cols - 列占用的二进制表示
+   * @param diag1 - 主对角线占用
+   * @param diag2 - 副对角线占用
+   */
   const solve = (row, cols, diag1, diag2) => {
+    // 结束条件：所有行都放置了皇后
     if (row === n) {
       count++;
       return;
     }
 
-    // 所有可用位置
+    // 计算所有可用位置
+    // (1 << n) - 1：全1掩码，表示所有列
+    // ~(cols | diag1 | diag2)：取反得到可用位置
+    // & mask：只保留有效的 n 位
     let availablePositions = ((1 << n) - 1) & ~(cols | diag1 | diag2);
 
+    // 遍历所有可用位置（只遍历为1的位）
     while (availablePositions) {
-      // 取最低位的 1
+      // 取出最低位的 1
+      // x & -x 的原理：-x 是 x 的补码，与 x 相与只保留最低位的 1
       const position = availablePositions & -availablePositions;
+
+      // 清除最低位的 1，准备处理下一个可用位置
       availablePositions &= availablePositions - 1;
 
+      // 递归到下一行
       solve(
         row + 1,
-        cols | position,
-        (diag1 | position) << 1,
-        (diag2 | position) >> 1
+        cols | position,            // 新增列占用
+        (diag1 | position) << 1,    // 主对角线左移
+        (diag2 | position) >> 1     // 副对角线右移
       );
     }
   };
 
   solve(0, 0, 0, 0);
   return count;
-}`,
+}
+
+/**
+ * 位运算执行示例（n=4）：
+ *
+ * 初始：solve(0, 0000, 0000, 0000)
+ * available = 1111（全部可用）
+ *
+ * 选择 col=0（position = 0001）：
+ * solve(1, 0001, 0010, 0000)
+ * available = 1111 & ~(0001 | 0010 | 0000) = 1100
+ *
+ * 选择 col=2（position = 0100）：
+ * solve(2, 0101, 1010, 0010)
+ * available = 1111 & ~(0101 | 1010 | 0010) = 0000
+ * → 死胡同，回溯
+ *
+ * ... 继续搜索 ...
+ *
+ * 位运算优势：
+ * 1. 无需额外数据结构，直接用整数表示状态
+ * 2. 位操作比集合操作快得多（CPU 级别优化）
+ * 3. 只遍历可用位置，不需要遍历全部 n 列
+ *
+ * 性能对比（n=14）：
+ * - 遍历法：几十秒
+ * - 集合法：几秒
+ * - 位运算：毫秒级
+ *
+ * 为什么不需要显式回溯？
+ * - 状态（cols, diag1, diag2）作为参数传递
+ * - 每次递归调用创建新的状态值
+ * - 函数返回时自动恢复到调用前的状态
+ * - 这是"值传递"的天然优势
+ */`,
         explanation: `## 位运算优化
 
 ### 核心思想

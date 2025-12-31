@@ -1,4 +1,5 @@
 import { Problem } from "../types";
+import { LinkedListStep } from "../components/animations";
 
 // 链表分类题目
 export const linkedListProblems: Problem[] = [
@@ -156,6 +157,54 @@ function hasCycle(head) {
   // 快指针到达末尾，说明无环
   return false;
 }`,
+        animation: {
+          type: "linked-list" as const,
+          title: "环形链表 - 快慢指针演示",
+          steps: [
+            {
+              nodes: [
+                { value: 3, id: "0" },
+                { value: 2, id: "1" },
+                { value: 0, id: "2" },
+                { value: -4, id: "3" },
+              ],
+              pointers: { "0": ["slow", "fast"] },
+              description: "初始化：slow 和 fast 都指向 head（节点3）",
+            },
+            {
+              nodes: [
+                { value: 3, id: "0" },
+                { value: 2, id: "1" },
+                { value: 0, id: "2" },
+                { value: -4, id: "3" },
+              ],
+              pointers: { "1": ["slow"], "2": ["fast"] },
+              description: "第1步：slow 走1步到节点2，fast 走2步到节点0",
+            },
+            {
+              nodes: [
+                { value: 3, id: "0" },
+                { value: 2, id: "1" },
+                { value: 0, id: "2" },
+                { value: -4, id: "3" },
+              ],
+              pointers: { "2": ["slow"], "1": ["fast"] },
+              highlights: [{ nodeIds: ["1"], color: "yellow" as const, label: "环内" }],
+              description: "第2步：slow 到节点0，fast 在环中到节点2（-4→2）",
+            },
+            {
+              nodes: [
+                { value: 3, id: "0" },
+                { value: 2, id: "1" },
+                { value: 0, id: "2" },
+                { value: -4, id: "3" },
+              ],
+              pointers: { "3": ["slow", "fast"] },
+              highlights: [{ nodeIds: ["3"], color: "green" as const, label: "相遇!" }],
+              description: "第3步：slow 和 fast 都在节点-4，相遇！存在环，返回 true",
+            },
+          ] as LinkedListStep[],
+        },
         explanation: `## 快慢指针（Floyd 判圈算法）
 
 ### 核心思想
@@ -482,6 +531,81 @@ a = n(b + c) - b = (n-1)(b + c) + c
 |------|-----|------|------|
 | 初始 | 3 | -4 | |
 | 1 | 2 | 2 | 相遇！返回节点 2 |`,
+        animation: {
+          type: "linked-list" as const,
+          title: "环形链表 II 演示",
+          steps: [
+            {
+              nodes: [
+                { value: 3, id: "n0" },
+                { value: 2, id: "n1" },
+                { value: 0, id: "n2" },
+                { value: -4, id: "n3" },
+              ],
+              pointers: { n0: ["slow", "fast"] },
+              highlights: [{ nodeIds: ["n1"], color: "yellow" as const }],
+              description: "链表: 3→2→0→-4→(回到2)。黄色节点是入环点。快慢指针都从头开始",
+            },
+            {
+              nodes: [
+                { value: 3, id: "n0" },
+                { value: 2, id: "n1" },
+                { value: 0, id: "n2" },
+                { value: -4, id: "n3" },
+              ],
+              pointers: { n1: ["slow"], n2: ["fast"] },
+              highlights: [{ nodeIds: ["n1"], color: "yellow" as const }],
+              description: "第1步：slow 走1步到节点2，fast 走2步到节点0",
+            },
+            {
+              nodes: [
+                { value: 3, id: "n0" },
+                { value: 2, id: "n1" },
+                { value: 0, id: "n2" },
+                { value: -4, id: "n3" },
+              ],
+              pointers: { n2: ["slow"], n1: ["fast"] },
+              highlights: [{ nodeIds: ["n1"], color: "yellow" as const }],
+              description: "第2步：slow 到节点0，fast 走2步经过-4回到节点2（fast在环中绕）",
+            },
+            {
+              nodes: [
+                { value: 3, id: "n0" },
+                { value: 2, id: "n1" },
+                { value: 0, id: "n2" },
+                { value: -4, id: "n3" },
+              ],
+              pointers: { n3: ["slow", "fast"] },
+              highlights: [
+                { nodeIds: ["n1"], color: "yellow" as const },
+                { nodeIds: ["n3"], color: "red" as const },
+              ],
+              description: "第3步：slow 到-4，fast 也到-4。相遇！证明有环。现在进入第二阶段",
+            },
+            {
+              nodes: [
+                { value: 3, id: "n0" },
+                { value: 2, id: "n1" },
+                { value: 0, id: "n2" },
+                { value: -4, id: "n3" },
+              ],
+              pointers: { n0: ["ptr"], n3: ["slow"] },
+              highlights: [{ nodeIds: ["n1"], color: "yellow" as const }],
+              description: "第二阶段：ptr从头开始，slow在相遇点。两者同时每次走1步",
+            },
+            {
+              nodes: [
+                { value: 3, id: "n0" },
+                { value: 2, id: "n1" },
+                { value: 0, id: "n2" },
+                { value: -4, id: "n3" },
+              ],
+              pointers: { n1: ["ptr", "slow"] },
+              highlights: [{ nodeIds: ["n1"], color: "green" as const }],
+              description: "ptr走1步到2，slow走1步到2。相遇！节点2就是入环点。数学原理: a = c + (n-1)圈",
+            },
+          ] as LinkedListStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
       },
@@ -702,6 +826,88 @@ null <- 1 <- 2 <- 3          (prev=2, curr=3)
     solutions: [
       {
         name: "迭代法（推荐）",
+        animation: {
+          type: "linked-list" as const,
+          title: "反转链表 - 迭代法演示",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "1": ["curr"] },
+              description: "初始化：prev = null, curr 指向头节点 1",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "1": ["prev"], "2": ["curr"] },
+              brokenConnections: [{ from: "1", to: "2" }],
+              highlights: [{ nodeIds: ["1"], color: "green" as const, label: "已反转" }],
+              description: "第1步：next=2, 1.next=null(断开), prev=1, curr=2",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "2": ["prev"], "3": ["curr"] },
+              brokenConnections: [{ from: "1", to: "2" }, { from: "2", to: "3" }],
+              highlights: [{ nodeIds: ["1", "2"], color: "green" as const, label: "已反转" }],
+              description: "第2步：next=3, 2.next=1(反转), prev=2, curr=3",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "3": ["prev"], "4": ["curr"] },
+              brokenConnections: [{ from: "1", to: "2" }, { from: "2", to: "3" }, { from: "3", to: "4" }],
+              highlights: [{ nodeIds: ["1", "2", "3"], color: "green" as const, label: "已反转" }],
+              description: "第3步：next=4, 3.next=2(反转), prev=3, curr=4",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "4": ["prev"], "5": ["curr"] },
+              brokenConnections: [{ from: "1", to: "2" }, { from: "2", to: "3" }, { from: "3", to: "4" }, { from: "4", to: "5" }],
+              highlights: [{ nodeIds: ["1", "2", "3", "4"], color: "green" as const, label: "已反转" }],
+              description: "第4步：next=5, 4.next=3(反转), prev=4, curr=5",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "5": ["prev/新头"] },
+              brokenConnections: [{ from: "1", to: "2" }, { from: "2", to: "3" }, { from: "3", to: "4" }, { from: "4", to: "5" }],
+              highlights: [{ nodeIds: ["1", "2", "3", "4", "5"], color: "green" as const, label: "完成" }],
+              description: "完成！curr=null，返回 prev=5。链表已反转：5→4→3→2→1",
+            },
+          ] as LinkedListStep[],
+        },
         code: `/**
  * 反转链表 - 迭代法（双指针）
  *
@@ -1107,6 +1313,90 @@ function mergeTwoLists(l1, l2) {
     solutions: [
       {
         name: "迭代法（推荐）",
+        animation: {
+          type: "linked-list" as const,
+          title: "合并两个有序链表 - 迭代法演示",
+          steps: [
+            {
+              nodes: [
+                { value: "1₁", id: "l1-1" },
+                { value: "2₁", id: "l1-2" },
+                { value: "4₁", id: "l1-4" },
+              ],
+              pointers: { "l1-1": ["list1"] },
+              description: "list1: 1→2→4, list2: 1→3→4。创建哨兵节点 dummy",
+            },
+            {
+              nodes: [
+                { value: "1₁", id: "l1-1" },
+                { value: "2₁", id: "l1-2" },
+                { value: "4₁", id: "l1-4" },
+              ],
+              pointers: { "l1-1": ["选中"] },
+              highlights: [{ nodeIds: ["l1-1"], color: "green" as const, label: "1≤1" }],
+              description: "比较 1₁ vs 1₂：相等，选 list1 的 1。结果：dummy→1₁",
+            },
+            {
+              nodes: [
+                { value: "1₁", id: "l1-1" },
+                { value: "1₂", id: "l2-1" },
+                { value: "2₁", id: "l1-2" },
+                { value: "4₁", id: "l1-4" },
+              ],
+              pointers: { "l2-1": ["选中"] },
+              highlights: [{ nodeIds: ["l1-1"], color: "green" as const }, { nodeIds: ["l2-1"], color: "yellow" as const, label: "1<2" }],
+              description: "比较 2₁ vs 1₂：1₂更小。结果：dummy→1₁→1₂",
+            },
+            {
+              nodes: [
+                { value: "1₁", id: "l1-1" },
+                { value: "1₂", id: "l2-1" },
+                { value: "2₁", id: "l1-2" },
+                { value: "4₁", id: "l1-4" },
+              ],
+              pointers: { "l1-2": ["选中"] },
+              highlights: [{ nodeIds: ["l1-1", "l2-1"], color: "green" as const }, { nodeIds: ["l1-2"], color: "yellow" as const, label: "2<3" }],
+              description: "比较 2₁ vs 3₂：2₁更小。结果：dummy→1₁→1₂→2₁",
+            },
+            {
+              nodes: [
+                { value: "1₁", id: "l1-1" },
+                { value: "1₂", id: "l2-1" },
+                { value: "2₁", id: "l1-2" },
+                { value: "3₂", id: "l2-3" },
+                { value: "4₁", id: "l1-4" },
+              ],
+              pointers: { "l2-3": ["选中"] },
+              highlights: [{ nodeIds: ["l1-1", "l2-1", "l1-2"], color: "green" as const }, { nodeIds: ["l2-3"], color: "yellow" as const, label: "3<4" }],
+              description: "比较 4₁ vs 3₂：3₂更小。结果：...→2₁→3₂",
+            },
+            {
+              nodes: [
+                { value: "1₁", id: "l1-1" },
+                { value: "1₂", id: "l2-1" },
+                { value: "2₁", id: "l1-2" },
+                { value: "3₂", id: "l2-3" },
+                { value: "4₁", id: "l1-4" },
+                { value: "4₂", id: "l2-4" },
+              ],
+              pointers: { "l1-4": ["选中"] },
+              highlights: [{ nodeIds: ["l1-1", "l2-1", "l1-2", "l2-3"], color: "green" as const }, { nodeIds: ["l1-4"], color: "yellow" as const, label: "4≤4" }],
+              description: "比较 4₁ vs 4₂：相等选 list1。结果：...→3₂→4₁",
+            },
+            {
+              nodes: [
+                { value: "1₁", id: "l1-1" },
+                { value: "1₂", id: "l2-1" },
+                { value: "2₁", id: "l1-2" },
+                { value: "3₂", id: "l2-3" },
+                { value: "4₁", id: "l1-4" },
+                { value: "4₂", id: "l2-4" },
+              ],
+              highlights: [{ nodeIds: ["l1-1", "l2-1", "l1-2", "l2-3", "l1-4", "l2-4"], color: "green" as const, label: "完成" }],
+              description: "list1 遍历完，连接 list2 剩余：4₂。最终：1→1→2→3→4→4",
+            },
+          ] as LinkedListStep[],
+        },
         code: `/**
  * 合并两个有序链表 - 迭代法
  *
@@ -1394,6 +1684,63 @@ function addTwoNumbers(l1, l2) {
     solutions: [
       {
         name: "模拟加法（推荐）",
+        animation: {
+          type: "linked-list" as const,
+          title: "两数相加 - 模拟加法演示",
+          steps: [
+            {
+              nodes: [
+                { value: 2, id: "l1-2" },
+                { value: 4, id: "l1-4" },
+                { value: 3, id: "l1-3" },
+              ],
+              pointers: { "l1-2": ["l1"], "l1-4": ["l2"] },
+              description: "l1=[2,4,3] 表示 342，l2=[5,6,4] 表示 465。从个位开始相加",
+            },
+            {
+              nodes: [
+                { value: 2, id: "l1-2" },
+                { value: 5, id: "l2-5" },
+                { value: 7, id: "r-7" },
+              ],
+              pointers: { "l1-2": ["2"], "l2-5": ["5"] },
+              highlights: [{ nodeIds: ["r-7"], color: "green" as const, label: "2+5=7" }],
+              description: "个位：2 + 5 = 7，无进位。结果：7",
+            },
+            {
+              nodes: [
+                { value: 7, id: "r-7" },
+                { value: 4, id: "l1-4" },
+                { value: 6, id: "l2-6" },
+                { value: 0, id: "r-0" },
+              ],
+              pointers: { "l1-4": ["4"], "l2-6": ["6"] },
+              highlights: [{ nodeIds: ["r-7"], color: "green" as const }, { nodeIds: ["r-0"], color: "yellow" as const, label: "4+6=10" }],
+              description: "十位：4 + 6 = 10，进位1，保留0。结果：7→0",
+            },
+            {
+              nodes: [
+                { value: 7, id: "r-7" },
+                { value: 0, id: "r-0" },
+                { value: 3, id: "l1-3" },
+                { value: 4, id: "l2-4" },
+                { value: 8, id: "r-8" },
+              ],
+              pointers: { "l1-3": ["3"], "l2-4": ["4"] },
+              highlights: [{ nodeIds: ["r-7", "r-0"], color: "green" as const }, { nodeIds: ["r-8"], color: "yellow" as const, label: "3+4+1=8" }],
+              description: "百位：3 + 4 + 1(进位) = 8。结果：7→0→8",
+            },
+            {
+              nodes: [
+                { value: 7, id: "r-7" },
+                { value: 0, id: "r-0" },
+                { value: 8, id: "r-8" },
+              ],
+              highlights: [{ nodeIds: ["r-7", "r-0", "r-8"], color: "green" as const, label: "完成" }],
+              description: "计算完成！342 + 465 = 807，链表表示：7→0→8",
+            },
+          ] as LinkedListStep[],
+        },
         code: `/**
  * 两数相加 - 模拟加法
  *
@@ -1691,6 +2038,84 @@ function removeNthFromEnd(head, n) {
     solutions: [
       {
         name: "快慢指针（推荐）",
+        animation: {
+          type: "linked-list" as const,
+          title: "删除倒数第N个节点 - 快慢指针演示",
+          steps: [
+            {
+              nodes: [
+                { value: "D", id: "dummy" },
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "dummy": ["slow", "fast"] },
+              description: "n=2。创建哨兵节点dummy，slow和fast都指向dummy",
+            },
+            {
+              nodes: [
+                { value: "D", id: "dummy" },
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "dummy": ["slow"], "3": ["fast"] },
+              highlights: [{ nodeIds: ["1", "2", "3"], color: "yellow" as const, label: "fast先走n+1步" }],
+              description: "fast先走n+1=3步，此时fast指向节点3",
+            },
+            {
+              nodes: [
+                { value: "D", id: "dummy" },
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "1": ["slow"], "4": ["fast"] },
+              description: "同步移动：slow→1，fast→4",
+            },
+            {
+              nodes: [
+                { value: "D", id: "dummy" },
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "2": ["slow"], "5": ["fast"] },
+              description: "同步移动：slow→2，fast→5",
+            },
+            {
+              nodes: [
+                { value: "D", id: "dummy" },
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "3": ["slow"] },
+              highlights: [{ nodeIds: ["4"], color: "red" as const, label: "删除" }],
+              description: "fast到null停止。slow→3，删除slow.next(节点4)",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["1", "2", "3", "5"], color: "green" as const, label: "完成" }],
+              description: "完成！结果：1→2→3→5（节点4已删除）",
+            },
+          ] as LinkedListStep[],
+        },
         code: `/**
  * 删除链表的倒数第 N 个结点 - 快慢指针法（一趟扫描）
  *
@@ -2124,6 +2549,111 @@ function getIntersectionNode(headA, headB) {
   // 返回交点（或 null，表示没有交点）
   return pA;
 }`,
+        animation: {
+          type: "linked-list" as const,
+          title: "相交链表 - 双指针法演示",
+          steps: [
+            {
+              nodes: [
+                { value: "A1", id: "a1" },
+                { value: "A2", id: "a2" },
+                { value: "→8", id: "c1" },
+                { value: 4, id: "c2" },
+                { value: 5, id: "c3" },
+              ],
+              pointers: { a1: ["pA"] },
+              highlights: [{ nodeIds: ["c1", "c2", "c3"], color: "purple" as const }],
+              description: "链表 A: A1→A2→8→4→5。链表 B: B1→B2→B3→8→4→5。两链表在节点 8 处相交（紫色为公共部分）。pA 从 A 头开始",
+            },
+            {
+              nodes: [
+                { value: "B1", id: "b1" },
+                { value: "B2", id: "b2" },
+                { value: "B3", id: "b3" },
+                { value: "→8", id: "c1" },
+                { value: 4, id: "c2" },
+                { value: 5, id: "c3" },
+              ],
+              pointers: { b1: ["pB"] },
+              highlights: [{ nodeIds: ["c1", "c2", "c3"], color: "purple" as const }],
+              description: "链表 B 视角: B1→B2→B3→8→4→5。pB 从 B 头开始。核心思想：pA 走 A+B 路程，pB 走 B+A 路程，总长相等！",
+            },
+            {
+              nodes: [
+                { value: "A1", id: "a1" },
+                { value: "A2", id: "a2" },
+                { value: "→8", id: "c1" },
+                { value: 4, id: "c2" },
+                { value: 5, id: "c3" },
+              ],
+              pointers: { c1: ["pA"] },
+              highlights: [{ nodeIds: ["c1"], color: "blue" as const }],
+              description: "pA 遍历链表 A：A1→A2→8（到达交点）→4→5→null。然后跳转到链表 B 头继续",
+            },
+            {
+              nodes: [
+                { value: "B1", id: "b1" },
+                { value: "B2", id: "b2" },
+                { value: "B3", id: "b3" },
+                { value: "→8", id: "c1" },
+                { value: 4, id: "c2" },
+                { value: 5, id: "c3" },
+              ],
+              pointers: { b1: ["pA"] },
+              highlights: [{ nodeIds: ["b1"], color: "yellow" as const }],
+              description: "pA 走完 A 后跳转到 B 头！现在 pA 在 B1 位置。此时 pA 已走过：A1→A2→8→4→5（5步）",
+            },
+            {
+              nodes: [
+                { value: "B1", id: "b1" },
+                { value: "B2", id: "b2" },
+                { value: "B3", id: "b3" },
+                { value: "→8", id: "c1" },
+                { value: 4, id: "c2" },
+                { value: 5, id: "c3" },
+              ],
+              pointers: { c1: ["pB"] },
+              highlights: [{ nodeIds: ["c1"], color: "blue" as const }],
+              description: "同时 pB 遍历链表 B：B1→B2→B3→8（到达交点）→4→5→null。然后跳转到链表 A 头继续",
+            },
+            {
+              nodes: [
+                { value: "A1", id: "a1" },
+                { value: "A2", id: "a2" },
+                { value: "→8", id: "c1" },
+                { value: 4, id: "c2" },
+                { value: 5, id: "c3" },
+              ],
+              pointers: { a1: ["pB"] },
+              highlights: [{ nodeIds: ["a1"], color: "yellow" as const }],
+              description: "pB 走完 B 后跳转到 A 头！现在 pB 在 A1 位置。此时 pB 已走过：B1→B2→B3→8→4→5（6步）",
+            },
+            {
+              nodes: [
+                { value: "A1", id: "a1" },
+                { value: "A2", id: "a2" },
+                { value: "→8", id: "c1" },
+                { value: 4, id: "c2" },
+                { value: 5, id: "c3" },
+              ],
+              pointers: { c1: ["pA", "pB"] },
+              highlights: [{ nodeIds: ["c1"], color: "green" as const }],
+              description: "关键时刻！pA 从 B 头走 B1→B2→B3→8，pB 从 A 头走 A1→A2→8。两者同时到达交点 8！",
+            },
+            {
+              nodes: [
+                { value: "A1", id: "a1" },
+                { value: "A2", id: "a2" },
+                { value: "→8", id: "c1" },
+                { value: 4, id: "c2" },
+                { value: 5, id: "c3" },
+              ],
+              pointers: { c1: ["pA=pB"] },
+              highlights: [{ nodeIds: ["c1"], color: "green" as const }],
+              description: "相遇！pA 总路程=5+3=8步，pB 总路程=6+2=8步。路程相等所以必在交点相遇！返回节点 8",
+            },
+          ] as LinkedListStep[],
+        },
         explanation: `## 双指针法（浪漫的相遇）
 
 ### 算法原理
@@ -2642,6 +3172,93 @@ slow 停在 3（中间节点）
 虽然题目没有要求，但恢复链表是良好的编程习惯：
 - 不破坏原始数据结构
 - 在实际项目中可能有其他代码依赖这个链表`,
+        animation: {
+          type: "linked-list" as const,
+          title: "回文链表 - 快慢指针 + 反转演示",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 2, id: "3" },
+                { value: 1, id: "4" },
+              ],
+              pointers: { "1": ["slow", "fast"] },
+              description: "初始化：slow 和 fast 都指向头节点，链表 [1,2,2,1]",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 2, id: "3" },
+                { value: 1, id: "4" },
+              ],
+              pointers: { "2": ["slow"], "3": ["fast"] },
+              description: "第1步找中点：slow 走1步到节点2，fast 走2步到节点2(第二个)",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 2, id: "3" },
+                { value: 1, id: "4" },
+              ],
+              pointers: { "2": ["slow/中点"] },
+              highlights: [
+                { nodeIds: ["1", "2"], color: "blue" as const, label: "前半部分" },
+                { nodeIds: ["3", "4"], color: "yellow" as const, label: "后半部分" },
+              ],
+              description: "找到中点：slow 在第2个节点，slow.next 开始是后半部分",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 1, id: "4" },
+                { value: 2, id: "3" },
+              ],
+              pointers: { "4": ["p2"] },
+              brokenConnections: [{ from: "3", to: "4" }],
+              highlights: [
+                { nodeIds: ["1", "2"], color: "blue" as const, label: "前半" },
+                { nodeIds: ["4", "3"], color: "purple" as const, label: "反转后" },
+              ],
+              description: "反转后半部分：[2,1] 变成 [1,2]，p2 指向反转后的头节点",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 1, id: "4" },
+                { value: 2, id: "3" },
+              ],
+              pointers: { "1": ["p1"], "4": ["p2"] },
+              highlights: [{ nodeIds: ["1", "4"], color: "green" as const, label: "比较 1==1" }],
+              description: "比较：p1.val(1) === p2.val(1) ✓ 相等，继续",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 1, id: "4" },
+                { value: 2, id: "3" },
+              ],
+              pointers: { "2": ["p1"], "3": ["p2"] },
+              highlights: [{ nodeIds: ["2", "3"], color: "green" as const, label: "比较 2==2" }],
+              description: "比较：p1.val(2) === p2.val(2) ✓ 相等，继续",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 2, id: "3" },
+                { value: 1, id: "4" },
+              ],
+              highlights: [{ nodeIds: ["1", "2", "3", "4"], color: "green" as const, label: "回文!" }],
+              description: "结果：p2 到达 null，所有比较都相等，返回 true - 是回文链表！",
+            },
+          ] as LinkedListStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
       },
@@ -3013,6 +3630,125 @@ function deleteDuplicates(head) {
 - 第一次：删除第二个 1，变成 1 → 1 → 2
 - 第二次：删除第二个 1，变成 1 → 2
 - 如果每次都移动 curr，会漏掉重复元素`,
+        animation: {
+          type: "linked-list" as const,
+          title: "删除排序链表重复元素演示",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "n1" },
+                { value: 1, id: "n2" },
+                { value: 1, id: "n3" },
+                { value: 2, id: "n4" },
+                { value: 3, id: "n5" },
+                { value: 3, id: "n6" },
+              ],
+              pointers: { n1: ["curr"] },
+              description: "初始链表: 1→1→1→2→3→3。curr 指向头节点。由于已排序，重复元素一定相邻",
+            },
+            {
+              nodes: [
+                { value: 1, id: "n1" },
+                { value: 1, id: "n2" },
+                { value: 1, id: "n3" },
+                { value: 2, id: "n4" },
+                { value: 3, id: "n5" },
+                { value: 3, id: "n6" },
+              ],
+              pointers: { n1: ["curr"] },
+              highlights: [{ nodeIds: ["n1", "n2"], color: "yellow" as const }],
+              description: "比较 curr.val (1) 和 curr.next.val (1)：相等！发现重复",
+            },
+            {
+              nodes: [
+                { value: 1, id: "n1" },
+                { value: 1, id: "n3" },
+                { value: 2, id: "n4" },
+                { value: 3, id: "n5" },
+                { value: 3, id: "n6" },
+              ],
+              pointers: { n1: ["curr"] },
+              highlights: [{ nodeIds: ["n1"], color: "green" as const }],
+              brokenConnections: [{ from: "n1", to: "n2" }],
+              description: "删除重复节点：curr.next = curr.next.next。注意 curr 不移动，因为可能还有连续重复",
+            },
+            {
+              nodes: [
+                { value: 1, id: "n1" },
+                { value: 1, id: "n3" },
+                { value: 2, id: "n4" },
+                { value: 3, id: "n5" },
+                { value: 3, id: "n6" },
+              ],
+              pointers: { n1: ["curr"] },
+              highlights: [{ nodeIds: ["n1", "n3"], color: "yellow" as const }],
+              description: "继续比较：curr.val (1) 和 curr.next.val (1)：还是相等！继续删除",
+            },
+            {
+              nodes: [
+                { value: 1, id: "n1" },
+                { value: 2, id: "n4" },
+                { value: 3, id: "n5" },
+                { value: 3, id: "n6" },
+              ],
+              pointers: { n1: ["curr"] },
+              highlights: [{ nodeIds: ["n1"], color: "green" as const }],
+              description: "再次删除重复节点。现在 curr.val (1) ≠ curr.next.val (2)，不相等",
+            },
+            {
+              nodes: [
+                { value: 1, id: "n1" },
+                { value: 2, id: "n4" },
+                { value: 3, id: "n5" },
+                { value: 3, id: "n6" },
+              ],
+              pointers: { n4: ["curr"] },
+              highlights: [{ nodeIds: ["n1"], color: "green" as const }],
+              description: "不相等时 curr 前进：curr = curr.next。现在检查节点 2",
+            },
+            {
+              nodes: [
+                { value: 1, id: "n1" },
+                { value: 2, id: "n4" },
+                { value: 3, id: "n5" },
+                { value: 3, id: "n6" },
+              ],
+              pointers: { n4: ["curr"] },
+              highlights: [{ nodeIds: ["n4", "n5"], color: "blue" as const }],
+              description: "比较 curr.val (2) 和 curr.next.val (3)：不相等，curr 继续前进",
+            },
+            {
+              nodes: [
+                { value: 1, id: "n1" },
+                { value: 2, id: "n4" },
+                { value: 3, id: "n5" },
+                { value: 3, id: "n6" },
+              ],
+              pointers: { n5: ["curr"] },
+              highlights: [{ nodeIds: ["n5", "n6"], color: "yellow" as const }],
+              description: "比较 curr.val (3) 和 curr.next.val (3)：相等！发现重复",
+            },
+            {
+              nodes: [
+                { value: 1, id: "n1" },
+                { value: 2, id: "n4" },
+                { value: 3, id: "n5" },
+              ],
+              pointers: { n5: ["curr"] },
+              highlights: [{ nodeIds: ["n5"], color: "green" as const }],
+              description: "删除重复节点。curr.next 变为 null，遍历结束",
+            },
+            {
+              nodes: [
+                { value: 1, id: "n1" },
+                { value: 2, id: "n4" },
+                { value: 3, id: "n5" },
+              ],
+              highlights: [{ nodeIds: ["n1", "n4", "n5"], color: "green" as const }],
+              description: "完成！结果链表: 1→2→3。每个元素只出现一次",
+            },
+          ] as LinkedListStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
       },
@@ -3320,6 +4056,135 @@ function deleteDuplicates(head) {
 - **哨兵节点必须**：头节点可能被删除
 - **prev 只在确定保留时移动**：避免跳过连续的重复序列
 - **跳过整个重复序列**：不是只删一个，而是全删`,
+        animation: {
+          type: "linked-list" as const,
+          title: "删除重复元素 II 演示",
+          steps: [
+            {
+              nodes: [
+                { value: "D", id: "dummy" },
+                { value: 1, id: "n1" },
+                { value: 2, id: "n2" },
+                { value: 3, id: "n3a" },
+                { value: 3, id: "n3b" },
+                { value: 4, id: "n4a" },
+                { value: 4, id: "n4b" },
+                { value: 5, id: "n5" },
+              ],
+              pointers: { dummy: ["prev"], n1: ["head"] },
+              description: "链表: 1→2→3→3→4→4→5。用哨兵节点 dummy，prev 指向已确认保留的最后节点",
+            },
+            {
+              nodes: [
+                { value: "D", id: "dummy" },
+                { value: 1, id: "n1" },
+                { value: 2, id: "n2" },
+                { value: 3, id: "n3a" },
+                { value: 3, id: "n3b" },
+                { value: 4, id: "n4a" },
+                { value: 4, id: "n4b" },
+                { value: 5, id: "n5" },
+              ],
+              pointers: { n1: ["prev"], n2: ["head"] },
+              highlights: [{ nodeIds: ["n1"], color: "green" as const }],
+              description: "节点 1 不重复（1≠2），保留！prev 移动到 1",
+            },
+            {
+              nodes: [
+                { value: "D", id: "dummy" },
+                { value: 1, id: "n1" },
+                { value: 2, id: "n2" },
+                { value: 3, id: "n3a" },
+                { value: 3, id: "n3b" },
+                { value: 4, id: "n4a" },
+                { value: 4, id: "n4b" },
+                { value: 5, id: "n5" },
+              ],
+              pointers: { n2: ["prev"], n3a: ["head"] },
+              highlights: [{ nodeIds: ["n1", "n2"], color: "green" as const }],
+              description: "节点 2 不重复（2≠3），保留！prev 移动到 2",
+            },
+            {
+              nodes: [
+                { value: "D", id: "dummy" },
+                { value: 1, id: "n1" },
+                { value: 2, id: "n2" },
+                { value: 3, id: "n3a" },
+                { value: 3, id: "n3b" },
+                { value: 4, id: "n4a" },
+                { value: 4, id: "n4b" },
+                { value: 5, id: "n5" },
+              ],
+              pointers: { n2: ["prev"], n3a: ["head"] },
+              highlights: [
+                { nodeIds: ["n1", "n2"], color: "green" as const },
+                { nodeIds: ["n3a", "n3b"], color: "red" as const },
+              ],
+              description: "节点 3 重复！（3==3）。需要跳过所有值为 3 的节点",
+            },
+            {
+              nodes: [
+                { value: "D", id: "dummy" },
+                { value: 1, id: "n1" },
+                { value: 2, id: "n2" },
+                { value: 4, id: "n4a" },
+                { value: 4, id: "n4b" },
+                { value: 5, id: "n5" },
+              ],
+              pointers: { n2: ["prev"], n4a: ["head"] },
+              highlights: [{ nodeIds: ["n1", "n2"], color: "green" as const }],
+              brokenConnections: [{ from: "n2", to: "n3a" }],
+              description: "删除所有 3：prev.next = head.next。prev 不移动（不确定下一个是否重复）",
+            },
+            {
+              nodes: [
+                { value: "D", id: "dummy" },
+                { value: 1, id: "n1" },
+                { value: 2, id: "n2" },
+                { value: 4, id: "n4a" },
+                { value: 4, id: "n4b" },
+                { value: 5, id: "n5" },
+              ],
+              pointers: { n2: ["prev"], n4a: ["head"] },
+              highlights: [
+                { nodeIds: ["n1", "n2"], color: "green" as const },
+                { nodeIds: ["n4a", "n4b"], color: "red" as const },
+              ],
+              description: "节点 4 重复！（4==4）。需要跳过所有值为 4 的节点",
+            },
+            {
+              nodes: [
+                { value: "D", id: "dummy" },
+                { value: 1, id: "n1" },
+                { value: 2, id: "n2" },
+                { value: 5, id: "n5" },
+              ],
+              pointers: { n2: ["prev"], n5: ["head"] },
+              highlights: [{ nodeIds: ["n1", "n2"], color: "green" as const }],
+              description: "删除所有 4：prev.next = head.next",
+            },
+            {
+              nodes: [
+                { value: "D", id: "dummy" },
+                { value: 1, id: "n1" },
+                { value: 2, id: "n2" },
+                { value: 5, id: "n5" },
+              ],
+              pointers: { n5: ["prev", "head"] },
+              highlights: [{ nodeIds: ["n1", "n2", "n5"], color: "green" as const }],
+              description: "节点 5 不重复（5.next=null），保留！prev 移动到 5",
+            },
+            {
+              nodes: [
+                { value: 1, id: "n1" },
+                { value: 2, id: "n2" },
+                { value: 5, id: "n5" },
+              ],
+              highlights: [{ nodeIds: ["n1", "n2", "n5"], color: "green" as const }],
+              description: "完成！返回 dummy.next 即 1→2→5。所有重复元素已删除",
+            },
+          ] as LinkedListStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
       },
@@ -3658,6 +4523,120 @@ function rotateRight(head, k) {
         ↑
       newHead
 \`\`\``,
+        animation: {
+          type: "linked-list" as const,
+          title: "旋转链表演示",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "1": ["head"] },
+              description: "初始链表: 1→2→3→4→5，k = 2（向右旋转 2 位）",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "1": ["head"], "5": ["tail"] },
+              highlights: [{ nodeIds: ["5"], color: "blue" as const }],
+              description: "第一步：遍历链表计算长度 len = 5，同时找到尾节点 tail",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "1": ["head"], "5": ["tail"] },
+              description: "第二步：计算实际旋转次数 k = k % len = 2 % 5 = 2",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "1": ["head", "newTail"], "5": ["tail"] },
+              highlights: [{ nodeIds: ["1"], color: "yellow" as const }],
+              description: "第三步：找新尾节点，newTail 从 head 开始，需要移动 len - k - 1 = 2 步",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "1": ["head"], "2": ["newTail"], "5": ["tail"] },
+              highlights: [{ nodeIds: ["2"], color: "yellow" as const }],
+              description: "newTail 移动一步到节点 2",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "1": ["head"], "3": ["newTail"], "5": ["tail"] },
+              highlights: [{ nodeIds: ["3"], color: "green" as const }],
+              description: "newTail 再移动一步到节点 3，这就是新的尾节点",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "1": ["head"], "3": ["newTail"], "4": ["newHead"], "5": ["tail"] },
+              highlights: [{ nodeIds: ["3"], color: "green" as const }, { nodeIds: ["4"], color: "blue" as const }],
+              description: "第四步：newHead = newTail.next = 节点 4（这是新的头节点）",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "1": ["head"], "3": ["newTail"], "4": ["newHead"], "5": ["tail"] },
+              highlights: [{ nodeIds: ["3"], color: "red" as const }],
+              brokenConnections: [{ from: "3", to: "4" }],
+              description: "断开连接：newTail.next = null（节点 3 不再指向节点 4）",
+            },
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              pointers: { "4": ["newHead"] },
+              highlights: [{ nodeIds: ["4", "5"], color: "green" as const }],
+              newConnections: [{ from: "5", to: "1" }],
+              description: "重新连接：tail.next = head（节点 5 指向节点 1）。完成旋转！结果：4→5→1→2→3",
+            },
+          ] as LinkedListStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
       },
@@ -4012,6 +4991,146 @@ smallDummy → 1 → 2 → 2 → 4 → 3 → 5 → null
 - 不需要单独处理空链表或第一个节点
 - small.next = head 对任何情况都适用
 - 最后返回 smallDummy.next 即可`,
+        animation: {
+          type: "linked-list" as const,
+          title: "分隔链表演示",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 4, id: "4" },
+                { value: 3, id: "3" },
+                { value: 2, id: "2" },
+                { value: 5, id: "5" },
+                { value: 2, id: "2b" },
+              ],
+              pointers: { "1": ["head"] },
+              description: "初始链表: 1→4→3→2→5→2，x = 3，将小于 3 的节点放到前面",
+            },
+            {
+              nodes: [
+                { value: "S", id: "sd" },
+                { value: "L", id: "ld" },
+                { value: 1, id: "1" },
+                { value: 4, id: "4" },
+                { value: 3, id: "3" },
+                { value: 2, id: "2" },
+                { value: 5, id: "5" },
+                { value: 2, id: "2b" },
+              ],
+              pointers: { "sd": ["smallDummy"], "ld": ["largeDummy"], "1": ["head"] },
+              highlights: [{ nodeIds: ["sd"], color: "green" as const }, { nodeIds: ["ld"], color: "red" as const }],
+              description: "创建两个哨兵节点：smallDummy（绿色，存放 <3）和 largeDummy（红色，存放 ≥3）",
+            },
+            {
+              nodes: [
+                { value: "S", id: "sd" },
+                { value: 1, id: "1" },
+                { value: "L", id: "ld" },
+                { value: 4, id: "4" },
+                { value: 3, id: "3" },
+                { value: 2, id: "2" },
+                { value: 5, id: "5" },
+                { value: 2, id: "2b" },
+              ],
+              pointers: { "1": ["small"], "4": ["head"] },
+              highlights: [{ nodeIds: ["1"], color: "green" as const }],
+              description: "节点 1 < 3，加入 small 链表",
+            },
+            {
+              nodes: [
+                { value: "S", id: "sd" },
+                { value: 1, id: "1" },
+                { value: "L", id: "ld" },
+                { value: 4, id: "4" },
+                { value: 3, id: "3" },
+                { value: 2, id: "2" },
+                { value: 5, id: "5" },
+                { value: 2, id: "2b" },
+              ],
+              pointers: { "1": ["small"], "4": ["large"], "3": ["head"] },
+              highlights: [{ nodeIds: ["4"], color: "red" as const }],
+              description: "节点 4 ≥ 3，加入 large 链表",
+            },
+            {
+              nodes: [
+                { value: "S", id: "sd" },
+                { value: 1, id: "1" },
+                { value: "L", id: "ld" },
+                { value: 4, id: "4" },
+                { value: 3, id: "3" },
+                { value: 2, id: "2" },
+                { value: 5, id: "5" },
+                { value: 2, id: "2b" },
+              ],
+              pointers: { "1": ["small"], "3": ["large"], "2": ["head"] },
+              highlights: [{ nodeIds: ["3"], color: "red" as const }],
+              description: "节点 3 ≥ 3，加入 large 链表",
+            },
+            {
+              nodes: [
+                { value: "S", id: "sd" },
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: "L", id: "ld" },
+                { value: 4, id: "4" },
+                { value: 3, id: "3" },
+                { value: 5, id: "5" },
+                { value: 2, id: "2b" },
+              ],
+              pointers: { "2": ["small"], "3": ["large"], "5": ["head"] },
+              highlights: [{ nodeIds: ["2"], color: "green" as const }],
+              description: "节点 2 < 3，加入 small 链表",
+            },
+            {
+              nodes: [
+                { value: "S", id: "sd" },
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: "L", id: "ld" },
+                { value: 4, id: "4" },
+                { value: 3, id: "3" },
+                { value: 5, id: "5" },
+                { value: 2, id: "2b" },
+              ],
+              pointers: { "2": ["small"], "5": ["large"], "2b": ["head"] },
+              highlights: [{ nodeIds: ["5"], color: "red" as const }],
+              description: "节点 5 ≥ 3，加入 large 链表",
+            },
+            {
+              nodes: [
+                { value: "S", id: "sd" },
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 2, id: "2b" },
+                { value: "L", id: "ld" },
+                { value: 4, id: "4" },
+                { value: 3, id: "3" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "2b": ["small"], "5": ["large"] },
+              highlights: [{ nodeIds: ["2b"], color: "green" as const }],
+              description: "节点 2 < 3，加入 small 链表。遍历完成！",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 2, id: "2b" },
+                { value: 4, id: "4" },
+                { value: 3, id: "3" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "1": ["result"] },
+              highlights: [
+                { nodeIds: ["1", "2", "2b"], color: "green" as const },
+                { nodeIds: ["4", "3", "5"], color: "blue" as const },
+              ],
+              newConnections: [{ from: "2b", to: "4" }],
+              description: "连接两链表：small.next = largeDummy.next。结果：1→2→2→4→3→5",
+            },
+          ] as LinkedListStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
       },
@@ -4357,6 +5476,96 @@ map.set('a', 1);
 - 代码极简，只需要 Map 的基本操作
 - 不需要自己实现双向链表
 - JavaScript/TypeScript 专属技巧`,
+        animation: {
+          type: "linked-list" as const,
+          title: "LRU 缓存演示",
+          steps: [
+            {
+              nodes: [],
+              pointers: {},
+              description: "初始化 LRU 缓存，容量 = 2。Map 为空",
+            },
+            {
+              nodes: [
+                { value: "(1,1)", id: "1" },
+              ],
+              pointers: { "1": ["最新"] },
+              highlights: [{ nodeIds: ["1"], color: "green" as const }],
+              description: "put(1, 1)：插入键值对 (1,1)。Map: {1:1}",
+            },
+            {
+              nodes: [
+                { value: "(1,1)", id: "1" },
+                { value: "(2,2)", id: "2" },
+              ],
+              pointers: { "1": ["最旧"], "2": ["最新"] },
+              highlights: [{ nodeIds: ["2"], color: "green" as const }],
+              description: "put(2, 2)：插入键值对 (2,2)。Map: {1:1, 2:2}",
+            },
+            {
+              nodes: [
+                { value: "(2,2)", id: "2" },
+                { value: "(1,1)", id: "1" },
+              ],
+              pointers: { "2": ["最旧"], "1": ["最新", "访问"] },
+              highlights: [{ nodeIds: ["1"], color: "blue" as const }],
+              description: "get(1)：访问键 1，返回 1。删除后重新插入，1 变为最新。Map: {2:2, 1:1}",
+            },
+            {
+              nodes: [
+                { value: "(1,1)", id: "1" },
+                { value: "(3,3)", id: "3" },
+              ],
+              pointers: { "1": ["最旧"], "3": ["最新"] },
+              highlights: [{ nodeIds: ["3"], color: "green" as const }],
+              description: "put(3, 3)：容量已满！淘汰最旧的键 2，插入 (3,3)。Map: {1:1, 3:3}",
+            },
+            {
+              nodes: [
+                { value: "(1,1)", id: "1" },
+                { value: "(3,3)", id: "3" },
+              ],
+              pointers: { "1": ["最旧"], "3": ["最新"] },
+              highlights: [{ nodeIds: ["1", "3"], color: "yellow" as const }],
+              description: "get(2)：键 2 不存在（已被淘汰），返回 -1",
+            },
+            {
+              nodes: [
+                { value: "(3,3)", id: "3" },
+                { value: "(4,4)", id: "4" },
+              ],
+              pointers: { "3": ["最旧"], "4": ["最新"] },
+              highlights: [{ nodeIds: ["4"], color: "green" as const }],
+              description: "put(4, 4)：容量已满！淘汰最旧的键 1，插入 (4,4)。Map: {3:3, 4:4}",
+            },
+            {
+              nodes: [
+                { value: "(3,3)", id: "3" },
+                { value: "(4,4)", id: "4" },
+              ],
+              pointers: { "3": ["最旧"], "4": ["最新"] },
+              description: "get(1)：键 1 不存在（已被淘汰），返回 -1",
+            },
+            {
+              nodes: [
+                { value: "(4,4)", id: "4" },
+                { value: "(3,3)", id: "3" },
+              ],
+              pointers: { "4": ["最旧"], "3": ["最新", "访问"] },
+              highlights: [{ nodeIds: ["3"], color: "blue" as const }],
+              description: "get(3)：访问键 3，返回 3。3 变为最新。Map: {4:4, 3:3}",
+            },
+            {
+              nodes: [
+                { value: "(4,4)", id: "4" },
+                { value: "(3,3)", id: "3" },
+              ],
+              pointers: { "4": ["访问"], "3": ["最新"] },
+              highlights: [{ nodeIds: ["4"], color: "blue" as const }],
+              description: "get(4)：访问键 4，返回 4。最终输出: [null,null,null,1,null,-1,null,-1,3,4]",
+            },
+          ] as LinkedListStep[],
+        },
         timeComplexity: "O(1)",
         spaceComplexity: "O(capacity)",
       },
@@ -4771,6 +5980,116 @@ dummy → 2 → 1 → 4 → 3 → 5
 - 翻转后：新 head = 2
 
 使用 dummy 可以通过 dummy.next 获取正确的头`,
+        animation: {
+          type: "linked-list" as const,
+          title: "K 个一组翻转链表演示",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "1": ["head"] },
+              description: "初始链表: 1→2→3→4→5，k = 2（每 2 个一组翻转）",
+            },
+            {
+              nodes: [
+                { value: "D", id: "d" },
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "d": ["prevGE"], "1": ["GS"], "2": ["kth"], "3": ["nextGS"] },
+              highlights: [{ nodeIds: ["1", "2"], color: "yellow" as const, label: "第一组" }],
+              description: "找到第一组的 k=2 个节点。GS=1, kth=2, nextGS=3",
+            },
+            {
+              nodes: [
+                { value: "D", id: "d" },
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "3": ["prev"], "1": ["curr"] },
+              highlights: [{ nodeIds: ["1", "2"], color: "blue" as const }],
+              description: "开始翻转第一组：prev = nextGS(3)，curr = GS(1)",
+            },
+            {
+              nodes: [
+                { value: "D", id: "d" },
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "d": ["prevGE"], "1": ["prevGE更新"] },
+              highlights: [{ nodeIds: ["2", "1"], color: "green" as const, label: "已翻转" }],
+              description: "第一组翻转完成！2→1→3。prevGE.next = kth(2)，prevGE = GS(1)",
+            },
+            {
+              nodes: [
+                { value: "D", id: "d" },
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "1": ["prevGE"], "3": ["GS"], "4": ["kth"], "5": ["nextGS"] },
+              highlights: [{ nodeIds: ["3", "4"], color: "yellow" as const, label: "第二组" }],
+              description: "找到第二组的 k=2 个节点。GS=3, kth=4, nextGS=5",
+            },
+            {
+              nodes: [
+                { value: "D", id: "d" },
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 4, id: "4" },
+                { value: 3, id: "3" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "3": ["prevGE更新"] },
+              highlights: [{ nodeIds: ["4", "3"], color: "green" as const, label: "已翻转" }],
+              description: "第二组翻转完成！4→3→5。prevGE.next = kth(4)，prevGE = GS(3)",
+            },
+            {
+              nodes: [
+                { value: "D", id: "d" },
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 4, id: "4" },
+                { value: 3, id: "3" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "3": ["prevGE"], "5": ["检查"] },
+              highlights: [{ nodeIds: ["5"], color: "red" as const }],
+              description: "第三组只有 1 个节点 (5)，不足 k=2 个，保持原样",
+            },
+            {
+              nodes: [
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 4, id: "4" },
+                { value: 3, id: "3" },
+                { value: 5, id: "5" },
+              ],
+              pointers: { "2": ["head"] },
+              highlights: [
+                { nodeIds: ["2", "1"], color: "green" as const },
+                { nodeIds: ["4", "3"], color: "green" as const },
+              ],
+              description: "完成！结果: 2→1→4→3→5",
+            },
+          ] as LinkedListStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
       },
@@ -5136,6 +6455,99 @@ sortList(4→2→1→3)
 
 - 递归调用栈深度：O(log n)
 - 合并操作只调整指针，不需要额外数组`,
+        animation: {
+          type: "linked-list" as const,
+          title: "归并排序链表演示",
+          steps: [
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+              ],
+              pointers: { "4": ["head"] },
+              description: "初始链表: 4→2→1→3，使用归并排序",
+            },
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+              ],
+              pointers: { "4": ["slow"], "2": ["slow"], "1": ["fast"] },
+              highlights: [{ nodeIds: ["2"], color: "yellow" as const }],
+              description: "快慢指针找中点：slow=2, fast=3→null，slow 停在 2",
+            },
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+              ],
+              pointers: {},
+              highlights: [
+                { nodeIds: ["4", "2"], color: "blue" as const, label: "左半" },
+                { nodeIds: ["1", "3"], color: "green" as const, label: "右半" },
+              ],
+              brokenConnections: [{ from: "2", to: "1" }],
+              description: "断开链表：左半 [4→2]，右半 [1→3]",
+            },
+            {
+              nodes: [
+                { value: 2, id: "2" },
+                { value: 4, id: "4" },
+              ],
+              pointers: {},
+              highlights: [{ nodeIds: ["2", "4"], color: "blue" as const, label: "左半排序" }],
+              description: "递归排序左半：4→2 变为 2→4",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+              ],
+              pointers: {},
+              highlights: [{ nodeIds: ["1", "3"], color: "green" as const, label: "右半排序" }],
+              description: "递归排序右半：1→3 已有序，保持不变",
+            },
+            {
+              nodes: [
+                { value: 2, id: "2" },
+                { value: 4, id: "4" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+              ],
+              pointers: { "2": ["l1"], "1": ["l2"] },
+              highlights: [{ nodeIds: ["1"], color: "yellow" as const }],
+              description: "合并：比较 2 和 1，1 < 2，选择 1",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 4, id: "4" },
+                { value: 3, id: "3" },
+              ],
+              pointers: { "2": ["l1"], "3": ["l2"] },
+              highlights: [{ nodeIds: ["2"], color: "yellow" as const }],
+              description: "合并：比较 2 和 3，2 < 3，选择 2",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+              ],
+              pointers: { "1": ["head"] },
+              highlights: [{ nodeIds: ["1", "2", "3", "4"], color: "green" as const }],
+              description: "合并完成！结果: 1→2→3→4",
+            },
+          ] as LinkedListStep[],
+        },
         timeComplexity: "O(n log n)",
         spaceComplexity: "O(log n)",
       },
@@ -5506,6 +6918,77 @@ A'.random = map.get(A.random) = map.get(C) = C'
 
 - 哈希表存储 n 个键值对：O(n)
 - 新链表本身也需要 O(n) 空间，但这是输出，不算额外空间`,
+        animation: {
+          type: "linked-list" as const,
+          title: "随机链表复制演示",
+          steps: [
+            {
+              nodes: [
+                { value: 7, id: "7" },
+                { value: 13, id: "13" },
+                { value: 11, id: "11" },
+              ],
+              pointers: { "7": ["head"] },
+              description: "原链表: 7→13→11，每个节点有 random 指针",
+            },
+            {
+              nodes: [
+                { value: 7, id: "7" },
+                { value: 13, id: "13" },
+                { value: 11, id: "11" },
+                { value: "7'", id: "7c" },
+              ],
+              pointers: { "7": ["curr"], "7c": ["新建"] },
+              highlights: [{ nodeIds: ["7", "7c"], color: "blue" as const }],
+              description: "第一遍：遍历原链表，为每个节点创建对应的新节点。Map: {7→7'}",
+            },
+            {
+              nodes: [
+                { value: 7, id: "7" },
+                { value: 13, id: "13" },
+                { value: 11, id: "11" },
+                { value: "7'", id: "7c" },
+                { value: "13'", id: "13c" },
+              ],
+              pointers: { "13": ["curr"], "13c": ["新建"] },
+              highlights: [{ nodeIds: ["13", "13c"], color: "blue" as const }],
+              description: "继续创建节点。Map: {7→7', 13→13'}",
+            },
+            {
+              nodes: [
+                { value: 7, id: "7" },
+                { value: 13, id: "13" },
+                { value: 11, id: "11" },
+                { value: "7'", id: "7c" },
+                { value: "13'", id: "13c" },
+                { value: "11'", id: "11c" },
+              ],
+              pointers: { "11": ["curr"], "11c": ["新建"] },
+              highlights: [{ nodeIds: ["11", "11c"], color: "blue" as const }],
+              description: "创建完成。Map: {7→7', 13→13', 11→11'}",
+            },
+            {
+              nodes: [
+                { value: "7'", id: "7c" },
+                { value: "13'", id: "13c" },
+                { value: "11'", id: "11c" },
+              ],
+              pointers: { "7c": ["设置next"] },
+              highlights: [{ nodeIds: ["7c", "13c"], color: "yellow" as const }],
+              description: "第二遍：设置 next 指针。7'.next = map.get(13) = 13'",
+            },
+            {
+              nodes: [
+                { value: "7'", id: "7c" },
+                { value: "13'", id: "13c" },
+                { value: "11'", id: "11c" },
+              ],
+              pointers: { "7c": ["head'"] },
+              highlights: [{ nodeIds: ["7c", "13c", "11c"], color: "green" as const }],
+              description: "完成！新链表 7'→13'→11'，random 指针也正确设置",
+            },
+          ] as LinkedListStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
@@ -5837,6 +7320,81 @@ prev -> second -> first -> next
 - 交换后：head = 2
 
 使用 dummy 后，直接返回 dummy.next 即可`,
+        animation: {
+          type: "linked-list" as const,
+          title: "两两交换链表节点演示",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+              ],
+              pointers: { "1": ["head"] },
+              description: "初始链表: 1→2→3→4，两两交换相邻节点",
+            },
+            {
+              nodes: [
+                { value: "D", id: "d" },
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+              ],
+              pointers: { "d": ["prev"], "1": ["first"], "2": ["second"] },
+              highlights: [{ nodeIds: ["1", "2"], color: "yellow" as const, label: "待交换" }],
+              description: "定位第一对：prev=dummy, first=1, second=2",
+            },
+            {
+              nodes: [
+                { value: "D", id: "d" },
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+              ],
+              pointers: { "d": ["prev"], "1": ["prev更新"] },
+              highlights: [{ nodeIds: ["2", "1"], color: "green" as const, label: "已交换" }],
+              description: "交换完成！执行: first.next=3, second.next=first, prev.next=second。prev 移到 1",
+            },
+            {
+              nodes: [
+                { value: "D", id: "d" },
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+              ],
+              pointers: { "1": ["prev"], "3": ["first"], "4": ["second"] },
+              highlights: [{ nodeIds: ["3", "4"], color: "yellow" as const, label: "待交换" }],
+              description: "定位第二对：prev=1, first=3, second=4",
+            },
+            {
+              nodes: [
+                { value: "D", id: "d" },
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 4, id: "4" },
+                { value: 3, id: "3" },
+              ],
+              pointers: { "3": ["prev"] },
+              highlights: [{ nodeIds: ["4", "3"], color: "green" as const, label: "已交换" }],
+              description: "交换完成！prev.next=null，循环结束",
+            },
+            {
+              nodes: [
+                { value: 2, id: "2" },
+                { value: 1, id: "1" },
+                { value: 4, id: "4" },
+                { value: 3, id: "3" },
+              ],
+              pointers: { "2": ["head"] },
+              highlights: [{ nodeIds: ["2", "1", "4", "3"], color: "green" as const }],
+              description: "完成！结果: 2→1→4→3",
+            },
+          ] as LinkedListStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
       },
@@ -6150,6 +7708,76 @@ function mergeTwoLists(l1: ListNode | null, l2: ListNode | null): ListNode | nul
   - 每轮处理所有 N 个节点
 - **空间复杂度**：O(log k)
   - 每轮需要存储中间结果数组`,
+        animation: {
+          type: "linked-list" as const,
+          title: "合并 K 个升序链表演示",
+          steps: [
+            {
+              nodes: [
+                { value: "1→4→5", id: "l1" },
+                { value: "1→3→4", id: "l2" },
+                { value: "2→6", id: "l3" },
+              ],
+              pointers: {},
+              highlights: [
+                { nodeIds: ["l1"], color: "blue" as const },
+                { nodeIds: ["l2"], color: "green" as const },
+                { nodeIds: ["l3"], color: "yellow" as const },
+              ],
+              description: "初始：3 个有序链表 [1→4→5], [1→3→4], [2→6]",
+            },
+            {
+              nodes: [
+                { value: "1→4→5", id: "l1" },
+                { value: "1→3→4", id: "l2" },
+              ],
+              pointers: {},
+              highlights: [
+                { nodeIds: ["l1", "l2"], color: "yellow" as const, label: "第一对" },
+              ],
+              description: "第一轮：两两配对。合并 [1→4→5] 和 [1→3→4]",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1a" },
+                { value: 1, id: "1b" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4a" },
+                { value: 4, id: "4b" },
+                { value: 5, id: "5" },
+              ],
+              pointers: {},
+              highlights: [{ nodeIds: ["1a", "1b", "3", "4a", "4b", "5"], color: "blue" as const }],
+              description: "合并结果：1→1→3→4→4→5",
+            },
+            {
+              nodes: [
+                { value: "1→1→3→4→4→5", id: "m1" },
+                { value: "2→6", id: "l3" },
+              ],
+              pointers: {},
+              highlights: [
+                { nodeIds: ["m1", "l3"], color: "yellow" as const, label: "第二对" },
+              ],
+              description: "第二轮：合并 [1→1→3→4→4→5] 和 [2→6]",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1a" },
+                { value: 1, id: "1b" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4a" },
+                { value: 4, id: "4b" },
+                { value: 5, id: "5" },
+                { value: 6, id: "6" },
+              ],
+              pointers: { "1a": ["head"] },
+              highlights: [{ nodeIds: ["1a", "1b", "2", "3", "4a", "4b", "5", "6"], color: "green" as const }],
+              description: "完成！结果: 1→1→2→3→4→4→5→6",
+            },
+          ] as LinkedListStep[],
+        },
         timeComplexity: "O(N log k)",
         spaceComplexity: "O(log k)",
       },

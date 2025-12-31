@@ -1,4 +1,5 @@
 import { Problem } from "../types";
+import { TwoPointersStep } from "../components/animations";
 
 export const mathProblems: Problem[] = [
   // 1. 回文数 (9)
@@ -101,22 +102,111 @@ export const mathProblems: Problem[] = [
     solutions: [
       {
         name: "反转一半数字（推荐）",
-        code: `function isPalindrome(x) {
-  // 负数和以 0 结尾的非零数不是回文
+        code: `/**
+ * 回文数 - 反转一半数字法
+ *
+ * 核心思想：只反转数字的后半部分，与前半部分比较
+ *
+ * 为什么只反转一半？
+ * - 避免整数溢出问题（完全反转可能溢出）
+ * - 当反转的数 >= 剩余的数时，说明已经处理了一半
+ *
+ * 特殊情况：
+ * - 负数不是回文（-121 读作 121-）
+ * - 以 0 结尾的非零数不是回文（10 反转是 01）
+ *
+ * 时间复杂度：O(log n)，每次迭代去掉一位数字
+ * 空间复杂度：O(1)
+ */
+function isPalindrome(x) {
+  // 特殊情况处理
+  // 1. 负数不是回文
+  // 2. 以 0 结尾的非零数不是回文（因为开头不能是 0）
   if (x < 0 || (x % 10 === 0 && x !== 0)) {
     return false;
   }
 
+  // reversed 存储反转的后半部分
   let reversed = 0;
+
+  /**
+   * 反转后半部分数字
+   *
+   * 示例：x = 12321
+   *
+   * 初始：x=12321, reversed=0
+   *
+   * 第1轮：
+   *   reversed = 0*10 + 12321%10 = 1
+   *   x = floor(12321/10) = 1232
+   *   x(1232) > reversed(1)，继续
+   *
+   * 第2轮：
+   *   reversed = 1*10 + 1232%10 = 12
+   *   x = floor(1232/10) = 123
+   *   x(123) > reversed(12)，继续
+   *
+   * 第3轮：
+   *   reversed = 12*10 + 123%10 = 123
+   *   x = floor(123/10) = 12
+   *   x(12) < reversed(123)，停止
+   *
+   * 奇数位数情况：中间数字在 reversed 中
+   * x=12, reversed=123
+   * 比较：x(12) === floor(reversed/10)(12) ✓
+   */
   while (x > reversed) {
+    // 取出 x 的最后一位，加到 reversed 上
     reversed = reversed * 10 + x % 10;
+    // 去掉 x 的最后一位
     x = Math.floor(x / 10);
   }
 
-  // 偶数位数：x === reversed
-  // 奇数位数：x === Math.floor(reversed / 10)
+  // 偶数位数：x === reversed（如 1221 → x=12, reversed=12）
+  // 奇数位数：x === floor(reversed/10)（如 12321 → x=12, reversed=123）
   return x === reversed || x === Math.floor(reversed / 10);
 }`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "回文数判断演示",
+          steps: [
+            {
+              array: ["1", "2", "3", "2", "1"],
+              left: 0,
+              right: 4,
+              highlights: [],
+              description: "x=12321。只反转后半部分与前半部分比较",
+            },
+            {
+              array: ["1", "2", "3", "2", "1"],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [0, 1], color: "blue" as const, label: "x" }, { indices: [4], color: "green" as const, label: "reversed" }],
+              description: "x=12321, reversed=0。取最后一位：reversed=0*10+1=1, x=1232",
+            },
+            {
+              array: ["1", "2", "3", "2"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0, 1], color: "blue" as const, label: "x" }, { indices: [3], color: "green" as const, label: "reversed" }],
+              description: "x=1232, reversed=1。取最后一位：reversed=1*10+2=12, x=123",
+            },
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1], color: "blue" as const, label: "x" }, { indices: [2], color: "green" as const, label: "reversed" }],
+              description: "x=123, reversed=12。取最后一位：reversed=12*10+3=123, x=12",
+            },
+            {
+              array: ["1", "2"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "blue" as const, label: "x=12" }, { indices: [0, 1], color: "green" as const, label: "rev=123" }],
+              description: "x=12 < reversed=123，停止。x(12) === floor(123/10)(12) ✓ 是回文",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 反转一半数字
 
 ### 思路
@@ -139,9 +229,38 @@ x=12, reversed=123, 123/10=12=x，是回文`,
       },
       {
         name: "字符串反转",
-        code: `function isPalindrome(x) {
+        code: `/**
+ * 回文数 - 字符串反转法
+ *
+ * 核心思想：将数字转为字符串，比较原字符串与反转后的字符串
+ *
+ * 实现步骤：
+ * 1. 转为字符串
+ * 2. 反转字符串
+ * 3. 比较是否相等
+ *
+ * 时间复杂度：O(n)，n 为数字位数
+ * 空间复杂度：O(n)，存储字符串
+ */
+function isPalindrome(x) {
+  // 负数不是回文
   if (x < 0) return false;
+
+  // 转为字符串
   const str = x.toString();
+
+  /**
+   * 反转字符串并比较
+   *
+   * 示例：x = 121
+   *
+   * str = "121"
+   * str.split('') = ['1', '2', '1']
+   * .reverse() = ['1', '2', '1']
+   * .join('') = "121"
+   *
+   * "121" === "121" → true
+   */
   return str === str.split('').reverse().join('');
 }`,
         explanation: `## 字符串反转
@@ -159,17 +278,58 @@ x=12, reversed=123, 123/10=12=x，是回文`,
       },
       {
         name: "完全反转数字",
-        code: `function isPalindrome(x) {
+        code: `/**
+ * 回文数 - 完全反转数字法
+ *
+ * 核心思想：完全反转整个数字，与原数字比较
+ *
+ * 注意：
+ * - 需要保存原始数字用于最后比较
+ * - 对于很大的数字可能存在溢出问题（JS 中使用 Number 类型会自动处理）
+ *
+ * 时间复杂度：O(log n)
+ * 空间复杂度：O(1)
+ */
+function isPalindrome(x) {
+  // 负数不是回文
   if (x < 0) return false;
 
+  // 保存原始值用于最后比较
   const original = x;
+  // 存储反转后的数字
   let reversed = 0;
 
+  /**
+   * 完全反转数字
+   *
+   * 示例：x = 121
+   *
+   * 初始：x=121, reversed=0
+   *
+   * 第1轮：
+   *   reversed = 0*10 + 121%10 = 1
+   *   x = floor(121/10) = 12
+   *
+   * 第2轮：
+   *   reversed = 1*10 + 12%10 = 12
+   *   x = floor(12/10) = 1
+   *
+   * 第3轮：
+   *   reversed = 12*10 + 1%10 = 121
+   *   x = floor(1/10) = 0
+   *
+   * x = 0，退出循环
+   * reversed = 121, original = 121
+   * 121 === 121 → true
+   */
   while (x > 0) {
+    // 取出最后一位，加到 reversed
     reversed = reversed * 10 + x % 10;
+    // 去掉最后一位
     x = Math.floor(x / 10);
   }
 
+  // 比较反转后的数字与原始数字
   return original === reversed;
 }`,
         explanation: `## 完全反转数字
@@ -283,17 +443,101 @@ x=12, reversed=123, 123/10=12=x，是回文`,
     solutions: [
       {
         name: "模拟加法（推荐）",
-        code: `function plusOne(digits) {
+        code: `/**
+ * 加一 - 模拟加法
+ *
+ * 核心思想：从最低位开始处理进位
+ *
+ * 关键观察：
+ * - 如果当前位 < 9，加 1 后不会产生进位，直接返回
+ * - 如果当前位 = 9，加 1 后变成 0，需要向前进位
+ * - 只有所有位都是 9 时（如 999），才需要扩展数组
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(1)，只有 999...9 情况需要 O(n)
+ */
+function plusOne(digits) {
+  /**
+   * 从最低位向最高位处理
+   *
+   * 示例1：digits = [1,2,3]
+   *
+   * i=2: digits[2]=3 < 9
+   *      digits[2]++ → [1,2,4]
+   *      直接返回 [1,2,4]
+   *
+   * 示例2：digits = [1,2,9]
+   *
+   * i=2: digits[2]=9
+   *      digits[2]=0 → [1,2,0]
+   *      继续
+   * i=1: digits[1]=2 < 9
+   *      digits[1]++ → [1,3,0]
+   *      直接返回 [1,3,0]
+   *
+   * 示例3：digits = [9,9,9]
+   *
+   * i=2: digits[2]=9 → [9,9,0]
+   * i=1: digits[1]=9 → [9,0,0]
+   * i=0: digits[0]=9 → [0,0,0]
+   * 循环结束，所有位都是 9
+   * 返回 [1,0,0,0]
+   */
   for (let i = digits.length - 1; i >= 0; i--) {
     if (digits[i] < 9) {
+      // 不需要进位，直接加 1 返回
       digits[i]++;
       return digits;
     }
+    // 需要进位，当前位变 0，继续处理下一位
     digits[i] = 0;
   }
-  // 所有位都是 9 的情况
+
+  // 所有位都是 9 的情况（如 999 → 1000）
+  // [0,0,0] → [1,0,0,0]
   return [1, ...digits];
 }`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "加一演示",
+          steps: [
+            {
+              array: ["9", "9", "9"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [2], color: "blue" as const, label: "i=2" }],
+              description: "digits=[9,9,9]。从最低位开始处理。i=2, digits[2]=9",
+            },
+            {
+              array: ["9", "9", "0"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [2], color: "green" as const, label: "→0" }, { indices: [1], color: "blue" as const, label: "i=1" }],
+              description: "digits[2]=9，需要进位，变成0。继续处理 i=1",
+            },
+            {
+              array: ["9", "0", "0"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [1], color: "green" as const, label: "→0" }, { indices: [0], color: "blue" as const, label: "i=0" }],
+              description: "digits[1]=9，需要进位，变成0。继续处理 i=0",
+            },
+            {
+              array: ["0", "0", "0"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0], color: "green" as const, label: "→0" }],
+              description: "digits[0]=9，需要进位，变成0。循环结束，所有位都是9",
+            },
+            {
+              array: ["1", "0", "0", "0"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0], color: "green" as const, label: "新增1" }],
+              description: "在最前面加1。结果=[1,0,0,0]",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 模拟加法
 
 ### 思路
@@ -310,17 +554,55 @@ x=12, reversed=123, 123/10=12=x，是回文`,
       },
       {
         name: "显式进位",
-        code: `function plusOne(digits) {
-  let carry = 1; // 初始进位为 1（相当于 +1）
+        code: `/**
+ * 加一 - 显式进位法
+ *
+ * 核心思想：使用 carry 变量显式跟踪进位
+ *
+ * 这是更通用的加法模拟方法，可以扩展为加任意数
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(1)
+ */
+function plusOne(digits) {
+  // 初始进位为 1（相当于 +1 操作）
+  let carry = 1;
 
+  /**
+   * 从最低位开始，逐位处理
+   *
+   * 示例：digits = [1,9,9]
+   *
+   * 初始：carry = 1
+   *
+   * i=2: sum = 9 + 1 = 10
+   *      digits[2] = 10 % 10 = 0
+   *      carry = floor(10/10) = 1
+   *      carry ≠ 0，继续
+   *
+   * i=1: sum = 9 + 1 = 10
+   *      digits[1] = 10 % 10 = 0
+   *      carry = floor(10/10) = 1
+   *      carry ≠ 0，继续
+   *
+   * i=0: sum = 1 + 1 = 2
+   *      digits[0] = 2 % 10 = 2
+   *      carry = floor(2/10) = 0
+   *      carry = 0，返回 [2,0,0]
+   */
   for (let i = digits.length - 1; i >= 0; i--) {
+    // 当前位 + 进位
     const sum = digits[i] + carry;
+    // 新的当前位
     digits[i] = sum % 10;
+    // 新的进位
     carry = Math.floor(sum / 10);
 
+    // 如果没有进位了，可以提前返回
     if (carry === 0) return digits;
   }
 
+  // 如果最后还有进位（如 999 + 1），在开头添加
   if (carry > 0) {
     digits.unshift(carry);
   }
@@ -342,8 +624,33 @@ x=12, reversed=123, 123/10=12=x，是回文`,
       },
       {
         name: "BigInt 方法",
-        code: `function plusOne(digits) {
+        code: `/**
+ * 加一 - BigInt 方法
+ *
+ * 核心思想：利用 JavaScript 的 BigInt 处理大数运算
+ *
+ * 实现步骤：
+ * 1. 数组 → 字符串 → BigInt
+ * 2. BigInt + 1n
+ * 3. BigInt → 字符串 → 数组
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(n)
+ */
+function plusOne(digits) {
+  /**
+   * 示例：digits = [9,9,9]
+   *
+   * digits.join('') = "999"
+   * BigInt("999") = 999n
+   * 999n + 1n = 1000n
+   * (1000n).toString() = "1000"
+   * "1000".split('') = ['1','0','0','0']
+   * .map(Number) = [1,0,0,0]
+   */
+  // 将数组转为 BigInt 数字
   const num = BigInt(digits.join('')) + 1n;
+  // 转回数组
   return num.toString().split('').map(Number);
 }`,
         explanation: `## BigInt 方法
@@ -464,23 +771,131 @@ x=12, reversed=123, 123/10=12=x，是回文`,
     solutions: [
       {
         name: "快速幂-迭代（推荐）",
-        code: `function myPow(x, n) {
+        code: `/**
+ * Pow(x, n) - 快速幂迭代法
+ *
+ * 核心思想：利用二进制分解指数，将 O(n) 优化到 O(log n)
+ *
+ * 数学原理：
+ * - x^n 可以分解为 x^(二进制位的加权和)
+ * - 例如：x^13 = x^(1101₂) = x^8 × x^4 × x^1
+ *
+ * 关键操作：
+ * - n & 1：判断 n 的最低位是否为 1（奇偶性）
+ * - n >>= 1 或 n /= 2：右移一位（去掉最低位）
+ * - x *= x：底数平方，对应二进制位的权重翻倍
+ *
+ * 时间复杂度：O(log n)
+ * 空间复杂度：O(1)
+ */
+function myPow(x, n) {
+  // 任何数的 0 次方都是 1
   if (n === 0) return 1;
+
+  // 处理负指数：x^(-n) = (1/x)^n
   if (n < 0) {
     x = 1 / x;
     n = -n;
   }
 
+  // 结果累积器
   let result = 1;
+
+  /**
+   * 快速幂迭代过程
+   *
+   * 示例：x = 2, n = 13 (二进制: 1101)
+   *
+   * 初始：result=1, x=2, n=13
+   *
+   * 第1轮：n=13, 二进制最低位=1
+   *   n & 1 = 1 → result = 1 × 2 = 2
+   *   x = 2 × 2 = 4
+   *   n = 13 >> 1 = 6
+   *   （相当于累积了 x^1）
+   *
+   * 第2轮：n=6, 二进制最低位=0
+   *   n & 1 = 0 → result 不变 = 2
+   *   x = 4 × 4 = 16
+   *   n = 6 >> 1 = 3
+   *   （跳过 x^2）
+   *
+   * 第3轮：n=3, 二进制最低位=1
+   *   n & 1 = 1 → result = 2 × 16 = 32
+   *   x = 16 × 16 = 256
+   *   n = 3 >> 1 = 1
+   *   （累积了 x^4，result = x^1 × x^4 = x^5）
+   *
+   * 第4轮：n=1, 二进制最低位=1
+   *   n & 1 = 1 → result = 32 × 256 = 8192
+   *   x = 256 × 256 = 65536
+   *   n = 1 >> 1 = 0
+   *   （累积了 x^8，result = x^5 × x^8 = x^13）
+   *
+   * n = 0，退出循环
+   * result = 8192 = 2^13
+   */
   while (n > 0) {
     if (n & 1) {
+      // 当前二进制位为 1，将当前的 x 累积到结果
       result *= x;
     }
+    // 底数平方，对应下一个二进制位
     x *= x;
+    // 右移一位
     n = Math.floor(n / 2);
   }
+
   return result;
 }`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "快速幂演示",
+          steps: [
+            {
+              array: ["1", "1", "0", "1"],
+              left: 0,
+              right: 3,
+              highlights: [],
+              description: "计算2^13。n=13的二进制=1101。x=2, result=1",
+            },
+            {
+              array: ["1", "1", "0", "1"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [3], color: "green" as const, label: "bit=1" }],
+              description: "n=13, 最低位=1。result=1×2=2, x=2×2=4, n=6",
+            },
+            {
+              array: ["0", "1", "1", "0"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [3], color: "gray" as const, label: "bit=0" }],
+              description: "n=6(0110), 最低位=0。跳过。x=4×4=16, n=3",
+            },
+            {
+              array: ["0", "0", "1", "1"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [3], color: "green" as const, label: "bit=1" }],
+              description: "n=3(0011), 最低位=1。result=2×16=32, x=16×16=256, n=1",
+            },
+            {
+              array: ["0", "0", "0", "1"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [3], color: "green" as const, label: "bit=1" }],
+              description: "n=1(0001), 最低位=1。result=32×256=8192, n=0",
+            },
+            {
+              array: ["8", "1", "9", "2"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [0, 1, 2, 3], color: "green" as const, label: "结果" }],
+              description: "n=0, 退出循环。result=8192=2^13 ✓",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 快速幂-迭代
 
 ### 思路
@@ -501,16 +916,53 @@ n=13(1101)：
       },
       {
         name: "快速幂-递归",
-        code: `function myPow(x, n) {
+        code: `/**
+ * Pow(x, n) - 快速幂递归法
+ *
+ * 核心思想：利用分治思想，将问题规模减半
+ *
+ * 递归关系：
+ * - x^0 = 1（基准情况）
+ * - x^n = (x^(n/2))² × x^(n%2)
+ *   - n 为偶数：x^n = (x^(n/2))²
+ *   - n 为奇数：x^n = (x^(n/2))² × x
+ *
+ * 时间复杂度：O(log n)
+ * 空间复杂度：O(log n)，递归栈深度
+ */
+function myPow(x, n) {
   if (n === 0) return 1;
+
+  // 处理负指数
   if (n < 0) {
     x = 1 / x;
     n = -n;
   }
 
+  /**
+   * 递归计算快速幂
+   *
+   * 示例：x = 2, n = 10
+   *
+   * quickPow(2, 10)
+   *   half = quickPow(2, 5)
+   *     half = quickPow(2, 2)
+   *       half = quickPow(2, 1)
+   *         half = quickPow(2, 0) = 1
+   *         1%2=1, return 1 * 1 * 2 = 2
+   *       2%2=0, return 2 * 2 = 4
+   *     5%2=1, return 4 * 4 * 2 = 32
+   *   10%2=0, return 32 * 32 = 1024
+   *
+   * 结果：1024 = 2^10
+   */
   function quickPow(x, n) {
     if (n === 0) return 1;
+
+    // 递归计算 x^(n/2)
     const half = quickPow(x, Math.floor(n / 2));
+
+    // 根据 n 的奇偶性返回结果
     return n % 2 === 0 ? half * half : half * half * x;
   }
 
@@ -531,13 +983,39 @@ n=13(1101)：
       },
       {
         name: "暴力法（仅作对比）",
-        code: `function myPow(x, n) {
+        code: `/**
+ * Pow(x, n) - 暴力法
+ *
+ * 核心思想：直接循环 n 次，每次乘以 x
+ *
+ * 注意：此方法仅用于理解问题，实际会超时
+ * 当 n = 2^31 - 1 时，需要循环约 21 亿次
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(1)
+ */
+function myPow(x, n) {
   if (n === 0) return 1;
+
+  // 处理负指数
   if (n < 0) {
     x = 1 / x;
     n = -n;
   }
 
+  /**
+   * 简单循环乘法
+   *
+   * 示例：x = 2, n = 5
+   *
+   * i=0: result = 1 × 2 = 2
+   * i=1: result = 2 × 2 = 4
+   * i=2: result = 4 × 2 = 8
+   * i=3: result = 8 × 2 = 16
+   * i=4: result = 16 × 2 = 32
+   *
+   * 结果：32 = 2^5
+   */
   let result = 1;
   for (let i = 0; i < n; i++) {
     result *= x;
@@ -651,27 +1129,112 @@ n=13(1101)：
     solutions: [
       {
         name: "二分查找（推荐）",
-        code: `function mySqrt(x) {
+        code: `/**
+ * x 的平方根 - 二分查找法
+ *
+ * 核心思想：在 [1, x/2] 范围内二分查找平方根
+ *
+ * 为什么上界是 x/2？
+ * - 对于 x >= 4，sqrt(x) <= x/2（因为 (x/2)² = x²/4 >= x）
+ * - 对于 x < 4（即 0, 1, 2, 3），直接特殊处理
+ *
+ * 二分查找条件：
+ * - mid² = x：找到精确平方根
+ * - mid² < x：答案在右半部分
+ * - mid² > x：答案在左半部分
+ *
+ * 时间复杂度：O(log x)
+ * 空间复杂度：O(1)
+ */
+function mySqrt(x) {
+  // 特殊处理 0 和 1
   if (x < 2) return x;
 
+  // 搜索范围 [1, x/2]
   let left = 1;
   let right = Math.floor(x / 2);
 
+  /**
+   * 二分查找过程
+   *
+   * 示例：x = 8
+   * 搜索范围：[1, 4]
+   *
+   * 第1轮：
+   *   mid = (1+4)/2 = 2
+   *   square = 2² = 4 < 8
+   *   在右半部分查找，left = 3
+   *
+   * 第2轮：
+   *   mid = (3+4)/2 = 3
+   *   square = 3² = 9 > 8
+   *   在左半部分查找，right = 2
+   *
+   * left(3) > right(2)，退出循环
+   * 返回 right = 2
+   *
+   * 验证：2² = 4 <= 8 < 9 = 3²，正确
+   */
   while (left <= right) {
     const mid = Math.floor((left + right) / 2);
     const square = mid * mid;
 
     if (square === x) {
+      // 找到精确平方根
       return mid;
     } else if (square < x) {
+      // mid 太小，在右半部分查找
       left = mid + 1;
     } else {
+      // mid 太大，在左半部分查找
       right = mid - 1;
     }
   }
 
+  // 返回 right，即不超过平方根的最大整数
   return right;
 }`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "x的平方根二分查找演示",
+          steps: [
+            {
+              array: ["1", "2", "3", "4"],
+              left: 0,
+              right: 3,
+              highlights: [],
+              description: "x=8。搜索范围[1, 4]。找不超过sqrt(8)≈2.83的最大整数",
+            },
+            {
+              array: ["1", "2", "3", "4"],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [1], color: "blue" as const, label: "mid=2" }],
+              description: "mid=(1+4)/2=2。2²=4<8, 在右半部分查找。left=3",
+            },
+            {
+              array: ["1", "2", "3", "4"],
+              left: 2,
+              right: 3,
+              highlights: [{ indices: [2], color: "blue" as const, label: "mid=3" }],
+              description: "left=3, right=4。mid=3。3²=9>8, 在左半部分。right=2",
+            },
+            {
+              array: ["1", "2", "3", "4"],
+              left: 2,
+              right: 1,
+              highlights: [{ indices: [1], color: "green" as const, label: "right=2" }],
+              description: "left=3>right=2, 退出循环。返回right=2",
+            },
+            {
+              array: ["2"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "结果" }],
+              description: "验证：2²=4≤8<9=3²。答案正确！sqrt(8)取整=2",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 二分查找
 
 ### 思路
@@ -690,13 +1253,56 @@ n=13(1101)：
       },
       {
         name: "牛顿迭代法",
-        code: `function mySqrt(x) {
+        code: `/**
+ * x 的平方根 - 牛顿迭代法
+ *
+ * 核心思想：求 f(r) = r² - x = 0 的根
+ *
+ * 牛顿迭代公式：
+ *   r_new = r - f(r) / f'(r)
+ *         = r - (r² - x) / (2r)
+ *         = (r + x/r) / 2
+ *
+ * 收敛性：
+ * - 牛顿法具有二次收敛性
+ * - 每次迭代精度大约翻倍
+ *
+ * 时间复杂度：O(log x)
+ * 空间复杂度：O(1)
+ */
+function mySqrt(x) {
   if (x < 2) return x;
 
+  // 初始猜测值
   let r = x;
+
+  /**
+   * 牛顿迭代过程
+   *
+   * 示例：x = 8
+   *
+   * 初始：r = 8
+   *
+   * 第1轮：r² = 64 > 8
+   *   r = (8 + 8/8) / 2 = (8 + 1) / 2 = 4
+   *
+   * 第2轮：r² = 16 > 8
+   *   r = (4 + 8/4) / 2 = (4 + 2) / 2 = 3
+   *
+   * 第3轮：r² = 9 > 8
+   *   r = (3 + 8/3) / 2 = (3 + 2.67) / 2 = 2.83
+   *   floor(2.83) = 2
+   *
+   * 第4轮：r² = 4 < 8
+   *   退出循环
+   *
+   * 返回 r = 2
+   */
   while (r * r > x) {
+    // 牛顿迭代公式
     r = Math.floor((r + x / r) / 2);
   }
+
   return r;
 }`,
         explanation: `## 牛顿迭代法
@@ -717,21 +1323,59 @@ r_new = r - f(r) / f'(r)
       },
       {
         name: "位运算 + 二分",
-        code: `function mySqrt(x) {
+        code: `/**
+ * x 的平方根 - 位运算优化二分法
+ *
+ * 核心思想：避免整数溢出的安全实现
+ *
+ * 优化点：
+ * - 使用 mid <= x / mid 代替 mid * mid <= x，避免乘法溢出
+ * - 使用位运算 >> 1 代替 / 2
+ *
+ * 时间复杂度：O(log x)
+ * 空间复杂度：O(1)
+ */
+function mySqrt(x) {
   if (x < 2) return x;
 
-  // 使用位运算估算初始值
-  // sqrt(x) 大约是 2^(log2(x)/2)
   let left = 1;
   let right = x;
   let ans = 0;
 
+  /**
+   * 安全的二分查找
+   *
+   * 示例：x = 8
+   *
+   * 第1轮：
+   *   mid = 1 + (8-1)/2 = 4
+   *   4 <= 8/4 = 2? 否
+   *   right = 3
+   *
+   * 第2轮：
+   *   mid = 1 + (3-1)/2 = 2
+   *   2 <= 8/2 = 4? 是
+   *   ans = 2, left = 3
+   *
+   * 第3轮：
+   *   mid = 3 + (3-3)/2 = 3
+   *   3 <= 8/3 = 2? 否
+   *   right = 2
+   *
+   * left(3) > right(2)，退出
+   * 返回 ans = 2
+   */
   while (left <= right) {
+    // 使用位运算优化除法
     const mid = left + ((right - left) >> 1);
+
+    // 使用除法避免乘法溢出
     if (mid <= x / mid) {
+      // mid 可能是答案，记录并继续在右半部分查找
       ans = mid;
       left = mid + 1;
     } else {
+      // mid 太大，在左半部分查找
       right = mid - 1;
     }
   }

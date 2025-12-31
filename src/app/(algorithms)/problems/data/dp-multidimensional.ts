@@ -1,4 +1,5 @@
 import { Problem } from "../types";
+import { TwoPointersStep } from "../components/animations";
 
 export const dpMultidimensionalProblems: Problem[] = [
   // 1. 不同路径 (62)
@@ -107,6 +108,52 @@ export const dpMultidimensionalProblems: Problem[] = [
     solutions: [
       {
         name: "动态规划 - 空间优化（推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "不同路径DP演示",
+          steps: [
+            {
+              array: ["1", "1", "1"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "green" as const, label: "第1行" },
+              ],
+              description: "m=3,n=3。初始化第一行全为1",
+            },
+            {
+              array: ["1", "2", "3"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "dp[0]=1" },
+                { indices: [1], color: "green" as const, label: "1+1=2" },
+                { indices: [2], color: "green" as const, label: "1+2=3" },
+              ],
+              description: "第2行: dp[1]=1+1=2, dp[2]=1+2=3",
+            },
+            {
+              array: ["1", "3", "6"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "dp[0]=1" },
+                { indices: [1], color: "green" as const, label: "2+1=3" },
+                { indices: [2], color: "green" as const, label: "3+3=6" },
+              ],
+              description: "第3行: dp[1]=2+1=3, dp[2]=3+3=6",
+            },
+            {
+              array: ["1", "3", "6"],
+              left: 2,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "答案=6" },
+              ],
+              description: "完成！3x3网格有6条不同路径",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 不同路径 - 动态规划空间优化解法
  *
@@ -395,6 +442,63 @@ function uniquePaths(m, n) {
     solutions: [
       {
         name: "动态规划 - 空间优化（推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "最小路径和DP演示",
+          steps: [
+            {
+              array: ["1", "3", "1"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "blue" as const, label: "grid[0]" },
+              ],
+              description: "grid=[[1,3,1],[1,5,1],[4,2,1]]",
+            },
+            {
+              array: ["1", "4", "5"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "dp[0]=1" },
+                { indices: [1], color: "green" as const, label: "1+3=4" },
+                { indices: [2], color: "green" as const, label: "4+1=5" },
+              ],
+              description: "第1行: dp=[1,4,5]。累加第一行",
+            },
+            {
+              array: ["2", "7", "6"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "1+1=2" },
+                { indices: [1], color: "green" as const, label: "min(4,2)+5=7" },
+                { indices: [2], color: "green" as const, label: "min(5,7)+1=6" },
+              ],
+              description: "第2行: dp=[2,7,6]",
+            },
+            {
+              array: ["6", "8", "7"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "2+4=6" },
+                { indices: [1], color: "green" as const, label: "min(7,6)+2=8" },
+                { indices: [2], color: "green" as const, label: "min(6,8)+1=7" },
+              ],
+              description: "第3行: dp=[6,8,7]",
+            },
+            {
+              array: ["6", "8", "7"],
+              left: 2,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "答案=7" },
+              ],
+              description: "完成！最小路径和=7 (1→3→1→1→1)",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 最小路径和 - 动态规划空间优化解法
  *
@@ -706,6 +810,61 @@ function minPathSum(grid) {
     solutions: [
       {
         name: "动态规划 - 空间优化（推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "不同路径II演示",
+          steps: [
+            {
+              array: ["0", "0", "0"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "blue" as const, label: "第1行" },
+              ],
+              description: "grid=[[0,0,0],[0,1,0],[0,0,0]]。1表示障碍物",
+            },
+            {
+              array: ["1", "1", "1"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "green" as const, label: "dp" },
+              ],
+              description: "第1行: dp=[1,1,1]。无障碍物",
+            },
+            {
+              array: ["1", "0", "1"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "dp[0]=1" },
+                { indices: [1], color: "red" as const, label: "障碍物=0" },
+                { indices: [2], color: "green" as const, label: "0+1=1" },
+              ],
+              description: "第2行: 中间是障碍物，dp[1]=0",
+            },
+            {
+              array: ["1", "1", "2"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "dp[0]=1" },
+                { indices: [1], color: "green" as const, label: "0+1=1" },
+                { indices: [2], color: "green" as const, label: "1+1=2" },
+              ],
+              description: "第3行: dp=[1,1,2]",
+            },
+            {
+              array: ["1", "1", "2"],
+              left: 2,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "答案=2" },
+              ],
+              description: "完成！有2条不同路径(绕过障碍物)",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 不同路径 II（带障碍物）- 动态规划空间优化解法
  *
@@ -957,6 +1116,69 @@ function uniquePathsWithObstacles(obstacleGrid) {
     solutions: [
       {
         name: "动态规划 - 自底向上（推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "三角形最小路径和演示",
+          steps: [
+            {
+              array: ["4", "1", "8", "3"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "blue" as const, label: "底层" },
+              ],
+              description: "triangle=[[2],[3,4],[6,5,7],[4,1,8,3]]。从底向上",
+            },
+            {
+              array: ["4", "1", "8", "3"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "green" as const, label: "dp初始" },
+              ],
+              description: "dp=[4,1,8,3]。初始化为最后一行",
+            },
+            {
+              array: ["7", "6", "10"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "6+min(4,1)=7" },
+                { indices: [1], color: "green" as const, label: "5+min(1,8)=6" },
+                { indices: [2], color: "green" as const, label: "7+min(8,3)=10" },
+              ],
+              description: "第3层: dp=[7,6,10]",
+            },
+            {
+              array: ["9", "10"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "3+min(7,6)=9" },
+                { indices: [1], color: "green" as const, label: "4+min(6,10)=10" },
+              ],
+              description: "第2层: dp=[9,10]",
+            },
+            {
+              array: ["11"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "2+min(9,10)=11" },
+              ],
+              description: "第1层: dp=[11]",
+            },
+            {
+              array: ["11"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "答案=11" },
+              ],
+              description: "完成！最小路径和=11 (2→3→5→1)",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 三角形最小路径和 - 自底向上 DP 解法
  *
@@ -1277,6 +1499,84 @@ function minimumTotal(triangle) {
     solutions: [
       {
         name: "动态规划 - 二维数组（推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "最长公共子序列演示",
+          steps: [
+            {
+              array: ["a", "b", "c", "d", "e"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4], color: "blue" as const, label: "text1" },
+              ],
+              description: "text1=\"abcde\", text2=\"ace\"",
+            },
+            {
+              array: ["0", "0", "0", "0"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "gray" as const, label: "dp第1行" },
+              ],
+              description: "初始化dp表。dp[0][j]=0表示空串",
+            },
+            {
+              array: ["1", "1", "1", "1"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "a==a:1" },
+              ],
+              description: "i=1(a): 与text2的a匹配，dp[1][1]=1",
+            },
+            {
+              array: ["1", "1", "1", "1"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "gray" as const, label: "b不匹配" },
+              ],
+              description: "i=2(b): 与ace无匹配，继承上一行",
+            },
+            {
+              array: ["1", "2", "2", "2"],
+              left: 1,
+              right: 3,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "c==c:2" },
+              ],
+              description: "i=3(c): 与text2的c匹配，dp[3][2]=2",
+            },
+            {
+              array: ["1", "2", "2", "2"],
+              left: 1,
+              right: 3,
+              highlights: [
+                { indices: [1, 2, 3], color: "gray" as const, label: "d不匹配" },
+              ],
+              description: "i=4(d): 与ace无匹配",
+            },
+            {
+              array: ["1", "2", "3", "3"],
+              left: 2,
+              right: 3,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "e==e:3" },
+              ],
+              description: "i=5(e): 与text2的e匹配，dp[5][3]=3",
+            },
+            {
+              array: ["1", "2", "3", "3"],
+              left: 3,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "答案=3" },
+              ],
+              description: "完成！LCS=\"ace\"，长度=3",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 最长公共子序列 (LCS) - 动态规划二维数组解法
  *
@@ -1618,6 +1918,84 @@ exection -> execution (插入 'u')
     solutions: [
       {
         name: "动态规划 - 二维数组（推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "编辑距离DP演示",
+          steps: [
+            {
+              array: ["h", "o", "r", "s", "e"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4], color: "blue" as const, label: "horse" },
+              ],
+              description: "word1=\"horse\", word2=\"ros\"",
+            },
+            {
+              array: ["0", "1", "2", "3"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "gray" as const, label: "dp[0]" },
+              ],
+              description: "初始化: dp[0][j]=j (插入j个字符)",
+            },
+            {
+              array: ["1", "1", "2", "3"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "删除h" },
+              ],
+              description: "i=1(h): h≠ros，需要操作",
+            },
+            {
+              array: ["2", "1", "2", "3"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "o==o:1" },
+              ],
+              description: "i=2(o): o==o，dp[2][2]=dp[1][1]=1",
+            },
+            {
+              array: ["3", "2", "1", "2"],
+              left: 2,
+              right: 3,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "r==r:1" },
+              ],
+              description: "i=3(r): r==r，dp[3][1]=dp[2][0]=2",
+            },
+            {
+              array: ["4", "3", "2", "1"],
+              left: 3,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "s==s:1" },
+              ],
+              description: "i=4(s): s==s，dp[4][3]=dp[3][2]=2",
+            },
+            {
+              array: ["5", "4", "3", "2"],
+              left: 3,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "删除e" },
+              ],
+              description: "i=5(e): e≠s，dp[5][3]=dp[4][3]+1=3",
+            },
+            {
+              array: ["5", "4", "3", "3"],
+              left: 3,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "答案=3" },
+              ],
+              description: "完成！最少操作3次: 替换h→r,删r,删e",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 编辑距离 (Levenshtein Distance) - 动态规划解法
  *
@@ -2025,6 +2403,61 @@ function maxProfit(prices) {
  * - 第二次：第7天买入(1)，第8天卖出(4)，利润3
  * - 总利润：6
  */`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "买卖股票III状态机演示",
+          steps: [
+            {
+              array: ["3", "3", "5", "0", "0", "3", "1", "4"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "day0" },
+              ],
+              description: "prices=[3,3,5,0,0,3,1,4]。初始化: buy1=-3, sell1=0, buy2=-3, sell2=0",
+            },
+            {
+              array: ["3", "3", "5", "0", "0", "3", "1", "4"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "buy1=0" },
+              ],
+              description: "第4天价格=0，更新buy1=max(-3,-0)=0（最佳买入点）",
+            },
+            {
+              array: ["3", "3", "5", "0", "0", "3", "1", "4"],
+              left: 3,
+              right: 5,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "买入" },
+                { indices: [5], color: "red" as const, label: "卖出sell1=3" },
+              ],
+              description: "第6天价格=3，sell1=max(0,0+3)=3（第一次卖出利润3）",
+            },
+            {
+              array: ["3", "3", "5", "0", "0", "3", "1", "4"],
+              left: 5,
+              right: 6,
+              highlights: [
+                { indices: [6], color: "green" as const, label: "buy2=2" },
+              ],
+              description: "第7天价格=1，buy2=max(-3,3-1)=2（第二次买入，基于第一次收益）",
+            },
+            {
+              array: ["3", "3", "5", "0", "0", "3", "1", "4"],
+              left: 6,
+              right: 7,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "交易1买" },
+                { indices: [5], color: "red" as const, label: "交易1卖" },
+                { indices: [6], color: "blue" as const, label: "交易2买" },
+                { indices: [7], color: "red" as const, label: "交易2卖" },
+              ],
+              description: "第8天价格=4，sell2=max(0,2+4)=6。最终两次交易总利润=6",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 状态机 - 空间优化
 
 ### 思路
@@ -2372,6 +2805,61 @@ function maxProfit(k, prices) {
  * - n 天最多进行 n/2 次交易
  * - 当 k >= n/2 时，交易次数不再是限制因素
  */`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "买卖股票IV状态机演示",
+          steps: [
+            {
+              array: ["3", "2", "6", "5", "0", "3"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "day0" },
+              ],
+              description: "k=2, prices=[3,2,6,5,0,3]。初始化buy=[−∞,−∞,−∞], sell=[0,0,0]",
+            },
+            {
+              array: ["3", "2", "6", "5", "0", "3"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "buy[1]=-2" },
+              ],
+              description: "第2天价格=2，buy[1]=max(-∞,0-2)=-2（第1次买入）",
+            },
+            {
+              array: ["3", "2", "6", "5", "0", "3"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "买入" },
+                { indices: [2], color: "red" as const, label: "sell[1]=4" },
+              ],
+              description: "第3天价格=6，sell[1]=max(0,-2+6)=4（第1次卖出利润4）",
+            },
+            {
+              array: ["3", "2", "6", "5", "0", "3"],
+              left: 2,
+              right: 4,
+              highlights: [
+                { indices: [4], color: "green" as const, label: "buy[2]=4" },
+              ],
+              description: "第5天价格=0，buy[2]=max(-∞,4-0)=4（第2次买入，基于第1次收益）",
+            },
+            {
+              array: ["3", "2", "6", "5", "0", "3"],
+              left: 4,
+              right: 5,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "交易1买" },
+                { indices: [2], color: "red" as const, label: "交易1卖" },
+                { indices: [4], color: "blue" as const, label: "交易2买" },
+                { indices: [5], color: "red" as const, label: "交易2卖" },
+              ],
+              description: "第6天价格=3，sell[2]=max(0,4+3)=7。k=2次交易总利润=7",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 状态机动态规划
 
 ### 思路
@@ -2716,6 +3204,70 @@ function longestPalindrome(s) {
  *     L C R
  *   从中心C向两边扩展，直到字符不匹配
  */`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "最长回文子串中心扩展演示",
+          steps: [
+            {
+              array: ["b", "a", "b", "a", "d"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "center" },
+              ],
+              description: "s=\"babad\"。从第1个字符'b'作为中心开始扩展",
+            },
+            {
+              array: ["b", "a", "b", "a", "d"],
+              left: 1,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "blue" as const, label: "center" },
+              ],
+              description: "以'a'(索引1)为中心，准备向两边扩展",
+            },
+            {
+              array: ["b", "a", "b", "a", "d"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "L" },
+                { indices: [1], color: "blue" as const, label: "C" },
+                { indices: [2], color: "green" as const, label: "R" },
+              ],
+              description: "扩展: s[0]='b' == s[2]='b'，匹配！回文长度=3",
+            },
+            {
+              array: ["b", "a", "b", "a", "d"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "green" as const, label: "bab" },
+              ],
+              description: "继续扩展越界，回文\"bab\"长度3 > maxLen=1，更新",
+            },
+            {
+              array: ["b", "a", "b", "a", "d"],
+              left: 1,
+              right: 3,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "L" },
+                { indices: [2], color: "blue" as const, label: "C" },
+                { indices: [3], color: "green" as const, label: "R" },
+              ],
+              description: "以'b'(索引2)为中心扩展: s[1]='a' == s[3]='a'",
+            },
+            {
+              array: ["b", "a", "b", "a", "d"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1, 2], color: "red" as const, label: "result" },
+              ],
+              description: "遍历完成。最长回文子串=\"bab\"，长度=3",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 中心扩展法
 
 ### 思路
@@ -3118,6 +3670,60 @@ function longestValidParentheses(s) {
  *    ↓    ↑ ↑        ↓    ↑               ↑  ↑
  * dp[i-2] i-1 i   dp[前] 匹配位置      dp[i-1] i
  */`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "最长有效括号DP演示",
+          steps: [
+            {
+              array: [")", "(", ")", "(", ")", ")"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: ")" },
+              ],
+              description: "s=\")()())\"。初始dp=[0,0,0,0,0,0]。i=0是')无法匹配",
+            },
+            {
+              array: [")", "(", ")", "(", ")", ")"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "(" },
+                { indices: [2], color: "red" as const, label: ")" },
+              ],
+              description: "i=2: ')' 且 s[1]='('，形成()。dp[2]=dp[0]+2=2",
+            },
+            {
+              array: [")", "(", ")", "(", ")", ")"],
+              left: 3,
+              right: 4,
+              highlights: [
+                { indices: [1, 2], color: "blue" as const, label: "dp[2]=2" },
+                { indices: [3], color: "green" as const, label: "(" },
+                { indices: [4], color: "red" as const, label: ")" },
+              ],
+              description: "i=4: ')' 且 s[3]='('，形成()。dp[4]=dp[2]+2=4",
+            },
+            {
+              array: [")", "(", ")", "(", ")", ")"],
+              left: 4,
+              right: 5,
+              highlights: [
+                { indices: [5], color: "gray" as const, label: "无法匹配" },
+              ],
+              description: "i=5: ')' 且 s[4]=')'，检查s[5-4-1]=s[0]=')'，不是'('，dp[5]=0",
+            },
+            {
+              array: [")", "(", ")", "(", ")", ")"],
+              left: 1,
+              right: 4,
+              highlights: [
+                { indices: [1, 2, 3, 4], color: "green" as const, label: "()()" },
+              ],
+              description: "遍历完成。最长有效括号=\"()()\"，长度=4",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 动态规划
 
 ### 思路

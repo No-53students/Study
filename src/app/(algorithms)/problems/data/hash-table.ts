@@ -1,4 +1,5 @@
 import { Problem } from "../types";
+import { TwoPointersStep } from "../components/animations";
 
 // 哈希表分类题目
 export const hashTableProblems: Problem[] = [
@@ -180,6 +181,40 @@ function twoSum(nums, target) {
 ### 优点
 - 时间复杂度 O(n)，只需遍历一次
 - 代码简洁高效`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "两数之和演示",
+          steps: [
+            {
+              array: ["2", "7", "11", "15"],
+              left: 0,
+              right: 0,
+              highlights: [],
+              description: "nums=[2,7,11,15], target=9。用哈希表存储已遍历元素",
+            },
+            {
+              array: ["2", "7", "11", "15"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "当前" }],
+              description: "i=0, num=2, 补数=9-2=7。Map为空，7不在Map中。Map={2:0}",
+            },
+            {
+              array: ["2", "7", "11", "15"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "yellow" as const, label: "补数" }, { indices: [1], color: "green" as const, label: "当前" }],
+              description: "i=1, num=7, 补数=9-7=2。2在Map中！Map.get(2)=0",
+            },
+            {
+              array: ["0", "1"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "green" as const, label: "结果" }],
+              description: "找到答案！返回[0,1]，nums[0]+nums[1]=2+7=9",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
@@ -406,6 +441,54 @@ function groupAnagrams(strs) {
 ### 优点
 - 思路直观，容易理解
 - 实现简单`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "字母异位词分组演示",
+          steps: [
+            {
+              array: ["eat", "tea", "tan", "ate", "nat", "bat"],
+              left: 0,
+              right: 5,
+              highlights: [],
+              description: "strs=[\"eat\",\"tea\",\"tan\",\"ate\",\"nat\",\"bat\"]。排序后作为key分组",
+            },
+            {
+              array: ["eat", "tea", "tan", "ate", "nat", "bat"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "aet" }],
+              description: "\"eat\"排序→\"aet\"。Map={\"aet\":[\"eat\"]}",
+            },
+            {
+              array: ["eat", "tea", "tan", "ate", "nat", "bat"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0, 1], color: "blue" as const, label: "aet" }],
+              description: "\"tea\"排序→\"aet\"。Map={\"aet\":[\"eat\",\"tea\"]}",
+            },
+            {
+              array: ["eat", "tea", "tan", "ate", "nat", "bat"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [2], color: "yellow" as const, label: "ant" }],
+              description: "\"tan\"排序→\"ant\"。Map增加\"ant\"组",
+            },
+            {
+              array: ["eat", "tea", "tan", "ate", "nat", "bat"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0, 1, 3], color: "blue" as const, label: "aet" }, { indices: [2, 4], color: "yellow" as const, label: "ant" }, { indices: [5], color: "red" as const, label: "abt" }],
+              description: "处理完所有字符串，分成3组",
+            },
+            {
+              array: ["[bat]", "[nat,tan]", "[ate,eat,tea]"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "结果" }],
+              description: "返回所有分组的数组",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(n × k log k)",
         spaceComplexity: "O(n × k)",
       },
@@ -610,6 +693,47 @@ function isAnagram(s, t) {
 ### 优缺点
 - 优点：实现简单，一行代码
 - 缺点：排序时间复杂度较高`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "有效的字母异位词演示",
+          steps: [
+            {
+              array: ["a", "n", "a", "g", "r", "a", "m"],
+              left: 0,
+              right: 6,
+              highlights: [],
+              description: "s=\"anagram\", t=\"nagaram\"。用计数数组检测是否为异位词",
+            },
+            {
+              array: ["a", "n", "a", "g", "r", "a", "m"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "+1" }],
+              description: "s[0]='a'，count[a]++。t[0]='n'，count[n]--",
+            },
+            {
+              array: ["a", "n", "a", "g", "r", "a", "m"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [1], color: "green" as const, label: "+1" }],
+              description: "s[1]='n'，count[n]++。t[1]='a'，count[a]--。计数抵消",
+            },
+            {
+              array: ["a", "n", "a", "g", "r", "a", "m"],
+              left: 0,
+              right: 6,
+              highlights: [{ indices: [0, 1, 2, 3, 4, 5, 6], color: "blue" as const, label: "遍历" }],
+              description: "继续遍历所有字符，+1和-1相互抵消",
+            },
+            {
+              array: ["0", "0", "0", "0", "0", "0", "0"],
+              left: 0,
+              right: 6,
+              highlights: [{ indices: [0, 1, 2, 3, 4, 5, 6], color: "green" as const, label: "全0" }],
+              description: "所有计数为0，s和t是异位词！返回true",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(n log n)",
         spaceComplexity: "O(n)",
       },
@@ -911,6 +1035,59 @@ function getNext(n) {
 2. 重复计算各位数字的平方和
 3. 如果结果为1，返回true
 4. 如果结果已在Set中，说明进入循环，返回false`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "快乐数演示",
+          steps: [
+            {
+              array: ["19"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "n" }],
+              description: "n=19，使用Set记录出现过的数来检测循环",
+            },
+            {
+              array: ["19", "→", "82"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "seen" },
+                { indices: [2], color: "blue" as const, label: "当前" },
+              ],
+              description: "19: 1²+9²=1+81=82。Set={19}",
+            },
+            {
+              array: ["19", "→", "82", "→", "68"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0, 2], color: "gray" as const, label: "seen" },
+                { indices: [4], color: "blue" as const, label: "当前" },
+              ],
+              description: "82: 8²+2²=64+4=68。Set={19,82}",
+            },
+            {
+              array: ["19", "→", "82", "→", "68", "→", "100"],
+              left: 0,
+              right: 6,
+              highlights: [
+                { indices: [0, 2, 4], color: "gray" as const, label: "seen" },
+                { indices: [6], color: "blue" as const, label: "当前" },
+              ],
+              description: "68: 6²+8²=36+64=100。Set={19,82,68}",
+            },
+            {
+              array: ["19", "→", "82", "→", "68", "→", "100", "→", "1"],
+              left: 0,
+              right: 8,
+              highlights: [
+                { indices: [0, 2, 4, 6], color: "gray" as const, label: "seen" },
+                { indices: [8], color: "green" as const, label: "=1!" },
+              ],
+              description: "100: 1²+0²+0²=1。n===1，是快乐数！返回true",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(log n)",
         spaceComplexity: "O(log n)",
       },
@@ -1290,6 +1467,56 @@ function containsDuplicate(nums) {
 \`return new Set(nums).size !== nums.length;\`
 - 将数组转为Set会自动去重
 - 如果去重后大小不同，说明有重复`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "存在重复元素演示",
+          steps: [
+            {
+              array: ["1", "2", "3", "1"],
+              left: 0,
+              right: 0,
+              highlights: [],
+              description: "nums=[1,2,3,1]。用Set存储已遍历元素，检测重复",
+            },
+            {
+              array: ["1", "2", "3", "1"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "当前" }],
+              description: "num=1，Set为空，1不在Set中。Set={1}",
+            },
+            {
+              array: ["1", "2", "3", "1"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "seen" },
+                { indices: [1], color: "blue" as const, label: "当前" },
+              ],
+              description: "num=2，Set={1}，2不在Set中。Set={1,2}",
+            },
+            {
+              array: ["1", "2", "3", "1"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 1], color: "gray" as const, label: "seen" },
+                { indices: [2], color: "blue" as const, label: "当前" },
+              ],
+              description: "num=3，Set={1,2}，3不在Set中。Set={1,2,3}",
+            },
+            {
+              array: ["1", "2", "3", "1"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2], color: "gray" as const, label: "seen" },
+                { indices: [3], color: "red" as const, label: "重复!" },
+              ],
+              description: "num=1，Set={1,2,3}，1已在Set中！发现重复，返回true",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
@@ -1516,6 +1743,50 @@ function containsNearbyDuplicate(nums, k) {
 ### 优点
 - 空间复杂度严格为 O(min(n, k))
 - 思路更清晰`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "存在重复元素 II 演示",
+          steps: [
+            {
+              array: ["1", "2", "3", "1"],
+              left: 0,
+              right: 0,
+              highlights: [],
+              description: "nums=[1,2,3,1], k=3。维护大小为k的滑动窗口，检测窗口内重复",
+            },
+            {
+              array: ["1", "2", "3", "1"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "窗口" }],
+              description: "i=0, num=1，窗口为空，1不在窗口中。窗口={1}",
+            },
+            {
+              array: ["1", "2", "3", "1"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "blue" as const, label: "窗口" }],
+              description: "i=1, num=2，2不在窗口{1}中。窗口={1,2}",
+            },
+            {
+              array: ["1", "2", "3", "1"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "blue" as const, label: "窗口" }],
+              description: "i=2, num=3，3不在窗口{1,2}中。窗口={1,2,3}",
+            },
+            {
+              array: ["1", "2", "3", "1"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2], color: "blue" as const, label: "窗口" },
+                { indices: [3], color: "red" as const, label: "重复!" },
+              ],
+              description: "i=3, num=1，1在窗口{1,2,3}中！距离3-0=3<=k，返回true",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(min(n, k))",
       },
@@ -1763,6 +2034,76 @@ Set = {100, 4, 200, 1, 3, 2}
 
 ### 为什么只从起点开始？
 避免重复计算，保证每个数只被访问一次。`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "最长连续序列演示",
+          steps: [
+            {
+              array: ["100", "4", "200", "1", "3", "2"],
+              left: 0,
+              right: 0,
+              highlights: [],
+              description: "nums=[100,4,200,1,3,2]。先将所有数存入Set，然后只从序列起点开始计数",
+            },
+            {
+              array: ["100", "4", "200", "1", "3", "2"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "起点" }],
+              description: "num=100，99不在Set中，100是起点。101不在Set中，长度=1",
+            },
+            {
+              array: ["100", "4", "200", "1", "3", "2"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [1], color: "gray" as const, label: "跳过" }],
+              description: "num=4，3在Set中，4不是起点，跳过",
+            },
+            {
+              array: ["100", "4", "200", "1", "3", "2"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [2], color: "green" as const, label: "起点" }],
+              description: "num=200，199不在Set中，200是起点。201不在Set中，长度=1",
+            },
+            {
+              array: ["100", "4", "200", "1", "3", "2"],
+              left: 3,
+              right: 3,
+              highlights: [{ indices: [3], color: "green" as const, label: "起点" }],
+              description: "num=1，0不在Set中，1是起点！开始向后计数",
+            },
+            {
+              array: ["100", "4", "200", "1", "3", "2"],
+              left: 3,
+              right: 5,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "1" },
+                { indices: [5], color: "blue" as const, label: "2" },
+              ],
+              description: "2在Set中，继续。长度=2",
+            },
+            {
+              array: ["100", "4", "200", "1", "3", "2"],
+              left: 3,
+              right: 4,
+              highlights: [
+                { indices: [3, 5], color: "green" as const, label: "1,2" },
+                { indices: [4], color: "blue" as const, label: "3" },
+              ],
+              description: "3在Set中，继续。长度=3",
+            },
+            {
+              array: ["100", "4", "200", "1", "3", "2"],
+              left: 3,
+              right: 1,
+              highlights: [
+                { indices: [3, 5, 4, 1], color: "green" as const, label: "序列" },
+              ],
+              description: "4在Set中，长度=4。5不在Set中，序列[1,2,3,4]结束。返回4",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
@@ -2035,6 +2376,50 @@ function canConstruct(ransomNote, magazine) {
 1. 统计 magazine 中每个字符的数量
 2. 遍历 ransomNote，检查每个字符是否足够
 3. 如果不够返回 false，否则减少计数`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "赎金信演示",
+          steps: [
+            {
+              array: ["a", "a", "b"],
+              left: 0,
+              right: 2,
+              highlights: [],
+              description: "ransomNote=\"aa\", magazine=\"aab\"。先统计magazine中每个字符的数量",
+            },
+            {
+              array: ["a", "a", "b"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "blue" as const, label: "统计" }],
+              description: "遍历magazine: count={'a':2, 'b':1}",
+            },
+            {
+              array: ["a", "a"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "检查" }],
+              description: "ransomNote[0]='a'，count[a]=2>0，可用！count[a]--→1",
+            },
+            {
+              array: ["a", "a"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "已用" },
+                { indices: [1], color: "green" as const, label: "检查" },
+              ],
+              description: "ransomNote[1]='a'，count[a]=1>0，可用！count[a]--→0",
+            },
+            {
+              array: ["a", "a"],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "green" as const, label: "完成" }],
+              description: "所有字符都够用，返回true。ransomNote可以由magazine构成",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(m + n)",
         spaceComplexity: "O(1)",
       },
@@ -2332,6 +2717,56 @@ words = ["dog", "cat", "cat", "dog"]
 - 单向映射：'a'->"dog", 'b'->"dog" 都合法
 - 但实际上不同字符映射到了相同单词
 - wordToChar可以检测这种情况`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "单词规律演示",
+          steps: [
+            {
+              array: ["a", "b", "b", "a"],
+              left: 0,
+              right: 3,
+              highlights: [],
+              description: "pattern=\"abba\", s=\"dog cat cat dog\"。建立字符↔单词的双向映射",
+            },
+            {
+              array: ["a", "b", "b", "a"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "a→dog" }],
+              description: "i=0: char='a', word='dog'。建立映射：a↔dog",
+            },
+            {
+              array: ["a", "b", "b", "a"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "a↔dog" },
+                { indices: [1], color: "blue" as const, label: "b→cat" },
+              ],
+              description: "i=1: char='b', word='cat'。建立映射：b↔cat",
+            },
+            {
+              array: ["a", "b", "b", "a"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "a↔dog" },
+                { indices: [1, 2], color: "green" as const, label: "b↔cat✓" },
+              ],
+              description: "i=2: char='b', word='cat'。验证：b已映射cat，cat已映射b，一致！",
+            },
+            {
+              array: ["a", "b", "b", "a"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 3], color: "green" as const, label: "a↔dog✓" },
+                { indices: [1, 2], color: "green" as const, label: "b↔cat✓" },
+              ],
+              description: "i=3: char='a', word='dog'。验证：a已映射dog，dog已映射a，一致！返回true",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(n + m)",
         spaceComplexity: "O(n)",
       },
@@ -2628,6 +3063,46 @@ function isIsomorphic(s, t) {
 ### 要点
 - 双向映射确保一一对应关系
 - Map 支持任意字符作为键`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "同构字符串演示",
+          steps: [
+            {
+              array: ["e", "g", "g"],
+              left: 0,
+              right: 2,
+              highlights: [],
+              description: "s=\"egg\", t=\"add\"。建立s↔t的双向字符映射",
+            },
+            {
+              array: ["e", "g", "g"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "e↔a" }],
+              description: "i=0: s[0]='e', t[0]='a'。建立映射：e↔a",
+            },
+            {
+              array: ["e", "g", "g"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "e↔a" },
+                { indices: [1], color: "blue" as const, label: "g↔d" },
+              ],
+              description: "i=1: s[1]='g', t[1]='d'。建立映射：g↔d",
+            },
+            {
+              array: ["e", "g", "g"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "e↔a" },
+                { indices: [1, 2], color: "green" as const, label: "g↔d✓" },
+              ],
+              description: "i=2: s[2]='g', t[2]='d'。验证：g已映射d，d已映射g，一致！返回true",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(字符集大小)",
       },
@@ -2922,6 +3397,52 @@ nums = [1, 1, 1], k = 2
 ### 复杂度分析
 - 时间复杂度：O(n)，一次遍历
 - 空间复杂度：O(n)，最多存储 n 个不同的前缀和`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "和为K的子数组演示",
+          steps: [
+            {
+              array: ["1", "1", "1"],
+              left: 0,
+              right: 0,
+              highlights: [],
+              description: "nums=[1,1,1], k=2。用前缀和+哈希表，map初始化{0:1}",
+            },
+            {
+              array: ["1", "1", "1"],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "sum=1" }],
+              description: "i=0: prefixSum=1，查找1-2=-1不在map中。map={0:1,1:1}，count=0",
+            },
+            {
+              array: ["1", "1", "1"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "子数组!" },
+              ],
+              description: "i=1: prefixSum=2，查找2-2=0在map中（1次）！map={0:1,1:1,2:1}，count=1",
+            },
+            {
+              array: ["1", "1", "1"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [0, 1], color: "gray" as const, label: "已找到" },
+                { indices: [1, 2], color: "green" as const, label: "子数组!" },
+              ],
+              description: "i=2: prefixSum=3，查找3-2=1在map中（1次）！map={0:1,1:1,2:1,3:1}，count=2",
+            },
+            {
+              array: ["1", "1", "1"],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "完成" }],
+              description: "遍历结束。找到2个和为k的子数组：[0,1]和[1,2]",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },

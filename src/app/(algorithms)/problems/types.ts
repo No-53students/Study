@@ -45,6 +45,23 @@ export interface TestCase {
   description?: string;
 }
 
+// 动画类型
+export type AnimationType = "two-pointers" | "array" | "linked-list" | "tree" | "matrix" | "graph";
+
+// 动画步骤基础接口
+export interface AnimationStepBase {
+  description: string;
+}
+
+// 动画配置
+export interface AnimationConfig {
+  type: AnimationType;
+  steps: AnimationStepBase[];
+  title?: string;
+  // 动画类型特定的配置
+  config?: Record<string, unknown>;
+}
+
 // 解法定义
 export interface Solution {
   name: string;                  // 解法名称，如 "暴力法"、"双指针"、"哈希表"
@@ -52,6 +69,7 @@ export interface Solution {
   explanation?: string;          // 解法说明（Markdown）
   timeComplexity?: string;       // 时间复杂度
   spaceComplexity?: string;      // 空间复杂度
+  animation?: AnimationConfig;   // 动画配置（可选）
 }
 
 // 前端相关度

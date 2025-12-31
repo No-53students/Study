@@ -1,4 +1,5 @@
 import { Problem } from "../types";
+import { TreeStep } from "../components/animations";
 
 export const binaryTreeProblems: Problem[] = [
   // 1. 二叉树的最大深度 (104)
@@ -94,6 +95,139 @@ maxDepth(root) = max(maxDepth(left), maxDepth(right)) + 1
     solutions: [
       {
         name: "递归 DFS（推荐）",
+        animation: {
+          type: "tree" as const,
+          title: "二叉树最大深度 - 递归 DFS 演示",
+          steps: [
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              pointers: { "3": ["root"] },
+              description: "开始：从根节点3出发，计算最大深度",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              pointers: { "9": ["curr"] },
+              highlights: [{ nodeIds: ["9"], color: "yellow" as const, label: "递归" }],
+              description: "递归进入左子树：maxDepth(9)",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["9"], color: "green" as const, label: "深度=1" }],
+              description: "节点9无子节点，返回 max(0,0)+1=1",
+              visitPath: ["9"],
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              pointers: { "20": ["curr"] },
+              highlights: [{ nodeIds: ["9"], color: "green" as const }, { nodeIds: ["20"], color: "yellow" as const, label: "递归" }],
+              description: "递归进入右子树：maxDepth(20)",
+              visitPath: ["9"],
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              pointers: { "15": ["curr"] },
+              highlights: [{ nodeIds: ["9"], color: "green" as const }, { nodeIds: ["15"], color: "yellow" as const, label: "递归" }],
+              description: "继续递归：maxDepth(15)",
+              visitPath: ["9"],
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["9", "15"], color: "green" as const, label: "深度=1" }],
+              description: "节点15无子节点，返回1",
+              visitPath: ["9", "15"],
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["9", "15", "7"], color: "green" as const, label: "深度=1" }],
+              description: "节点7无子节点，返回1",
+              visitPath: ["9", "15", "7"],
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["9", "15", "7"], color: "green" as const }, { nodeIds: ["20"], color: "blue" as const, label: "深度=2" }],
+              description: "节点20：max(1,1)+1=2",
+              visitPath: ["9", "15", "7", "20"],
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["3"], color: "purple" as const, label: "深度=3" }, { nodeIds: ["9", "15", "7", "20"], color: "green" as const }],
+              description: "根节点3：max(1,2)+1=3。最大深度为3！",
+              visitPath: ["9", "15", "7", "20", "3"],
+            },
+          ] as TreeStep[],
+        },
         code: `/**
  * 二叉树的最大深度 - 递归 DFS
  *
@@ -480,6 +614,80 @@ isSameTree(1, 1)
 ### 优点
 - 代码简洁直观
 - 符合树的递归结构`,
+        animation: {
+          type: "tree" as const,
+          title: "相同的树 - 递归比较演示",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "p1" },
+                { value: 2, id: "p2" },
+                { value: 3, id: "p3" },
+              ],
+              pointers: { p1: ["p"] },
+              description: "树 p: [1,2,3]。同时准备树 q: [1,2,3]。开始递归比较",
+            },
+            {
+              nodes: [
+                { value: 1, id: "p1" },
+                { value: 2, id: "p2" },
+                { value: 3, id: "p3" },
+              ],
+              pointers: { p1: ["p", "q"] },
+              highlights: [{ nodeIds: ["p1"], color: "green" as const }],
+              description: "比较根节点：p.val=1, q.val=1，相等 ✓ 继续比较子树",
+            },
+            {
+              nodes: [
+                { value: 1, id: "p1" },
+                { value: 2, id: "p2" },
+                { value: 3, id: "p3" },
+              ],
+              pointers: { p2: ["p.left", "q.left"] },
+              highlights: [
+                { nodeIds: ["p1"], color: "green" as const },
+                { nodeIds: ["p2"], color: "yellow" as const },
+              ],
+              description: "递归比较左子树：p.left.val=2, q.left.val=2，相等 ✓",
+            },
+            {
+              nodes: [
+                { value: 1, id: "p1" },
+                { value: 2, id: "p2" },
+                { value: 3, id: "p3" },
+              ],
+              highlights: [
+                { nodeIds: ["p1"], color: "green" as const },
+                { nodeIds: ["p2"], color: "green" as const },
+              ],
+              description: "节点2的左右子树都为null，返回 true。节点2子树相同 ✓",
+              visitPath: ["p2"],
+            },
+            {
+              nodes: [
+                { value: 1, id: "p1" },
+                { value: 2, id: "p2" },
+                { value: 3, id: "p3" },
+              ],
+              pointers: { p3: ["p.right", "q.right"] },
+              highlights: [
+                { nodeIds: ["p1", "p2"], color: "green" as const },
+                { nodeIds: ["p3"], color: "yellow" as const },
+              ],
+              description: "递归比较右子树：p.right.val=3, q.right.val=3，相等 ✓",
+            },
+            {
+              nodes: [
+                { value: 1, id: "p1" },
+                { value: 2, id: "p2" },
+                { value: 3, id: "p3" },
+              ],
+              highlights: [{ nodeIds: ["p1", "p2", "p3"], color: "green" as const }],
+              description: "节点3的左右子树都为null，返回 true。所有节点都匹配，返回 true！",
+              visitPath: ["p1", "p2", "p3"],
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(min(n, m))",
         spaceComplexity: "O(min(h1, h2))",
       },
@@ -668,6 +876,106 @@ p:   1        q:   1
     solutions: [
       {
         name: "递归（推荐）",
+        animation: {
+          type: "tree" as const,
+          title: "翻转二叉树 - 递归演示",
+          steps: [
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 2, id: "2" },
+                { value: 7, id: "7" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+                { value: 6, id: "6" },
+                { value: 9, id: "9" },
+              ],
+              pointers: { "4": ["root"] },
+              description: "原始树：4 的左子树是 2，右子树是 7",
+            },
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 2, id: "2" },
+                { value: 7, id: "7" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+                { value: 6, id: "6" },
+                { value: 9, id: "9" },
+              ],
+              pointers: { "4": ["swap"] },
+              highlights: [{ nodeIds: ["2", "7"], color: "yellow" as const, label: "交换" }],
+              description: "交换节点4的左右子树：2 ↔ 7",
+            },
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 7, id: "7" },
+                { value: 2, id: "2" },
+                { value: 6, id: "6" },
+                { value: 9, id: "9" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+              ],
+              pointers: { "7": ["curr"] },
+              highlights: [{ nodeIds: ["4"], color: "green" as const, label: "已处理" }, { nodeIds: ["7"], color: "yellow" as const, label: "递归" }],
+              description: "交换完成！递归处理左子树（原右子树7）",
+            },
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 7, id: "7" },
+                { value: 2, id: "2" },
+                { value: 6, id: "6" },
+                { value: 9, id: "9" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["4"], color: "green" as const }, { nodeIds: ["6", "9"], color: "yellow" as const, label: "交换" }],
+              description: "交换节点7的左右子树：6 ↔ 9",
+            },
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 7, id: "7" },
+                { value: 2, id: "2" },
+                { value: 9, id: "9" },
+                { value: 6, id: "6" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+              ],
+              pointers: { "2": ["curr"] },
+              highlights: [{ nodeIds: ["4", "7", "9", "6"], color: "green" as const }, { nodeIds: ["2"], color: "yellow" as const, label: "递归" }],
+              description: "节点7处理完毕！递归处理右子树（原左子树2）",
+            },
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 7, id: "7" },
+                { value: 2, id: "2" },
+                { value: 9, id: "9" },
+                { value: 6, id: "6" },
+                { value: 1, id: "1" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["4", "7", "9", "6"], color: "green" as const }, { nodeIds: ["1", "3"], color: "yellow" as const, label: "交换" }],
+              description: "交换节点2的左右子树：1 ↔ 3",
+            },
+            {
+              nodes: [
+                { value: 4, id: "4" },
+                { value: 7, id: "7" },
+                { value: 2, id: "2" },
+                { value: 9, id: "9" },
+                { value: 6, id: "6" },
+                { value: 3, id: "3" },
+                { value: 1, id: "1" },
+              ],
+              highlights: [{ nodeIds: ["4", "7", "9", "6", "2", "3", "1"], color: "green" as const, label: "完成" }],
+              description: "翻转完成！结果：4→[7,2], 7→[9,6], 2→[3,1]",
+            },
+          ] as TreeStep[],
+        },
         code: `/**
  * 翻转二叉树 - 递归法
  *
@@ -968,6 +1276,77 @@ function invertTree(root) {
     solutions: [
       {
         name: "递归（推荐）",
+        animation: {
+          type: "tree" as const,
+          title: "对称二叉树 - 递归检查演示",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2L" },
+                { value: 2, id: "2R" },
+                { value: 3, id: "3L" },
+                { value: 4, id: "4L" },
+                { value: 4, id: "4R" },
+                { value: 3, id: "3R" },
+              ],
+              pointers: { "1": ["root"] },
+              description: "检查树是否对称：比较左右子树是否互为镜像",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2L" },
+                { value: 2, id: "2R" },
+                { value: 3, id: "3L" },
+                { value: 4, id: "4L" },
+                { value: 4, id: "4R" },
+                { value: 3, id: "3R" },
+              ],
+              highlights: [{ nodeIds: ["2L", "2R"], color: "yellow" as const, label: "比较" }],
+              description: "isMirror(2L, 2R)：值都是 2，相等 ✓",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2L" },
+                { value: 2, id: "2R" },
+                { value: 3, id: "3L" },
+                { value: 4, id: "4L" },
+                { value: 4, id: "4R" },
+                { value: 3, id: "3R" },
+              ],
+              highlights: [{ nodeIds: ["2L", "2R"], color: "green" as const }, { nodeIds: ["3L", "3R"], color: "yellow" as const, label: "外侧" }],
+              description: "检查外侧：isMirror(3L, 3R)，值都是 3 ✓",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2L" },
+                { value: 2, id: "2R" },
+                { value: 3, id: "3L" },
+                { value: 4, id: "4L" },
+                { value: 4, id: "4R" },
+                { value: 3, id: "3R" },
+              ],
+              highlights: [{ nodeIds: ["2L", "2R", "3L", "3R"], color: "green" as const }, { nodeIds: ["4L", "4R"], color: "yellow" as const, label: "内侧" }],
+              description: "检查内侧：isMirror(4L, 4R)，值都是 4 ✓",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2L" },
+                { value: 2, id: "2R" },
+                { value: 3, id: "3L" },
+                { value: 4, id: "4L" },
+                { value: 4, id: "4R" },
+                { value: 3, id: "3R" },
+              ],
+              highlights: [{ nodeIds: ["1", "2L", "2R", "3L", "3R", "4L", "4R"], color: "green" as const, label: "对称" }],
+              description: "所有镜像检查都通过！树是对称的 ✓",
+            },
+          ] as TreeStep[],
+        },
         code: `/**
  * 对称二叉树 - 递归法
  *
@@ -1365,6 +1744,76 @@ inorder  = [9, 3, 15, 20, 7]
 ### 关键点
 - 先构建左子树，再构建右子树（与前序遍历顺序一致）
 - preIndex 全局递增，自动指向下一个根节点`,
+        animation: {
+          type: "tree" as const,
+          title: "从前序与中序构造二叉树演示",
+          steps: [
+            {
+              nodes: [],
+              description: "前序: [3,9,20,15,7]，中序: [9,3,15,20,7]。前序第一个元素3是根",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+              ],
+              pointers: { "3": ["root"] },
+              highlights: [{ nodeIds: ["3"], color: "green" as const }],
+              description: "创建根节点3。在中序中找到3的位置(索引1)，左边[9]是左子树，右边[15,20,7]是右子树",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+              ],
+              highlights: [
+                { nodeIds: ["3"], color: "green" as const },
+                { nodeIds: ["9"], color: "yellow" as const },
+              ],
+              description: "构建左子树：前序下一个元素9。中序左子树[9]只有一个元素，9是叶节点",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+              ],
+              highlights: [
+                { nodeIds: ["3", "9"], color: "green" as const },
+                { nodeIds: ["20"], color: "yellow" as const },
+              ],
+              description: "构建右子树：前序下一个元素20。在中序右子树[15,20,7]中找20(索引3)，左边[15]右边[7]",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+              ],
+              highlights: [
+                { nodeIds: ["3", "9", "20"], color: "green" as const },
+                { nodeIds: ["15"], color: "yellow" as const },
+              ],
+              description: "构建20的左子树：前序下一个元素15。15是叶节点",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["3", "9", "20", "15", "7"], color: "green" as const }],
+              description: "构建20的右子树：前序下一个元素7。7是叶节点。构造完成！",
+              visitPath: ["3", "9", "20", "15", "7"],
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
@@ -1566,6 +2015,97 @@ leftSize = iIdx - iS
     solutions: [
       {
         name: "BFS + 队列（推荐）",
+        animation: {
+          type: "tree" as const,
+          title: "二叉树层序遍历 - BFS 演示",
+          steps: [
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              pointers: { "3": ["queue"] },
+              description: "初始化：根节点3入队。queue=[3]",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["3"], color: "green" as const, label: "第1层" }],
+              description: "处理第1层：出队3，子节点9,20入队。结果：[[3]]",
+              visitPath: ["3"],
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              pointers: { "9": ["queue"], "20": ["queue"] },
+              highlights: [{ nodeIds: ["3"], color: "green" as const }, { nodeIds: ["9", "20"], color: "yellow" as const, label: "第2层" }],
+              description: "处理第2层：出队9和20。queue=[9,20]",
+              visitPath: ["3"],
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["3", "9", "20"], color: "green" as const }],
+              description: "第2层处理完毕。结果：[[3], [9,20]]。15和7入队",
+              visitPath: ["3", "9", "20"],
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              pointers: { "15": ["queue"], "7": ["queue"] },
+              highlights: [{ nodeIds: ["3", "9", "20"], color: "green" as const }, { nodeIds: ["15", "7"], color: "yellow" as const, label: "第3层" }],
+              description: "处理第3层：出队15和7，无子节点",
+              visitPath: ["3", "9", "20"],
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["3", "9", "20", "15", "7"], color: "green" as const, label: "完成" }],
+              description: "遍历完成！结果：[[3], [9,20], [15,7]]",
+              visitPath: ["3", "9", "20", "15", "7"],
+            },
+          ] as TreeStep[],
+        },
         code: `/**
  * 二叉树的层序遍历 - BFS + 队列
  *
@@ -1903,6 +2443,104 @@ function rightSideView(root) {
 ### 优点
 - 直观，容易理解
 - 适合处理"层"相关的问题`,
+        animation: {
+          type: "tree" as const,
+          title: "二叉树右视图 - BFS演示",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                null,
+                { value: 5, id: "5" },
+                null,
+                { value: 4, id: "4" },
+              ],
+              pointers: { "1": ["queue"] },
+              description: "树: [1,2,3,null,5,null,4]。从右侧看能看到每层最右边的节点。队列初始化为[1]",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                null,
+                { value: 5, id: "5" },
+                null,
+                { value: 4, id: "4" },
+              ],
+              highlights: [{ nodeIds: ["1"], color: "green" as const, label: "右视图" }],
+              description: "第0层: [1]。层大小=1，i=0是最后一个，记录1。result=[1]",
+              visitPath: ["1"],
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                null,
+                { value: 5, id: "5" },
+                null,
+                { value: 4, id: "4" },
+              ],
+              pointers: { "2": ["queue[0]"], "3": ["queue[1]"] },
+              highlights: [
+                { nodeIds: ["1"], color: "green" as const },
+                { nodeIds: ["2", "3"], color: "yellow" as const },
+              ],
+              description: "第1层: [2,3]。层大小=2",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                null,
+                { value: 5, id: "5" },
+                null,
+                { value: 4, id: "4" },
+              ],
+              highlights: [
+                { nodeIds: ["1", "3"], color: "green" as const, label: "右视图" },
+                { nodeIds: ["2"], color: "blue" as const },
+              ],
+              description: "处理2(i=0)和3(i=1)。i=1是最后一个，记录3。result=[1,3]",
+              visitPath: ["1", "3"],
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                null,
+                { value: 5, id: "5" },
+                null,
+                { value: 4, id: "4" },
+              ],
+              pointers: { "5": ["queue[0]"], "4": ["queue[1]"] },
+              highlights: [
+                { nodeIds: ["1", "3"], color: "green" as const },
+                { nodeIds: ["5", "4"], color: "yellow" as const },
+              ],
+              description: "第2层: [5,4]。层大小=2",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                null,
+                { value: 5, id: "5" },
+                null,
+                { value: 4, id: "4" },
+              ],
+              highlights: [{ nodeIds: ["1", "3", "4"], color: "green" as const, label: "右视图" }],
+              description: "处理5(i=0)和4(i=1)。i=1是最后一个，记录4。result=[1,3,4] ✓",
+              visitPath: ["1", "3", "4"],
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
@@ -2118,6 +2756,122 @@ function hasPathSum(root, targetSum) {
   // 使用 || 短路运算：左子树满足就不检查右子树
   return hasPathSum(root.left, remaining) || hasPathSum(root.right, remaining);
 }`,
+        animation: {
+          type: "tree" as const,
+          title: "路径总和 - 递归 DFS 演示 (targetSum = 22)",
+          steps: [
+            {
+              nodes: [
+                { value: 5, id: "5" },
+                { value: 4, id: "4" },
+                { value: 8, id: "8" },
+                { value: 11, id: "11" },
+                null,
+                { value: 13, id: "13" },
+                { value: 4, id: "4r" },
+                { value: 7, id: "7" },
+                { value: 2, id: "2" },
+              ],
+              pointers: { "5": ["root"] },
+              highlights: [{ nodeIds: ["5"], color: "blue" as const, label: "当前节点" }],
+              description: "开始：从根节点5出发，目标值 targetSum = 22，剩余 = 22",
+            },
+            {
+              nodes: [
+                { value: 5, id: "5" },
+                { value: 4, id: "4" },
+                { value: 8, id: "8" },
+                { value: 11, id: "11" },
+                null,
+                { value: 13, id: "13" },
+                { value: 4, id: "4r" },
+                { value: 7, id: "7" },
+                { value: 2, id: "2" },
+              ],
+              pointers: { "4": ["curr"] },
+              highlights: [
+                { nodeIds: ["5"], color: "yellow" as const, label: "已访问" },
+                { nodeIds: ["4"], color: "blue" as const, label: "当前" },
+              ],
+              description: "递归左子树：访问节点4，剩余 = 22 - 5 = 17",
+            },
+            {
+              nodes: [
+                { value: 5, id: "5" },
+                { value: 4, id: "4" },
+                { value: 8, id: "8" },
+                { value: 11, id: "11" },
+                null,
+                { value: 13, id: "13" },
+                { value: 4, id: "4r" },
+                { value: 7, id: "7" },
+                { value: 2, id: "2" },
+              ],
+              pointers: { "11": ["curr"] },
+              highlights: [
+                { nodeIds: ["5", "4"], color: "yellow" as const, label: "已访问" },
+                { nodeIds: ["11"], color: "blue" as const, label: "当前" },
+              ],
+              description: "继续左子树：访问节点11，剩余 = 17 - 4 = 13",
+            },
+            {
+              nodes: [
+                { value: 5, id: "5" },
+                { value: 4, id: "4" },
+                { value: 8, id: "8" },
+                { value: 11, id: "11" },
+                null,
+                { value: 13, id: "13" },
+                { value: 4, id: "4r" },
+                { value: 7, id: "7" },
+                { value: 2, id: "2" },
+              ],
+              pointers: { "7": ["curr"] },
+              highlights: [
+                { nodeIds: ["5", "4", "11"], color: "yellow" as const, label: "路径" },
+                { nodeIds: ["7"], color: "red" as const, label: "叶子节点" },
+              ],
+              description: "到达叶子节点7：剩余 = 13 - 11 = 2，但 7 ≠ 2，返回 false",
+            },
+            {
+              nodes: [
+                { value: 5, id: "5" },
+                { value: 4, id: "4" },
+                { value: 8, id: "8" },
+                { value: 11, id: "11" },
+                null,
+                { value: 13, id: "13" },
+                { value: 4, id: "4r" },
+                { value: 7, id: "7" },
+                { value: 2, id: "2" },
+              ],
+              pointers: { "2": ["curr"] },
+              highlights: [
+                { nodeIds: ["5", "4", "11"], color: "yellow" as const, label: "路径" },
+                { nodeIds: ["2"], color: "green" as const, label: "匹配！" },
+              ],
+              description: "检查右子节点2：剩余 = 2，2 === 2，找到路径！返回 true",
+            },
+            {
+              nodes: [
+                { value: 5, id: "5" },
+                { value: 4, id: "4" },
+                { value: 8, id: "8" },
+                { value: 11, id: "11" },
+                null,
+                { value: 13, id: "13" },
+                { value: 4, id: "4r" },
+                { value: 7, id: "7" },
+                { value: 2, id: "2" },
+              ],
+              highlights: [
+                { nodeIds: ["5", "4", "11", "2"], color: "green" as const, label: "有效路径" },
+              ],
+              visitPath: ["5", "4", "11", "2"],
+              description: "结果：找到路径 5→4→11→2，和为 5+4+11+2=22，返回 true",
+            },
+          ] as TreeStep[],
+        },
         explanation: `## 递归法
 
 ### 思路
@@ -2454,6 +3208,97 @@ function lowestCommonAncestor(root, p, q) {
   // （可能是 LCA，也可能是 p 或 q 本身）
   return left !== null ? left : right;
 }`,
+        animation: {
+          type: "tree" as const,
+          title: "最近公共祖先 - 递归 DFS 演示 (p=5, q=1)",
+          steps: [
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 5, id: "5" },
+                { value: 1, id: "1" },
+                { value: 6, id: "6" },
+                { value: 2, id: "2" },
+                { value: 0, id: "0" },
+                { value: 8, id: "8" },
+              ],
+              pointers: { "3": ["root"] },
+              highlights: [
+                { nodeIds: ["5"], color: "blue" as const, label: "p" },
+                { nodeIds: ["1"], color: "purple" as const, label: "q" },
+              ],
+              description: "开始：从根节点3出发，查找 p=5 和 q=1 的最近公共祖先",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 5, id: "5" },
+                { value: 1, id: "1" },
+                { value: 6, id: "6" },
+                { value: 2, id: "2" },
+                { value: 0, id: "0" },
+                { value: 8, id: "8" },
+              ],
+              pointers: { "5": ["curr"] },
+              highlights: [
+                { nodeIds: ["5"], color: "green" as const, label: "找到p!" },
+                { nodeIds: ["1"], color: "purple" as const, label: "q" },
+              ],
+              description: "递归左子树：访问节点5，发现 root === p，返回节点5",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 5, id: "5" },
+                { value: 1, id: "1" },
+                { value: 6, id: "6" },
+                { value: 2, id: "2" },
+                { value: 0, id: "0" },
+                { value: 8, id: "8" },
+              ],
+              pointers: { "1": ["curr"] },
+              highlights: [
+                { nodeIds: ["5"], color: "green" as const, label: "left=5" },
+                { nodeIds: ["1"], color: "green" as const, label: "找到q!" },
+              ],
+              description: "递归右子树：访问节点1，发现 root === q，返回节点1",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 5, id: "5" },
+                { value: 1, id: "1" },
+                { value: 6, id: "6" },
+                { value: 2, id: "2" },
+                { value: 0, id: "0" },
+                { value: 8, id: "8" },
+              ],
+              pointers: { "3": ["LCA"] },
+              highlights: [
+                { nodeIds: ["5"], color: "blue" as const, label: "left非空" },
+                { nodeIds: ["1"], color: "purple" as const, label: "right非空" },
+                { nodeIds: ["3"], color: "green" as const, label: "LCA!" },
+              ],
+              description: "回到根节点3：left=5 非空，right=1 非空，说明 p、q 分布两侧",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 5, id: "5" },
+                { value: 1, id: "1" },
+                { value: 6, id: "6" },
+                { value: 2, id: "2" },
+                { value: 0, id: "0" },
+                { value: 8, id: "8" },
+              ],
+              highlights: [
+                { nodeIds: ["3"], color: "green" as const, label: "最近公共祖先" },
+                { nodeIds: ["5", "1"], color: "yellow" as const, label: "p和q" },
+              ],
+              description: "结果：节点3是 p=5 和 q=1 的最近公共祖先，返回3",
+            },
+          ] as TreeStep[],
+        },
         explanation: `## 递归法（推荐）
 
 ### 算法原理
@@ -2835,6 +3680,97 @@ function maxPathSum(root) {
 ### 复杂度
 - 时间：O(n)，每个节点访问一次
 - 空间：O(h)，递归栈深度`,
+        animation: {
+          type: "tree" as const,
+          title: "二叉树最大路径和演示",
+          steps: [
+            {
+              nodes: [
+                { value: -10, id: "r" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              description: "树: [-10,9,20,null,null,15,7]。找最大路径和。路径可以拐弯但不能分叉",
+            },
+            {
+              nodes: [
+                { value: -10, id: "r" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["9"], color: "yellow" as const }],
+              description: "节点9: 无子节点。贡献=9，路径和=9。maxSum=9",
+              visitPath: ["9"],
+            },
+            {
+              nodes: [
+                { value: -10, id: "r" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["15"], color: "yellow" as const }],
+              description: "节点15: 无子节点。贡献=15，路径和=15。maxSum=15",
+              visitPath: ["15"],
+            },
+            {
+              nodes: [
+                { value: -10, id: "r" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["7"], color: "yellow" as const }],
+              description: "节点7: 无子节点。贡献=7，路径和=7。maxSum=15",
+              visitPath: ["7"],
+            },
+            {
+              nodes: [
+                { value: -10, id: "r" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [
+                { nodeIds: ["20"], color: "yellow" as const },
+                { nodeIds: ["15", "7"], color: "blue" as const },
+              ],
+              description: "节点20: 左贡献=15，右贡献=7。贡献=20+15=35。路径和=15+20+7=42。maxSum=42 ✓",
+              visitPath: ["15", "20", "7"],
+            },
+            {
+              nodes: [
+                { value: -10, id: "r" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["15", "20", "7"], color: "green" as const, label: "最大路径" }],
+              description: "最大路径: 15→20→7，和=42。注意-10贡献为负，不选入最优路径",
+              visitPath: ["15", "20", "7"],
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(h)",
       },
@@ -3120,6 +4056,148 @@ function isValidBST(root) {
 ### 复杂度
 - 时间：O(n)，每个节点访问一次
 - 空间：O(h)，递归栈深度`,
+        animation: {
+          type: "tree" as const,
+          title: "验证二叉搜索树演示",
+          steps: [
+            {
+              nodes: [
+                { value: 5, id: "n5" },
+                { value: 1, id: "n1" },
+                { value: 6, id: "n6" },
+                null,
+                null,
+                { value: 3, id: "n3" },
+                { value: 7, id: "n7" },
+              ],
+              highlights: [{ nodeIds: ["n5"], color: "blue" as const }],
+              description: "验证这棵树是否是有效的 BST。从根节点 5 开始，初始范围 (-∞, +∞)",
+            },
+            {
+              nodes: [
+                { value: 5, id: "n5" },
+                { value: 1, id: "n1" },
+                { value: 6, id: "n6" },
+                null,
+                null,
+                { value: 3, id: "n3" },
+                { value: 7, id: "n7" },
+              ],
+              highlights: [
+                { nodeIds: ["n5"], color: "green" as const },
+                { nodeIds: ["n1"], color: "blue" as const },
+              ],
+              pointers: { n5: ["(-∞,+∞)"] },
+              description: "节点 5 在 (-∞, +∞) 范围内 ✓。检查左子节点 1，范围变为 (-∞, 5)",
+            },
+            {
+              nodes: [
+                { value: 5, id: "n5" },
+                { value: 1, id: "n1" },
+                { value: 6, id: "n6" },
+                null,
+                null,
+                { value: 3, id: "n3" },
+                { value: 7, id: "n7" },
+              ],
+              highlights: [
+                { nodeIds: ["n5", "n1"], color: "green" as const },
+                { nodeIds: ["n6"], color: "blue" as const },
+              ],
+              pointers: { n1: ["(-∞,5)"] },
+              description: "节点 1 在 (-∞, 5) 范围内 ✓。检查右子节点 6，范围变为 (5, +∞)",
+            },
+            {
+              nodes: [
+                { value: 5, id: "n5" },
+                { value: 1, id: "n1" },
+                { value: 6, id: "n6" },
+                null,
+                null,
+                { value: 3, id: "n3" },
+                { value: 7, id: "n7" },
+              ],
+              highlights: [
+                { nodeIds: ["n5", "n1", "n6"], color: "green" as const },
+                { nodeIds: ["n3"], color: "blue" as const },
+              ],
+              pointers: { n6: ["(5,+∞)"] },
+              description: "节点 6 在 (5, +∞) 范围内 ✓。检查 6 的左子节点 3，范围变为 (5, 6)",
+            },
+            {
+              nodes: [
+                { value: 5, id: "n5" },
+                { value: 1, id: "n1" },
+                { value: 6, id: "n6" },
+                null,
+                null,
+                { value: 3, id: "n3" },
+                { value: 7, id: "n7" },
+              ],
+              highlights: [
+                { nodeIds: ["n5", "n1", "n6"], color: "green" as const },
+                { nodeIds: ["n3"], color: "red" as const },
+              ],
+              pointers: { n3: ["(5,6)?"] },
+              description: "节点 3 应在 (5, 6) 范围内，但 3 < 5 ✗ 违反 BST 性质！",
+            },
+            {
+              nodes: [
+                { value: 5, id: "n5" },
+                { value: 1, id: "n1" },
+                { value: 6, id: "n6" },
+                null,
+                null,
+                { value: 3, id: "n3" },
+                { value: 7, id: "n7" },
+              ],
+              highlights: [{ nodeIds: ["n3"], color: "red" as const }],
+              description: "发现无效节点！节点 3 在右子树中但小于根节点 5。返回 false，这不是有效的 BST",
+            },
+            {
+              nodes: [
+                { value: 2, id: "r2" },
+                { value: 1, id: "r1" },
+                { value: 3, id: "r3" },
+              ],
+              highlights: [{ nodeIds: ["r2"], color: "blue" as const }],
+              description: "对比：这是一个有效的 BST [2,1,3]。验证根节点 2，范围 (-∞, +∞)",
+            },
+            {
+              nodes: [
+                { value: 2, id: "r2" },
+                { value: 1, id: "r1" },
+                { value: 3, id: "r3" },
+              ],
+              highlights: [
+                { nodeIds: ["r2"], color: "green" as const },
+                { nodeIds: ["r1"], color: "blue" as const },
+              ],
+              description: "节点 2 有效 ✓。左子节点 1 在 (-∞, 2) 范围内 ✓",
+            },
+            {
+              nodes: [
+                { value: 2, id: "r2" },
+                { value: 1, id: "r1" },
+                { value: 3, id: "r3" },
+              ],
+              highlights: [
+                { nodeIds: ["r2", "r1"], color: "green" as const },
+                { nodeIds: ["r3"], color: "blue" as const },
+              ],
+              description: "右子节点 3 在 (2, +∞) 范围内 ✓。所有节点都满足范围约束",
+            },
+            {
+              nodes: [
+                { value: 2, id: "r2" },
+                { value: 1, id: "r1" },
+                { value: 3, id: "r3" },
+              ],
+              highlights: [{ nodeIds: ["r2", "r1", "r3"], color: "green" as const }],
+              description: "验证完成！[2,1,3] 是有效的 BST。返回 true",
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(h)",
       },
@@ -3491,6 +4569,76 @@ BST 的中序遍历产生升序序列：
 ### 复杂度
 - 时间：O(H + k)，H 是到最左节点的深度
 - 空间：O(H)，递归栈深度`,
+        animation: {
+          type: "tree" as const,
+          title: "BST第K小元素 - 中序遍历演示",
+          steps: [
+            {
+              nodes: [
+                { value: 5, id: "5" },
+                { value: 3, id: "3" },
+                { value: 6, id: "6" },
+                { value: 2, id: "2" },
+                { value: 4, id: "4" },
+              ],
+              description: "BST: [5,3,6,2,4]，找第k=3小的元素。BST中序遍历是升序的",
+            },
+            {
+              nodes: [
+                { value: 5, id: "5" },
+                { value: 3, id: "3" },
+                { value: 6, id: "6" },
+                { value: 2, id: "2" },
+                { value: 4, id: "4" },
+              ],
+              highlights: [{ nodeIds: ["2"], color: "yellow" as const }],
+              description: "递归到最左节点2。count=1。k=3，继续遍历",
+              visitPath: ["2"],
+            },
+            {
+              nodes: [
+                { value: 5, id: "5" },
+                { value: 3, id: "3" },
+                { value: 6, id: "6" },
+                { value: 2, id: "2" },
+                { value: 4, id: "4" },
+              ],
+              highlights: [
+                { nodeIds: ["2"], color: "blue" as const },
+                { nodeIds: ["3"], color: "yellow" as const },
+              ],
+              description: "回到节点3。count=2。k=3，继续遍历",
+              visitPath: ["2", "3"],
+            },
+            {
+              nodes: [
+                { value: 5, id: "5" },
+                { value: 3, id: "3" },
+                { value: 6, id: "6" },
+                { value: 2, id: "2" },
+                { value: 4, id: "4" },
+              ],
+              highlights: [
+                { nodeIds: ["2", "3"], color: "blue" as const },
+                { nodeIds: ["4"], color: "green" as const, label: "第3小" },
+              ],
+              description: "访问节点4。count=3=k。找到答案！result=4，提前终止",
+              visitPath: ["2", "3", "4"],
+            },
+            {
+              nodes: [
+                { value: 5, id: "5" },
+                { value: 3, id: "3" },
+                { value: 6, id: "6" },
+                { value: 2, id: "2" },
+                { value: 4, id: "4" },
+              ],
+              highlights: [{ nodeIds: ["4"], color: "green" as const, label: "答案" }],
+              description: "中序遍历: 2→3→4→...。第3个元素是4。无需遍历5和6",
+              visitPath: ["2", "3", "4"],
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(H + k)",
         spaceComplexity: "O(H)",
       },
@@ -3884,6 +5032,183 @@ function inorderTraversal(root) {
 ### 复杂度
 - 时间：O(n)，每个节点访问一次
 - 空间：O(n)，递归栈（最坏 O(n)）+ 结果数组`,
+        animation: {
+          type: "tree" as const,
+          title: "二叉树中序遍历演示",
+          steps: [
+            {
+              nodes: [
+                { value: 4, id: "n4" },
+                { value: 2, id: "n2" },
+                { value: 6, id: "n6" },
+                { value: 1, id: "n1" },
+                { value: 3, id: "n3" },
+                { value: 5, id: "n5" },
+                { value: 7, id: "n7" },
+              ],
+              highlights: [{ nodeIds: ["n4"], color: "blue" as const }],
+              description: "中序遍历顺序：左子树 → 根节点 → 右子树。从根节点 4 开始",
+            },
+            {
+              nodes: [
+                { value: 4, id: "n4" },
+                { value: 2, id: "n2" },
+                { value: 6, id: "n6" },
+                { value: 1, id: "n1" },
+                { value: 3, id: "n3" },
+                { value: 5, id: "n5" },
+                { value: 7, id: "n7" },
+              ],
+              highlights: [{ nodeIds: ["n2"], color: "blue" as const }],
+              description: "先访问左子树。进入节点 2 的子树",
+            },
+            {
+              nodes: [
+                { value: 4, id: "n4" },
+                { value: 2, id: "n2" },
+                { value: 6, id: "n6" },
+                { value: 1, id: "n1" },
+                { value: 3, id: "n3" },
+                { value: 5, id: "n5" },
+                { value: 7, id: "n7" },
+              ],
+              highlights: [{ nodeIds: ["n1"], color: "blue" as const }],
+              description: "继续访问节点 2 的左子树，进入节点 1",
+            },
+            {
+              nodes: [
+                { value: 4, id: "n4" },
+                { value: 2, id: "n2" },
+                { value: 6, id: "n6" },
+                { value: 1, id: "n1" },
+                { value: 3, id: "n3" },
+                { value: 5, id: "n5" },
+                { value: 7, id: "n7" },
+              ],
+              highlights: [{ nodeIds: ["n1"], color: "green" as const }],
+              visitPath: ["n1"],
+              description: "节点 1 无左子树，访问节点 1。输出: [1]",
+            },
+            {
+              nodes: [
+                { value: 4, id: "n4" },
+                { value: 2, id: "n2" },
+                { value: 6, id: "n6" },
+                { value: 1, id: "n1" },
+                { value: 3, id: "n3" },
+                { value: 5, id: "n5" },
+                { value: 7, id: "n7" },
+              ],
+              highlights: [{ nodeIds: ["n1", "n2"], color: "green" as const }],
+              visitPath: ["n1", "n2"],
+              description: "节点 1 无右子树，返回父节点。访问节点 2。输出: [1, 2]",
+            },
+            {
+              nodes: [
+                { value: 4, id: "n4" },
+                { value: 2, id: "n2" },
+                { value: 6, id: "n6" },
+                { value: 1, id: "n1" },
+                { value: 3, id: "n3" },
+                { value: 5, id: "n5" },
+                { value: 7, id: "n7" },
+              ],
+              highlights: [
+                { nodeIds: ["n1", "n2"], color: "green" as const },
+                { nodeIds: ["n3"], color: "blue" as const },
+              ],
+              visitPath: ["n1", "n2"],
+              description: "进入节点 2 的右子树，访问节点 3",
+            },
+            {
+              nodes: [
+                { value: 4, id: "n4" },
+                { value: 2, id: "n2" },
+                { value: 6, id: "n6" },
+                { value: 1, id: "n1" },
+                { value: 3, id: "n3" },
+                { value: 5, id: "n5" },
+                { value: 7, id: "n7" },
+              ],
+              highlights: [{ nodeIds: ["n1", "n2", "n3"], color: "green" as const }],
+              visitPath: ["n1", "n2", "n3"],
+              description: "节点 3 无子节点，访问节点 3。输出: [1, 2, 3]",
+            },
+            {
+              nodes: [
+                { value: 4, id: "n4" },
+                { value: 2, id: "n2" },
+                { value: 6, id: "n6" },
+                { value: 1, id: "n1" },
+                { value: 3, id: "n3" },
+                { value: 5, id: "n5" },
+                { value: 7, id: "n7" },
+              ],
+              highlights: [{ nodeIds: ["n1", "n2", "n3", "n4"], color: "green" as const }],
+              visitPath: ["n1", "n2", "n3", "n4"],
+              description: "左子树遍历完成，访问根节点 4。输出: [1, 2, 3, 4]",
+            },
+            {
+              nodes: [
+                { value: 4, id: "n4" },
+                { value: 2, id: "n2" },
+                { value: 6, id: "n6" },
+                { value: 1, id: "n1" },
+                { value: 3, id: "n3" },
+                { value: 5, id: "n5" },
+                { value: 7, id: "n7" },
+              ],
+              highlights: [
+                { nodeIds: ["n1", "n2", "n3", "n4"], color: "green" as const },
+                { nodeIds: ["n6"], color: "blue" as const },
+              ],
+              visitPath: ["n1", "n2", "n3", "n4"],
+              description: "进入右子树，访问节点 6 的子树",
+            },
+            {
+              nodes: [
+                { value: 4, id: "n4" },
+                { value: 2, id: "n2" },
+                { value: 6, id: "n6" },
+                { value: 1, id: "n1" },
+                { value: 3, id: "n3" },
+                { value: 5, id: "n5" },
+                { value: 7, id: "n7" },
+              ],
+              highlights: [{ nodeIds: ["n1", "n2", "n3", "n4", "n5"], color: "green" as const }],
+              visitPath: ["n1", "n2", "n3", "n4", "n5"],
+              description: "访问节点 5（6 的左子节点）。输出: [1, 2, 3, 4, 5]",
+            },
+            {
+              nodes: [
+                { value: 4, id: "n4" },
+                { value: 2, id: "n2" },
+                { value: 6, id: "n6" },
+                { value: 1, id: "n1" },
+                { value: 3, id: "n3" },
+                { value: 5, id: "n5" },
+                { value: 7, id: "n7" },
+              ],
+              highlights: [{ nodeIds: ["n1", "n2", "n3", "n4", "n5", "n6"], color: "green" as const }],
+              visitPath: ["n1", "n2", "n3", "n4", "n5", "n6"],
+              description: "访问节点 6。输出: [1, 2, 3, 4, 5, 6]",
+            },
+            {
+              nodes: [
+                { value: 4, id: "n4" },
+                { value: 2, id: "n2" },
+                { value: 6, id: "n6" },
+                { value: 1, id: "n1" },
+                { value: 3, id: "n3" },
+                { value: 5, id: "n5" },
+                { value: 7, id: "n7" },
+              ],
+              highlights: [{ nodeIds: ["n1", "n2", "n3", "n4", "n5", "n6", "n7"], color: "green" as const }],
+              visitPath: ["n1", "n2", "n3", "n4", "n5", "n6", "n7"],
+              description: "访问节点 7。完成！输出: [1, 2, 3, 4, 5, 6, 7]",
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
@@ -4305,6 +5630,85 @@ function diameterOfBinaryTree(root) {
 ### 复杂度
 - 时间：O(n)，每个节点访问一次
 - 空间：O(h)，递归栈深度`,
+        animation: {
+          type: "tree" as const,
+          title: "二叉树直径演示",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              description: "树: [1,2,3,4,5]。直径=任意两点间最长路径的边数",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["4"], color: "yellow" as const }],
+              description: "节点4: 左深度=0，右深度=0。直径贡献=0+0=0",
+              visitPath: ["4"],
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["5"], color: "yellow" as const }],
+              description: "节点5: 左深度=0，右深度=0。直径贡献=0+0=0",
+              visitPath: ["5"],
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [
+                { nodeIds: ["2"], color: "yellow" as const },
+                { nodeIds: ["4", "5"], color: "blue" as const },
+              ],
+              description: "节点2: 左深度=1，右深度=1。直径贡献=1+1=2。maxDiameter=2",
+              visitPath: ["4", "2", "5"],
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["3"], color: "yellow" as const }],
+              description: "节点3: 左深度=0，右深度=0。直径贡献=0。maxDiameter=2",
+              visitPath: ["3"],
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["4", "2", "1", "3"], color: "green" as const, label: "直径路径" }],
+              description: "节点1: 左深度=2，右深度=1。直径贡献=2+1=3。maxDiameter=3 ✓",
+              visitPath: ["4", "2", "1", "3"],
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(h)",
       },
@@ -4518,6 +5922,82 @@ function buildTree(inorder, postorder) {
 ### 复杂度
 - 时间：O(n)，每个节点处理一次
 - 空间：O(n)，哈希表 + 递归栈`,
+        animation: {
+          type: "tree" as const,
+          title: "从中序与后序构造二叉树演示",
+          steps: [
+            {
+              nodes: [],
+              description: "中序: [9,3,15,20,7]，后序: [9,15,7,20,3]。后序最后一个3是根",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+              ],
+              pointers: { "3": ["root"] },
+              highlights: [{ nodeIds: ["3"], color: "green" as const }],
+              description: "创建根节点3。在中序中找到3(索引1)，左子树[9]，右子树[15,20,7]",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                null,
+                { value: 20, id: "20" },
+              ],
+              highlights: [
+                { nodeIds: ["3"], color: "green" as const },
+                { nodeIds: ["20"], color: "yellow" as const },
+              ],
+              description: "先构建右子树！后序下一个20是右子树根。在中序[15,20,7]中找20，左[15]右[7]",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                null,
+                { value: 20, id: "20" },
+                null,
+                null,
+                null,
+                { value: 7, id: "7" },
+              ],
+              highlights: [
+                { nodeIds: ["3", "20"], color: "green" as const },
+                { nodeIds: ["7"], color: "yellow" as const },
+              ],
+              description: "构建20的右子树：后序下一个7。7是叶节点",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                null,
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [
+                { nodeIds: ["3", "20", "7"], color: "green" as const },
+                { nodeIds: ["15"], color: "yellow" as const },
+              ],
+              description: "构建20的左子树：后序下一个15。15是叶节点",
+            },
+            {
+              nodes: [
+                { value: 3, id: "3" },
+                { value: 9, id: "9" },
+                { value: 20, id: "20" },
+                null,
+                null,
+                { value: 15, id: "15" },
+                { value: 7, id: "7" },
+              ],
+              highlights: [{ nodeIds: ["3", "9", "20", "15", "7"], color: "green" as const }],
+              description: "最后构建3的左子树：后序下一个9。9是叶节点。构造完成！",
+              visitPath: ["3", "20", "7", "15", "9"],
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
@@ -4819,6 +6299,92 @@ function flatten(root) {
 ### 复杂度
 - 时间：O(n)
 - 空间：O(1)，原地修改`,
+        animation: {
+          type: "tree" as const,
+          title: "二叉树展开为链表演示",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 5, id: "5" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                null,
+                { value: 6, id: "6" },
+              ],
+              pointers: { "1": ["curr"] },
+              description: "树: [1,2,5,3,4,null,6]。展开为链表，按先序遍历顺序",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 5, id: "5" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                null,
+                { value: 6, id: "6" },
+              ],
+              pointers: { "1": ["curr"], "4": ["前驱"] },
+              highlights: [{ nodeIds: ["4"], color: "yellow" as const }],
+              description: "节点1有左子树。找左子树最右节点=4（前驱）",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                null,
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                null,
+                null,
+                null,
+                null,
+                null,
+                { value: 5, id: "5" },
+                null,
+                null,
+                null,
+                { value: 6, id: "6" },
+              ],
+              highlights: [
+                { nodeIds: ["4", "5"], color: "yellow" as const },
+              ],
+              description: "把右子树(5-6)接到4右边，把左子树移到右边",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                null,
+                { value: 2, id: "2" },
+                null,
+                null,
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                { value: 5, id: "5" },
+              ],
+              pointers: { "2": ["curr"] },
+              description: "curr移到2。继续处理，找左子树最右节点=3",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                null,
+                { value: 2, id: "2" },
+              ],
+              highlights: [{ nodeIds: ["1", "2"], color: "green" as const }],
+              description: "重复操作...最终展开为链表: 1→2→3→4→5→6",
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
       },
@@ -5205,6 +6771,66 @@ dfs(2, 1):        dfs(3, 1):
 ### 复杂度
 - 时间：O(n)，每个节点访问一次
 - 空间：O(h)，递归栈深度`,
+        animation: {
+          type: "tree" as const,
+          title: "求根到叶节点数字之和演示",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              pointers: { "1": ["curr"] },
+              description: "树: [1,2,3]。每条路径形成一个数字，求所有数字之和",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["1"], color: "yellow" as const }],
+              description: "从根节点1开始，currentSum = 0×10 + 1 = 1",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [
+                { nodeIds: ["1"], color: "blue" as const },
+                { nodeIds: ["2"], color: "green" as const, label: "12" },
+              ],
+              description: "递归左子树：到节点2，currentSum = 1×10 + 2 = 12。是叶子，返回12",
+              visitPath: ["1", "2"],
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [
+                { nodeIds: ["1"], color: "blue" as const },
+                { nodeIds: ["3"], color: "green" as const, label: "13" },
+              ],
+              description: "递归右子树：到节点3，currentSum = 1×10 + 3 = 13。是叶子，返回13",
+              visitPath: ["1", "3"],
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+              ],
+              highlights: [{ nodeIds: ["1", "2", "3"], color: "green" as const }],
+              description: "总和 = 12 + 13 = 25 ✓ 路径1→2形成12，路径1→3形成13",
+              visitPath: ["1", "2", "3"],
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(h)",
       },
@@ -5538,6 +7164,88 @@ unshift(x) = 在数组开头插入 x
 ### 复杂度
 - 时间：O(n)
 - 空间：O(n)`,
+        animation: {
+          type: "tree" as const,
+          title: "锯齿形层序遍历演示",
+          steps: [
+            {
+              nodes: [
+                { value: 3, id: "1" },
+                { value: 9, id: "2" },
+                { value: 20, id: "3" },
+                null,
+                null,
+                { value: 15, id: "4" },
+                { value: 7, id: "5" },
+              ],
+              description: "树: [3,9,20,null,null,15,7]。锯齿遍历：奇数层左→右，偶数层右→左",
+            },
+            {
+              nodes: [
+                { value: 3, id: "1" },
+                { value: 9, id: "2" },
+                { value: 20, id: "3" },
+                null,
+                null,
+                { value: 15, id: "4" },
+                { value: 7, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["1"], color: "green" as const, label: "→" }],
+              description: "第1层（左→右）：遍历节点3，level=[3]",
+              visitPath: ["1"],
+            },
+            {
+              nodes: [
+                { value: 3, id: "1" },
+                { value: 9, id: "2" },
+                { value: 20, id: "3" },
+                null,
+                null,
+                { value: 15, id: "4" },
+                { value: 7, id: "5" },
+              ],
+              highlights: [
+                { nodeIds: ["1"], color: "blue" as const },
+                { nodeIds: ["2"], color: "yellow" as const },
+                { nodeIds: ["3"], color: "green" as const, label: "←" },
+              ],
+              description: "第2层（右→左）：遍历9,20，用unshift插入 → level=[20,9]",
+              visitPath: ["1", "3", "2"],
+            },
+            {
+              nodes: [
+                { value: 3, id: "1" },
+                { value: 9, id: "2" },
+                { value: 20, id: "3" },
+                null,
+                null,
+                { value: 15, id: "4" },
+                { value: 7, id: "5" },
+              ],
+              highlights: [
+                { nodeIds: ["1", "2", "3"], color: "blue" as const },
+                { nodeIds: ["4"], color: "yellow" as const, label: "→" },
+                { nodeIds: ["5"], color: "green" as const },
+              ],
+              description: "第3层（左→右）：遍历15,7，正常push → level=[15,7]",
+              visitPath: ["1", "2", "3", "4", "5"],
+            },
+            {
+              nodes: [
+                { value: 3, id: "1" },
+                { value: 9, id: "2" },
+                { value: 20, id: "3" },
+                null,
+                null,
+                { value: 15, id: "4" },
+                { value: 7, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["1", "2", "3", "4", "5"], color: "green" as const }],
+              description: "结果: [[3], [20,9], [15,7]] ✓ 锯齿形遍历完成",
+              visitPath: ["1", "2", "3", "4", "5"],
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
@@ -5960,6 +7668,147 @@ sum(A→B) = prefixSum(B) - prefixSum(A)
 ### 复杂度
 - 时间：O(n)
 - 空间：O(n)`,
+        animation: {
+          type: "tree" as const,
+          title: "路径总和 III 演示",
+          steps: [
+            {
+              nodes: [
+                { value: 10, id: "1" },
+                { value: 5, id: "2" },
+                { value: -3, id: "3" },
+                { value: 3, id: "4" },
+                { value: 2, id: "5" },
+                null,
+                { value: 11, id: "6" },
+              ],
+              description: "树: [10,5,-3,3,2,null,11]，targetSum=8。用前缀和找路径",
+            },
+            {
+              nodes: [
+                { value: 10, id: "1" },
+                { value: 5, id: "2" },
+                { value: -3, id: "3" },
+                { value: 3, id: "4" },
+                { value: 2, id: "5" },
+                null,
+                { value: 11, id: "6" },
+              ],
+              pointers: { "1": ["curr"] },
+              highlights: [{ nodeIds: ["1"], color: "yellow" as const, label: "sum=10" }],
+              description: "节点10：prefixSum=10，查找10-8=2（无），map={0:1, 10:1}",
+              visitPath: ["1"],
+            },
+            {
+              nodes: [
+                { value: 10, id: "1" },
+                { value: 5, id: "2" },
+                { value: -3, id: "3" },
+                { value: 3, id: "4" },
+                { value: 2, id: "5" },
+                null,
+                { value: 11, id: "6" },
+              ],
+              pointers: { "2": ["curr"] },
+              highlights: [
+                { nodeIds: ["1"], color: "blue" as const },
+                { nodeIds: ["2"], color: "yellow" as const, label: "sum=15" },
+              ],
+              description: "节点5：prefixSum=15，查找15-8=7（无），map={0:1, 10:1, 15:1}",
+              visitPath: ["1", "2"],
+            },
+            {
+              nodes: [
+                { value: 10, id: "1" },
+                { value: 5, id: "2" },
+                { value: -3, id: "3" },
+                { value: 3, id: "4" },
+                { value: 2, id: "5" },
+                null,
+                { value: 11, id: "6" },
+              ],
+              pointers: { "4": ["curr"] },
+              highlights: [
+                { nodeIds: ["1"], color: "blue" as const },
+                { nodeIds: ["2", "4"], color: "green" as const, label: "5→3=8" },
+              ],
+              description: "节点3：prefixSum=18，查找18-8=10（有！）→ 路径5→3=8 ✓ count=1",
+              visitPath: ["1", "2", "4"],
+            },
+            {
+              nodes: [
+                { value: 10, id: "1" },
+                { value: 5, id: "2" },
+                { value: -3, id: "3" },
+                { value: 3, id: "4" },
+                { value: 2, id: "5" },
+                null,
+                { value: 11, id: "6" },
+              ],
+              pointers: { "5": ["curr"] },
+              highlights: [
+                { nodeIds: ["1"], color: "blue" as const },
+                { nodeIds: ["2"], color: "yellow" as const },
+                { nodeIds: ["5"], color: "yellow" as const, label: "sum=17" },
+              ],
+              description: "节点2：prefixSum=17，查找17-8=9（无）",
+              visitPath: ["1", "2", "5"],
+            },
+            {
+              nodes: [
+                { value: 10, id: "1" },
+                { value: 5, id: "2" },
+                { value: -3, id: "3" },
+                { value: 3, id: "4" },
+                { value: 2, id: "5" },
+                null,
+                { value: 11, id: "6" },
+              ],
+              pointers: { "3": ["curr"] },
+              highlights: [
+                { nodeIds: ["1"], color: "blue" as const },
+                { nodeIds: ["3"], color: "yellow" as const, label: "sum=7" },
+              ],
+              description: "节点-3：prefixSum=7，查找7-8=-1（无）",
+              visitPath: ["1", "3"],
+            },
+            {
+              nodes: [
+                { value: 10, id: "1" },
+                { value: 5, id: "2" },
+                { value: -3, id: "3" },
+                { value: 3, id: "4" },
+                { value: 2, id: "5" },
+                null,
+                { value: 11, id: "6" },
+              ],
+              pointers: { "6": ["curr"] },
+              highlights: [
+                { nodeIds: ["1"], color: "blue" as const },
+                { nodeIds: ["3", "6"], color: "green" as const, label: "-3→11=8" },
+              ],
+              description: "节点11：prefixSum=18，查找18-8=10（有！）→ 路径-3→11=8 ✓ count=2",
+              visitPath: ["1", "3", "6"],
+            },
+            {
+              nodes: [
+                { value: 10, id: "1" },
+                { value: 5, id: "2" },
+                { value: -3, id: "3" },
+                { value: 3, id: "4" },
+                { value: 2, id: "5" },
+                null,
+                { value: 11, id: "6" },
+              ],
+              highlights: [
+                { nodeIds: ["2", "4"], color: "green" as const },
+                { nodeIds: ["3", "6"], color: "green" as const },
+              ],
+              description: "找到2条路径：5→3=8，-3→11=8。答案=2 ✓",
+              visitPath: ["1", "2", "3", "4", "5", "6"],
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
@@ -6258,6 +8107,98 @@ build(0, 4)：mid=2, root=0
 ### 复杂度
 - 时间：O(n)，每个元素访问一次
 - 空间：O(log n)，递归栈深度`,
+        animation: {
+          type: "tree" as const,
+          title: "有序数组转换为BST演示",
+          steps: [
+            {
+              nodes: [],
+              description: "数组 nums = [-10, -3, 0, 5, 9]。选中间元素作根，递归构建平衡BST",
+            },
+            {
+              nodes: [{ value: 0, id: "1" }],
+              highlights: [{ nodeIds: ["1"], color: "green" as const, label: "mid=2" }],
+              description: "build(0,4): mid=2，选nums[2]=0作为根节点",
+              visitPath: ["1"],
+            },
+            {
+              nodes: [
+                { value: 0, id: "1" },
+                { value: -10, id: "2" },
+                null,
+              ],
+              highlights: [
+                { nodeIds: ["1"], color: "blue" as const },
+                { nodeIds: ["2"], color: "green" as const, label: "mid=0" },
+              ],
+              description: "build(0,1): mid=0，选nums[0]=-10作为左子树根",
+              visitPath: ["1", "2"],
+            },
+            {
+              nodes: [
+                { value: 0, id: "1" },
+                { value: -10, id: "2" },
+                null,
+                null,
+                { value: -3, id: "3" },
+              ],
+              highlights: [
+                { nodeIds: ["1"], color: "blue" as const },
+                { nodeIds: ["2"], color: "blue" as const },
+                { nodeIds: ["3"], color: "green" as const, label: "mid=1" },
+              ],
+              description: "build(1,1): mid=1，选nums[1]=-3作为-10的右子节点",
+              visitPath: ["1", "2", "3"],
+            },
+            {
+              nodes: [
+                { value: 0, id: "1" },
+                { value: -10, id: "2" },
+                { value: 5, id: "4" },
+                null,
+                { value: -3, id: "3" },
+              ],
+              highlights: [
+                { nodeIds: ["1"], color: "blue" as const },
+                { nodeIds: ["2", "3"], color: "blue" as const },
+                { nodeIds: ["4"], color: "green" as const, label: "mid=3" },
+              ],
+              description: "build(3,4): mid=3，选nums[3]=5作为右子树根",
+              visitPath: ["1", "2", "3", "4"],
+            },
+            {
+              nodes: [
+                { value: 0, id: "1" },
+                { value: -10, id: "2" },
+                { value: 5, id: "4" },
+                null,
+                { value: -3, id: "3" },
+                null,
+                { value: 9, id: "5" },
+              ],
+              highlights: [
+                { nodeIds: ["1", "2", "3", "4"], color: "blue" as const },
+                { nodeIds: ["5"], color: "green" as const, label: "mid=4" },
+              ],
+              description: "build(4,4): mid=4，选nums[4]=9作为5的右子节点",
+              visitPath: ["1", "2", "3", "4", "5"],
+            },
+            {
+              nodes: [
+                { value: 0, id: "1" },
+                { value: -10, id: "2" },
+                { value: 5, id: "4" },
+                null,
+                { value: -3, id: "3" },
+                null,
+                { value: 9, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["1", "2", "3", "4", "5"], color: "green" as const }],
+              description: "完成！平衡BST: [0,-10,5,null,-3,null,9]，高度差≤1 ✓",
+              visitPath: ["1", "2", "3", "4", "5"],
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(log n)",
       },
@@ -6528,6 +8469,89 @@ function connect(root) {
 ### 复杂度
 - 时间：O(n)
 - 空间：O(n)，队列空间`,
+        animation: {
+          type: "tree" as const,
+          title: "填充右侧节点指针演示",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+                null,
+                { value: 7, id: "6" },
+              ],
+              description: "树: [1,2,3,4,5,null,7]。将每层节点用next指针连接",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+                null,
+                { value: 7, id: "6" },
+              ],
+              highlights: [{ nodeIds: ["1"], color: "green" as const, label: "→null" }],
+              description: "第1层：节点1是唯一节点，1.next = null",
+              visitPath: ["1"],
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+                null,
+                { value: 7, id: "6" },
+              ],
+              highlights: [
+                { nodeIds: ["1"], color: "blue" as const },
+                { nodeIds: ["2"], color: "yellow" as const, label: "→3" },
+                { nodeIds: ["3"], color: "green" as const, label: "→null" },
+              ],
+              description: "第2层：2.next = 3，3.next = null",
+              visitPath: ["1", "2", "3"],
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+                null,
+                { value: 7, id: "6" },
+              ],
+              highlights: [
+                { nodeIds: ["1", "2", "3"], color: "blue" as const },
+                { nodeIds: ["4"], color: "yellow" as const, label: "→5" },
+                { nodeIds: ["5"], color: "yellow" as const, label: "→7" },
+                { nodeIds: ["6"], color: "green" as const, label: "→null" },
+              ],
+              description: "第3层：4.next = 5，5.next = 7，7.next = null",
+              visitPath: ["1", "2", "3", "4", "5", "6"],
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+                null,
+                { value: 7, id: "6" },
+              ],
+              highlights: [{ nodeIds: ["1", "2", "3", "4", "5", "6"], color: "green" as const }],
+              description: "完成！每层形成链表：[1,#] → [2→3,#] → [4→5→7,#]",
+              visitPath: ["1", "2", "3", "4", "5", "6"],
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(n)",
         spaceComplexity: "O(n)",
       },
@@ -6858,6 +8882,125 @@ n 次 next() 操作：共 2n 次栈操作
 ### 复杂度
 - 时间：next() 平均 O(1)，hasNext() O(1)
 - 空间：O(h)`,
+        animation: {
+          type: "tree" as const,
+          title: "BST迭代器演示",
+          steps: [
+            {
+              nodes: [
+                { value: 7, id: "1" },
+                { value: 3, id: "2" },
+                { value: 15, id: "3" },
+                null,
+                null,
+                { value: 9, id: "4" },
+                { value: 20, id: "5" },
+              ],
+              description: "BST: [7,3,15,null,null,9,20]。用栈模拟中序遍历",
+            },
+            {
+              nodes: [
+                { value: 7, id: "1" },
+                { value: 3, id: "2" },
+                { value: 15, id: "3" },
+                null,
+                null,
+                { value: 9, id: "4" },
+                { value: 20, id: "5" },
+              ],
+              highlights: [
+                { nodeIds: ["1", "2"], color: "yellow" as const, label: "入栈" },
+              ],
+              description: "初始化：pushLeft(7)，将7和3入栈，stack=[7,3]",
+              visitPath: ["1", "2"],
+            },
+            {
+              nodes: [
+                { value: 7, id: "1" },
+                { value: 3, id: "2" },
+                { value: 15, id: "3" },
+                null,
+                null,
+                { value: 9, id: "4" },
+                { value: 20, id: "5" },
+              ],
+              highlights: [
+                { nodeIds: ["1"], color: "yellow" as const },
+                { nodeIds: ["2"], color: "green" as const, label: "pop→3" },
+              ],
+              description: "next(): pop 3，返回3。3无右子树，stack=[7]",
+              visitPath: ["2"],
+            },
+            {
+              nodes: [
+                { value: 7, id: "1" },
+                { value: 3, id: "2" },
+                { value: 15, id: "3" },
+                null,
+                null,
+                { value: 9, id: "4" },
+                { value: 20, id: "5" },
+              ],
+              highlights: [
+                { nodeIds: ["2"], color: "blue" as const },
+                { nodeIds: ["1"], color: "green" as const, label: "pop→7" },
+                { nodeIds: ["3", "4"], color: "yellow" as const, label: "入栈" },
+              ],
+              description: "next(): pop 7，返回7。pushLeft(15)，stack=[15,9]",
+              visitPath: ["1", "3", "4"],
+            },
+            {
+              nodes: [
+                { value: 7, id: "1" },
+                { value: 3, id: "2" },
+                { value: 15, id: "3" },
+                null,
+                null,
+                { value: 9, id: "4" },
+                { value: 20, id: "5" },
+              ],
+              highlights: [
+                { nodeIds: ["1", "2"], color: "blue" as const },
+                { nodeIds: ["4"], color: "green" as const, label: "pop→9" },
+                { nodeIds: ["3"], color: "yellow" as const },
+              ],
+              description: "next(): pop 9，返回9。9无右子树，stack=[15]",
+              visitPath: ["4"],
+            },
+            {
+              nodes: [
+                { value: 7, id: "1" },
+                { value: 3, id: "2" },
+                { value: 15, id: "3" },
+                null,
+                null,
+                { value: 9, id: "4" },
+                { value: 20, id: "5" },
+              ],
+              highlights: [
+                { nodeIds: ["1", "2", "4"], color: "blue" as const },
+                { nodeIds: ["3"], color: "green" as const, label: "pop→15" },
+                { nodeIds: ["5"], color: "yellow" as const, label: "入栈" },
+              ],
+              description: "next(): pop 15，返回15。pushLeft(20)，stack=[20]",
+              visitPath: ["3", "5"],
+            },
+            {
+              nodes: [
+                { value: 7, id: "1" },
+                { value: 3, id: "2" },
+                { value: 15, id: "3" },
+                null,
+                null,
+                { value: 9, id: "4" },
+                { value: 20, id: "5" },
+              ],
+              highlights: [{ nodeIds: ["1", "2", "3", "4", "5"], color: "green" as const }],
+              description: "next(): pop 20，返回20。stack=[]，hasNext()=false。完成：3,7,9,15,20",
+              visitPath: ["1", "2", "3", "4", "5"],
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(1) 平均",
         spaceComplexity: "O(h)",
       },
@@ -7180,6 +9323,105 @@ countNodes(3)：leftDepth=1=rightDepth → 2^1-1=1
 ### 复杂度
 - 时间：O(log²n)
 - 空间：O(log n)，递归栈`,
+        animation: {
+          type: "tree" as const,
+          title: "完全二叉树节点个数演示",
+          steps: [
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+                { value: 6, id: "6" },
+              ],
+              description: "完全二叉树 [1,2,3,4,5,6]。利用完全二叉树性质快速计算节点数",
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+                { value: 6, id: "6" },
+              ],
+              pointers: { "1": ["root"] },
+              highlights: [
+                { nodeIds: ["1", "2", "4"], color: "yellow" as const, label: "左深=3" },
+                { nodeIds: ["1", "3"], color: "blue" as const, label: "右深=2" },
+              ],
+              description: "计算根节点：左深度=3，右深度=2，不相等→需递归",
+              visitPath: ["1"],
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+                { value: 6, id: "6" },
+              ],
+              highlights: [
+                { nodeIds: ["1"], color: "blue" as const },
+                { nodeIds: ["2", "4"], color: "yellow" as const, label: "左=2" },
+                { nodeIds: ["2", "5"], color: "green" as const, label: "右=2" },
+              ],
+              description: "递归左子树(2)：左深=右深=2 → 满二叉树！节点数=2²-1=3",
+              visitPath: ["1", "2"],
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+                { value: 6, id: "6" },
+              ],
+              highlights: [
+                { nodeIds: ["1"], color: "blue" as const },
+                { nodeIds: ["2", "4", "5"], color: "blue" as const },
+                { nodeIds: ["3", "6"], color: "yellow" as const, label: "左=2" },
+                { nodeIds: ["3"], color: "green" as const, label: "右=1" },
+              ],
+              description: "递归右子树(3)：左深=2≠右深=1 → 继续递归",
+              visitPath: ["1", "3"],
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+                { value: 6, id: "6" },
+              ],
+              highlights: [
+                { nodeIds: ["1", "2", "4", "5"], color: "blue" as const },
+                { nodeIds: ["6"], color: "green" as const, label: "满=1" },
+                { nodeIds: ["3"], color: "yellow" as const },
+              ],
+              description: "节点6：左=右=1 → 满二叉树=1。节点3右子树为空=0",
+              visitPath: ["3", "6"],
+            },
+            {
+              nodes: [
+                { value: 1, id: "1" },
+                { value: 2, id: "2" },
+                { value: 3, id: "3" },
+                { value: 4, id: "4" },
+                { value: 5, id: "5" },
+                { value: 6, id: "6" },
+              ],
+              highlights: [{ nodeIds: ["1", "2", "3", "4", "5", "6"], color: "green" as const }],
+              description: "汇总：1 + 左子树(3) + 右子树(1+1+0) = 1+3+2 = 6 ✓",
+              visitPath: ["1", "2", "3", "4", "5", "6"],
+            },
+          ] as TreeStep[],
+        },
         timeComplexity: "O(log²n)",
         spaceComplexity: "O(log n)",
       },

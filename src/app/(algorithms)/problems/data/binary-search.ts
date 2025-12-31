@@ -1,4 +1,5 @@
 import { Problem } from "../types";
+import { TwoPointersStep } from "../components/animations";
 
 export const binarySearchProblems: Problem[] = [
   // 1. 搜索旋转排序数组 (33)
@@ -176,6 +177,61 @@ function search(nums, target) {
 
   return -1;  // 未找到
 }`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "搜索旋转排序数组 - 二分查找演示",
+          config: { leftLabel: "left", rightLabel: "right" },
+          steps: [
+            {
+              array: [4, 5, 6, 7, 0, 1, 2],
+              left: 0,
+              right: 6,
+              highlights: [{ indices: [3], color: "yellow" as const, label: "mid=3" }],
+              description: "target=0。left=0, right=6, mid=3。nums[3]=7 ≠ 0",
+            },
+            {
+              array: [4, 5, 6, 7, 0, 1, 2],
+              left: 0,
+              right: 6,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "green" as const, label: "左有序" },
+                { indices: [3], color: "yellow" as const, label: "mid" },
+              ],
+              description: "nums[0]=4 <= nums[3]=7，左半有序。target=0 在 [4,7) 内？否！搜右半",
+            },
+            {
+              array: [4, 5, 6, 7, 0, 1, 2],
+              left: 4,
+              right: 6,
+              highlights: [{ indices: [5], color: "yellow" as const, label: "mid=5" }],
+              description: "left=4, right=6, mid=5。nums[5]=1 ≠ 0",
+            },
+            {
+              array: [4, 5, 6, 7, 0, 1, 2],
+              left: 4,
+              right: 6,
+              highlights: [
+                { indices: [5, 6], color: "green" as const, label: "右有序" },
+                { indices: [5], color: "yellow" as const, label: "mid" },
+              ],
+              description: "nums[4]=0 > nums[5]=1？否，右半有序。target=0 在 (1,2] 内？否！搜左半",
+            },
+            {
+              array: [4, 5, 6, 7, 0, 1, 2],
+              left: 4,
+              right: 4,
+              highlights: [{ indices: [4], color: "purple" as const, label: "mid=4" }],
+              description: "left=4, right=4, mid=4。nums[4]=0 === target！",
+            },
+            {
+              array: [4, 5, 6, 7, 0, 1, 2],
+              left: 4,
+              right: 4,
+              highlights: [{ indices: [4], color: "red" as const, label: "找到!" }],
+              description: "完成！找到 target=0 在索引 4 位置。返回 4",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 二分查找
 
 ### 核心思想
@@ -510,6 +566,47 @@ function findMin(nums) {
   // left == right，指向最小值
   return nums[left];
 }`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "寻找旋转数组最小值 - 二分查找演示",
+          config: { leftLabel: "left", rightLabel: "right" },
+          steps: [
+            {
+              array: [4, 5, 6, 7, 0, 1, 2],
+              left: 0,
+              right: 6,
+              highlights: [{ indices: [3], color: "yellow" as const, label: "mid=3" }],
+              description: "left=0, right=6, mid=3。nums[3]=7 > nums[6]=2，最小值在右半",
+            },
+            {
+              array: [4, 5, 6, 7, 0, 1, 2],
+              left: 4,
+              right: 6,
+              highlights: [
+                { indices: [4, 5, 6], color: "blue" as const, label: "搜索区间" },
+                { indices: [5], color: "yellow" as const, label: "mid=5" },
+              ],
+              description: "left=4, right=6, mid=5。nums[5]=1 < nums[6]=2，最小值在左半（含mid）",
+            },
+            {
+              array: [4, 5, 6, 7, 0, 1, 2],
+              left: 4,
+              right: 5,
+              highlights: [
+                { indices: [4, 5], color: "blue" as const, label: "搜索区间" },
+                { indices: [4], color: "yellow" as const, label: "mid=4" },
+              ],
+              description: "left=4, right=5, mid=4。nums[4]=0 < nums[5]=1，最小值在左半（含mid）",
+            },
+            {
+              array: [4, 5, 6, 7, 0, 1, 2],
+              left: 4,
+              right: 4,
+              highlights: [{ indices: [4], color: "red" as const, label: "最小值!" }],
+              description: "left=right=4，循环结束！nums[4]=0 是最小值",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 二分查找（与右端比较）
 
 ### 核心思想
@@ -857,6 +954,47 @@ matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 3
 
 ### 为什么这种方法有效？
 矩阵的特殊性质保证了按行展开后是完全有序的`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "搜索二维矩阵演示",
+          steps: [
+            {
+              array: [1, 3, 5, 7, 10, 11, 16, 20, 23, 30, 34, 60],
+              left: 0,
+              right: 11,
+              highlights: [],
+              description: "matrix展开为一维数组，target=3。left=0, right=11",
+            },
+            {
+              array: [1, 3, 5, 7, 10, 11, 16, 20, 23, 30, 34, 60],
+              left: 0,
+              right: 11,
+              highlights: [{ indices: [5], color: "yellow" as const, label: "mid=5" }],
+              description: "mid=5, value=11。11>3，往左找，right=4",
+            },
+            {
+              array: [1, 3, 5, 7, 10, 11, 16, 20, 23, 30, 34, 60],
+              left: 0,
+              right: 4,
+              highlights: [{ indices: [2], color: "yellow" as const, label: "mid=2" }],
+              description: "mid=2, value=5。5>3，往左找，right=1",
+            },
+            {
+              array: [1, 3, 5, 7, 10, 11, 16, 20, 23, 30, 34, 60],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0], color: "yellow" as const, label: "mid=0" }],
+              description: "mid=0, value=1。1<3，往右找，left=1",
+            },
+            {
+              array: [1, 3, 5, 7, 10, 11, 16, 20, 23, 30, 34, 60],
+              left: 1,
+              right: 1,
+              highlights: [{ indices: [1], color: "green" as const, label: "找到3" }],
+              description: "mid=1, value=3=target ✓ 找到目标！返回true",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(log(m × n))",
         spaceComplexity: "O(1)",
       },
@@ -1246,6 +1384,71 @@ nums = [5,7,7,8,8,10], target = 8
 ### 要点
 - 找到目标后继续搜索，直到 left > right
 - 用 result 变量保存最新找到的位置`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "查找元素第一个和最后一个位置演示",
+          steps: [
+            {
+              array: [5, 7, 7, 8, 8, 10],
+              left: 0,
+              right: 5,
+              highlights: [],
+              description: "nums=[5,7,7,8,8,10], target=8。分两步：找第一个8，找最后一个8",
+            },
+            {
+              array: [5, 7, 7, 8, 8, 10],
+              left: 0,
+              right: 5,
+              highlights: [{ indices: [2], color: "yellow" as const, label: "mid=2" }],
+              description: "【找第一个8】mid=2, nums[2]=7<8，往右找，left=3",
+            },
+            {
+              array: [5, 7, 7, 8, 8, 10],
+              left: 3,
+              right: 5,
+              highlights: [{ indices: [4], color: "green" as const, label: "mid=4" }],
+              description: "mid=4, nums[4]=8=target！记录result=4，继续往左找，right=3",
+            },
+            {
+              array: [5, 7, 7, 8, 8, 10],
+              left: 3,
+              right: 3,
+              highlights: [{ indices: [3], color: "green" as const, label: "mid=3" }],
+              description: "mid=3, nums[3]=8=target！记录result=3，继续往左找，right=2",
+            },
+            {
+              array: [5, 7, 7, 8, 8, 10],
+              left: 3,
+              right: 2,
+              highlights: [{ indices: [3], color: "green" as const, label: "first=3" }],
+              description: "left>right，第一个8在索引3。现在找最后一个8",
+            },
+            {
+              array: [5, 7, 7, 8, 8, 10],
+              left: 3,
+              right: 5,
+              highlights: [{ indices: [4], color: "green" as const, label: "mid=4" }],
+              description: "【找最后一个8】mid=4, nums[4]=8！记录result=4，继续往右找，left=5",
+            },
+            {
+              array: [5, 7, 7, 8, 8, 10],
+              left: 5,
+              right: 5,
+              highlights: [{ indices: [5], color: "yellow" as const, label: "mid=5" }],
+              description: "mid=5, nums[5]=10>8，往左找，right=4",
+            },
+            {
+              array: [5, 7, 7, 8, 8, 10],
+              left: 5,
+              right: 4,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "first" },
+                { indices: [4], color: "green" as const, label: "last" },
+              ],
+              description: "left>right，最后一个8在索引4。结果：[3,4] ✓",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(log n)",
         spaceComplexity: "O(1)",
       },
@@ -1607,6 +1810,46 @@ nums = [1,2,3,1]
 - 如果一直上坡走到末尾，末尾就是峰值
 - 如果一直下坡走到开头，开头就是峰值
 - 二分查找保证我们一定会收敛到某个峰值`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "寻找峰值演示",
+          steps: [
+            {
+              array: [1, 2, 3, 1],
+              left: 0,
+              right: 3,
+              highlights: [],
+              description: "nums=[1,2,3,1]。边界外是-∞，一定存在峰值",
+            },
+            {
+              array: [1, 2, 3, 1],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [1], color: "yellow" as const, label: "mid=1" },
+                { indices: [2], color: "blue" as const, label: "mid+1" },
+              ],
+              description: "mid=1, nums[1]=2 < nums[2]=3，上坡！峰值在右边，left=2",
+            },
+            {
+              array: [1, 2, 3, 1],
+              left: 2,
+              right: 3,
+              highlights: [
+                { indices: [2], color: "yellow" as const, label: "mid=2" },
+                { indices: [3], color: "blue" as const, label: "mid+1" },
+              ],
+              description: "mid=2, nums[2]=3 > nums[3]=1，下坡！峰值在左边（含mid），right=2",
+            },
+            {
+              array: [1, 2, 3, 1],
+              left: 2,
+              right: 2,
+              highlights: [{ indices: [2], color: "green" as const, label: "峰值=3" }],
+              description: "left==right==2，找到峰值！nums[2]=3 ✓",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(log n)",
         spaceComplexity: "O(1)",
       },
@@ -1939,6 +2182,54 @@ canFinish(4) 的计算：
 - 最大化最小值
 - 最小化最大值
 - 找满足某条件的最小/最大值`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "爱吃香蕉的珂珂演示",
+          steps: [
+            {
+              array: [3, 6, 7, 11],
+              left: 1,
+              right: 11,
+              highlights: [],
+              description: "piles=[3,6,7,11], h=8小时。二分查找速度k∈[1,11]",
+            },
+            {
+              array: [3, 6, 7, 11],
+              left: 1,
+              right: 11,
+              highlights: [{ indices: [3], color: "yellow" as const, label: "max=11" }],
+              description: "mid=6。速度6：ceil(3/6)+ceil(6/6)+ceil(7/6)+ceil(11/6)=1+1+2+2=6≤8 ✓ right=6",
+            },
+            {
+              array: [3, 6, 7, 11],
+              left: 1,
+              right: 6,
+              highlights: [],
+              description: "mid=3。速度3：ceil(3/3)+ceil(6/3)+ceil(7/3)+ceil(11/3)=1+2+3+4=10>8 ✗ left=4",
+            },
+            {
+              array: [3, 6, 7, 11],
+              left: 4,
+              right: 6,
+              highlights: [],
+              description: "mid=5。速度5：1+2+2+3=8≤8 ✓ right=5",
+            },
+            {
+              array: [3, 6, 7, 11],
+              left: 4,
+              right: 5,
+              highlights: [],
+              description: "mid=4。速度4：1+2+2+3=8≤8 ✓ right=4",
+            },
+            {
+              array: [3, 6, 7, 11],
+              left: 4,
+              right: 4,
+              highlights: [{ indices: [0, 1, 2, 3], color: "green" as const }],
+              description: "left==right==4。最小速度k=4，刚好8小时吃完 ✓",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(n × log(max))",
         spaceComplexity: "O(1)",
       },
@@ -2329,6 +2620,56 @@ nums2LeftMax = -∞ (j=1时 j-1=0，nums2[0]=2)
 - 保证 j = (m+n+1)/2 - i 不会越界
 - 当 i 从 0 到 m 变化时，j 从 (m+n+1)/2 到 (n-m+1)/2
 - 如果 m <= n，则 j 始终 >= 0`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "寻找两个正序数组的中位数演示",
+          steps: [
+            {
+              array: [1, 2, 3, 4],
+              left: 0,
+              right: 2,
+              highlights: [],
+              description: "nums1=[1,2], nums2=[3,4]。在较短数组上找分割点i",
+            },
+            {
+              array: [1, 2, 3, 4],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "nums1左" },
+                { indices: [1], color: "yellow" as const, label: "nums1右" },
+              ],
+              description: "i=1, j=1。分割：[1]|[2] 和 [3]|[4]。左max=max(1,3)=3, 右min=min(2,4)=2",
+            },
+            {
+              array: [1, 2, 3, 4],
+              left: 0,
+              right: 2,
+              highlights: [{ indices: [1], color: "red" as const }],
+              description: "nums1LeftMax=1 > nums2RightMin=4? 否。nums2LeftMax=3 > nums1RightMin=2? 是！left=2",
+            },
+            {
+              array: [1, 2, 3, 4],
+              left: 2,
+              right: 2,
+              highlights: [
+                { indices: [0, 1], color: "blue" as const, label: "nums1全左" },
+                { indices: [2, 3], color: "yellow" as const, label: "nums2全右" },
+              ],
+              description: "i=2, j=0。分割：[1,2]|∅ 和 ∅|[3,4]。左max=2, 右min=3",
+            },
+            {
+              array: [1, 2, 3, 4],
+              left: 2,
+              right: 2,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "左max=2" },
+                { indices: [2], color: "green" as const, label: "右min=3" },
+              ],
+              description: "2<=3 && -∞<=3 ✓ 偶数个，中位数=(2+3)/2=2.5 ✓",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(log(min(m, n)))",
         spaceComplexity: "O(1)",
       },
@@ -2725,6 +3066,40 @@ nums = [1,3,5,6], target = 7
 - 循环结束时：left = right + 1
 - nums[right] < target < nums[left]
 - 所以 target 应该插入到 left 的位置`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "搜索插入位置演示",
+          steps: [
+            {
+              array: [1, 3, 5, 6],
+              left: 0,
+              right: 3,
+              highlights: [],
+              description: "nums=[1,3,5,6], target=2。找到位置或返回插入位置",
+            },
+            {
+              array: [1, 3, 5, 6],
+              left: 0,
+              right: 3,
+              highlights: [{ indices: [1], color: "yellow" as const, label: "mid=1" }],
+              description: "mid=1, nums[1]=3>2，往左找，right=0",
+            },
+            {
+              array: [1, 3, 5, 6],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "yellow" as const, label: "mid=0" }],
+              description: "mid=0, nums[0]=1<2，往右找，left=1",
+            },
+            {
+              array: [1, 3, 5, 6],
+              left: 1,
+              right: 0,
+              highlights: [{ indices: [1], color: "green" as const, label: "插入位置" }],
+              description: "left=1 > right=0，循环结束。插入位置=1 ✓ 变成[1,2,3,5,6]",
+            },
+          ] as TwoPointersStep[],
+        },
         timeComplexity: "O(log n)",
         spaceComplexity: "O(1)",
       },

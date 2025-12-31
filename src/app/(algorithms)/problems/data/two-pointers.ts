@@ -1,4 +1,5 @@
 import { Problem } from "../types";
+import { TwoPointersStep } from "../components/animations";
 
 // 双指针分类题目
 export const twoPointersProblems: Problem[] = [
@@ -185,6 +186,34 @@ function isAlphanumeric(char) {
 - 一次遍历完成`,
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
+        animation: {
+          type: "two-pointers" as const,
+          title: "验证回文串 - 双指针演示",
+          config: { leftLabel: "left", rightLabel: "right" },
+          steps: [
+            {
+              array: ["A", " ", "m", "a", "n", ",", " ", "a", " ", "p", "l", "a", "n"],
+              left: 0,
+              right: 12,
+              description: "初始化：left 指向开头 'A'，right 指向末尾 'n'",
+            },
+            {
+              array: ["A", " ", "m", "a", "n", ",", " ", "a", " ", "p", "l", "a", "n"],
+              left: 0,
+              right: 12,
+              comparing: [0, 12],
+              description: "比较 s[0]='A' 和 s[12]='n'：转小写后 'a' vs 'n'",
+            },
+            {
+              array: ["A", " ", "m", "a", "n", ",", " ", "a", " ", "p", "l", "a", "n"],
+              left: 0,
+              right: 12,
+              comparing: [0, 12],
+              highlights: [{ indices: [0, 12], color: "red" as const, label: "不匹配" }],
+              description: "'a' ≠ 'n'，不是回文串！返回 false",
+            },
+          ] as TwoPointersStep[],
+        },
       },
       {
         name: "正则 + 反转",
@@ -402,6 +431,59 @@ function twoSum(numbers, target) {
 因为数组有序，移动指针可以单调地改变和的大小。`,
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
+        animation: {
+          type: "two-pointers" as const,
+          title: "两数之和 II - 双指针演示",
+          config: { leftLabel: "left", rightLabel: "right" },
+          steps: [
+            {
+              array: [2, 7, 11, 15],
+              left: 0,
+              right: 3,
+              description: "初始化：left=0 指向 2，right=3 指向 15，target=9",
+            },
+            {
+              array: [2, 7, 11, 15],
+              left: 0,
+              right: 3,
+              comparing: [0, 3],
+              description: "计算 sum = 2 + 15 = 17 > 9，和太大！",
+            },
+            {
+              array: [2, 7, 11, 15],
+              left: 0,
+              right: 2,
+              description: "右指针左移，right=2，现在指向 11",
+            },
+            {
+              array: [2, 7, 11, 15],
+              left: 0,
+              right: 2,
+              comparing: [0, 2],
+              description: "计算 sum = 2 + 11 = 13 > 9，和还是太大！",
+            },
+            {
+              array: [2, 7, 11, 15],
+              left: 0,
+              right: 1,
+              description: "右指针左移，right=1，现在指向 7",
+            },
+            {
+              array: [2, 7, 11, 15],
+              left: 0,
+              right: 1,
+              comparing: [0, 1],
+              description: "计算 sum = 2 + 7 = 9 === 9",
+            },
+            {
+              array: [2, 7, 11, 15],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [0, 1], color: "green" as const, label: "找到答案" }],
+              description: "找到答案！返回 [1, 2]（1-indexed）",
+            },
+          ] as TwoPointersStep[],
+        },
       },
       {
         name: "二分查找",
@@ -692,6 +774,73 @@ function threeSum(nums) {
 - 当前最大三数和 < 0 时跳过当前 i`,
         timeComplexity: "O(n²)",
         spaceComplexity: "O(log n)",
+        animation: {
+          type: "two-pointers" as const,
+          title: "三数之和 - 排序 + 双指针演示",
+          config: { leftLabel: "left", rightLabel: "right" },
+          steps: [
+            {
+              array: [-4, -1, -1, 0, 1, 2],
+              left: 1,
+              right: 5,
+              highlights: [{ indices: [0], color: "purple" as const, label: "固定 i" }],
+              description: "排序后数组。固定 i=0(-4)，在剩余部分用双指针找和为 4 的两数",
+            },
+            {
+              array: [-4, -1, -1, 0, 1, 2],
+              left: 1,
+              right: 5,
+              comparing: [1, 5],
+              highlights: [{ indices: [0], color: "purple" as const, label: "固定 i" }],
+              description: "sum = -4 + (-1) + 2 = -3 < 0，和太小，left++",
+            },
+            {
+              array: [-4, -1, -1, 0, 1, 2],
+              left: 2,
+              right: 5,
+              comparing: [2, 5],
+              highlights: [{ indices: [0], color: "purple" as const, label: "固定 i" }],
+              description: "sum = -4 + (-1) + 2 = -3 < 0，还是太小，继续尝试...",
+            },
+            {
+              array: [-4, -1, -1, 0, 1, 2],
+              left: 2,
+              right: 5,
+              highlights: [{ indices: [1], color: "purple" as const, label: "固定 i" }],
+              description: "i=0 找不到解，移动到 i=1(-1)，在 [2,5] 范围找和为 1 的两数",
+            },
+            {
+              array: [-4, -1, -1, 0, 1, 2],
+              left: 2,
+              right: 5,
+              comparing: [2, 5],
+              highlights: [{ indices: [1], color: "purple" as const, label: "固定 i" }],
+              description: "sum = -1 + (-1) + 2 = 0 === 0",
+            },
+            {
+              array: [-4, -1, -1, 0, 1, 2],
+              left: 2,
+              right: 5,
+              highlights: [{ indices: [1, 2, 5], color: "green" as const, label: "找到三元组" }],
+              description: "找到三元组 [-1, -1, 2]！继续寻找...",
+            },
+            {
+              array: [-4, -1, -1, 0, 1, 2],
+              left: 3,
+              right: 4,
+              comparing: [3, 4],
+              highlights: [{ indices: [1], color: "purple" as const, label: "固定 i" }],
+              description: "left++, right--, sum = -1 + 0 + 1 = 0 === 0",
+            },
+            {
+              array: [-4, -1, -1, 0, 1, 2],
+              left: 3,
+              right: 4,
+              highlights: [{ indices: [1, 3, 4], color: "green" as const, label: "找到三元组" }],
+              description: "又找到三元组 [-1, 0, 1]！结果: [[-1,-1,2], [-1,0,1]]",
+            },
+          ] as TwoPointersStep[],
+        },
       },
       {
         name: "哈希表法",
@@ -950,6 +1099,61 @@ function maxArea(height) {
 每次移动较短边，实际上排除了以该边为一端的所有情况，因为它们的容量一定不会更大。`,
         timeComplexity: "O(n)",
         spaceComplexity: "O(1)",
+        animation: {
+          type: "two-pointers" as const,
+          title: "盛最多水的容器 - 双指针演示",
+          config: { leftLabel: "left", rightLabel: "right" },
+          steps: [
+            {
+              array: [1, 8, 6, 2, 5, 4, 8, 3, 7],
+              left: 0,
+              right: 8,
+              description: "初始化：left=0(高度1)，right=8(高度7)，宽度=8",
+            },
+            {
+              array: [1, 8, 6, 2, 5, 4, 8, 3, 7],
+              left: 0,
+              right: 8,
+              comparing: [0, 8],
+              description: "容量 = min(1,7) × 8 = 8，height[0]=1 较短，移动左边",
+            },
+            {
+              array: [1, 8, 6, 2, 5, 4, 8, 3, 7],
+              left: 1,
+              right: 8,
+              description: "left++ 后，left=1(高度8)，right=8(高度7)，宽度=7",
+            },
+            {
+              array: [1, 8, 6, 2, 5, 4, 8, 3, 7],
+              left: 1,
+              right: 8,
+              comparing: [1, 8],
+              highlights: [{ indices: [1, 8], color: "green" as const, label: "最大容量" }],
+              description: "容量 = min(8,7) × 7 = 49！这是最大值，height[8]=7 较短，移动右边",
+            },
+            {
+              array: [1, 8, 6, 2, 5, 4, 8, 3, 7],
+              left: 1,
+              right: 7,
+              comparing: [1, 7],
+              description: "right-- 后，容量 = min(8,3) × 6 = 18 < 49，继续...",
+            },
+            {
+              array: [1, 8, 6, 2, 5, 4, 8, 3, 7],
+              left: 1,
+              right: 6,
+              comparing: [1, 6],
+              description: "容量 = min(8,8) × 5 = 40 < 49，继续...",
+            },
+            {
+              array: [1, 8, 6, 2, 5, 4, 8, 3, 7],
+              left: 1,
+              right: 8,
+              highlights: [{ indices: [1, 8], color: "green" as const, label: "答案" }],
+              description: "遍历结束，最大容量 = 49（在 left=1, right=8 时取得）",
+            },
+          ] as TwoPointersStep[],
+        },
       },
       {
         name: "暴力法（不推荐）",
@@ -1134,6 +1338,84 @@ function isSubsequence(s, t) {
   // 如果 i 到达 s 的末尾，说明 s 的所有字符都在 t 中找到了
   return i === s.length;
 }`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "判断子序列 - 双指针演示",
+          config: { leftLabel: "i (s)", rightLabel: "j (t)" },
+          steps: [
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: -1,
+              right: 0,
+              highlights: [{ indices: [0], color: "blue" as const, label: "检查" }],
+              description: "s=\"abc\", t=\"ahbgdc\"。i=0 指向 s[0]='a'，j=0 指向 t[0]='a'",
+            },
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: -1,
+              right: 0,
+              highlights: [{ indices: [0], color: "green" as const, label: "匹配" }],
+              description: "s[0]='a' === t[0]='a'，匹配成功！i++，现在 i=1 指向 'b'",
+            },
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "已匹配" },
+                { indices: [1], color: "red" as const, label: "不匹配" },
+              ],
+              description: "j=1，s[1]='b' !== t[1]='h'，不匹配。j 继续右移",
+            },
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "已匹配" },
+                { indices: [2], color: "green" as const, label: "匹配" },
+              ],
+              description: "j=2，s[1]='b' === t[2]='b'，匹配成功！i++，现在 i=2 指向 'c'",
+            },
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: 2,
+              right: 3,
+              highlights: [
+                { indices: [0, 2], color: "green" as const, label: "已匹配" },
+                { indices: [3], color: "red" as const, label: "不匹配" },
+              ],
+              description: "j=3，s[2]='c' !== t[3]='g'，不匹配。j 继续右移",
+            },
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: 2,
+              right: 4,
+              highlights: [
+                { indices: [0, 2], color: "green" as const, label: "已匹配" },
+                { indices: [4], color: "red" as const, label: "不匹配" },
+              ],
+              description: "j=4，s[2]='c' !== t[4]='d'，不匹配。j 继续右移",
+            },
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: 2,
+              right: 5,
+              highlights: [
+                { indices: [0, 2], color: "green" as const, label: "已匹配" },
+                { indices: [5], color: "green" as const, label: "匹配" },
+              ],
+              description: "j=5，s[2]='c' === t[5]='c'，匹配成功！i++，现在 i=3",
+            },
+            {
+              array: ["a", "h", "b", "g", "d", "c"],
+              left: 5,
+              right: 6,
+              highlights: [{ indices: [0, 2, 5], color: "green" as const, label: "匹配字符" }],
+              description: "i=3 === s.length，所有字符都匹配成功！返回 true",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 双指针法
 
 ### 思路
@@ -1440,6 +1722,72 @@ function moveZeroes(nums) {
     nums[i] = 0;
   }
 }`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "移动零 - 双指针演示",
+          config: { leftLabel: "slow", rightLabel: "fast" },
+          steps: [
+            {
+              array: [0, 1, 0, 3, 12],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "yellow" as const, label: "检查" }],
+              description: "初始化：slow=0, fast=0。检查 nums[0]=0，是零，fast 右移，slow 不动",
+            },
+            {
+              array: [0, 1, 0, 3, 12],
+              left: 0,
+              right: 1,
+              highlights: [{ indices: [1], color: "green" as const, label: "非零" }],
+              description: "fast=1，nums[1]=1 是非零元素，将其复制到 slow=0 位置",
+            },
+            {
+              array: [1, 1, 0, 3, 12],
+              left: 1,
+              right: 2,
+              highlights: [{ indices: [0], color: "green" as const, label: "已处理" }],
+              description: "nums[0]=1，slow 右移到 1。fast=2，nums[2]=0 是零，跳过",
+            },
+            {
+              array: [1, 1, 0, 3, 12],
+              left: 1,
+              right: 3,
+              highlights: [{ indices: [3], color: "green" as const, label: "非零" }],
+              description: "fast=3，nums[3]=3 是非零元素，将其复制到 slow=1 位置",
+            },
+            {
+              array: [1, 3, 0, 3, 12],
+              left: 2,
+              right: 4,
+              highlights: [{ indices: [4], color: "green" as const, label: "非零" }],
+              description: "nums[1]=3，slow 右移到 2。fast=4，nums[4]=12 是非零元素，复制到 slow=2",
+            },
+            {
+              array: [1, 3, 12, 3, 12],
+              left: 3,
+              right: 5,
+              highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "非零区域" }],
+              description: "第一次遍历完成！nums[2]=12，slow=3。slow 之后的位置需要填充 0",
+            },
+            {
+              array: [1, 3, 12, 0, 12],
+              left: 3,
+              right: 5,
+              highlights: [{ indices: [3], color: "red" as const, label: "填零" }],
+              description: "第二次遍历：nums[3] = 0",
+            },
+            {
+              array: [1, 3, 12, 0, 0],
+              left: 3,
+              right: 5,
+              highlights: [
+                { indices: [0, 1, 2], color: "green" as const, label: "非零" },
+                { indices: [3, 4], color: "red" as const, label: "零" },
+              ],
+              description: "完成！nums[4] = 0。最终结果：[1, 3, 12, 0, 0]",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 双指针法
 
 ### 核心思想
@@ -1648,6 +1996,106 @@ function sortColors(nums: number[]): void {
     }
   }
 }`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "颜色分类 - 三指针（荷兰国旗）演示",
+          config: { leftLabel: "p0", rightLabel: "p2" },
+          steps: [
+            {
+              array: [2, 0, 2, 1, 1, 0],
+              left: 0,
+              right: 5,
+              highlights: [{ indices: [0], color: "purple" as const, label: "curr=0" }],
+              description: "初始化：p0=0, curr=0, p2=5。nums[curr]=2，是蓝色，需要交换到右边",
+            },
+            {
+              array: [0, 0, 2, 1, 1, 2],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [5], color: "blue" as const, label: "蓝色区" },
+                { indices: [0], color: "purple" as const, label: "curr=0" },
+              ],
+              description: "交换 nums[0] 和 nums[5]，p2--=4。curr 不动（交换来的可能是 0/1/2）",
+            },
+            {
+              array: [0, 0, 2, 1, 1, 2],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0], color: "red" as const, label: "红色" },
+                { indices: [5], color: "blue" as const, label: "蓝色区" },
+              ],
+              description: "nums[curr]=0，是红色。由于 p0=curr=0，相当于和自己交换",
+            },
+            {
+              array: [0, 0, 2, 1, 1, 2],
+              left: 1,
+              right: 4,
+              highlights: [
+                { indices: [0], color: "red" as const, label: "红色区" },
+                { indices: [1], color: "purple" as const, label: "curr=1" },
+                { indices: [5], color: "blue" as const, label: "蓝色区" },
+              ],
+              description: "p0++, curr++。现在 p0=1, curr=1。nums[1]=0，是红色",
+            },
+            {
+              array: [0, 0, 2, 1, 1, 2],
+              left: 2,
+              right: 4,
+              highlights: [
+                { indices: [0, 1], color: "red" as const, label: "红色区" },
+                { indices: [2], color: "purple" as const, label: "curr=2" },
+                { indices: [5], color: "blue" as const, label: "蓝色区" },
+              ],
+              description: "交换后 p0++, curr++。p0=2, curr=2。nums[2]=2，是蓝色",
+            },
+            {
+              array: [0, 0, 1, 1, 2, 2],
+              left: 2,
+              right: 3,
+              highlights: [
+                { indices: [0, 1], color: "red" as const, label: "红色区" },
+                { indices: [2], color: "purple" as const, label: "curr=2" },
+                { indices: [4, 5], color: "blue" as const, label: "蓝色区" },
+              ],
+              description: "交换 nums[2] 和 nums[4]，p2--=3。curr 不动，检查交换来的元素",
+            },
+            {
+              array: [0, 0, 1, 1, 2, 2],
+              left: 2,
+              right: 3,
+              highlights: [
+                { indices: [0, 1], color: "red" as const, label: "红色区" },
+                { indices: [2], color: "yellow" as const, label: "白色" },
+                { indices: [4, 5], color: "blue" as const, label: "蓝色区" },
+              ],
+              description: "nums[2]=1，是白色，curr++。curr=3",
+            },
+            {
+              array: [0, 0, 1, 1, 2, 2],
+              left: 2,
+              right: 3,
+              highlights: [
+                { indices: [0, 1], color: "red" as const, label: "红色区" },
+                { indices: [2, 3], color: "yellow" as const, label: "白色区" },
+                { indices: [4, 5], color: "blue" as const, label: "蓝色区" },
+              ],
+              description: "nums[3]=1，是白色，curr++。curr=4 > p2=3，循环结束！",
+            },
+            {
+              array: [0, 0, 1, 1, 2, 2],
+              left: 2,
+              right: 3,
+              highlights: [
+                { indices: [0, 1], color: "red" as const, label: "0(红)" },
+                { indices: [2, 3], color: "yellow" as const, label: "1(白)" },
+                { indices: [4, 5], color: "blue" as const, label: "2(蓝)" },
+              ],
+              description: "完成！数组已按 0, 1, 2 顺序排列：[0,0,1,1,2,2]",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 三指针（荷兰国旗）
 
 ### 核心思想
@@ -1870,6 +2318,84 @@ function findDuplicate(nums: number[]): number {
 
   return slow;
 }`,
+        animation: {
+          type: "two-pointers" as const,
+          title: "寻找重复数 - Floyd判圈演示",
+          config: { leftLabel: "slow", rightLabel: "fast" },
+          steps: [
+            {
+              array: [1, 3, 4, 2, 2],
+              left: 0,
+              right: 0,
+              highlights: [{ indices: [0], color: "yellow" as const, label: "起点" }],
+              description: "数组 [1,3,4,2,2] 构成链表：0→1→3→2→4→2（环）。slow=fast=nums[0]=1",
+            },
+            {
+              array: [1, 3, 4, 2, 2],
+              left: 1,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "slow" },
+                { indices: [1], color: "blue" as const, label: "fast" },
+              ],
+              description: "第一阶段：找环内相遇点。slow=1, fast=1",
+            },
+            {
+              array: [1, 3, 4, 2, 2],
+              left: 3,
+              right: 2,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "slow=3" },
+                { indices: [2], color: "blue" as const, label: "fast=2" },
+              ],
+              description: "slow=nums[1]=3, fast=nums[nums[1]]=nums[3]=2。slow≠fast，继续",
+            },
+            {
+              array: [1, 3, 4, 2, 2],
+              left: 2,
+              right: 2,
+              highlights: [{ indices: [2], color: "purple" as const, label: "相遇!" }],
+              description: "slow=nums[3]=2, fast=nums[nums[2]]=nums[4]=2。slow===fast=2，在节点2相遇！",
+            },
+            {
+              array: [1, 3, 4, 2, 2],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "slow=1" },
+                { indices: [2], color: "blue" as const, label: "fast=2" },
+              ],
+              description: "第二阶段：找入口。slow 回到起点 nums[0]=1，fast 留在相遇点 2",
+            },
+            {
+              array: [1, 3, 4, 2, 2],
+              left: 3,
+              right: 4,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "slow=3" },
+                { indices: [4], color: "blue" as const, label: "fast=4" },
+              ],
+              description: "slow=nums[1]=3, fast=nums[2]=4。slow≠fast，继续",
+            },
+            {
+              array: [1, 3, 4, 2, 2],
+              left: 2,
+              right: 2,
+              highlights: [{ indices: [2], color: "red" as const, label: "入口=2" }],
+              description: "slow=nums[3]=2, fast=nums[4]=2。slow===fast=2，找到环入口！",
+            },
+            {
+              array: [1, 3, 4, 2, 2],
+              left: 2,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "red" as const, label: "重复数" },
+                { indices: [4], color: "red" as const, label: "重复数" },
+              ],
+              description: "完成！重复的数是 2（索引 3 和 4 都指向值 2）",
+            },
+          ] as TwoPointersStep[],
+        },
         explanation: `## 快慢指针（Floyd判圈）
 
 ### 核心思想

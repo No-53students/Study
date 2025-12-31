@@ -1,4 +1,5 @@
 import { Problem } from "../types";
+import { TwoPointersStep } from "../components/animations";
 
 export const dp1dProblems: Problem[] = [
   // 1. 爬楼梯 (70)
@@ -94,6 +95,61 @@ export const dp1dProblems: Problem[] = [
     solutions: [
       {
         name: "动态规划 - 空间优化（推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "爬楼梯DP演示",
+          steps: [
+            {
+              array: ["1", "2", "?", "?", "?"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "dp[1]=1" },
+                { indices: [1], color: "blue" as const, label: "dp[2]=2" },
+              ],
+              description: "n=5。初始化 dp[1]=1, dp[2]=2",
+            },
+            {
+              array: ["1", "2", "3", "?", "?"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [0, 1], color: "gray" as const, label: "prev" },
+                { indices: [2], color: "green" as const, label: "dp[3]=1+2=3" },
+              ],
+              description: "i=3: dp[3] = dp[2] + dp[1] = 2 + 1 = 3",
+            },
+            {
+              array: ["1", "2", "3", "5", "?"],
+              left: 2,
+              right: 3,
+              highlights: [
+                { indices: [1, 2], color: "gray" as const, label: "prev" },
+                { indices: [3], color: "green" as const, label: "dp[4]=2+3=5" },
+              ],
+              description: "i=4: dp[4] = dp[3] + dp[2] = 3 + 2 = 5",
+            },
+            {
+              array: ["1", "2", "3", "5", "8"],
+              left: 3,
+              right: 4,
+              highlights: [
+                { indices: [2, 3], color: "gray" as const, label: "prev" },
+                { indices: [4], color: "green" as const, label: "dp[5]=3+5=8" },
+              ],
+              description: "i=5: dp[5] = dp[4] + dp[3] = 5 + 3 = 8",
+            },
+            {
+              array: ["1", "2", "3", "5", "8"],
+              left: 4,
+              right: 4,
+              highlights: [
+                { indices: [4], color: "green" as const, label: "答案=8" },
+              ],
+              description: "完成！爬到第5阶有 8 种方法",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 爬楼梯 - 动态规划（空间优化，推荐）
  *
@@ -424,6 +480,81 @@ climb(5) → 计算 climb(4) + climb(3)
     solutions: [
       {
         name: "动态规划 - 空间优化（推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "打家劫舍DP演示",
+          steps: [
+            {
+              array: ["2", "7", "9", "3", "1"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4], color: "blue" as const, label: "房屋金额" },
+              ],
+              description: "nums=[2,7,9,3,1]。相邻房屋不能同时偷",
+            },
+            {
+              array: ["2", "7", "9", "3", "1"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "偷:2" },
+              ],
+              description: "i=0: max(不偷0, 偷0+2)=2。prev1=2",
+            },
+            {
+              array: ["2", "7", "9", "3", "1"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "prev2=2" },
+                { indices: [1], color: "green" as const, label: "偷:7" },
+              ],
+              description: "i=1: max(2, 0+7)=7。选择偷7",
+            },
+            {
+              array: ["2", "7", "9", "3", "1"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "prev2=2" },
+                { indices: [1], color: "gray" as const, label: "prev1=7" },
+                { indices: [2], color: "green" as const, label: "偷:2+9=11" },
+              ],
+              description: "i=2: max(7, 2+9)=11。选择偷房屋0和2",
+            },
+            {
+              array: ["2", "7", "9", "3", "1"],
+              left: 2,
+              right: 3,
+              highlights: [
+                { indices: [1], color: "gray" as const, label: "prev2=7" },
+                { indices: [2], color: "gray" as const, label: "prev1=11" },
+                { indices: [3], color: "red" as const, label: "不偷:11" },
+              ],
+              description: "i=3: max(11, 7+3)=11。不偷房屋3更优",
+            },
+            {
+              array: ["2", "7", "9", "3", "1"],
+              left: 3,
+              right: 4,
+              highlights: [
+                { indices: [2], color: "gray" as const, label: "prev2=11" },
+                { indices: [4], color: "green" as const, label: "偷:11+1=12" },
+              ],
+              description: "i=4: max(11, 11+1)=12。偷房屋0,2,4",
+            },
+            {
+              array: ["2", "7", "9", "3", "1"],
+              left: 4,
+              right: 4,
+              highlights: [
+                { indices: [0, 2, 4], color: "green" as const, label: "偷取" },
+              ],
+              description: "完成！最大金额=12 (偷房屋0,2,4: 2+9+1)",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 打家劫舍 - 动态规划（空间优化，推荐）
  *
@@ -782,6 +913,80 @@ dp[i] = min(dp[i], dp[i - coin] + 1)
     solutions: [
       {
         name: "动态规划 - 自底向上（推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "零钱兑换DP演示",
+          steps: [
+            {
+              array: ["0", "∞", "∞", "∞", "∞", "∞"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "dp[0]=0" },
+              ],
+              description: "coins=[1,2,5], amount=5。dp[0]=0",
+            },
+            {
+              array: ["0", "1", "∞", "∞", "∞", "∞"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "dp[0]=0" },
+                { indices: [1], color: "green" as const, label: "dp[1]=1" },
+              ],
+              description: "i=1: 用1元硬币，dp[1]=dp[0]+1=1",
+            },
+            {
+              array: ["0", "1", "1", "∞", "∞", "∞"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "dp[0]=0" },
+                { indices: [2], color: "green" as const, label: "dp[2]=1" },
+              ],
+              description: "i=2: 用2元硬币，dp[2]=dp[0]+1=1",
+            },
+            {
+              array: ["0", "1", "1", "2", "∞", "∞"],
+              left: 2,
+              right: 3,
+              highlights: [
+                { indices: [1, 2], color: "gray" as const, label: "尝试" },
+                { indices: [3], color: "green" as const, label: "dp[3]=2" },
+              ],
+              description: "i=3: min(dp[2]+1,dp[1]+1)=2",
+            },
+            {
+              array: ["0", "1", "1", "2", "2", "∞"],
+              left: 3,
+              right: 4,
+              highlights: [
+                { indices: [2, 3], color: "gray" as const, label: "尝试" },
+                { indices: [4], color: "green" as const, label: "dp[4]=2" },
+              ],
+              description: "i=4: min(dp[3]+1,dp[2]+1)=2",
+            },
+            {
+              array: ["0", "1", "1", "2", "2", "1"],
+              left: 4,
+              right: 5,
+              highlights: [
+                { indices: [0], color: "blue" as const, label: "用5元" },
+                { indices: [5], color: "green" as const, label: "dp[5]=1" },
+              ],
+              description: "i=5: 用5元硬币，dp[5]=dp[0]+1=1",
+            },
+            {
+              array: ["0", "1", "1", "2", "2", "1"],
+              left: 5,
+              right: 5,
+              highlights: [
+                { indices: [5], color: "green" as const, label: "答案=1" },
+              ],
+              description: "完成！凑成5元最少需要1枚硬币(5)",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 零钱兑换 - 动态规划（自底向上，推荐）
  *
@@ -1202,6 +1407,84 @@ coins = [1, 2, 5], amount = 11
     solutions: [
       {
         name: "贪心 + 二分查找（推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "最长递增子序列演示",
+          steps: [
+            {
+              array: ["10", "9", "2", "5", "3", "7"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5], color: "blue" as const, label: "nums" },
+              ],
+              description: "nums=[10,9,2,5,3,7]。维护tails数组",
+            },
+            {
+              array: ["10", "9", "2", "5", "3", "7"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "处理10" },
+              ],
+              description: "tails=[10]。第一个元素直接加入",
+            },
+            {
+              array: ["10", "9", "2", "5", "3", "7"],
+              left: 1,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "处理9" },
+              ],
+              description: "9<10，替换tails[0]。tails=[9]",
+            },
+            {
+              array: ["10", "9", "2", "5", "3", "7"],
+              left: 2,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "green" as const, label: "处理2" },
+              ],
+              description: "2<9，替换tails[0]。tails=[2]",
+            },
+            {
+              array: ["10", "9", "2", "5", "3", "7"],
+              left: 3,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "处理5" },
+              ],
+              description: "5>2，追加。tails=[2,5]",
+            },
+            {
+              array: ["10", "9", "2", "5", "3", "7"],
+              left: 4,
+              right: 4,
+              highlights: [
+                { indices: [4], color: "green" as const, label: "处理3" },
+              ],
+              description: "3>2且3<5，替换tails[1]。tails=[2,3]",
+            },
+            {
+              array: ["10", "9", "2", "5", "3", "7"],
+              left: 5,
+              right: 5,
+              highlights: [
+                { indices: [5], color: "green" as const, label: "处理7" },
+              ],
+              description: "7>3，追加。tails=[2,3,7]",
+            },
+            {
+              array: ["10", "9", "2", "5", "3", "7"],
+              left: 5,
+              right: 5,
+              highlights: [
+                { indices: [2, 4, 5], color: "green" as const, label: "LIS" },
+              ],
+              description: "完成！最长递增子序列长度=3 (如2,3,7)",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 最长递增子序列 - 贪心 + 二分查找（推荐）
  *
@@ -1603,6 +1886,77 @@ dp(0) 被多次调用 → 需要记忆化！
     solutions: [
       {
         name: "动态规划（推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "单词拆分DP演示",
+          steps: [
+            {
+              array: ["l", "e", "e", "t", "c", "o", "d", "e"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5, 6, 7], color: "blue" as const, label: "leetcode" },
+              ],
+              description: "s=\"leetcode\", wordDict=[\"leet\",\"code\"]",
+            },
+            {
+              array: ["T", "?", "?", "?", "?", "?", "?", "?", "?"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "dp[0]=T" },
+              ],
+              description: "dp数组。dp[0]=true(空串可拆分)",
+            },
+            {
+              array: ["T", "F", "F", "F", "?", "?", "?", "?", "?"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [1, 2, 3], color: "red" as const, label: "不在字典" },
+              ],
+              description: "dp[1-3]=false。l/le/lee不在字典中",
+            },
+            {
+              array: ["T", "F", "F", "F", "T", "?", "?", "?", "?"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0], color: "gray" as const, label: "dp[0]=T" },
+                { indices: [4], color: "green" as const, label: "dp[4]=T" },
+              ],
+              description: "dp[4]=true! dp[0]=T且\"leet\"在字典中",
+            },
+            {
+              array: ["T", "F", "F", "F", "T", "F", "F", "F", "?"],
+              left: 4,
+              right: 7,
+              highlights: [
+                { indices: [5, 6, 7], color: "red" as const, label: "不在字典" },
+              ],
+              description: "dp[5-7]=false。c/co/cod不在字典中",
+            },
+            {
+              array: ["T", "F", "F", "F", "T", "F", "F", "F", "T"],
+              left: 4,
+              right: 8,
+              highlights: [
+                { indices: [4], color: "gray" as const, label: "dp[4]=T" },
+                { indices: [8], color: "green" as const, label: "dp[8]=T" },
+              ],
+              description: "dp[8]=true! dp[4]=T且\"code\"在字典中",
+            },
+            {
+              array: ["T", "F", "F", "F", "T", "F", "F", "F", "T"],
+              left: 8,
+              right: 8,
+              highlights: [
+                { indices: [8], color: "green" as const, label: "答案=true" },
+              ],
+              description: "完成！\"leetcode\"可以拆分为\"leet\"+\"code\"",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 单词拆分 - 动态规划（推荐）
  *
@@ -1973,6 +2327,70 @@ triangle[i][j] = triangle[i-1][j-1] + triangle[i-1][j]
     solutions: [
       {
         name: "动态规划（推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "杨辉三角生成演示",
+          steps: [
+            {
+              array: ["1"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "第1行" },
+              ],
+              description: "第1行: [1]",
+            },
+            {
+              array: ["1", "1"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "第2行" },
+              ],
+              description: "第2行: [1,1]。首尾都是1",
+            },
+            {
+              array: ["1", "2", "1"],
+              left: 0,
+              right: 2,
+              highlights: [
+                { indices: [0, 2], color: "gray" as const, label: "首尾=1" },
+                { indices: [1], color: "green" as const, label: "1+1=2" },
+              ],
+              description: "第3行: [1,2,1]。中间=上行相邻和",
+            },
+            {
+              array: ["1", "3", "3", "1"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 3], color: "gray" as const, label: "首尾=1" },
+                { indices: [1], color: "green" as const, label: "1+2=3" },
+                { indices: [2], color: "green" as const, label: "2+1=3" },
+              ],
+              description: "第4行: [1,3,3,1]",
+            },
+            {
+              array: ["1", "4", "6", "4", "1"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0, 4], color: "gray" as const, label: "首尾=1" },
+                { indices: [1, 2, 3], color: "green" as const, label: "计算中间" },
+              ],
+              description: "第5行: [1,4,6,4,1]。3+1=4, 3+3=6, 3+1=4",
+            },
+            {
+              array: ["1", "4", "6", "4", "1"],
+              left: 0,
+              right: 4,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4], color: "green" as const, label: "完成" },
+              ],
+              description: "完成！生成了5行杨辉三角",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 杨辉三角 - 动态规划
  *
@@ -2164,6 +2582,66 @@ minProd = min(num, minProd * num)
     solutions: [
       {
         name: "动态规划（推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "乘积最大子数组演示",
+          steps: [
+            {
+              array: ["2", "3", "-2", "4"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "blue" as const, label: "nums" },
+              ],
+              description: "nums=[2,3,-2,4]。维护max和min乘积",
+            },
+            {
+              array: ["2", "3", "-2", "4"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "max=2,min=2" },
+              ],
+              description: "i=0: maxProd=2, minProd=2, result=2",
+            },
+            {
+              array: ["2", "3", "-2", "4"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "max=6" },
+              ],
+              description: "i=1: maxProd=max(3,2*3)=6, minProd=3, result=6",
+            },
+            {
+              array: ["2", "3", "-2", "4"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [2], color: "red" as const, label: "负数交换" },
+              ],
+              description: "i=2: 遇到-2，交换max和min。maxProd=-2, minProd=-12",
+            },
+            {
+              array: ["2", "3", "-2", "4"],
+              left: 2,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "max=4" },
+              ],
+              description: "i=3: maxProd=max(4,-2*4)=4, minProd=-48",
+            },
+            {
+              array: ["2", "3", "-2", "4"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [0, 1], color: "green" as const, label: "最大乘积" },
+              ],
+              description: "完成！最大乘积=6，子数组[2,3]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 乘积最大子数组 - 动态规划
  *
@@ -2411,6 +2889,66 @@ dp[j] = dp[j] || dp[j - num]
     solutions: [
       {
         name: "一维 DP（推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "分割等和子集演示",
+          steps: [
+            {
+              array: ["1", "5", "11", "5"],
+              left: 0,
+              right: 3,
+              highlights: [
+                { indices: [0, 1, 2, 3], color: "blue" as const, label: "sum=22" },
+              ],
+              description: "nums=[1,5,11,5]。sum=22，target=11",
+            },
+            {
+              array: ["T", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "dp[0]=T" },
+              ],
+              description: "dp数组(0-11)。dp[0]=true",
+            },
+            {
+              array: ["T", "T", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F"],
+              left: 0,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "dp[1]=T" },
+              ],
+              description: "处理num=1: dp[1]=dp[0]=true",
+            },
+            {
+              array: ["T", "T", "F", "F", "F", "T", "T", "F", "F", "F", "F", "F"],
+              left: 1,
+              right: 6,
+              highlights: [
+                { indices: [5, 6], color: "green" as const, label: "dp更新" },
+              ],
+              description: "处理num=5: dp[5]=T, dp[6]=T",
+            },
+            {
+              array: ["T", "T", "F", "F", "F", "T", "T", "F", "F", "F", "F", "T"],
+              left: 6,
+              right: 11,
+              highlights: [
+                { indices: [11], color: "green" as const, label: "dp[11]=T" },
+              ],
+              description: "处理num=11: dp[11]=dp[0]=true!",
+            },
+            {
+              array: ["T", "T", "F", "F", "F", "T", "T", "F", "F", "F", "T", "T"],
+              left: 11,
+              right: 11,
+              highlights: [
+                { indices: [11], color: "green" as const, label: "找到!" },
+              ],
+              description: "完成！dp[11]=true，可以分割([11]和[1,5,5])",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 分割等和子集 - 一维 DP（0-1 背包空间优化）
  *
@@ -2739,6 +3277,84 @@ dp[4][11] = T，可以分割！
     solutions: [
       {
         name: "Kadane 算法（推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "最大子数组和演示",
+          steps: [
+            {
+              array: ["-2", "1", "-3", "4", "-1", "2", "1", "-5", "4"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0, 1, 2, 3, 4, 5, 6, 7, 8], color: "blue" as const, label: "nums" },
+              ],
+              description: "nums=[-2,1,-3,4,-1,2,1,-5,4]",
+            },
+            {
+              array: ["-2", "1", "-3", "4", "-1", "2", "1", "-5", "4"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "cur=-2" },
+              ],
+              description: "i=0: currentSum=-2, maxSum=-2",
+            },
+            {
+              array: ["-2", "1", "-3", "4", "-1", "2", "1", "-5", "4"],
+              left: 1,
+              right: 1,
+              highlights: [
+                { indices: [1], color: "green" as const, label: "重新开始" },
+              ],
+              description: "i=1: max(1,-2+1)=1。重新开始。maxSum=1",
+            },
+            {
+              array: ["-2", "1", "-3", "4", "-1", "2", "1", "-5", "4"],
+              left: 1,
+              right: 2,
+              highlights: [
+                { indices: [1, 2], color: "gray" as const, label: "cur=-2" },
+              ],
+              description: "i=2: max(-3,1-3)=-2。maxSum=1",
+            },
+            {
+              array: ["-2", "1", "-3", "4", "-1", "2", "1", "-5", "4"],
+              left: 3,
+              right: 3,
+              highlights: [
+                { indices: [3], color: "green" as const, label: "重新开始" },
+              ],
+              description: "i=3: max(4,-2+4)=4。重新开始。maxSum=4",
+            },
+            {
+              array: ["-2", "1", "-3", "4", "-1", "2", "1", "-5", "4"],
+              left: 3,
+              right: 6,
+              highlights: [
+                { indices: [3, 4, 5, 6], color: "green" as const, label: "cur=6" },
+              ],
+              description: "i=4-6: 4→3→5→6。maxSum=6",
+            },
+            {
+              array: ["-2", "1", "-3", "4", "-1", "2", "1", "-5", "4"],
+              left: 3,
+              right: 8,
+              highlights: [
+                { indices: [7, 8], color: "gray" as const, label: "cur=5" },
+              ],
+              description: "i=7-8: 6→1→5。maxSum仍为6",
+            },
+            {
+              array: ["-2", "1", "-3", "4", "-1", "2", "1", "-5", "4"],
+              left: 3,
+              right: 6,
+              highlights: [
+                { indices: [3, 4, 5, 6], color: "green" as const, label: "最大子数组" },
+              ],
+              description: "完成！最大和=6，子数组[4,-1,2,1]",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 最大子数组和 - Kadane 算法（空间优化的 DP）
  *
@@ -3173,6 +3789,75 @@ mid = 3 (元素 4)
     solutions: [
       {
         name: "动态规划（推荐）",
+        animation: {
+          type: "two-pointers" as const,
+          title: "完全平方数DP演示",
+          steps: [
+            {
+              array: ["0", "∞", "∞", "∞", "∞", "∞", "∞", "∞", "∞", "∞", "∞", "∞", "∞"],
+              left: 0,
+              right: 0,
+              highlights: [
+                { indices: [0], color: "green" as const, label: "dp[0]=0" },
+              ],
+              description: "n=12。dp[0]=0，其他初始化为∞",
+            },
+            {
+              array: ["0", "1", "2", "3", "∞", "∞", "∞", "∞", "∞", "∞", "∞", "∞", "∞"],
+              left: 1,
+              right: 3,
+              highlights: [
+                { indices: [1, 2, 3], color: "green" as const, label: "用1²" },
+              ],
+              description: "i=1-3: 只能用1²=1。dp[1]=1,dp[2]=2,dp[3]=3",
+            },
+            {
+              array: ["0", "1", "2", "3", "1", "2", "3", "4", "∞", "∞", "∞", "∞", "∞"],
+              left: 4,
+              right: 7,
+              highlights: [
+                { indices: [4], color: "green" as const, label: "dp[4]=1" },
+              ],
+              description: "i=4: dp[4]=dp[0]+1=1 (用4)。i=5-7继续填表",
+            },
+            {
+              array: ["0", "1", "2", "3", "1", "2", "3", "4", "2", "∞", "∞", "∞", "∞"],
+              left: 8,
+              right: 8,
+              highlights: [
+                { indices: [8], color: "green" as const, label: "dp[8]=2" },
+              ],
+              description: "i=8: dp[8]=dp[4]+1=2 (用4+4)",
+            },
+            {
+              array: ["0", "1", "2", "3", "1", "2", "3", "4", "2", "1", "2", "3", "∞"],
+              left: 9,
+              right: 11,
+              highlights: [
+                { indices: [9], color: "green" as const, label: "dp[9]=1" },
+              ],
+              description: "i=9: dp[9]=dp[0]+1=1 (用9)。i=10-11继续",
+            },
+            {
+              array: ["0", "1", "2", "3", "1", "2", "3", "4", "2", "1", "2", "3", "3"],
+              left: 12,
+              right: 12,
+              highlights: [
+                { indices: [12], color: "green" as const, label: "dp[12]=3" },
+              ],
+              description: "i=12: min(dp[11]+1,dp[8]+1,dp[3]+1)=3",
+            },
+            {
+              array: ["0", "1", "2", "3", "1", "2", "3", "4", "2", "1", "2", "3", "3"],
+              left: 12,
+              right: 12,
+              highlights: [
+                { indices: [12], color: "green" as const, label: "答案=3" },
+              ],
+              description: "完成！12=4+4+4，最少需要3个完全平方数",
+            },
+          ] as TwoPointersStep[],
+        },
         code: `/**
  * 完全平方数 - 动态规划（完全背包）
  *

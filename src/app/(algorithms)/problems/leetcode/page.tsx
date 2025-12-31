@@ -5,8 +5,18 @@ import dynamic from "next/dynamic";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Link from "next/link";
-import { Problem, DIFFICULTY_CONFIG, CATEGORIES, Category, FrontendRelevance, FRONTEND_RELEVANCE_CONFIG } from "../types";
+import { Problem, DIFFICULTY_CONFIG, CATEGORIES, Category, FrontendRelevance, FRONTEND_RELEVANCE_CONFIG, Solution } from "../types";
 import { allProblems, getProblemsByCategory } from "../data";
+import {
+  TwoPointersAnimation,
+  LinkedListAnimation,
+  TreeAnimation,
+  MatrixAnimation,
+  type TwoPointersStep,
+  type LinkedListStep,
+  type TreeStep,
+  type MatrixStep,
+} from "../components/animations";
 
 // 动态导入 Monaco Editor
 const Editor = dynamic(() => import("@monaco-editor/react"), {
@@ -27,7 +37,65 @@ interface ConsoleOutput {
   timestamp: number;
 }
 
+// 移动端视图类型
+type MobileView = "list" | "description" | "solution";
+
+// localStorage keys
+const LAYOUT_KEY = 'leetcode-layout';
+const CODE_KEY = 'leetcode-code-';
+const COMPLETED_KEY = 'leetcode-completed';
+
+// 检测是否为移动端的 hook
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  return isMobile;
+}
+
+// 读取 localStorage 的辅助函数
+function getStoredLayout() {
+  if (typeof window === 'undefined') return null;
+  try {
+    const saved = localStorage.getItem(LAYOUT_KEY);
+    return saved ? JSON.parse(saved) : null;
+  } catch {
+    return null;
+  }
+}
+
+function getStoredCode(problemId: string): string | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    return localStorage.getItem(CODE_KEY + problemId);
+  } catch {
+    return null;
+  }
+}
+
+function getCompletedProblems(): Set<string> {
+  if (typeof window === 'undefined') return new Set();
+  try {
+    const saved = localStorage.getItem(COMPLETED_KEY);
+    return saved ? new Set(JSON.parse(saved)) : new Set();
+  } catch {
+    return new Set();
+  }
+}
+
 export default function LeetCodePage() {
+  // 移动端检测
+  const isMobile = useIsMobile();
+  const [mobileView, setMobileView] = useState<MobileView>("list");
+
   // 选中的分类和题目
   const [selectedCategory, setSelectedCategory] = useState<Category | "all">("all");
   const [selectedProblem, setSelectedProblem] = useState<Problem | null>(null);
@@ -49,15 +117,77 @@ export default function LeetCodePage() {
   // Tab 状态
   const [leftTab, setLeftTab] = useState<"description" | "solution">("description");
   const [bottomTab, setBottomTab] = useState<"testcases" | "console">("testcases");
+  const [selectedSolutionIndex, setSelectedSolutionIndex] = useState(0);
 
-  // 布局状态
+  // 统一解法列表
+  const allSolutions = useMemo<Solution[]>(() => {
+    if (!selectedProblem) return [];
+    const solutions: Solution[] = [];
+    if (selectedProblem.solutions && selectedProblem.solutions.length > 0) {
+      solutions.push(...selectedProblem.solutions);
+    } else if (selectedProblem.solution) {
+      solutions.push({
+        name: "参考答案",
+        code: selectedProblem.solution,
+        explanation: selectedProblem.explanation,
+        timeComplexity: selectedProblem.timeComplexity,
+        spaceComplexity: selectedProblem.spaceComplexity,
+      });
+    }
+    return solutions;
+  }, [selectedProblem]);
+
+  const currentSolution = allSolutions[selectedSolutionIndex];
+
+  // 布局状态（从 localStorage 恢复）
   const [sidebarWidth, setSidebarWidth] = useState(280);
   const [leftPanelWidth, setLeftPanelWidth] = useState(40);
   const [bottomHeight, setBottomHeight] = useState(220);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [isLayoutLoaded, setIsLayoutLoaded] = useState(false);
+
+  // 进度追踪
+  const [completedProblems, setCompletedProblems] = useState<Set<string>>(new Set());
+
+  // 拖拽状态
+  const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const isDraggingSidebar = useRef(false);
   const isDraggingVertical = useRef(false);
   const isDraggingHorizontal = useRef(false);
+
+  // 初始化：从 localStorage 恢复布局和进度
+  useEffect(() => {
+    const layout = getStoredLayout();
+    if (layout) {
+      if (layout.sidebarWidth) setSidebarWidth(layout.sidebarWidth);
+      if (layout.leftPanelWidth) setLeftPanelWidth(layout.leftPanelWidth);
+      if (layout.bottomHeight) setBottomHeight(layout.bottomHeight);
+      if (layout.sidebarCollapsed !== undefined) setSidebarCollapsed(layout.sidebarCollapsed);
+    }
+    setCompletedProblems(getCompletedProblems());
+    setIsLayoutLoaded(true);
+  }, []);
+
+  // 保存布局到 localStorage（防抖）
+  useEffect(() => {
+    if (!isLayoutLoaded) return;
+    const timer = setTimeout(() => {
+      localStorage.setItem(LAYOUT_KEY, JSON.stringify({
+        sidebarWidth, leftPanelWidth, bottomHeight, sidebarCollapsed
+      }));
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [sidebarWidth, leftPanelWidth, bottomHeight, sidebarCollapsed, isLayoutLoaded]);
+
+  // 自动保存代码（防抖）
+  useEffect(() => {
+    if (!selectedProblem || !code) return;
+    const timer = setTimeout(() => {
+      localStorage.setItem(CODE_KEY + selectedProblem.id, code);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [code, selectedProblem]);
 
   // 过滤题目
   const filteredProblems = useMemo(() => {
@@ -94,16 +224,23 @@ export default function LeetCodePage() {
     return stats;
   }, []);
 
-  // 选择题目
-  const selectProblem = useCallback((problem: Problem) => {
+  // 选择题目（从 localStorage 恢复代码）
+  const selectProblem = useCallback((problem: Problem, fromMobileList = false) => {
     setSelectedProblem(problem);
-    setCode(problem.initialCode);
+    // 尝试恢复保存的代码
+    const savedCode = getStoredCode(problem.id);
+    setCode(savedCode || problem.initialCode);
     setConsoleOutput([]);
     setTestResults([]);
     setShowSolution(false);
     setShowHints(false);
     setCurrentHintIndex(0);
+    setSelectedSolutionIndex(0);
     setLeftTab("description");
+    // 移动端从列表选择题目后跳转到描述页
+    if (fromMobileList) {
+      setMobileView("description");
+    }
   }, []);
 
   // 初始化选中第一道题
@@ -112,6 +249,25 @@ export default function LeetCodePage() {
       selectProblem(filteredProblems[0]);
     }
   }, [filteredProblems, selectedProblem, selectProblem]);
+
+  // 获取当前题目在列表中的索引
+  const currentProblemIndex = useMemo(() => {
+    if (!selectedProblem) return -1;
+    return filteredProblems.findIndex(p => p.id === selectedProblem.id);
+  }, [selectedProblem, filteredProblems]);
+
+  // 上一题/下一题
+  const goToPrevProblem = useCallback(() => {
+    if (currentProblemIndex > 0) {
+      selectProblem(filteredProblems[currentProblemIndex - 1]);
+    }
+  }, [currentProblemIndex, filteredProblems, selectProblem]);
+
+  const goToNextProblem = useCallback(() => {
+    if (currentProblemIndex < filteredProblems.length - 1) {
+      selectProblem(filteredProblems[currentProblemIndex + 1]);
+    }
+  }, [currentProblemIndex, filteredProblems, selectProblem]);
 
   // 添加控制台输出
   const addConsoleOutput = useCallback((type: ConsoleType, content: string) => {
@@ -258,18 +414,26 @@ export default function LeetCodePage() {
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (isDraggingSidebar.current) {
+        setIsDragging(true);
         const newWidth = e.clientX;
         setSidebarWidth(Math.min(Math.max(newWidth, 200), 400));
       }
       if (isDraggingVertical.current && containerRef.current) {
+        setIsDragging(true);
         const rect = containerRef.current.getBoundingClientRect();
-        const newWidth = ((e.clientX - rect.left - sidebarWidth) / (rect.width - sidebarWidth)) * 100;
-        setLeftPanelWidth(Math.min(Math.max(newWidth, 25), 60));
+        const effectiveWidth = sidebarCollapsed ? rect.width : rect.width - sidebarWidth;
+        const offset = sidebarCollapsed ? rect.left : rect.left + sidebarWidth;
+        const newWidth = ((e.clientX - offset) / effectiveWidth) * 100;
+        // 不限制最小宽度，只限制最大宽度防止编辑器消失
+        setLeftPanelWidth(Math.min(Math.max(newWidth, 0), 90));
       }
       if (isDraggingHorizontal.current) {
+        setIsDragging(true);
         const windowHeight = window.innerHeight;
         const newHeight = windowHeight - e.clientY;
-        setBottomHeight(Math.min(Math.max(newHeight, 120), 400));
+        // 限制底部面板最大高度为屏幕的 50%
+        const maxHeight = windowHeight * 0.5;
+        setBottomHeight(Math.min(Math.max(newHeight, 120), maxHeight));
       }
     };
 
@@ -277,6 +441,7 @@ export default function LeetCodePage() {
       isDraggingSidebar.current = false;
       isDraggingVertical.current = false;
       isDraggingHorizontal.current = false;
+      setIsDragging(false);
     };
 
     document.addEventListener("mousemove", handleMouseMove);
@@ -286,134 +451,542 @@ export default function LeetCodePage() {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [sidebarWidth]);
+  }, [sidebarWidth, sidebarCollapsed]);
+
+  // 快捷键支持
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl/Cmd + Enter: 运行代码
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        runCode();
+      }
+      // Ctrl/Cmd + \: 切换侧边栏
+      if ((e.metaKey || e.ctrlKey) && e.key === '\\') {
+        e.preventDefault();
+        setSidebarCollapsed(prev => !prev);
+      }
+      // Ctrl/Cmd + S: 阻止浏览器保存（代码已自动保存）
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+        e.preventDefault();
+      }
+      // Escape: 退出查看答案模式
+      if (e.key === 'Escape' && showSolution) {
+        setShowSolution(false);
+      }
+      // Ctrl/Cmd + [ : 上一题
+      if ((e.metaKey || e.ctrlKey) && e.key === '[') {
+        e.preventDefault();
+        goToPrevProblem();
+      }
+      // Ctrl/Cmd + ] : 下一题
+      if ((e.metaKey || e.ctrlKey) && e.key === ']') {
+        e.preventDefault();
+        goToNextProblem();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [runCode, showSolution, goToPrevProblem, goToNextProblem]);
 
   const passedCount = testResults.filter((r) => r.passed).length;
   const allPassed = testResults.length > 0 && passedCount === testResults.length;
+
+  // 保存完成的题目
+  useEffect(() => {
+    if (allPassed && selectedProblem) {
+      setCompletedProblems(prev => {
+        const newSet = new Set([...prev, selectedProblem.id]);
+        localStorage.setItem(COMPLETED_KEY, JSON.stringify([...newSet]));
+        return newSet;
+      });
+    }
+  }, [allPassed, selectedProblem]);
+
   const categoryInfo = selectedProblem ? CATEGORIES.find((c) => c.id === selectedProblem.category) : null;
 
   // 有题目的分类
   const categoriesWithProblems = CATEGORIES.filter(c => categoryStats[c.id] > 0);
 
-  return (
-    <div ref={containerRef} className="flex h-screen bg-zinc-950 text-white">
-      {/* 左侧边栏 - 题目列表 */}
-      <div
-        className="flex flex-col border-r border-zinc-800 bg-zinc-900"
-        style={{ width: `${sidebarWidth}px` }}
-      >
-        {/* 侧边栏头部 */}
-        <div className="flex items-center justify-between p-3 border-b border-zinc-800">
-          <Link href="/problems" className="text-sm text-zinc-400 hover:text-white transition-colors">
-            ← 返回
-          </Link>
-          <h2 className="text-sm font-semibold">算法题库</h2>
+  // ==================== 移动端布局 ====================
+  if (isMobile) {
+    return (
+      <div className="flex flex-col h-screen bg-zinc-950 text-white">
+        {/* 移动端头部 */}
+        <header className="flex items-center justify-between px-4 py-3 border-b border-zinc-800 bg-zinc-900 shrink-0">
+          <div className="flex items-center gap-2">
+            <Link href="/problems" className="text-zinc-400 hover:text-white">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </Link>
+            <h1 className="text-base font-semibold">
+              {mobileView === "list" ? "算法题库" : selectedProblem?.title || "题目"}
+            </h1>
+          </div>
+          {/* 进度 */}
+          <div className="text-xs text-zinc-400">
+            {completedProblems.size}/{allProblems.length}
+          </div>
+        </header>
+
+        {/* 移动端内容区域 */}
+        <div className="flex-1 overflow-hidden">
+          {/* 题目列表视图 */}
+          {mobileView === "list" && (
+            <div className="h-full flex flex-col">
+              {/* 搜索和筛选 */}
+              <div className="p-3 space-y-2 border-b border-zinc-800 bg-zinc-900/50 shrink-0">
+                <input
+                  type="text"
+                  placeholder="搜索题目..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full px-3 py-2 text-sm bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-green-500"
+                />
+                {/* 难度筛选 */}
+                <div className="flex gap-1">
+                  {(["all", "easy", "medium", "hard"] as const).map((d) => (
+                    <button
+                      key={d}
+                      onClick={() => setDifficultyFilter(d)}
+                      className={`flex-1 px-2 py-1.5 text-xs rounded-lg transition-colors ${
+                        difficultyFilter === d
+                          ? d === "all"
+                            ? "bg-zinc-700 text-white"
+                            : `${DIFFICULTY_CONFIG[d].bg} ${DIFFICULTY_CONFIG[d].color}`
+                          : "text-zinc-400 bg-zinc-800"
+                      }`}
+                    >
+                      {d === "all" ? "全部" : DIFFICULTY_CONFIG[d].label}
+                    </button>
+                  ))}
+                </div>
+                {/* 分类选择 */}
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value as Category | "all")}
+                  className="w-full px-3 py-2 text-sm bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-green-500"
+                >
+                  <option value="all">📋 所有分类 ({categoryStats.all})</option>
+                  {categoriesWithProblems.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.icon} {category.name} ({categoryStats[category.id]})
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/* 题目列表 */}
+              <div className="flex-1 overflow-y-auto">
+                {filteredProblems.map((problem) => (
+                  <button
+                    key={problem.id}
+                    onClick={() => selectProblem(problem, true)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 border-b border-zinc-800/50 transition-colors ${
+                      selectedProblem?.id === problem.id
+                        ? "bg-green-900/30"
+                        : "active:bg-zinc-800"
+                    }`}
+                  >
+                    {/* 完成状态 */}
+                    <span className={`text-sm ${completedProblems.has(problem.id) ? "text-green-400" : "text-zinc-600"}`}>
+                      {completedProblems.has(problem.id) ? "✓" : "○"}
+                    </span>
+                    {/* 难度 */}
+                    <span className={`w-1.5 h-1.5 rounded-full ${DIFFICULTY_CONFIG[problem.difficulty].bg.replace('/10', '')}`} />
+                    {/* 题号 */}
+                    <span className="text-zinc-500 text-xs w-8">{problem.leetcodeId || "-"}</span>
+                    {/* 标题 */}
+                    <span className="flex-1 text-left text-sm truncate">{problem.title}</span>
+                    {/* 箭头 */}
+                    <svg className="w-4 h-4 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 题目描述视图 */}
+          {mobileView === "description" && selectedProblem && (
+            <div className="h-full overflow-y-auto p-4">
+              {/* 题目信息 */}
+              <div className="mb-4">
+                <div className="flex items-center gap-2 flex-wrap mb-2">
+                  {selectedProblem.leetcodeId && (
+                    <span className="text-zinc-500 text-sm">#{selectedProblem.leetcodeId}</span>
+                  )}
+                  <span className={`px-2 py-0.5 rounded text-xs font-medium ${DIFFICULTY_CONFIG[selectedProblem.difficulty].color} ${DIFFICULTY_CONFIG[selectedProblem.difficulty].bg}`}>
+                    {DIFFICULTY_CONFIG[selectedProblem.difficulty].label}
+                  </span>
+                </div>
+                <h2 className="text-lg font-bold">{selectedProblem.title}</h2>
+                {selectedProblem.titleEn && (
+                  <p className="text-sm text-zinc-500 mt-1">{selectedProblem.titleEn}</p>
+                )}
+              </div>
+
+              {/* 分类标签 */}
+              <div className="flex flex-wrap gap-2 mb-4">
+                {categoryInfo && (
+                  <span className="px-2 py-1 rounded-full text-xs bg-zinc-800 text-zinc-400">
+                    {categoryInfo.icon} {categoryInfo.name}
+                  </span>
+                )}
+                {selectedProblem.tags?.map((tag) => (
+                  <span key={tag} className="px-2 py-1 rounded-full text-xs bg-zinc-800 text-zinc-400">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              {/* 题目内容 */}
+              <div className="prose prose-invert prose-sm max-w-none prose-pre:bg-zinc-800 prose-pre:text-xs prose-code:text-green-400 prose-code:before:content-none prose-code:after:content-none">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{selectedProblem.description}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{selectedProblem.examples}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{selectedProblem.constraints}</ReactMarkdown>
+              </div>
+
+              {/* 提示 */}
+              {selectedProblem.hints && selectedProblem.hints.length > 0 && (
+                <div className="mt-6 pt-4 border-t border-zinc-800">
+                  {!showHints ? (
+                    <button
+                      onClick={() => setShowHints(true)}
+                      className="text-sm text-blue-400"
+                    >
+                      💡 显示提示 ({selectedProblem.hints.length})
+                    </button>
+                  ) : (
+                    <div className="space-y-2">
+                      {selectedProblem.hints.slice(0, currentHintIndex + 1).map((hint, i) => (
+                        <div key={i} className="rounded-lg bg-amber-900/20 border border-amber-700/50 p-3">
+                          <div className="text-xs text-amber-400 mb-1">提示 {i + 1}</div>
+                          <p className="text-sm text-amber-200">{hint}</p>
+                        </div>
+                      ))}
+                      {currentHintIndex < selectedProblem.hints.length - 1 && (
+                        <button
+                          onClick={() => setCurrentHintIndex(i => i + 1)}
+                          className="text-xs text-amber-400"
+                        >
+                          显示更多提示 →
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 题解视图 */}
+          {mobileView === "solution" && selectedProblem && (
+            <div className="h-full overflow-y-auto p-4">
+              <h2 className="text-lg font-semibold mb-4">解题思路</h2>
+
+              {/* 解法选择 */}
+              {allSolutions.length > 1 && (
+                <div className="mb-4">
+                  <div className="text-xs text-zinc-500 mb-2">选择解法：</div>
+                  <div className="flex flex-wrap gap-2">
+                    {allSolutions.map((sol, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setSelectedSolutionIndex(index)}
+                        className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
+                          selectedSolutionIndex === index
+                            ? "bg-green-600 text-white"
+                            : "bg-zinc-800 text-zinc-400"
+                        }`}
+                      >
+                        {sol.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 复杂度 */}
+              {currentSolution && (
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <div className="px-3 py-1.5 rounded bg-zinc-800 text-sm">
+                    <span className="text-zinc-400">时间: </span>
+                    <span className="text-green-400 font-mono">{currentSolution.timeComplexity || selectedProblem.timeComplexity}</span>
+                  </div>
+                  <div className="px-3 py-1.5 rounded bg-zinc-800 text-sm">
+                    <span className="text-zinc-400">空间: </span>
+                    <span className="text-blue-400 font-mono">{currentSolution.spaceComplexity || selectedProblem.spaceComplexity}</span>
+                  </div>
+                </div>
+              )}
+
+              {/* 动画演示 */}
+              {currentSolution?.animation && (
+                <div className="mb-6">
+                  {currentSolution.animation.type === "two-pointers" && (
+                    <TwoPointersAnimation
+                      steps={currentSolution.animation.steps as TwoPointersStep[]}
+                      title={currentSolution.animation.title || "双指针演示"}
+                      leftLabel={(currentSolution.animation.config?.leftLabel as string) || "left"}
+                      rightLabel={(currentSolution.animation.config?.rightLabel as string) || "right"}
+                    />
+                  )}
+                  {currentSolution.animation.type === "linked-list" && (
+                    <LinkedListAnimation
+                      steps={currentSolution.animation.steps as LinkedListStep[]}
+                      title={currentSolution.animation.title || "链表演示"}
+                    />
+                  )}
+                  {currentSolution.animation.type === "tree" && (
+                    <TreeAnimation
+                      steps={currentSolution.animation.steps as TreeStep[]}
+                      title={currentSolution.animation.title || "二叉树演示"}
+                    />
+                  )}
+                  {currentSolution.animation.type === "matrix" && (
+                    <MatrixAnimation
+                      steps={currentSolution.animation.steps as MatrixStep[]}
+                      title={currentSolution.animation.title || "矩阵演示"}
+                    />
+                  )}
+                </div>
+              )}
+
+              {/* 解释 */}
+              <div className="prose prose-invert prose-sm max-w-none prose-pre:bg-zinc-800 prose-pre:text-xs prose-code:text-green-400">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {currentSolution?.explanation || selectedProblem.explanation}
+                </ReactMarkdown>
+              </div>
+
+              {/* 参考代码 */}
+              {currentSolution?.code && (
+                <div className="mt-6">
+                  <h3 className="text-sm font-medium text-zinc-400 mb-2">参考代码</h3>
+                  <pre className="bg-zinc-800 rounded-lg p-4 overflow-x-auto text-xs">
+                    <code className="text-green-400">{currentSolution.code}</code>
+                  </pre>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* 搜索框 */}
-        <div className="p-2 border-b border-zinc-800">
-          <input
-            type="text"
-            placeholder="搜索题目..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-3 py-1.5 text-sm bg-zinc-800 border border-zinc-700 rounded focus:outline-none focus:border-green-500"
-          />
-        </div>
-
-        {/* 难度筛选 */}
-        <div className="flex gap-1 p-2 border-b border-zinc-800">
-          {(["all", "easy", "medium", "hard"] as const).map((d) => (
-            <button
-              key={d}
-              onClick={() => setDifficultyFilter(d)}
-              className={`flex-1 px-2 py-1 text-xs rounded transition-colors ${
-                difficultyFilter === d
-                  ? d === "all"
-                    ? "bg-zinc-700 text-white"
-                    : `${DIFFICULTY_CONFIG[d].bg} ${DIFFICULTY_CONFIG[d].color}`
-                  : "text-zinc-400 hover:text-white hover:bg-zinc-800"
-              }`}
-            >
-              {d === "all" ? "全部" : DIFFICULTY_CONFIG[d].label}
-            </button>
-          ))}
-        </div>
-
-        {/* 前端相关度筛选 */}
-        <div className="flex gap-1 p-2 border-b border-zinc-800">
-          {(["all", "high", "medium", "low"] as const).map((r) => (
-            <button
-              key={r}
-              onClick={() => setRelevanceFilter(r)}
-              className={`flex-1 px-2 py-1 text-xs rounded transition-colors ${
-                relevanceFilter === r
-                  ? r === "all"
-                    ? "bg-zinc-700 text-white"
-                    : `${FRONTEND_RELEVANCE_CONFIG[r].bg} ${FRONTEND_RELEVANCE_CONFIG[r].color}`
-                  : "text-zinc-400 hover:text-white hover:bg-zinc-800"
-              }`}
-              title={r !== "all" ? FRONTEND_RELEVANCE_CONFIG[r].description : "显示所有题目"}
-            >
-              {r === "all" ? "前端" : `${FRONTEND_RELEVANCE_CONFIG[r].icon} ${FRONTEND_RELEVANCE_CONFIG[r].label}`}
-            </button>
-          ))}
-        </div>
-
-        {/* 分类列表 */}
-        <div className="flex-1 overflow-y-auto">
-          {/* 所有题目 */}
+        {/* 移动端底部导航栏 */}
+        <nav className="flex border-t border-zinc-800 bg-zinc-900 shrink-0 safe-area-inset-bottom">
           <button
-            onClick={() => setSelectedCategory("all")}
-            className={`w-full flex items-center justify-between px-3 py-2 text-sm transition-colors ${
-              selectedCategory === "all"
-                ? "bg-green-900/30 text-green-400 border-l-2 border-green-500"
-                : "text-zinc-400 hover:text-white hover:bg-zinc-800"
+            onClick={() => setMobileView("list")}
+            className={`flex-1 flex flex-col items-center gap-1 py-3 transition-colors ${
+              mobileView === "list" ? "text-green-400" : "text-zinc-500"
             }`}
           >
-            <span>📋 所有题目</span>
-            <span className="text-xs">{categoryStats.all}</span>
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+            </svg>
+            <span className="text-xs">题目</span>
           </button>
+          <button
+            onClick={() => setMobileView("description")}
+            disabled={!selectedProblem}
+            className={`flex-1 flex flex-col items-center gap-1 py-3 transition-colors ${
+              mobileView === "description" ? "text-green-400" : "text-zinc-500"
+            } disabled:opacity-30`}
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span className="text-xs">描述</span>
+          </button>
+          <button
+            onClick={() => setMobileView("solution")}
+            disabled={!selectedProblem}
+            className={`flex-1 flex flex-col items-center gap-1 py-3 transition-colors ${
+              mobileView === "solution" ? "text-green-400" : "text-zinc-500"
+            } disabled:opacity-30`}
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+            <span className="text-xs">题解</span>
+          </button>
+          {/* 上下题切换 */}
+          <button
+            onClick={goToPrevProblem}
+            disabled={currentProblemIndex <= 0}
+            className="px-4 py-3 text-zinc-500 disabled:opacity-30"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button
+            onClick={goToNextProblem}
+            disabled={currentProblemIndex >= filteredProblems.length - 1}
+            className="px-4 py-3 text-zinc-500 disabled:opacity-30"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </nav>
+      </div>
+    );
+  }
 
-          {/* 分类 */}
-          {categoriesWithProblems.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => setSelectedCategory(category.id)}
-              className={`w-full flex items-center justify-between px-3 py-2 text-sm transition-colors ${
-                selectedCategory === category.id
-                  ? "bg-green-900/30 text-green-400 border-l-2 border-green-500"
-                  : "text-zinc-400 hover:text-white hover:bg-zinc-800"
-              }`}
+  // ==================== 桌面端布局 ====================
+  return (
+    <div ref={containerRef} className={`flex h-screen bg-zinc-950 text-white ${isDragging ? 'select-none' : ''}`}>
+      {/* 侧边栏折叠时的悬浮按钮 */}
+      {sidebarCollapsed && (
+        <button
+          onClick={() => setSidebarCollapsed(false)}
+          className="fixed left-4 top-4 z-50 flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg px-3 py-2 text-sm transition-colors shadow-lg"
+          title="显示侧边栏 (Ctrl+\)"
+        >
+          <span>📋</span>
+          <span className="text-zinc-300">题目列表</span>
+        </button>
+      )}
+
+      {/* 左侧边栏 - 题目列表 */}
+      {!sidebarCollapsed && (
+        <div
+          className="flex flex-col border-r border-zinc-800 bg-zinc-900 relative"
+          style={{ width: `${sidebarWidth}px` }}
+        >
+          {/* 侧边栏头部 */}
+          <div className="flex items-center justify-between p-3 border-b border-zinc-800">
+            <Link href="/problems" className="text-sm text-zinc-400 hover:text-white transition-colors">
+              ← 返回
+            </Link>
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-semibold">算法题库</h2>
+              <button
+                onClick={() => setSidebarCollapsed(true)}
+                className="p-1 text-zinc-500 hover:text-white hover:bg-zinc-800 rounded transition-colors"
+                title="隐藏侧边栏 (Ctrl+\)"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* 进度显示 */}
+          <div className="px-3 py-2 border-b border-zinc-800 bg-zinc-800/50">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-zinc-400">已完成</span>
+              <span className="text-green-400 font-medium">
+                {completedProblems.size} / {allProblems.length}
+              </span>
+            </div>
+            <div className="mt-1.5 h-1.5 bg-zinc-700 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-green-500 rounded-full transition-all duration-300"
+                style={{ width: `${(completedProblems.size / allProblems.length) * 100}%` }}
+              />
+            </div>
+          </div>
+
+          {/* 搜索框 */}
+          <div className="p-2 border-b border-zinc-800">
+            <input
+              type="text"
+              placeholder="搜索题目..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-3 py-1.5 text-sm bg-zinc-800 border border-zinc-700 rounded focus:outline-none focus:border-green-500"
+            />
+          </div>
+
+          {/* 难度筛选 */}
+          <div className="flex gap-1 p-2 border-b border-zinc-800">
+            {(["all", "easy", "medium", "hard"] as const).map((d) => (
+              <button
+                key={d}
+                onClick={() => setDifficultyFilter(d)}
+                className={`flex-1 px-2 py-1 text-xs rounded transition-colors ${
+                  difficultyFilter === d
+                    ? d === "all"
+                      ? "bg-zinc-700 text-white"
+                      : `${DIFFICULTY_CONFIG[d].bg} ${DIFFICULTY_CONFIG[d].color}`
+                    : "text-zinc-400 hover:text-white hover:bg-zinc-800"
+                }`}
+              >
+                {d === "all" ? "全部" : DIFFICULTY_CONFIG[d].label}
+              </button>
+            ))}
+          </div>
+
+          {/* 前端相关度筛选 */}
+          <div className="flex gap-1 p-2 border-b border-zinc-800">
+            {(["all", "high", "medium", "low"] as const).map((r) => (
+              <button
+                key={r}
+                onClick={() => setRelevanceFilter(r)}
+                className={`flex-1 px-2 py-1 text-xs rounded transition-colors ${
+                  relevanceFilter === r
+                    ? r === "all"
+                      ? "bg-zinc-700 text-white"
+                      : `${FRONTEND_RELEVANCE_CONFIG[r].bg} ${FRONTEND_RELEVANCE_CONFIG[r].color}`
+                    : "text-zinc-400 hover:text-white hover:bg-zinc-800"
+                }`}
+                title={r !== "all" ? FRONTEND_RELEVANCE_CONFIG[r].description : "显示所有题目"}
+              >
+                {r === "all" ? "前端" : `${FRONTEND_RELEVANCE_CONFIG[r].icon} ${FRONTEND_RELEVANCE_CONFIG[r].label}`}
+              </button>
+            ))}
+          </div>
+
+          {/* 分类下拉选择器 */}
+          <div className="p-2 border-b border-zinc-800">
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value as Category | "all")}
+              className="w-full px-3 py-1.5 text-sm bg-zinc-800 border border-zinc-700 rounded focus:outline-none focus:border-green-500 cursor-pointer"
             >
-              <span>{category.icon} {category.name}</span>
-              <span className="text-xs">{categoryStats[category.id]}</span>
-            </button>
-          ))}
-
-          {/* 分隔线 */}
-          <div className="border-t border-zinc-800 my-2" />
+              <option value="all">📋 所有分类 ({categoryStats.all})</option>
+              {categoriesWithProblems.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.icon} {category.name} ({categoryStats[category.id]})
+                </option>
+              ))}
+            </select>
+          </div>
 
           {/* 题目列表 */}
-          <div className="px-2 pb-2">
-            <div className="text-xs text-zinc-500 px-2 mb-1">
+          <div className="flex-1 overflow-y-auto">
+            <div className="text-xs text-zinc-500 px-3 py-2 sticky top-0 bg-zinc-900 border-b border-zinc-800">
               {filteredProblems.length} 道题目
             </div>
             {filteredProblems.map((problem) => (
               <button
                 key={problem.id}
                 onClick={() => selectProblem(problem)}
-                className={`w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded transition-colors ${
+                className={`w-full flex items-center gap-2 px-3 py-2 text-sm border-b border-zinc-800/50 transition-colors ${
                   selectedProblem?.id === problem.id
                     ? "bg-green-900/30 text-green-400"
                     : "text-zinc-300 hover:bg-zinc-800"
                 }`}
               >
+                {/* 完成状态 */}
+                <span className={`w-4 h-4 flex items-center justify-center text-xs flex-shrink-0 ${
+                  completedProblems.has(problem.id) ? "text-green-400" : "text-zinc-600"
+                }`}>
+                  {completedProblems.has(problem.id) ? "✓" : "○"}
+                </span>
+                {/* 难度指示器 */}
                 <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${DIFFICULTY_CONFIG[problem.difficulty].bg.replace('/10', '')}`} />
+                {/* 题号 */}
                 <span className="text-zinc-500 text-xs w-8 flex-shrink-0">
                   {problem.leetcodeId || "-"}
                 </span>
+                {/* 标题 */}
                 <span className="truncate text-left flex-1">{problem.title}</span>
+                {/* 前端相关度 */}
                 {problem.frontendRelevance && (
                   <span
                     className="text-xs flex-shrink-0"
@@ -426,13 +999,15 @@ export default function LeetCodePage() {
             ))}
           </div>
         </div>
-      </div>
+      )}
 
       {/* 侧边栏拖拽条 */}
-      <div
-        className="w-1 bg-zinc-800 hover:bg-green-500 cursor-col-resize transition-colors"
-        onMouseDown={() => { isDraggingSidebar.current = true; }}
-      />
+      {!sidebarCollapsed && (
+        <div
+          className={`w-1 bg-zinc-800 hover:bg-green-500 cursor-col-resize transition-colors ${isDragging ? 'bg-green-500' : ''}`}
+          onMouseDown={() => { isDraggingSidebar.current = true; }}
+        />
+      )}
 
       {/* 主内容区域 */}
       {selectedProblem ? (
@@ -572,22 +1147,82 @@ export default function LeetCodePage() {
                 <div className="p-4">
                   <h2 className="text-lg font-semibold mb-4">解题思路</h2>
 
+                  {/* 解法选择按钮 */}
+                  {allSolutions.length > 1 && (
+                    <div className="mb-4">
+                      <div className="text-xs text-zinc-500 mb-2">选择解法：</div>
+                      <div className="flex flex-wrap gap-2">
+                        {allSolutions.map((sol, index) => (
+                          <button
+                            key={index}
+                            onClick={() => setSelectedSolutionIndex(index)}
+                            className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
+                              selectedSolutionIndex === index
+                                ? "bg-green-600 text-white"
+                                : "bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700"
+                            }`}
+                          >
+                            {sol.name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   {/* 复杂度 */}
-                  <div className="flex gap-4 mb-4 text-sm">
-                    <div className="px-3 py-1.5 rounded bg-zinc-800">
-                      <span className="text-zinc-400">时间复杂度: </span>
-                      <span className="text-green-400 font-mono">{selectedProblem.timeComplexity}</span>
+                  {currentSolution && (
+                    <div className="flex gap-4 mb-4 text-sm">
+                      <div className="px-3 py-1.5 rounded bg-zinc-800">
+                        <span className="text-zinc-400">时间复杂度: </span>
+                        <span className="text-green-400 font-mono">
+                          {currentSolution.timeComplexity || selectedProblem.timeComplexity}
+                        </span>
+                      </div>
+                      <div className="px-3 py-1.5 rounded bg-zinc-800">
+                        <span className="text-zinc-400">空间复杂度: </span>
+                        <span className="text-blue-400 font-mono">
+                          {currentSolution.spaceComplexity || selectedProblem.spaceComplexity}
+                        </span>
+                      </div>
                     </div>
-                    <div className="px-3 py-1.5 rounded bg-zinc-800">
-                      <span className="text-zinc-400">空间复杂度: </span>
-                      <span className="text-blue-400 font-mono">{selectedProblem.spaceComplexity}</span>
+                  )}
+
+                  {/* 动画演示 */}
+                  {currentSolution?.animation && (
+                    <div className="mb-6">
+                      {currentSolution.animation.type === "two-pointers" && (
+                        <TwoPointersAnimation
+                          steps={currentSolution.animation.steps as TwoPointersStep[]}
+                          title={currentSolution.animation.title || "双指针演示"}
+                          leftLabel={(currentSolution.animation.config?.leftLabel as string) || "left"}
+                          rightLabel={(currentSolution.animation.config?.rightLabel as string) || "right"}
+                        />
+                      )}
+                      {currentSolution.animation.type === "linked-list" && (
+                        <LinkedListAnimation
+                          steps={currentSolution.animation.steps as LinkedListStep[]}
+                          title={currentSolution.animation.title || "链表演示"}
+                        />
+                      )}
+                      {currentSolution.animation.type === "tree" && (
+                        <TreeAnimation
+                          steps={currentSolution.animation.steps as TreeStep[]}
+                          title={currentSolution.animation.title || "二叉树演示"}
+                        />
+                      )}
+                      {currentSolution.animation.type === "matrix" && (
+                        <MatrixAnimation
+                          steps={currentSolution.animation.steps as MatrixStep[]}
+                          title={currentSolution.animation.title || "矩阵演示"}
+                        />
+                      )}
                     </div>
-                  </div>
+                  )}
 
                   {/* 详细解释 */}
                   <div className="prose prose-invert prose-sm max-w-none prose-pre:bg-zinc-800 prose-pre:border prose-pre:border-zinc-700 prose-code:text-green-400">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {selectedProblem.explanation}
+                      {currentSolution?.explanation || selectedProblem.explanation}
                     </ReactMarkdown>
                   </div>
 
@@ -618,7 +1253,7 @@ export default function LeetCodePage() {
 
           {/* 垂直分隔线 */}
           <div
-            className="w-1 bg-zinc-800 hover:bg-green-500 cursor-col-resize transition-colors"
+            className={`w-1 bg-zinc-800 hover:bg-green-500 cursor-col-resize transition-colors ${isDragging ? 'bg-green-500' : ''}`}
             onMouseDown={() => { isDraggingVertical.current = true; }}
           />
 
@@ -627,6 +1262,33 @@ export default function LeetCodePage() {
             {/* 工具栏 */}
             <div className="flex items-center justify-between border-b border-zinc-800 bg-zinc-900 px-3">
               <div className="flex items-center gap-2 py-2">
+                {/* 上下切题按钮 */}
+                <div className="flex items-center gap-1 mr-2">
+                  <button
+                    onClick={goToPrevProblem}
+                    disabled={currentProblemIndex <= 0}
+                    className="p-1.5 text-zinc-400 hover:text-white rounded hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed"
+                    title="上一题 (Ctrl+[)"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <span className="text-xs text-zinc-500 min-w-[60px] text-center">
+                    {currentProblemIndex + 1} / {filteredProblems.length}
+                  </span>
+                  <button
+                    onClick={goToNextProblem}
+                    disabled={currentProblemIndex >= filteredProblems.length - 1}
+                    className="p-1.5 text-zinc-400 hover:text-white rounded hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed"
+                    title="下一题 (Ctrl+])"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="h-4 w-px bg-zinc-700" />
                 <span className="text-xs text-zinc-500 uppercase">{selectedProblem.language || "javascript"}</span>
               </div>
               <div className="flex items-center gap-2">
@@ -718,7 +1380,7 @@ export default function LeetCodePage() {
 
             {/* 水平分隔线 */}
             <div
-              className="h-1 bg-zinc-800 hover:bg-green-500 cursor-row-resize transition-colors"
+              className={`h-1 bg-zinc-800 hover:bg-green-500 cursor-row-resize transition-colors ${isDragging ? 'bg-green-500' : ''}`}
               onMouseDown={() => { isDraggingHorizontal.current = true; }}
             />
 
