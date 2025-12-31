@@ -278,6 +278,13 @@
   --sidebar-offset: 0px;
 }
 
+/* 移动端隐藏顶部导航栏 */
+@media (max-width: 1023px) {
+  header[role="banner"] {
+    display: none !important;
+  }
+}
+
 /* LeetCode 全屏模式 - 隐藏移动端导航栏和侧边栏 */
 .leetcode-fullscreen header[role="banner"],
 .leetcode-fullscreen aside[role="complementary"],

@@ -251,7 +251,7 @@ export default function SidebarNav({ groups }: SidebarNavProps) {
       {/* 侧边栏 */}
       <aside
         id="mobile-sidebar"
-        className={`fixed left-0 top-0 z-40 h-[100dvh] flex border-r border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-900 pt-14 lg:pt-0 transition-transform duration-300 ease-out sidebar-shadow ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"} ${isCollapsed ? "lg:-translate-x-full" : "lg:translate-x-0"}`}
+        className={`fixed left-0 top-0 z-40 h-[100dvh] flex border-r border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-900 transition-transform duration-300 ease-out sidebar-shadow ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"} ${isCollapsed ? "lg:-translate-x-full" : "lg:translate-x-0"}`}
         style={{ width: "var(--sidebar-width)" }}
         role="complementary"
         aria-label="侧边导航栏"

@@ -1,12 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { usePathname } from "next/navigation";
 
 const FULLSCREEN_KEY = "leetcode-fullscreen";
 const BUTTON_POSITION_KEY = "leetcode-button-position";
 const BUTTON_MINIMIZED_KEY = "leetcode-button-minimized";
-const AUTO_FULLSCREEN_TRIGGERED_KEY = "leetcode-auto-fullscreen-triggered";
 
 interface Position {
   x: number;
@@ -72,21 +70,22 @@ export default function LeetCodeLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
   const [isFullscreen, setIsFullscreen] = useState(true);
-  const [isBrowserFs, setIsBrowserFs] = useState(false); // 浏览器全屏状态
+  const [isBrowserFs, setIsBrowserFs] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-  const [position, setPosition] = useState<Position>({ x: -1, y: -1 }); // -1 表示使用默认位置
+  const [position, setPosition] = useState<Position>({ x: -1, y: -1 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState<Position>({ x: 0, y: 0 });
   const [supportsFullscreen, setSupportsFullscreen] = useState(false);
-  const [hasTriggeredAutoFullscreen, setHasTriggeredAutoFullscreen] = useState(false);
   const buttonRef = useRef<HTMLDivElement>(null);
-  const prevPathnameRef = useRef(pathname);
+  const hasInitializedRef = useRef(false);
 
-  // 从 localStorage 恢复状态
+  // 从 localStorage 恢复状态（只在首次加载时执行）
   useEffect(() => {
+    if (hasInitializedRef.current) return;
+    hasInitializedRef.current = true;
+
     const saved = localStorage.getItem(FULLSCREEN_KEY);
     if (saved !== null) {
       setIsFullscreen(saved === "true");
@@ -107,58 +106,10 @@ export default function LeetCodeLayout({
       }
     }
 
-    // 检查全屏支持
     setSupportsFullscreen(isFullscreenSupported());
     setIsBrowserFs(isBrowserFullscreen());
-
-    // 检查是否已经触发过自动全屏
-    const autoTriggered = sessionStorage.getItem(AUTO_FULLSCREEN_TRIGGERED_KEY);
-    setHasTriggeredAutoFullscreen(autoTriggered === "true");
-
     setIsLoaded(true);
   }, []);
-
-  // 用户首次操作时自动进入浏览器全屏
-  useEffect(() => {
-    if (!isLoaded || !supportsFullscreen || hasTriggeredAutoFullscreen || isBrowserFs) {
-      return;
-    }
-
-    const triggerFullscreen = async () => {
-      // 标记已触发，避免重复
-      setHasTriggeredAutoFullscreen(true);
-      sessionStorage.setItem(AUTO_FULLSCREEN_TRIGGERED_KEY, "true");
-      await enterBrowserFullscreen();
-    };
-
-    // 监听用户的首次交互
-    const handleInteraction = () => {
-      triggerFullscreen();
-      // 移除所有监听器
-      document.removeEventListener("click", handleInteraction);
-      document.removeEventListener("touchstart", handleInteraction);
-      document.removeEventListener("keydown", handleInteraction);
-      document.removeEventListener("scroll", handleInteraction, true);
-      document.removeEventListener("wheel", handleInteraction);
-      document.removeEventListener("touchmove", handleInteraction);
-    };
-
-    document.addEventListener("click", handleInteraction, { once: true });
-    document.addEventListener("touchstart", handleInteraction, { once: true });
-    document.addEventListener("keydown", handleInteraction, { once: true });
-    document.addEventListener("scroll", handleInteraction, { capture: true, once: true });
-    document.addEventListener("wheel", handleInteraction, { once: true });
-    document.addEventListener("touchmove", handleInteraction, { once: true });
-
-    return () => {
-      document.removeEventListener("click", handleInteraction);
-      document.removeEventListener("touchstart", handleInteraction);
-      document.removeEventListener("keydown", handleInteraction);
-      document.removeEventListener("scroll", handleInteraction, true);
-      document.removeEventListener("wheel", handleInteraction);
-      document.removeEventListener("touchmove", handleInteraction);
-    };
-  }, [isLoaded, supportsFullscreen, hasTriggeredAutoFullscreen, isBrowserFs]);
 
   // 监听浏览器全屏状态变化
   useEffect(() => {
@@ -174,24 +125,6 @@ export default function LeetCodeLayout({
       document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
     };
   }, []);
-
-  // 路由变化时保持全屏状态（从 localStorage 读取）并尝试进入浏览器全屏
-  useEffect(() => {
-    if (pathname !== prevPathnameRef.current) {
-      prevPathnameRef.current = pathname;
-      // 路由变化时，从 localStorage 重新读取全屏状态
-      const saved = localStorage.getItem(FULLSCREEN_KEY);
-      if (saved !== null) {
-        setIsFullscreen(saved === "true");
-      }
-      // 路由切换时，如果不在全屏状态，尝试进入全屏（需要用户手势触发，这里记录意图）
-      if (supportsFullscreen && !isBrowserFullscreen()) {
-        // 标记需要在下次用户交互时进入全屏
-        setHasTriggeredAutoFullscreen(false);
-        sessionStorage.removeItem(AUTO_FULLSCREEN_TRIGGERED_KEY);
-      }
-    }
-  }, [pathname, supportsFullscreen]);
 
   // 全屏模式时隐藏移动端导航栏
   useEffect(() => {
