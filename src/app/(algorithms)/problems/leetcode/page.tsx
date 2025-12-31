@@ -3,8 +3,10 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import Link from "next/link";
 import { Problem, DIFFICULTY_CONFIG, CATEGORIES, Category, FrontendRelevance, FRONTEND_RELEVANCE_CONFIG, Solution } from "../types";
 import { allProblems, getProblemsByCategory, getProblemById } from "../data";
@@ -552,6 +554,39 @@ export default function LeetCodePage() {
   // 有题目的分类
   const categoriesWithProblems = CATEGORIES.filter(c => categoryStats[c.id] > 0);
 
+  // Markdown 代码高亮组件
+  const markdownComponents: Components = {
+    code({ className, children, ...props }) {
+      const match = /language-(\w+)/.exec(className || "");
+      const codeString = String(children).replace(/\n$/, "");
+
+      // 如果有语言标识或者是多行代码，使用语法高亮
+      if (match || codeString.includes("\n")) {
+        return (
+          <SyntaxHighlighter
+            style={oneDark}
+            language={match?.[1] || "javascript"}
+            PreTag="div"
+            customStyle={{
+              margin: 0,
+              borderRadius: "0.5rem",
+              fontSize: "0.75rem",
+            }}
+          >
+            {codeString}
+          </SyntaxHighlighter>
+        );
+      }
+
+      // 行内代码
+      return (
+        <code className={className} {...props}>
+          {children}
+        </code>
+      );
+    },
+  };
+
   // ==================== 移动端布局 ====================
   if (isMobile) {
     return (
@@ -594,8 +629,55 @@ export default function LeetCodePage() {
           </div>
         </header>
 
+        {/* 顶部 Tab 导航 */}
+        <nav className="flex border-b border-zinc-800 bg-zinc-900 shrink-0">
+          <button
+            onClick={() => setMobileView("list")}
+            className={`flex-1 py-2.5 text-sm font-medium transition-colors border-b-2 ${
+              mobileView === "list"
+                ? "text-green-400 border-green-500"
+                : "text-zinc-500 border-transparent"
+            }`}
+          >
+            题目
+          </button>
+          <button
+            onClick={() => setMobileView("description")}
+            disabled={!selectedProblem}
+            className={`flex-1 py-2.5 text-sm font-medium transition-colors border-b-2 ${
+              mobileView === "description"
+                ? "text-green-400 border-green-500"
+                : "text-zinc-500 border-transparent"
+            } disabled:opacity-30`}
+          >
+            描述
+          </button>
+          <button
+            onClick={() => setMobileView("solution")}
+            disabled={!selectedProblem}
+            className={`flex-1 py-2.5 text-sm font-medium transition-colors border-b-2 ${
+              mobileView === "solution"
+                ? "text-green-400 border-green-500"
+                : "text-zinc-500 border-transparent"
+            } disabled:opacity-30`}
+          >
+            题解
+          </button>
+          <button
+            onClick={() => setMobileView("code")}
+            disabled={!selectedProblem}
+            className={`flex-1 py-2.5 text-sm font-medium transition-colors border-b-2 ${
+              mobileView === "code"
+                ? "text-green-400 border-green-500"
+                : "text-zinc-500 border-transparent"
+            } disabled:opacity-30`}
+          >
+            代码
+          </button>
+        </nav>
+
         {/* 移动端内容区域 */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden pb-safe">
           {/* 题目列表视图 */}
           {mobileView === "list" && (
             <div className="h-full flex flex-col">
@@ -707,9 +789,9 @@ export default function LeetCodePage() {
 
               {/* 题目内容 */}
               <div className="prose prose-invert prose-sm max-w-none prose-pre:bg-zinc-800 prose-pre:text-xs prose-code:text-green-400 prose-code:before:content-none prose-code:after:content-none">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{selectedProblem.description}</ReactMarkdown>
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{selectedProblem.examples}</ReactMarkdown>
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{selectedProblem.constraints}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{selectedProblem.description}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{selectedProblem.examples}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{selectedProblem.constraints}</ReactMarkdown>
               </div>
 
               {/* 提示 */}
@@ -820,7 +902,7 @@ export default function LeetCodePage() {
 
               {/* 解释 */}
               <div className="prose prose-invert prose-sm max-w-none prose-pre:bg-zinc-800 prose-pre:text-xs prose-code:text-green-400">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
                   {currentSolution?.explanation || selectedProblem.explanation}
                 </ReactMarkdown>
               </div>
@@ -829,9 +911,16 @@ export default function LeetCodePage() {
               {currentSolution?.code && (
                 <div className="mt-6">
                   <h3 className="text-sm font-medium text-zinc-400 mb-2">参考代码</h3>
-                  <pre className="bg-zinc-800 rounded-lg p-4 overflow-x-auto text-xs">
-                    <code className="text-green-400">{currentSolution.code}</code>
-                  </pre>
+                  <SyntaxHighlighter
+                    style={oneDark}
+                    language="javascript"
+                    customStyle={{
+                      borderRadius: "0.5rem",
+                      fontSize: "0.75rem",
+                    }}
+                  >
+                    {currentSolution.code}
+                  </SyntaxHighlighter>
                 </div>
               )}
             </div>
@@ -957,53 +1046,6 @@ export default function LeetCodePage() {
             </div>
           )}
         </div>
-
-        {/* 底部 Tab 导航 */}
-        <nav className="flex border-t border-zinc-800 bg-zinc-900 shrink-0 pb-safe">
-          <button
-            onClick={() => setMobileView("list")}
-            className={`flex-1 py-3 text-sm font-medium transition-colors ${
-              mobileView === "list"
-                ? "text-green-400"
-                : "text-zinc-500"
-            }`}
-          >
-            题目
-          </button>
-          <button
-            onClick={() => setMobileView("description")}
-            disabled={!selectedProblem}
-            className={`flex-1 py-3 text-sm font-medium transition-colors ${
-              mobileView === "description"
-                ? "text-green-400"
-                : "text-zinc-500"
-            } disabled:opacity-30`}
-          >
-            描述
-          </button>
-          <button
-            onClick={() => setMobileView("solution")}
-            disabled={!selectedProblem}
-            className={`flex-1 py-3 text-sm font-medium transition-colors ${
-              mobileView === "solution"
-                ? "text-green-400"
-                : "text-zinc-500"
-            } disabled:opacity-30`}
-          >
-            题解
-          </button>
-          <button
-            onClick={() => setMobileView("code")}
-            disabled={!selectedProblem}
-            className={`flex-1 py-3 text-sm font-medium transition-colors ${
-              mobileView === "code"
-                ? "text-green-400"
-                : "text-zinc-500"
-            } disabled:opacity-30`}
-          >
-            代码
-          </button>
-        </nav>
       </div>
     );
   }
@@ -1271,13 +1313,13 @@ export default function LeetCodePage() {
 
                   {/* 题目描述 */}
                   <div className="prose prose-invert prose-sm max-w-none prose-pre:bg-zinc-800 prose-pre:border prose-pre:border-zinc-700 prose-code:text-green-400 prose-code:before:content-none prose-code:after:content-none">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
                       {selectedProblem.description}
                     </ReactMarkdown>
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
                       {selectedProblem.examples}
                     </ReactMarkdown>
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
                       {selectedProblem.constraints}
                     </ReactMarkdown>
                   </div>
@@ -1394,7 +1436,7 @@ export default function LeetCodePage() {
 
                   {/* 详细解释 */}
                   <div className="prose prose-invert prose-sm max-w-none prose-pre:bg-zinc-800 prose-pre:border prose-pre:border-zinc-700 prose-code:text-green-400">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
                       {currentSolution?.explanation || selectedProblem.explanation}
                     </ReactMarkdown>
                   </div>

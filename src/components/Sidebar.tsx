@@ -97,7 +97,7 @@ export default function Sidebar({ groups }: SidebarProps) {
 
       {/* 侧边栏 */}
       <aside
-        className={`fixed left-0 top-0 z-50 h-screen w-64 border-r border-zinc-200 bg-white transition-transform duration-300 dark:border-zinc-800 dark:bg-zinc-900 lg:translate-x-0 lg:z-40 ${
+        className={`fixed left-0 top-0 z-50 h-screen w-72 border-r border-zinc-200 bg-white transition-transform duration-300 dark:border-zinc-800 dark:bg-zinc-900 lg:w-64 lg:translate-x-0 lg:z-40 ${
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -166,16 +166,17 @@ export default function Sidebar({ groups }: SidebarProps) {
 
                 {/* 二级目录 */}
                 {expandedGroups.includes(group.name) && group.routes.length > 0 && (
-                  <ul className="mt-1 ml-4 space-y-1 border-l border-zinc-200 pl-4 dark:border-zinc-700">
+                  <ul className="mt-1 ml-3 space-y-0.5 border-l-2 border-zinc-200 pl-3 dark:border-zinc-700">
                     {group.routes.map((route) => (
                       <li key={route.path}>
                         <Link
                           href={route.path}
-                          className={`block rounded-lg px-3 py-1.5 text-sm transition-colors ${
+                          className={`block rounded-lg px-3 py-2 text-sm transition-colors truncate ${
                             isActive(route.path)
                               ? "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400"
                               : "text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-500 dark:hover:bg-zinc-800 dark:hover:text-white"
                           }`}
+                          title={route.displayName}
                         >
                           {route.displayName}
                         </Link>

@@ -48,8 +48,8 @@ export function GroupPageLayout({
   const otherRoutes = routes.filter((r) => !r.difficulty);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col gap-8 bg-white px-8 py-16 dark:bg-black sm:px-16">
+    <div className="flex min-h-screen items-start sm:items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+      <main className="flex min-h-screen w-full max-w-3xl flex-col gap-4 sm:gap-8 bg-white px-4 py-6 sm:px-8 lg:px-16 sm:py-16 pb-safe dark:bg-black">
         {/* 返回链接 */}
         <Link
           href={backHref}
@@ -60,21 +60,21 @@ export function GroupPageLayout({
         </Link>
 
         {/* Header */}
-        <div className="flex items-center gap-4">
-          <span className="text-4xl">{icon}</span>
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <span className="text-3xl sm:text-4xl">{icon}</span>
+          <div className="min-w-0 flex-1">
+            <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-black dark:text-zinc-50 truncate">
               {title}
             </h1>
-            <p className="mt-1 text-zinc-600 dark:text-zinc-400">{subtitle}</p>
+            <p className="mt-0.5 sm:mt-1 text-sm sm:text-base text-zinc-600 dark:text-zinc-400 truncate">{subtitle}</p>
           </div>
-          <span className="ml-auto rounded-full bg-zinc-100 px-3 py-1 text-sm font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+          <span className="shrink-0 rounded-full bg-zinc-100 px-2.5 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
             {routes.length} 个
           </span>
         </div>
 
         {/* 路由列表 */}
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
           {beginnerRoutes.length > 0 && (
             <DifficultyGroup
               title="入门级"
@@ -132,29 +132,29 @@ function DifficultyGroup({
   };
 
   return (
-    <div className={`border-l-4 pl-4 ${colorClasses[color]}`}>
-      <div className="mb-3">
+    <div className={`border-l-4 pl-3 sm:pl-4 ${colorClasses[color]}`}>
+      <div className="mb-2 sm:mb-3">
         <h3 className="font-medium text-zinc-900 dark:text-zinc-100">{title}</h3>
-        {subtitle && <p className="text-sm text-zinc-500">{subtitle}</p>}
+        {subtitle && <p className="text-xs sm:text-sm text-zinc-500">{subtitle}</p>}
       </div>
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-2 sm:gap-3 sm:grid-cols-2">
         {routes.map((route) => (
           <Link
             key={route.path}
             href={route.path}
-            className="group flex items-center justify-between rounded-lg border border-zinc-200 p-3 transition-all hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-700 dark:hover:border-zinc-500 dark:hover:bg-zinc-800/50"
+            className="group flex items-center justify-between rounded-lg border border-zinc-200 p-2.5 sm:p-3 transition-all hover:border-zinc-400 hover:bg-zinc-50 active:scale-[0.98] dark:border-zinc-700 dark:hover:border-zinc-500 dark:hover:bg-zinc-800/50"
           >
-            <div className="flex flex-col">
-              <span className="font-medium text-zinc-900 dark:text-zinc-100">
+            <div className="flex flex-col min-w-0 flex-1">
+              <span className="font-medium text-sm sm:text-base text-zinc-900 dark:text-zinc-100 truncate">
                 {route.displayName}
               </span>
-              <span className="text-xs text-zinc-500 dark:text-zinc-400">
+              <span className="text-xs text-zinc-500 dark:text-zinc-400 truncate">
                 {route.path}
               </span>
             </div>
             {route.difficulty && (
               <span
-                className={`ml-2 shrink-0 rounded px-2 py-0.5 text-xs font-medium ${DIFFICULTY_CONFIG[route.difficulty].className}`}
+                className={`ml-2 shrink-0 rounded px-1.5 sm:px-2 py-0.5 text-xs font-medium ${DIFFICULTY_CONFIG[route.difficulty].className}`}
               >
                 {DIFFICULTY_CONFIG[route.difficulty].label}
               </span>

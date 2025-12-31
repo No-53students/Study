@@ -28,6 +28,8 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
 }
 
 /* 滚动条样式 */
@@ -65,5 +67,53 @@ body {
 
 .pt-safe {
   padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* 移动端触摸优化 */
+@media (max-width: 640px) {
+  /* 隐藏移动端滚动条 */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  * {
+    scrollbar-width: none;
+  }
+}
+
+/* 触摸反馈动画 */
+.touch-feedback {
+  transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+}
+
+.touch-feedback:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+/* 文本截断工具类 */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 移除 prose 中代码块的最小宽度限制，优化移动端显示 */
+.prose pre {
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.prose pre code {
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
