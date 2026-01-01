@@ -3,6 +3,69 @@
  * 用于构建前端算法学习路径系统
  */
 
+// ==================== 学习路径配置类型 ====================
+
+/**
+ * 路径难度等级
+ */
+export type PathDifficulty = "beginner" | "intermediate" | "advanced" | "expert";
+
+/**
+ * 学习路径阶段
+ */
+export interface PathStage {
+  id: string;
+  name: string;
+  description: string;
+  icon?: string; // 图标
+  days: PathDay[];
+  milestone?: string; // 阶段里程碑
+  checkpoints?: string[]; // 检查点
+}
+
+/**
+ * 学习路径中的一天
+ */
+export interface PathDay {
+  id?: string; // 可选的唯一标识
+  day?: number;
+  title?: string; // 标题
+  description?: string; // 描述
+  theme?: string;
+  focus?: string[];
+  estimatedMinutes?: number; // 预计学习时间
+  problems: ProblemReference[];
+  knowledgePoints?: string[]; // 知识点
+  tips?: string[];
+  review?: string[];
+}
+
+/**
+ * 问题引用
+ */
+export interface ProblemReference {
+  problemId: string;
+  name?: string; // 题目名称（可选，可从 problemId 查询）
+  isCore?: boolean; // 是否核心必做
+  timeLimit?: number; // 建议时间限制（分钟）
+  hint?: string; // 单个提示
+  hints?: string[]; // 多个提示
+}
+
+/**
+ * 完整学习路径配置
+ */
+export interface LearningPathConfig {
+  id: string;
+  name: string;
+  difficulty: PathDifficulty;
+  estimatedDays: number;
+  targetAudience: string[];
+  prerequisites: string[];
+  outcomes: string[];
+  stages: PathStage[];
+}
+
 // ==================== 学习路线相关类型 ====================
 
 /**

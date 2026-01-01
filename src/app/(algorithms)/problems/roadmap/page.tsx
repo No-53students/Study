@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { frontend50Path, calculatePathProgress } from "../data/roadmaps/frontend-50";
 import { PATH_DIFFICULTY_CONFIG } from "../types/roadmap";
+import { SmartRecommendations } from "../components/SmartRecommendations";
 
 // 本地存储 key
 const STORAGE_KEY = "algorithm-learning-progress";
@@ -125,7 +126,10 @@ export default function RoadmapPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-4xl px-3 sm:px-4 py-4 sm:py-8 pb-safe">
+      <main className="mx-auto max-w-7xl px-3 sm:px-4 py-4 sm:py-8 pb-safe">
+        <div className="lg:grid lg:grid-cols-[1fr,320px] lg:gap-6">
+          {/* 主内容区域 */}
+          <div className="max-w-4xl">
         {/* 路线信息卡片 */}
         <div className="mb-6 rounded-xl bg-gradient-to-br from-blue-500/10 via-indigo-500/10 to-purple-500/10 border border-blue-500/20 p-4 sm:p-6">
           <div className="flex items-start justify-between mb-4">
@@ -412,6 +416,20 @@ export default function RoadmapPage() {
               </div>
             );
           })}
+        </div>
+          </div>
+
+          {/* 智能推荐侧边栏 */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-20">
+              <SmartRecommendations completedProblems={completedProblems} />
+            </div>
+          </aside>
+        </div>
+
+        {/* 移动端智能推荐 */}
+        <div className="lg:hidden mt-8">
+          <SmartRecommendations completedProblems={completedProblems} />
         </div>
       </main>
     </div>

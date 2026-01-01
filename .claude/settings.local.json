@@ -28,7 +28,10 @@
       "Bash(node scripts/count-animations.js:*)",
       "Bash(rm:*)",
       "Bash(for file in src/app/\\\\\\(algorithms\\\\\\)/problems/data/*.ts)",
-      "Bash(node scripts/generate-icons.js:*)"
+      "Bash(node scripts/generate-icons.js:*)",
+      "Bash(curl:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs:*)"
     ],
     "deny": [],
     "ask": []

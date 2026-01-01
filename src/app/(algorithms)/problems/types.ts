@@ -46,7 +46,7 @@ export interface TestCase {
 }
 
 // 动画类型
-export type AnimationType = "two-pointers" | "array" | "linked-list" | "tree" | "matrix" | "graph";
+export type AnimationType = "two-pointers" | "array" | "linked-list" | "tree" | "matrix" | "graph" | "sliding-window" | "stack" | "hash-table";
 
 // 动画步骤基础接口
 export interface AnimationStepBase {
@@ -163,3 +163,562 @@ export const FRONTEND_RELEVANCE_CONFIG = {
     icon: "📖"
   },
 };
+
+// ==================== 深度讲解系统类型 ====================
+
+/**
+ * 算法直觉 - 帮助理解"为什么"用这个算法
+ */
+export interface AlgorithmIntuition {
+  /** 从题目中观察到什么关键特征 */
+  observation: string;
+  /** 这个特征对应什么算法模式 */
+  patternMatch: string;
+  /** 为什么这个方法有效的核心原理 */
+  whyItWorks: string;
+  /** 形象的比喻帮助记忆 */
+  metaphor?: string;
+}
+
+/**
+ * 思维过程步骤 - 展示从0到1的推导过程
+ */
+export interface ThinkingStep {
+  /** 步骤编号 */
+  step: number;
+  /** 标题 */
+  title: string;
+  /** 这一步在思考什么 */
+  thought: string;
+  /** 做出的决策或行动 */
+  action: string;
+  /** 对应的代码片段（可选） */
+  codeSnippet?: string;
+  /** 高亮代码行号（可选） */
+  codeLines?: number[];
+}
+
+/**
+ * 代码逐行解析
+ */
+export interface CodeWalkthrough {
+  /** 行号范围 [起始行, 结束行] */
+  lineRange: [number, number];
+  /** 这段代码的解释 */
+  explanation: string;
+  /** 重点标记（可选） */
+  keyPoint?: string;
+  /** 这行容易犯的错误（可选） */
+  commonMistake?: string;
+}
+
+/**
+ * 复杂度深度分析
+ */
+export interface ComplexityAnalysis {
+  /** 时间复杂度详细分解 */
+  timeBreakdown: string;
+  /** 空间复杂度详细分解 */
+  spaceBreakdown: string;
+  /** 最优情况（可选） */
+  bestCase?: string;
+  /** 最差情况（可选） */
+  worstCase?: string;
+  /** 为什么是这个复杂度 */
+  reasoning?: string;
+}
+
+/**
+ * 相似题型对比
+ */
+export interface PatternComparison {
+  /** 相似题目ID */
+  problemId: string;
+  /** 题目标题 */
+  title: string;
+  /** 相似点 */
+  similarity: string;
+  /** 不同点 */
+  difference: string;
+  /** 学习建议 */
+  tip?: string;
+}
+
+/**
+ * 常见错误
+ */
+export interface CommonMistake {
+  /** 错误类型 */
+  type: "boundary" | "logic" | "complexity" | "syntax" | "edge-case";
+  /** 错误描述 */
+  description: string;
+  /** 错误代码 */
+  wrongCode: string;
+  /** 正确代码 */
+  correctCode: string;
+  /** 为什么会犯这个错 */
+  whyWrong: string;
+  /** 如何避免 */
+  howToAvoid: string;
+}
+
+/**
+ * 变体练习
+ */
+export interface Variation {
+  /** 变体描述 */
+  description: string;
+  /** 难度变化 */
+  difficultyChange: "easier" | "same" | "harder";
+  /** 需要修改的思路 */
+  modification: string;
+  /** 关联题目ID（可选） */
+  relatedProblemId?: string;
+}
+
+/**
+ * 深度讲解 - 完整的讲解体系
+ */
+export interface DeepExplanation {
+  /** 算法直觉 */
+  intuition: AlgorithmIntuition;
+  /** 思维过程 */
+  thinkingProcess: ThinkingStep[];
+  /** 代码逐行解析 */
+  codeWalkthrough: CodeWalkthrough[];
+  /** 复杂度深度分析 */
+  complexityAnalysis: ComplexityAnalysis;
+  /** 相似题型对比 */
+  patternComparisons?: PatternComparison[];
+  /** 常见错误 */
+  commonMistakes?: CommonMistake[];
+  /** 变体练习 */
+  variations?: Variation[];
+  /** 面试技巧 */
+  interviewTips?: string[];
+  /** 前端应用场景 */
+  frontendApplications?: string[];
+}
+
+// ==================== 思维引导系统类型 ====================
+
+/**
+ * 苏格拉底式提问
+ */
+export interface SocraticQuestion {
+  /** 阶段 */
+  stage: "understand" | "plan" | "code" | "optimize";
+  /** 问题 */
+  question: string;
+  /** 提示（折叠显示） */
+  hint: string;
+  /** 答案（折叠显示） */
+  answer: string;
+  /** 这个问题想让你发现什么 */
+  insight: string;
+}
+
+/**
+ * 逐步揭示内容
+ */
+export interface ProgressiveReveal {
+  /** 揭示级别 1-5 */
+  level: 1 | 2 | 3 | 4 | 5;
+  /** 揭示内容 */
+  content: string;
+  /** 代码片段（可选） */
+  codeFragment?: string;
+}
+
+/**
+ * 思维检查点
+ */
+export interface ThinkingCheckpoint {
+  /** 问题 */
+  question: string;
+  /** 选项 */
+  options: string[];
+  /** 正确答案索引 */
+  correctAnswer: number;
+  /** 解释 */
+  explanation: string;
+}
+
+/**
+ * 思维引导配置
+ */
+export interface GuidedThinking {
+  /** 苏格拉底式提问序列 */
+  socraticQuestions: SocraticQuestion[];
+  /** 逐步揭示内容 */
+  progressiveReveal: ProgressiveReveal[];
+  /** 思维检查点 */
+  checkpoints?: ThinkingCheckpoint[];
+}
+
+// ==================== 扩展的题目定义 ====================
+
+/**
+ * 增强的题目定义（包含深度讲解）
+ */
+export interface EnhancedProblem extends Problem {
+  /** 深度讲解（可选，逐步添加） */
+  deepExplanation?: DeepExplanation;
+  /** 思维引导（可选，逐步添加） */
+  guidedThinking?: GuidedThinking;
+  /** 核心知识点 */
+  coreKnowledge?: string[];
+  /** 前置知识 */
+  prerequisites?: string[];
+  /** 适用的解题模板ID */
+  templateIds?: string[];
+}
+
+// ==================== 知识图谱系统类型 ====================
+
+/**
+ * 知识节点类型
+ */
+export type KnowledgeNodeType =
+  | "concept"     // 概念节点（如：双指针、滑动窗口）
+  | "technique"   // 技巧节点（如：快慢指针、哈希计数）
+  | "pattern"     // 模式节点（如：回溯模板、BFS模板）
+  | "problem"     // 题目节点
+  | "category";   // 分类节点
+
+/**
+ * 知识节点
+ */
+export interface KnowledgeNode {
+  /** 节点ID */
+  id: string;
+  /** 节点类型 */
+  type: KnowledgeNodeType;
+  /** 显示名称 */
+  name: string;
+  /** 描述 */
+  description?: string;
+  /** 难度等级 1-5 */
+  difficulty?: 1 | 2 | 3 | 4 | 5;
+  /** 重要程度 1-5 */
+  importance?: 1 | 2 | 3 | 4 | 5;
+  /** 相关标签 */
+  tags?: string[];
+  /** 颜色（用于可视化） */
+  color?: string;
+  /** 图标 */
+  icon?: string;
+  /** 关联的题目ID（仅当type为problem时） */
+  problemId?: string;
+  /** 学习状态 */
+  status?: "locked" | "available" | "in-progress" | "mastered";
+}
+
+/**
+ * 边关系类型
+ */
+export type EdgeRelationType =
+  | "prerequisite"   // 前置知识
+  | "extends"        // 扩展/进阶
+  | "similar"        // 相似/同类
+  | "applies"        // 应用于
+  | "contains"       // 包含
+  | "variant";       // 变体
+
+/**
+ * 知识边（节点之间的关系）
+ */
+export interface KnowledgeEdge {
+  /** 源节点ID */
+  source: string;
+  /** 目标节点ID */
+  target: string;
+  /** 关系类型 */
+  relation: EdgeRelationType;
+  /** 关系描述 */
+  description?: string;
+  /** 关系强度 1-5 */
+  strength?: 1 | 2 | 3 | 4 | 5;
+}
+
+/**
+ * 学习路径
+ */
+export interface LearningPath {
+  /** 路径ID */
+  id: string;
+  /** 路径名称 */
+  name: string;
+  /** 路径描述 */
+  description: string;
+  /** 目标技能 */
+  targetSkills: string[];
+  /** 节点序列（按学习顺序） */
+  nodes: string[];
+  /** 预计学习时间（分钟） */
+  estimatedTime?: number;
+  /** 难度等级 */
+  difficulty: "beginner" | "intermediate" | "advanced";
+}
+
+/**
+ * 知识图谱配置
+ */
+export interface KnowledgeGraph {
+  /** 所有节点 */
+  nodes: KnowledgeNode[];
+  /** 所有边 */
+  edges: KnowledgeEdge[];
+  /** 学习路径（可选） */
+  learningPaths?: LearningPath[];
+}
+
+// ==================== 学习路线图系统类型 ====================
+
+/**
+ * 路线图中的题目
+ */
+export interface RoadmapProblem {
+  /** 题目ID */
+  id: string;
+  /** 为什么选这道题 */
+  reason: string;
+  /** 涉及的技术点 */
+  techniques: string[];
+  /** 相似题目（用于巩固） */
+  similarProblems?: string[];
+}
+
+/**
+ * 学习日程
+ */
+export interface RoadmapDay {
+  /** 第几天 */
+  day: number;
+  /** 当日主题 */
+  theme: string;
+  /** 当日题目列表 */
+  problems: RoadmapProblem[];
+  /** 当日要点 */
+  keyPoints: string[];
+}
+
+/**
+ * 学习阶段
+ */
+export interface RoadmapStage {
+  /** 阶段ID */
+  id: string;
+  /** 第几周 */
+  week: number;
+  /** 阶段名称 */
+  name: string;
+  /** 阶段描述 */
+  description: string;
+  /** 前置阶段ID列表 */
+  prerequisites: string[];
+  /** 本阶段学习目标 */
+  goals: string[];
+  /** 每日安排 */
+  days: RoadmapDay[];
+}
+
+/**
+ * 完整学习路线
+ */
+export interface Roadmap {
+  /** 路线ID */
+  id: string;
+  /** 路线名称 */
+  name: string;
+  /** 路线描述 */
+  description: string;
+  /** 总题数 */
+  totalProblems: number;
+  /** 预计周数 */
+  estimatedWeeks: number;
+  /** 难度等级 */
+  difficulty: "beginner" | "intermediate" | "advanced";
+  /** 学习阶段列表 */
+  stages: RoadmapStage[];
+  /** 适用人群 */
+  targetAudience?: string;
+  /** 图标 */
+  icon?: string;
+}
+
+/**
+ * 用户路线图进度
+ */
+export interface RoadmapProgress {
+  /** 路线ID */
+  roadmapId: string;
+  /** 已完成题目ID列表 */
+  completedProblems: string[];
+  /** 当前阶段索引 */
+  currentStageIndex: number;
+  /** 当前日期索引 */
+  currentDayIndex: number;
+  /** 开始日期 */
+  startDate: string;
+  /** 最后活跃日期 */
+  lastActiveDate: string;
+  /** 连续学习天数 */
+  streak: number;
+}
+
+// ==================== 解题模板库系统类型 ====================
+
+/**
+ * 模板分类
+ */
+export type TemplateCategory =
+  | "two-pointers"       // 双指针
+  | "sliding-window"     // 滑动窗口
+  | "binary-search"      // 二分查找
+  | "dfs"                // 深度优先搜索
+  | "bfs"                // 广度优先搜索
+  | "backtracking"       // 回溯
+  | "dynamic-programming"// 动态规划
+  | "greedy"             // 贪心
+  | "tree"               // 树
+  | "graph"              // 图
+  | "linked-list"        // 链表
+  | "stack-queue"        // 栈和队列
+  | "hash-table"         // 哈希表
+  | "heap";              // 堆
+
+/**
+ * 模板变量
+ */
+export interface TemplateVariable {
+  /** 变量名 */
+  name: string;
+  /** 变量描述 */
+  description: string;
+  /** 使用示例 */
+  example: string;
+}
+
+/**
+ * 代码行注释
+ */
+export interface LineComment {
+  /** 行号 */
+  line: number;
+  /** 注释内容 */
+  text: string;
+}
+
+/**
+ * 模板思维步骤
+ */
+export interface TemplateThinkingStep {
+  /** 步骤序号 */
+  step: number;
+  /** 要问自己的问题 */
+  question: string;
+  /** 对应的行动 */
+  action: string;
+  /** 对应模板的行号 */
+  codeMapping?: number[];
+}
+
+/**
+ * 模板错误示例
+ */
+export interface TemplateMistake {
+  /** 错误描述 */
+  description: string;
+  /** 错误代码 */
+  wrongCode: string;
+  /** 正确代码 */
+  correctCode: string;
+  /** 解释 */
+  explanation: string;
+}
+
+/**
+ * 模板变体
+ */
+export interface TemplateVariant {
+  /** 变体名称 */
+  name: string;
+  /** 适用场景 */
+  scenario: string;
+  /** 需要修改的部分 */
+  modification: string;
+}
+
+/**
+ * 算法模板
+ */
+export interface AlgorithmTemplate {
+  /** 模板ID */
+  id: string;
+  /** 模板名称 */
+  name: string;
+  /** 模板分类 */
+  category: TemplateCategory;
+  /** 图标 */
+  icon: string;
+
+  /** 识别模式 */
+  recognition: {
+    /** 关键词 */
+    keywords: string[];
+    /** 适用场景描述 */
+    patterns: string[];
+    /** 不适用的情况 */
+    antiPatterns: string[];
+  };
+
+  /** 代码模板 */
+  template: {
+    /** 模板代码 */
+    code: string;
+    /** 可替换的变量 */
+    variables: TemplateVariable[];
+    /** 每行注释 */
+    comments: LineComment[];
+  };
+
+  /** 思维步骤 */
+  thinkingSteps: TemplateThinkingStep[];
+
+  /** 常见错误 */
+  commonMistakes: TemplateMistake[];
+
+  /** 适用题目ID列表 */
+  applicableProblems: string[];
+
+  /** 复杂度 */
+  complexity: {
+    time: string;
+    space: string;
+    explanation: string;
+  };
+
+  /** 变体 */
+  variants: TemplateVariant[];
+}
+
+/**
+ * 算法决策树节点
+ */
+export interface DecisionNode {
+  /** 问题 */
+  question: string;
+  /** 选项 */
+  options: DecisionOption[];
+}
+
+/**
+ * 决策选项
+ */
+export interface DecisionOption {
+  /** 答案 */
+  answer: string;
+  /** 下一步（节点或模板ID） */
+  next: DecisionNode | string;
+}

@@ -8,18 +8,28 @@ import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import Link from "next/link";
-import { Problem, DIFFICULTY_CONFIG, CATEGORIES, Category, FrontendRelevance, FRONTEND_RELEVANCE_CONFIG, Solution } from "../types";
+import { Problem, DIFFICULTY_CONFIG, CATEGORIES, Category, FrontendRelevance, FRONTEND_RELEVANCE_CONFIG, Solution, DeepExplanation, GuidedThinking } from "../types";
 import { allProblems, getProblemsByCategory, getProblemById } from "../data";
+import { deepExplanations, guidedThinkings } from "../data/deep-explanations";
+import { DeepExplanationPanel } from "../components/deep-explanation";
 import {
   TwoPointersAnimation,
   LinkedListAnimation,
   TreeAnimation,
   MatrixAnimation,
+  SlidingWindowAnimation,
+  StackAnimation,
+  HashTableAnimation,
+  CodeSyncDemo,
   type TwoPointersStep,
   type LinkedListStep,
   type TreeStep,
   type MatrixStep,
+  type SlidingWindowStep,
+  type StackStep,
+  type HashTableStep,
 } from "../components/animations";
+import { getCodeSyncAnimationsByProblemId } from "../data/code-sync-animations";
 
 // 动态导入 Monaco Editor
 const Editor = dynamic(() => import("@monaco-editor/react"), {
@@ -129,9 +139,13 @@ export default function LeetCodePage() {
   const [currentHintIndex, setCurrentHintIndex] = useState(0);
 
   // Tab 状态
-  const [leftTab, setLeftTab] = useState<"description" | "solution">("description");
+  const [leftTab, setLeftTab] = useState<"description" | "solution" | "deep">("description");
   const [bottomTab, setBottomTab] = useState<"testcases" | "console">("testcases");
   const [selectedSolutionIndex, setSelectedSolutionIndex] = useState(0);
+
+  // 获取当前题目的深度讲解数据
+  const currentDeepExplanation = selectedProblem ? deepExplanations[selectedProblem.id] : undefined;
+  const currentGuidedThinking = selectedProblem ? guidedThinkings[selectedProblem.id] : undefined;
 
   // 统一解法列表
   const allSolutions = useMemo<Solution[]>(() => {
@@ -874,6 +888,37 @@ export default function LeetCodePage() {
                       title={currentSolution.animation.title || "矩阵演示"}
                     />
                   )}
+                  {currentSolution.animation.type === "sliding-window" && (
+                    <SlidingWindowAnimation
+                      steps={currentSolution.animation.steps as SlidingWindowStep[]}
+                      title={currentSolution.animation.title || "滑动窗口演示"}
+                    />
+                  )}
+                  {currentSolution.animation.type === "stack" && (
+                    <StackAnimation
+                      steps={currentSolution.animation.steps as StackStep[]}
+                      title={currentSolution.animation.title || "栈操作演示"}
+                    />
+                  )}
+                  {currentSolution.animation.type === "hash-table" && (
+                    <HashTableAnimation
+                      steps={currentSolution.animation.steps as HashTableStep[]}
+                      title={currentSolution.animation.title || "哈希表演示"}
+                    />
+                  )}
+                </div>
+              )}
+
+              {/* 代码同步动画（增强版动画，显示代码执行过程） */}
+              {selectedProblem && getCodeSyncAnimationsByProblemId(selectedProblem.id).length > 0 && (
+                <div className="mb-6 space-y-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-zinc-300">代码同步动画</span>
+                    <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-xs">新功能</span>
+                  </div>
+                  {getCodeSyncAnimationsByProblemId(selectedProblem.id).map((animation) => (
+                    <CodeSyncDemo key={animation.id} data={animation} layout="stacked" />
+                  ))}
                 </div>
               )}
 
@@ -1235,6 +1280,19 @@ export default function LeetCodePage() {
               >
                 题解
               </button>
+              {currentDeepExplanation && (
+                <button
+                  onClick={() => setLeftTab("deep")}
+                  className={`px-4 py-2 text-sm font-medium transition-colors flex items-center gap-1 ${
+                    leftTab === "deep"
+                      ? "text-white border-b-2 border-purple-500"
+                      : "text-zinc-400 hover:text-white"
+                  }`}
+                >
+                  <span className="text-lg">🎓</span>
+                  深度讲解
+                </button>
+              )}
             </div>
 
             {/* 左侧内容 */}
@@ -1339,7 +1397,7 @@ export default function LeetCodePage() {
                     </div>
                   )}
                 </div>
-              ) : (
+              ) : leftTab === "solution" ? (
                 <div className="p-4">
                   <h2 className="text-lg font-semibold mb-4">解题思路</h2>
 
@@ -1412,6 +1470,37 @@ export default function LeetCodePage() {
                           title={currentSolution.animation.title || "矩阵演示"}
                         />
                       )}
+                      {currentSolution.animation.type === "sliding-window" && (
+                        <SlidingWindowAnimation
+                          steps={currentSolution.animation.steps as SlidingWindowStep[]}
+                          title={currentSolution.animation.title || "滑动窗口演示"}
+                        />
+                      )}
+                      {currentSolution.animation.type === "stack" && (
+                        <StackAnimation
+                          steps={currentSolution.animation.steps as StackStep[]}
+                          title={currentSolution.animation.title || "栈操作演示"}
+                        />
+                      )}
+                      {currentSolution.animation.type === "hash-table" && (
+                        <HashTableAnimation
+                          steps={currentSolution.animation.steps as HashTableStep[]}
+                          title={currentSolution.animation.title || "哈希表演示"}
+                        />
+                      )}
+                    </div>
+                  )}
+
+                  {/* 代码同步动画（增强版动画，显示代码执行过程） */}
+                  {selectedProblem && getCodeSyncAnimationsByProblemId(selectedProblem.id).length > 0 && (
+                    <div className="mb-6 space-y-4">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-zinc-300">代码同步动画</span>
+                        <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-xs">新功能</span>
+                      </div>
+                      {getCodeSyncAnimationsByProblemId(selectedProblem.id).map((animation) => (
+                        <CodeSyncDemo key={animation.id} data={animation} layout="split" />
+                      ))}
                     </div>
                   )}
 
@@ -1443,7 +1532,17 @@ export default function LeetCodePage() {
                     </div>
                   )}
                 </div>
-              )}
+              ) : leftTab === "deep" && currentDeepExplanation ? (
+                <div className="p-4">
+                  <DeepExplanationPanel
+                    explanation={currentDeepExplanation}
+                    guidedThinking={currentGuidedThinking}
+                    code={currentSolution?.code || selectedProblem.solution}
+                    timeComplexity={currentSolution?.timeComplexity || selectedProblem.timeComplexity}
+                    spaceComplexity={currentSolution?.spaceComplexity || selectedProblem.spaceComplexity}
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
 
