@@ -31,7 +31,16 @@
       "Bash(node scripts/generate-icons.js:*)",
       "Bash(curl:*)",
       "Bash(lsof:*)",
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "Bash(du -h:*)",
+      "Bash(tail:*)",
+      "Bash(for dir in two-pointers sliding-window backtracking dynamic-programming bit-manipulation graph heap)",
+      "Bash(do)",
+      "Bash(echo:*)",
+      "Bash(if [ -f \"/Users/wangguorong/Study/next/my-app/src/app/\\(algorithms\\)/$dir/page.tsx\" ])",
+      "Bash(then)",
+      "Bash(else)",
+      "Bash(fi)"
     ],
     "deny": [],
     "ask": []

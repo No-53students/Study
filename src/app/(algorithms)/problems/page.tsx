@@ -83,8 +83,8 @@ export default function ProblemsPage() {
           </div>
         </Link>
 
-        {/* 工具入口 - 模板库、实战案例、知识图谱、LeetCode练习 */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+        {/* 工具入口 - 模板库、实战案例、知识图谱、LeetCode练习、JS API */}
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mb-6 sm:mb-8">
           <Link
             href="/concepts/templates"
             className="group rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 p-3 sm:p-4 hover:border-purple-400/40 hover:shadow-lg hover:shadow-purple-500/10 active:scale-[0.99] transition-all"
@@ -146,6 +146,22 @@ export default function ProblemsPage() {
                   LeetCode 练习
                 </h3>
                 <p className="text-xs text-zinc-500">沉浸式刷题</p>
+              </div>
+            </div>
+          </Link>
+          <Link
+            href="/problems/js-api"
+            className="group rounded-xl bg-gradient-to-br from-teal-500/10 to-emerald-500/10 border border-teal-500/20 p-3 sm:p-4 hover:border-teal-400/40 hover:shadow-lg hover:shadow-teal-500/10 active:scale-[0.99] transition-all"
+          >
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-lg bg-gradient-to-br from-teal-500 to-emerald-600 text-xl sm:text-2xl shadow-lg shadow-teal-500/20">
+                📖
+              </div>
+              <div>
+                <h3 className="font-semibold text-sm sm:text-base group-hover:text-teal-400 transition-colors">
+                  JS API 速查
+                </h3>
+                <p className="text-xs text-zinc-500">50+ 常用方法</p>
               </div>
             </div>
           </Link>
