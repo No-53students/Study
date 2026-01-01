@@ -170,7 +170,7 @@ const ROUTES_METADATA: Record<string, RouteMetadata> = {
   animations: { difficulty: "beginner", module: "algorithms", order: 243 },
   "js-api": { difficulty: "beginner", module: "algorithms", order: 244 },
   "knowledge-graph": { difficulty: "beginner", module: "algorithms", order: 245 },
-  "题库": { difficulty: "intermediate", module: "algorithms", order: 246 },
+  categories: { difficulty: "beginner", module: "algorithms", order: 246 },
 
   // ==========================================
   // 编程题模块 (301-400)
@@ -275,7 +275,7 @@ const VIRTUAL_GROUP_MAPPING: Record<string, {
       if (path === "/problems") return true;
       if (path.startsWith("/problems/")) {
         const subPath = path.replace("/problems/", "").split("/")[0];
-        return ["leetcode", "roadmap", "cases", "templates"].includes(subPath);
+        return ["leetcode", "roadmap", "cases", "templates", "categories"].includes(subPath);
       }
       return false;
     },
@@ -285,7 +285,6 @@ const VIRTUAL_GROUP_MAPPING: Record<string, {
     routeFilter: (path, name) => {
       // 学习资源相关
       if (path === "/concepts" || path.startsWith("/concepts/")) return true;
-      if (path === "/题库") return true;
       if (path.startsWith("/problems/")) {
         const subPath = path.replace("/problems/", "").split("/")[0];
         return ["animation-demo", "animations", "js-api", "knowledge-graph"].includes(subPath);
@@ -464,7 +463,7 @@ function formatDisplayName(name: string): string {
     animations: "算法动画",
     "js-api": "JS API 手册",
     "knowledge-graph": "知识图谱",
-    "题库": "LeetCode 题库",
+    categories: "算法分类",
     // 编程题
     "interview-questions": "前端编程挑战",
   };

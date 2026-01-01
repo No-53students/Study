@@ -39,7 +39,7 @@ function useForceLayout(
   useEffect(() => {
     if (nodes.length === 0) return;
 
-    // 初始化位置：按类型分层
+    // 初始化位置：按类型分层，增加间距
     const newPositions = new Map<string, { x: number; y: number }>();
     const typeGroups: Record<string, KnowledgeNode[]> = {};
 
@@ -57,31 +57,39 @@ function useForceLayout(
 
       nodesInLayer.forEach((node, nodeIndex) => {
         newPositions.set(node.id, {
-          x: layerWidth * (nodeIndex + 1) + (Math.random() - 0.5) * 30,
-          y: layerHeight * (layerIndex + 1) + (Math.random() - 0.5) * 30,
+          x: layerWidth * (nodeIndex + 1) + (Math.random() - 0.5) * 50,
+          y: layerHeight * (layerIndex + 1) + (Math.random() - 0.5) * 50,
         });
       });
     });
 
-    // 简单的力迭代
-    for (let i = 0; i < 50; i++) {
+    // 力迭代 - 增加迭代次数和斥力
+    for (let i = 0; i < 100; i++) {
       nodes.forEach(node => {
         const pos = newPositions.get(node.id)!;
         let fx = 0, fy = 0;
 
-        // 节点间斥力
+        // 节点间斥力 - 增大斥力常数
         nodes.forEach(other => {
           if (other.id === node.id) return;
           const otherPos = newPositions.get(other.id)!;
           const dx = pos.x - otherPos.x;
           const dy = pos.y - otherPos.y;
           const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-          const force = 2000 / (dist * dist);
-          fx += (dx / dist) * force;
-          fy += (dy / dist) * force;
+          // 增加斥力，设置最小距离
+          const minDist = 120;
+          if (dist < minDist) {
+            const force = 8000 / (dist * dist);
+            fx += (dx / dist) * force;
+            fy += (dy / dist) * force;
+          } else {
+            const force = 4000 / (dist * dist);
+            fx += (dx / dist) * force;
+            fy += (dy / dist) * force;
+          }
         });
 
-        // 边的引力
+        // 边的引力 - 减小引力
         edges.forEach(edge => {
           let otherId: string | null = null;
           if (edge.source === node.id) otherId = edge.target;
@@ -94,17 +102,19 @@ function useForceLayout(
           const dx = otherPos.x - pos.x;
           const dy = otherPos.y - pos.y;
           const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-          const force = dist * 0.01;
+          // 理想距离
+          const idealDist = 150;
+          const force = (dist - idealDist) * 0.005;
           fx += (dx / dist) * force;
           fy += (dy / dist) * force;
         });
 
-        // 边界约束
-        const padding = 80;
-        if (pos.x < padding) fx += 5;
-        if (pos.x > width - padding) fx -= 5;
-        if (pos.y < padding) fy += 5;
-        if (pos.y > height - padding) fy -= 5;
+        // 边界约束 - 增大边距
+        const padding = 100;
+        if (pos.x < padding) fx += 10;
+        if (pos.x > width - padding) fx -= 10;
+        if (pos.y < padding) fy += 10;
+        if (pos.y > height - padding) fy -= 10;
 
         newPositions.set(node.id, {
           x: pos.x + fx * 0.1,
@@ -218,7 +228,7 @@ export default function KnowledgeGraphPage() {
       if (containerRef.current) {
         setDimensions({
           width: containerRef.current.offsetWidth,
-          height: Math.max(500, window.innerHeight - 200),
+          height: Math.max(700, window.innerHeight - 180),
         });
       }
     };

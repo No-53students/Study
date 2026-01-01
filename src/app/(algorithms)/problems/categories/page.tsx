@@ -1,15 +1,8 @@
 import Link from "next/link";
+import { CATEGORIES } from "../types";
+import { getProblemsByCategory } from "../data";
 
-// 题库分类数据
-const problemCategories = [
-  { id: "array-string", name: "数组 / 字符串", icon: "📝", file: "数组-字符串.js" },
-  { id: "two-pointers", name: "双指针", icon: "👆", file: "双指针.js" },
-  { id: "sliding-window", name: "滑动窗口", icon: "🪟", file: "滑动窗口.js" },
-  { id: "matrix", name: "矩阵", icon: "🔢", file: "矩阵.js" },
-  { id: "hash-table", name: "哈希表", icon: "#️⃣", file: "哈希表.js" },
-];
-
-export default function ProblemBankPage() {
+export default function CategoriesPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 text-white">
       {/* 顶部导航 */}
@@ -32,7 +25,7 @@ export default function ProblemBankPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                 </svg>
               </div>
-              <h1 className="text-base sm:text-lg font-bold">LeetCode 题库</h1>
+              <h1 className="text-base sm:text-lg font-bold">算法分类</h1>
             </div>
           </div>
         </div>
@@ -56,33 +49,34 @@ export default function ProblemBankPage() {
 
         {/* 分类卡片 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {problemCategories.map((category) => (
-            <div
-              key={category.id}
-              className="group rounded-xl bg-zinc-900/80 border border-zinc-800 p-4 sm:p-5 hover:border-violet-500/30 transition-all"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-800 text-2xl group-hover:bg-violet-500/20 transition-colors">
-                  {category.icon}
+          {CATEGORIES.map((category) => {
+            const problems = getProblemsByCategory(category.id);
+            return (
+              <Link
+                key={category.id}
+                href={`/problems/category/${category.id}`}
+                className="group rounded-xl bg-zinc-900/80 border border-zinc-800 p-4 sm:p-5 hover:border-violet-500/30 hover:bg-zinc-800/50 transition-all"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-800 text-2xl group-hover:bg-violet-500/20 transition-colors">
+                    {category.icon}
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-base group-hover:text-violet-400 transition-colors">
+                      {category.name}
+                    </h3>
+                    <p className="text-xs text-zinc-500">{category.description}</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-base group-hover:text-violet-400 transition-colors">
-                    {category.name}
-                  </h3>
-                  <p className="text-xs text-zinc-500">{category.file}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-zinc-500">{problems.length} 道题目</span>
+                  <span className="text-xs text-violet-400 group-hover:text-violet-300 transition-colors">
+                    查看题目 →
+                  </span>
                 </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-zinc-500">数据文件</span>
-                <Link
-                  href={`/problems/category/${category.id}`}
-                  className="text-xs text-violet-400 hover:text-violet-300 transition-colors"
-                >
-                  查看题目 →
-                </Link>
-              </div>
-            </div>
-          ))}
+              </Link>
+            );
+          })}
         </div>
 
         {/* 快捷入口 */}
