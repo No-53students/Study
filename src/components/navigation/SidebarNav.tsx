@@ -28,7 +28,7 @@ interface Category {
 const categories: Category[] = [
   { id: "home", name: "首页", groups: [], color: "blue" },
   { id: "react", name: "React", groups: ["hooks", "react-basics"], color: "cyan" },
-  { id: "algorithms", name: "算法", groups: ["algorithms", "interview"], color: "emerald" },
+  { id: "algorithms", name: "算法", groups: ["data-structures", "algorithm-techniques", "problems", "learning-resources", "interview"], color: "emerald" },
   { id: "tools", name: "工具", groups: [], color: "amber" },
 ];
 
@@ -139,15 +139,32 @@ export default function SidebarNav({ groups }: SidebarNavProps) {
       return;
     }
 
+    // 优先精确匹配路由，避免路径前缀匹配导致的错误
     for (const category of categories) {
       if (category.groups.length === 0) continue;
       const categoryGroups = groups.filter(g => category.groups.includes(g.name));
       for (const group of categoryGroups) {
-        if (pathname.startsWith(group.path) || group.routes.some(r => pathname === r.path)) {
+        // 先检查精确路由匹配
+        if (group.routes.some(r => pathname === r.path)) {
           setActiveCategory(category.id);
-          if (!expandedGroups.includes(group.name)) {
-            setExpandedGroups(prev => [...prev, group.name]);
-          }
+          setExpandedGroups(prev =>
+            prev.includes(group.name) ? prev : [...prev, group.name]
+          );
+          return;
+        }
+      }
+    }
+
+    // 如果没有精确匹配，再检查路径前缀
+    for (const category of categories) {
+      if (category.groups.length === 0) continue;
+      const categoryGroups = groups.filter(g => category.groups.includes(g.name));
+      for (const group of categoryGroups) {
+        if (pathname.startsWith(group.path + "/") || pathname === group.path) {
+          setActiveCategory(category.id);
+          setExpandedGroups(prev =>
+            prev.includes(group.name) ? prev : [...prev, group.name]
+          );
           return;
         }
       }

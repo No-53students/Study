@@ -130,20 +130,47 @@ const ROUTES_METADATA: Record<string, RouteMetadata> = {
   "controlled-uncontrolled": { difficulty: "advanced", module: "components", order: 125 },
 
   // ==========================================
-  // 算法与数据结构模块 (201-300)
+  // 数据结构模块 (201-210)
   // ==========================================
-  // 入门级 - 基础数据结构 (201-210)
   stack: { difficulty: "beginner", module: "algorithms", order: 201 },
   queue: { difficulty: "beginner", module: "algorithms", order: 202 },
   "linked-list": { difficulty: "beginner", module: "algorithms", order: 203 },
   "hash-table": { difficulty: "beginner", module: "algorithms", order: 204 },
-  // 中级 - 树与图 (211-220)
-  "binary-tree": { difficulty: "intermediate", module: "algorithms", order: 211 },
-  // 中级 - 排序与搜索 (221-230)
-  sorting: { difficulty: "intermediate", module: "algorithms", order: 221 },
-  searching: { difficulty: "intermediate", module: "algorithms", order: 222 },
-  // 高级 - 前端常用算法 (231-240)
-  "frontend-algorithms": { difficulty: "advanced", module: "algorithms", order: 231 },
+  "binary-tree": { difficulty: "intermediate", module: "algorithms", order: 205 },
+
+  // ==========================================
+  // 算法技巧模块 (211-230)
+  // ==========================================
+  sorting: { difficulty: "intermediate", module: "algorithms", order: 211 },
+  searching: { difficulty: "intermediate", module: "algorithms", order: 212 },
+  "two-pointers": { difficulty: "intermediate", module: "algorithms", order: 213 },
+  "sliding-window": { difficulty: "intermediate", module: "algorithms", order: 214 },
+  backtracking: { difficulty: "intermediate", module: "algorithms", order: 215 },
+  "dynamic-programming": { difficulty: "advanced", module: "algorithms", order: 216 },
+  "bit-manipulation": { difficulty: "advanced", module: "algorithms", order: 217 },
+  graph: { difficulty: "advanced", module: "algorithms", order: 218 },
+  heap: { difficulty: "intermediate", module: "algorithms", order: 219 },
+  algorithms: { difficulty: "beginner", module: "algorithms", order: 220 },
+  "frontend-algorithms": { difficulty: "advanced", module: "algorithms", order: 221 },
+
+  // ==========================================
+  // 刷题训练模块 (231-240)
+  // ==========================================
+  problems: { difficulty: "beginner", module: "algorithms", order: 231 },
+  leetcode: { difficulty: "intermediate", module: "algorithms", order: 232 },
+  roadmap: { difficulty: "beginner", module: "algorithms", order: 233 },
+  cases: { difficulty: "intermediate", module: "algorithms", order: 234 },
+  templates: { difficulty: "beginner", module: "algorithms", order: 235 },
+
+  // ==========================================
+  // 学习资源模块 (241-250)
+  // ==========================================
+  concepts: { difficulty: "beginner", module: "algorithms", order: 241 },
+  "animation-demo": { difficulty: "beginner", module: "algorithms", order: 242 },
+  animations: { difficulty: "beginner", module: "algorithms", order: 243 },
+  "js-api": { difficulty: "beginner", module: "algorithms", order: 244 },
+  "knowledge-graph": { difficulty: "beginner", module: "algorithms", order: 245 },
+  "题库": { difficulty: "intermediate", module: "algorithms", order: 246 },
 
   // ==========================================
   // 编程题模块 (301-400)
@@ -184,23 +211,102 @@ export const ROUTE_GROUPS: RouteGroupConfig[] = [
     icon: "🧮",
     path: "/algorithms",
   },
+  // ========== 算法分类拆分 ==========
+  {
+    name: "data-structures",
+    title: "数据结构",
+    subtitle: "栈、队列、链表、哈希表、树",
+    icon: "📦",
+    path: "/algorithms",
+  },
+  {
+    name: "algorithm-techniques",
+    title: "算法技巧",
+    subtitle: "排序、搜索、双指针、动态规划",
+    icon: "🧮",
+    path: "/algorithms",
+  },
+  {
+    name: "problems",
+    title: "刷题训练",
+    subtitle: "LeetCode 题解与实战练习",
+    icon: "📝",
+    path: "/problems",
+  },
+  {
+    name: "learning-resources",
+    title: "学习资源",
+    subtitle: "概念、模板、动画、手册",
+    icon: "📚",
+    path: "/concepts",
+  },
   {
     name: "interview",
     title: "编程挑战",
     subtitle: "前端高频算法题，在线编码实战",
     icon: "🎯",
-    path: "/interview",
+    path: "/interview-questions",
   },
 ];
 
 /**
+ * 虚拟分组映射 - 将虚拟分组映射到实际的文件夹和路由过滤规则
+ */
+const VIRTUAL_GROUP_MAPPING: Record<string, {
+  sourceGroup: string;  // 实际的文件夹分组名
+  routeFilter: (routePath: string, routeName: string) => boolean;  // 路由过滤函数
+}> = {
+  "data-structures": {
+    sourceGroup: "algorithms",
+    routeFilter: (_, name) => ["stack", "queue", "linked-list", "hash-table", "binary-tree"].includes(name),
+  },
+  "algorithm-techniques": {
+    sourceGroup: "algorithms",
+    routeFilter: (_, name) => [
+      "sorting", "searching", "two-pointers", "sliding-window",
+      "backtracking", "dynamic-programming", "bit-manipulation",
+      "graph", "heap", "algorithms", "frontend-algorithms"
+    ].includes(name),
+  },
+  "problems": {
+    sourceGroup: "algorithms",
+    routeFilter: (path, _name) => {
+      // problems 主页和其下的刷题相关页面
+      if (path === "/problems") return true;
+      if (path.startsWith("/problems/")) {
+        const subPath = path.replace("/problems/", "").split("/")[0];
+        return ["leetcode", "roadmap", "cases", "templates"].includes(subPath);
+      }
+      return false;
+    },
+  },
+  "learning-resources": {
+    sourceGroup: "algorithms",
+    routeFilter: (path, name) => {
+      // 学习资源相关
+      if (path === "/concepts" || path.startsWith("/concepts/")) return true;
+      if (path === "/题库") return true;
+      if (path.startsWith("/problems/")) {
+        const subPath = path.replace("/problems/", "").split("/")[0];
+        return ["animation-demo", "animations", "js-api", "knowledge-graph"].includes(subPath);
+      }
+      return false;
+    },
+  },
+};
+
+/**
  * 获取 app 目录下的所有路由
  * 只在服务端运行（Server Component）
- * @param groupName 可选，指定路由分组名称（如 "hooks", "react-basics", "algorithms"）
+ * @param groupName 可选，指定路由分组名称（如 "hooks", "react-basics", "data-structures"）
  */
 export function getAppRoutes(groupName?: string): RouteInfo[] {
   const appDir = path.join(process.cwd(), "src/app");
   const routes: RouteInfo[] = [];
+
+  // 检查是否是虚拟分组
+  const virtualMapping = groupName ? VIRTUAL_GROUP_MAPPING[groupName] : undefined;
+  const actualGroupName = virtualMapping?.sourceGroup || groupName;
 
   // 递归扫描目录
   function scanDirectory(dir: string, basePath: string = "") {
@@ -215,7 +321,7 @@ export function getAppRoutes(groupName?: string): RouteInfo[] {
       if (itemName.startsWith("(") && itemName.endsWith(")")) {
         const groupDirName = itemName.slice(1, -1); // 去掉括号
         // 如果指定了分组，只扫描该分组
-        if (groupName && groupDirName !== groupName) {
+        if (actualGroupName && groupDirName !== actualGroupName) {
           continue;
         }
         // 扫描分组内的目录，但不改变 basePath（分组不影响 URL）
@@ -263,8 +369,8 @@ export function getAppRoutes(groupName?: string): RouteInfo[] {
   }
 
   // 如果指定了分组，直接扫描分组目录
-  if (groupName) {
-    const groupDir = path.join(appDir, `(${groupName})`);
+  if (actualGroupName) {
+    const groupDir = path.join(appDir, `(${actualGroupName})`);
     if (fs.existsSync(groupDir)) {
       scanDirectory(groupDir);
     }
@@ -272,8 +378,16 @@ export function getAppRoutes(groupName?: string): RouteInfo[] {
     scanDirectory(appDir);
   }
 
+  // 如果是虚拟分组，应用过滤器
+  let filteredRoutes = routes;
+  if (virtualMapping) {
+    filteredRoutes = routes.filter(route =>
+      virtualMapping.routeFilter(route.path, route.name)
+    );
+  }
+
   // 按模块和难度排序
-  return routes.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+  return filteredRoutes.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
 }
 
 /**
@@ -322,29 +436,35 @@ function formatDisplayName(name: string): string {
     portal: "Portal",
     context: "Context",
     // 算法与数据结构
-    stack: "栈 (Stack)",
-    queue: "队列 (Queue)",
-    "linked-list": "链表 (Linked List)",
-    "hash-table": "哈希表 (Hash Table)",
-    "binary-tree": "二叉树 (Binary Tree)",
-    sorting: "排序算法 (Sorting)",
-    searching: "搜索算法 (Searching)",
+    stack: "栈",
+    queue: "队列",
+    "linked-list": "链表",
+    "hash-table": "哈希表",
+    "binary-tree": "二叉树",
+    sorting: "排序算法",
+    searching: "搜索算法",
     "frontend-algorithms": "前端常用算法",
+    algorithms: "算法总览",
     // 算法分类
-    "two-pointers": "双指针 (Two Pointers)",
-    "sliding-window": "滑动窗口 (Sliding Window)",
-    backtracking: "回溯 (Backtracking)",
-    graph: "图 (Graph)",
-    heap: "堆 (Heap)",
-    "dynamic-programming": "动态规划 (DP)",
-    "bit-manipulation": "位运算 (Bit)",
+    "two-pointers": "双指针",
+    "sliding-window": "滑动窗口",
+    backtracking: "回溯算法",
+    graph: "图论",
+    heap: "堆",
+    "dynamic-programming": "动态规划",
+    "bit-manipulation": "位运算",
     // 题库相关
     problems: "算法题库",
     concepts: "基础概念",
     templates: "代码模板",
     roadmap: "学习路线",
     cases: "实战案例",
-    leetcode: "LeetCode",
+    leetcode: "LeetCode 题解",
+    "animation-demo": "动画演示",
+    animations: "算法动画",
+    "js-api": "JS API 手册",
+    "knowledge-graph": "知识图谱",
+    "题库": "LeetCode 题库",
     // 编程题
     "interview-questions": "前端编程挑战",
   };
