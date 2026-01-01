@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { SidebarNav, BottomNav } from "@/components/navigation";
+import { SidebarNav, SmartBottomNav } from "@/components/navigation";
 import { getAppRoutes, ROUTE_GROUPS } from "@/lib/routes";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 
@@ -88,7 +88,7 @@ export default function RootLayout({
       >
         <ServiceWorkerRegistration />
         <SidebarNav groups={sidebarGroups} />
-        <BottomNav />
+        <SmartBottomNav />
         <main className="main-content main-content-with-nav h-[100dvh] overflow-y-auto overscroll-contain bg-zinc-50 pt-[var(--safe-area-top)] pb-[var(--safe-area-bottom)] dark:bg-zinc-950">
           {children}
         </main>
