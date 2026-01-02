@@ -1441,7 +1441,7 @@ export default function InterviewQuestionsExamples() {
                     </span>
                   </div>
                   <div className="mt-1">
-                    <span className={`rounded px-1.5 py-0.5 text-xs ${categoryColors[q.category] || "bg-zinc-200"}`}>
+                    <span className={`rounded px-1.5 py-0.5 text-xs ${categoryColors[q.category] || "bg-zinc-200 dark:bg-zinc-700"}`}>
                       {q.category}
                     </span>
                   </div>
@@ -1459,7 +1459,7 @@ export default function InterviewQuestionsExamples() {
               <span className={`rounded px-2 py-0.5 text-xs ${difficultyColors[selectedQuestion.difficulty]}`}>
                 {selectedQuestion.difficulty}
               </span>
-              <span className={`rounded px-2 py-0.5 text-xs ${categoryColors[selectedQuestion.category] || "bg-zinc-200"}`}>
+              <span className={`rounded px-2 py-0.5 text-xs ${categoryColors[selectedQuestion.category] || "bg-zinc-200 dark:bg-zinc-700"}`}>
                 {selectedQuestion.category}
               </span>
             </div>

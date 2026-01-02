@@ -122,13 +122,13 @@ export function DeepExplanationPanel({
           <span className="text-2xl">🎓</span>
           深度讲解
         </h2>
-        <div className="text-sm text-zinc-400">
+        <div className="text-sm text-zinc-600 dark:text-zinc-400">
           点击各标签深入学习
         </div>
       </div>
 
       {/* Tab 导航 */}
-      <div className="flex flex-wrap gap-2 p-1 bg-zinc-800/50 rounded-lg">
+      <div className="flex flex-wrap gap-2 p-1 bg-zinc-200 dark:bg-zinc-800/50 rounded-lg">
         {availableTabs.map((tab) => (
           <button
             key={tab.id}
@@ -136,7 +136,7 @@ export function DeepExplanationPanel({
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
               activeTab === tab.id
                 ? "bg-blue-600 text-white shadow-lg"
-                : "text-zinc-400 hover:text-white hover:bg-zinc-700"
+                : "text-zinc-600 dark:text-zinc-400 hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-700"
             }`}
           >
             <span>{tab.icon}</span>
@@ -157,7 +157,7 @@ export function DeepExplanationPanel({
           </h3>
           <ul className="space-y-2">
             {explanation.interviewTips.map((tip, index) => (
-              <li key={index} className="flex items-start gap-2 text-zinc-300">
+              <li key={index} className="flex items-start gap-2 text-zinc-700 dark:text-zinc-300">
                 <span className="text-purple-400 mt-1">•</span>
                 {tip}
               </li>
@@ -175,7 +175,7 @@ export function DeepExplanationPanel({
           </h3>
           <ul className="space-y-2">
             {explanation.frontendApplications.map((app, index) => (
-              <li key={index} className="flex items-start gap-2 text-zinc-300">
+              <li key={index} className="flex items-start gap-2 text-zinc-700 dark:text-zinc-300">
                 <span className="text-blue-400 mt-1">→</span>
                 {app}
               </li>

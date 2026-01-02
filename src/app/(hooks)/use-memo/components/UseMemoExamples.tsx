@@ -506,8 +506,8 @@ export default function UseMemoExamples() {
           useMemo 用于缓存计算结果，只有当依赖项变化时才重新计算。
         </p>
 
-        <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-          <p className="mb-2 text-zinc-400">// 基本语法</p>
+        <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+          <p className="mb-2 text-zinc-600 dark:text-zinc-400">// 基本语法</p>
           <pre className="text-green-400">
 {`const memoizedValue = useMemo(
   () => expensiveComputation(a, b),

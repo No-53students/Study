@@ -376,8 +376,8 @@ export default function UseEffectEventExamples() {
           useEffectEvent 用于从 Effect 中提取非响应式逻辑，避免不必要的 Effect 重执行。
         </p>
 
-        <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-          <p className="mb-2 text-zinc-400">// 基本语法</p>
+        <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+          <p className="mb-2 text-zinc-600 dark:text-zinc-400">// 基本语法</p>
           <pre className="text-green-400">
 {`const onSomething = useEffectEvent((param) => {
   // 总是能访问最新的 props/state

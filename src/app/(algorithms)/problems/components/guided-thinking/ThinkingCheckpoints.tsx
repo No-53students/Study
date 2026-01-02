@@ -46,7 +46,7 @@ export function ThinkingCheckpoints({ checkpoints }: ThinkingCheckpointsProps) {
     const isExcellent = percentage >= 80;
 
     return (
-      <div className="bg-zinc-900/50 rounded-xl border border-zinc-700/50 p-6">
+      <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-700/50 p-6">
         <div className="text-center">
           <div className={`text-6xl mb-4 ${isExcellent ? "" : "grayscale"}`}>
             {isExcellent ? "🏆" : "📚"}
@@ -54,12 +54,12 @@ export function ThinkingCheckpoints({ checkpoints }: ThinkingCheckpointsProps) {
           <h3 className="text-xl font-bold text-white mb-2">
             {isExcellent ? "太棒了！" : "继续加油！"}
           </h3>
-          <p className="text-zinc-400 mb-4">
+          <p className="text-zinc-600 dark:text-zinc-400 mb-4">
             你答对了 {correctCount} / {checkpoints.length} 题（{percentage}%）
           </p>
 
           {/* 进度条 */}
-          <div className="h-3 bg-zinc-800 rounded-full overflow-hidden mb-6 max-w-xs mx-auto">
+          <div className="h-3 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden mb-6 max-w-xs mx-auto">
             <div
               className={`h-full transition-all duration-500 ${
                 isExcellent
@@ -82,14 +82,14 @@ export function ThinkingCheckpoints({ checkpoints }: ThinkingCheckpointsProps) {
   }
 
   return (
-    <div className="bg-zinc-900/50 rounded-xl border border-zinc-700/50 overflow-hidden">
+    <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-700/50 overflow-hidden">
       {/* 标题和进度 */}
-      <div className="p-4 border-b border-zinc-700/50 flex items-center justify-between">
+      <div className="p-4 border-b border-zinc-200 dark:border-zinc-700/50 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-pink-400 flex items-center gap-2">
           <span className="text-2xl">✅</span>
           理解检验
         </h3>
-        <span className="text-sm text-zinc-400">
+        <span className="text-sm text-zinc-600 dark:text-zinc-400">
           {currentIndex + 1} / {checkpoints.length}
         </span>
       </div>
@@ -106,7 +106,7 @@ export function ThinkingCheckpoints({ checkpoints }: ThinkingCheckpointsProps) {
             const isSelected = selectedOption === index;
             const isAnswer = index === currentCheckpoint.correctAnswer;
 
-            let optionClass = "bg-zinc-800 border-zinc-700 hover:border-zinc-600";
+            let optionClass = "bg-zinc-100 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600";
             if (showResult) {
               if (isAnswer) {
                 optionClass = "bg-green-500/20 border-green-500";
@@ -135,7 +135,7 @@ export function ThinkingCheckpoints({ checkpoints }: ThinkingCheckpointsProps) {
                         ? "bg-red-500 text-white"
                         : isSelected
                         ? "bg-cyan-500 text-white"
-                        : "bg-zinc-700 text-zinc-400"
+                        : "bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-400"
                     }`}
                   >
                     {showResult && isAnswer ? "✓" : showResult && isSelected && !isAnswer ? "✗" : String.fromCharCode(65 + index)}
@@ -164,7 +164,7 @@ export function ThinkingCheckpoints({ checkpoints }: ThinkingCheckpointsProps) {
                 <span className={`text-sm font-medium ${isCorrect ? "text-green-400" : "text-red-400"}`}>
                   {isCorrect ? "正确！" : "错误"}
                 </span>
-                <p className="text-zinc-300 mt-1">{currentCheckpoint.explanation}</p>
+                <p className="text-zinc-700 dark:text-zinc-300 mt-1">{currentCheckpoint.explanation}</p>
               </div>
             </div>
           </div>
@@ -172,7 +172,7 @@ export function ThinkingCheckpoints({ checkpoints }: ThinkingCheckpointsProps) {
       </div>
 
       {/* 按钮 */}
-      <div className="p-4 border-t border-zinc-700/50 bg-black/20 flex justify-end">
+      <div className="p-4 border-t border-zinc-200 dark:border-zinc-700/50 bg-black/20 flex justify-end">
         {!showResult ? (
           <button
             onClick={handleSubmit}

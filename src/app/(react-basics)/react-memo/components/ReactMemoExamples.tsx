@@ -221,8 +221,8 @@ export function FunctionPropsExample() {
         </div>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`// ❌ 内联函数每次都是新引用
 <Child onClick={() => doSomething()} />
 
@@ -256,7 +256,7 @@ const UserCard = memo(
       <div className="rounded-md bg-zinc-100 p-4 dark:bg-zinc-800">
         <p className="font-medium">{user.name}</p>
         <p className="text-sm text-zinc-500">ID: {user.id}</p>
-        <p className="text-xs text-zinc-400">
+        <p className="text-xs text-zinc-500 dark:text-zinc-400">
           更新: {user.lastUpdated.toLocaleTimeString()}
         </p>
         <p className="mt-2 text-xs text-blue-500">渲染次数: {customCompareCount}</p>
@@ -357,11 +357,11 @@ const ListItemComponent = memo(function ListItemComponent({
   listItemRenderCount++;
   return (
     <li className="flex items-center justify-between rounded-md bg-zinc-100 px-4 py-2 dark:bg-zinc-800">
-      <span className={item.completed ? "line-through text-zinc-400" : ""}>
+      <span className={item.completed ? "line-through text-zinc-400 dark:text-zinc-500" : ""}>
         {item.name}
       </span>
       <div className="flex items-center gap-2">
-        <span className="text-xs text-zinc-400">#{listItemRenderCount}</span>
+        <span className="text-xs text-zinc-500 dark:text-zinc-400">#{listItemRenderCount}</span>
         <button
           onClick={() => onToggle(item.id)}
           className={`rounded px-2 py-1 text-xs text-white transition-all duration-200 hover:scale-105 active:scale-95 ${

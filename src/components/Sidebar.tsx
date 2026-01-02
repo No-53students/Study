@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 
 type DifficultyLevel = "beginner" | "intermediate" | "advanced";
 
@@ -97,12 +97,59 @@ function DifficultyGroupedRoutes({ routes, pathname }: { routes: RouteInfo[]; pa
   );
 }
 
+// 可折叠子菜单组件 - 使用 CSS 过渡避免闪动
+function CollapsibleSection({ isExpanded, children }: { isExpanded: boolean; children: React.ReactNode }) {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState<number | undefined>(isExpanded ? undefined : 0);
+
+  useEffect(() => {
+    if (!contentRef.current) return;
+
+    if (isExpanded) {
+      const contentHeight = contentRef.current.scrollHeight;
+      setHeight(contentHeight);
+      // 展开完成后移除固定高度，允许内容自然撑开
+      const timer = setTimeout(() => setHeight(undefined), 200);
+      return () => clearTimeout(timer);
+    } else {
+      // 先设置当前高度，然后过渡到 0
+      setHeight(contentRef.current.scrollHeight);
+      requestAnimationFrame(() => {
+        setHeight(0);
+      });
+    }
+  }, [isExpanded]);
+
+  return (
+    <div
+      ref={contentRef}
+      style={{ height: height !== undefined ? `${height}px` : 'auto' }}
+      className={`overflow-hidden transition-[height] duration-200 ease-out ${
+        !isExpanded ? 'pointer-events-none' : ''
+      }`}
+    >
+      {children}
+    </div>
+  );
+}
+
 export default function Sidebar({ groups }: SidebarProps) {
   const pathname = usePathname();
   const [expandedGroups, setExpandedGroups] = useState<string[]>(
     groups.map((g) => g.name) // 默认全部展开
   );
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  // 缓存活动分组状态，避免每次渲染都重新计算
+  const activeGroups = useMemo(() => {
+    return new Set(
+      groups
+        .filter((group) => pathname.startsWith(group.path) || group.routes.some((r) => pathname === r.path))
+        .map((g) => g.name)
+    );
+  }, [groups, pathname]);
+
+  const isGroupActive = useCallback((group: RouteGroup) => activeGroups.has(group.name), [activeGroups]);
 
   // 同步侧边栏折叠状态到 body class
   useEffect(() => {
@@ -123,9 +170,6 @@ export default function Sidebar({ groups }: SidebarProps) {
         : [...prev, groupName]
     );
   }, []);
-
-  const isGroupActive = (group: RouteGroup) =>
-    pathname.startsWith(group.path) || group.routes.some((r) => pathname === r.path);
 
   return (
     <>
@@ -218,9 +262,11 @@ export default function Sidebar({ groups }: SidebarProps) {
                   </svg>
                 </button>
 
-                {/* 二级目录 - 按难度分组 */}
-                {expandedGroups.includes(group.name) && group.routes.length > 0 && (
-                  <DifficultyGroupedRoutes routes={group.routes} pathname={pathname} />
+                {/* 二级目录 - 按难度分组，使用平滑过渡 */}
+                {group.routes.length > 0 && (
+                  <CollapsibleSection isExpanded={expandedGroups.includes(group.name)}>
+                    <DifficultyGroupedRoutes routes={group.routes} pathname={pathname} />
+                  </CollapsibleSection>
                 )}
               </li>
             ))}

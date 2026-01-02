@@ -564,8 +564,8 @@ export default function UseReducerExamples() {
           useReducer 用于管理复杂状态逻辑，通过 reducer 函数集中处理状态更新。
         </p>
 
-        <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-          <p className="mb-2 text-zinc-400">// 基本语法</p>
+        <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+          <p className="mb-2 text-zinc-600 dark:text-zinc-400">// 基本语法</p>
           <pre className="text-green-400">
 {`const [state, dispatch] = useReducer(reducer, initialState);
 

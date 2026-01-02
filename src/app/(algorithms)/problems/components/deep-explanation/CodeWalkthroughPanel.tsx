@@ -29,15 +29,15 @@ export function CodeWalkthroughPanel({ code, walkthroughs }: CodeWalkthroughPane
   };
 
   return (
-    <div className="bg-zinc-900/50 rounded-xl border border-zinc-700/50 overflow-hidden">
-      <h3 className="text-lg font-semibold text-purple-400 p-4 border-b border-zinc-700/50 flex items-center gap-2">
+    <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-700/50 overflow-hidden">
+      <h3 className="text-lg font-semibold text-purple-400 p-4 border-b border-zinc-200 dark:border-zinc-700/50 flex items-center gap-2">
         <span className="text-2xl">📖</span>
         代码逐行解析
       </h3>
 
       <div className="grid grid-cols-1 lg:grid-cols-2">
         {/* 左侧：代码 */}
-        <div className="border-r border-zinc-700/50 overflow-auto max-h-[600px]">
+        <div className="border-r border-zinc-200 dark:border-zinc-700/50 overflow-auto max-h-[600px]">
           <pre className="p-4 text-sm">
             {codeLines.map((line, index) => {
               const lineNum = index + 1;
@@ -52,7 +52,7 @@ export function CodeWalkthroughPanel({ code, walkthroughs }: CodeWalkthroughPane
                     isActive
                       ? "bg-purple-500/20"
                       : hasWalkthrough
-                      ? "hover:bg-zinc-800 cursor-pointer"
+                      ? "hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
                       : ""
                   }`}
                   onClick={() => {
@@ -68,7 +68,7 @@ export function CodeWalkthroughPanel({ code, walkthroughs }: CodeWalkthroughPane
                   {/* 行号 */}
                   <span
                     className={`w-10 text-right pr-4 select-none ${
-                      isActive ? "text-purple-400" : "text-zinc-600"
+                      isActive ? "text-purple-400" : "text-zinc-400 dark:text-zinc-600"
                     }`}
                   >
                     {lineNum}
@@ -76,7 +76,7 @@ export function CodeWalkthroughPanel({ code, walkthroughs }: CodeWalkthroughPane
                   {/* 代码内容 */}
                   <code
                     className={`flex-1 ${
-                      isActive ? "text-white" : "text-zinc-300"
+                      isActive ? "text-white" : "text-zinc-700 dark:text-zinc-300"
                     }`}
                   >
                     {line || " "}
@@ -103,7 +103,7 @@ export function CodeWalkthroughPanel({ code, walkthroughs }: CodeWalkthroughPane
                 className={`p-4 rounded-lg border transition-all cursor-pointer ${
                   isActive
                     ? "bg-purple-500/20 border-purple-500/50"
-                    : "bg-zinc-800/50 border-zinc-700/50 hover:border-zinc-600"
+                    : "bg-zinc-100 dark:bg-zinc-800/50 border-zinc-200 dark:border-zinc-700/50 hover:border-zinc-300 dark:hover:border-zinc-600"
                 }`}
                 onClick={() =>
                   setActiveRange(isActive ? null : walkthrough.lineRange)
@@ -111,7 +111,7 @@ export function CodeWalkthroughPanel({ code, walkthroughs }: CodeWalkthroughPane
               >
                 {/* 行号标识 */}
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="px-2 py-0.5 bg-zinc-700 rounded text-xs text-zinc-400">
+                  <span className="px-2 py-0.5 bg-zinc-200 dark:bg-zinc-700 rounded text-xs text-zinc-600 dark:text-zinc-400">
                     行 {walkthrough.lineRange[0]}
                     {walkthrough.lineRange[0] !== walkthrough.lineRange[1] &&
                       ` - ${walkthrough.lineRange[1]}`}
@@ -124,7 +124,7 @@ export function CodeWalkthroughPanel({ code, walkthroughs }: CodeWalkthroughPane
                 </div>
 
                 {/* 解释 */}
-                <p className="text-zinc-300 text-sm">{walkthrough.explanation}</p>
+                <p className="text-zinc-700 dark:text-zinc-300 text-sm">{walkthrough.explanation}</p>
 
                 {/* 重点标记 */}
                 {walkthrough.keyPoint && (

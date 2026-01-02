@@ -57,7 +57,7 @@ export function StackAnimation({
 
   if (!step || totalSteps === 0) {
     return (
-      <div className="rounded-xl border border-zinc-700 bg-zinc-900/80 overflow-hidden p-4">
+      <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/80 overflow-hidden p-4">
         <p className="text-sm text-zinc-500 text-center">暂无动画数据</p>
       </div>
     );
@@ -130,10 +130,10 @@ export function StackAnimation({
   const { cell, width } = sizeConfig[size];
 
   return (
-    <div className="rounded-xl border border-zinc-700 bg-zinc-900/80 overflow-hidden">
+    <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/80 overflow-hidden">
       {/* 头部 */}
-      <div className="px-4 py-3 border-b border-zinc-700 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-zinc-200">{title}</h3>
+      <div className="px-4 py-3 border-b border-zinc-200 dark:border-zinc-700 flex items-center justify-between">
+        <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{title}</h3>
         <div className="flex items-center gap-2 text-xs text-zinc-400">
           <span>步骤 {currentStep + 1} / {totalSteps}</span>
         </div>

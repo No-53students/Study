@@ -40,7 +40,9 @@
       "Bash(if [ -f \"/Users/wangguorong/Study/next/my-app/src/app/\\(algorithms\\)/$dir/page.tsx\" ])",
       "Bash(then)",
       "Bash(else)",
-      "Bash(fi)"
+      "Bash(fi)",
+      "Bash(git checkout:*)",
+      "Bash(git reset:*)"
     ],
     "deny": [],
     "ask": []

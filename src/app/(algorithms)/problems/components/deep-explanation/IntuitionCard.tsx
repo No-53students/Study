@@ -23,7 +23,7 @@ export function IntuitionCard({ intuition }: IntuitionCardProps) {
           <div className="flex items-start gap-3">
             <span className="text-xl">👁️</span>
             <div>
-              <h4 className="text-sm font-medium text-zinc-400 mb-1">观察到什么</h4>
+              <h4 className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-1">观察到什么</h4>
               <p className="text-zinc-200">{intuition.observation}</p>
             </div>
           </div>
@@ -34,7 +34,7 @@ export function IntuitionCard({ intuition }: IntuitionCardProps) {
           <div className="flex items-start gap-3">
             <span className="text-xl">🧩</span>
             <div>
-              <h4 className="text-sm font-medium text-zinc-400 mb-1">对应什么模式</h4>
+              <h4 className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-1">对应什么模式</h4>
               <p className="text-zinc-200">{intuition.patternMatch}</p>
             </div>
           </div>
@@ -45,7 +45,7 @@ export function IntuitionCard({ intuition }: IntuitionCardProps) {
           <div className="flex items-start gap-3">
             <span className="text-xl">✨</span>
             <div>
-              <h4 className="text-sm font-medium text-zinc-400 mb-1">为什么有效</h4>
+              <h4 className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-1">为什么有效</h4>
               <p className="text-zinc-200">{intuition.whyItWorks}</p>
             </div>
           </div>

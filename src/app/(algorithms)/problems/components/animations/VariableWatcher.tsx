@@ -96,11 +96,11 @@ export function VariableWatcher({
   const isHorizontal = layout === "horizontal";
 
   return (
-    <div className="rounded-lg bg-zinc-800/50 border border-zinc-700 overflow-hidden">
+    <div className="rounded-lg bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 overflow-hidden">
       {/* 标题 */}
-      <div className="px-3 py-2 border-b border-zinc-700 flex items-center gap-2">
+      <div className="px-3 py-2 border-b border-zinc-200 dark:border-zinc-700 flex items-center gap-2">
         <svg
-          className="w-4 h-4 text-emerald-400"
+          className="w-4 h-4 text-emerald-600 dark:text-emerald-400"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -118,7 +118,7 @@ export function VariableWatcher({
             d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
           />
         </svg>
-        <span className="text-xs font-medium text-zinc-300">{title}</span>
+        <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">{title}</span>
       </div>
 
       {/* 变量列表 */}
@@ -143,13 +143,13 @@ export function VariableWatcher({
                 layout
                 className={`${
                   isHorizontal
-                    ? "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-900/50 border border-zinc-700"
-                    : "flex items-center justify-between gap-4 px-3 py-2 rounded-lg bg-zinc-900/50 border border-zinc-700"
+                    ? "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-700"
+                    : "flex items-center justify-between gap-4 px-3 py-2 rounded-lg bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-700"
                 } ${variable.changed ? "ring-2 ring-yellow-500/50" : ""}`}
               >
                 {/* 变量名 */}
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-sm text-zinc-300">
+                  <span className="font-mono text-sm text-zinc-700 dark:text-zinc-300">
                     {variable.name}
                   </span>
                   {showType && !compact && (
@@ -173,16 +173,16 @@ export function VariableWatcher({
                   animate={{ scale: 1 }}
                   className={`font-mono text-sm ${
                     variable.changed
-                      ? "text-yellow-400 font-semibold"
+                      ? "text-yellow-600 dark:text-yellow-400 font-semibold"
                       : type === "number"
-                      ? "text-blue-400"
+                      ? "text-blue-600 dark:text-blue-400"
                       : type === "string"
-                      ? "text-green-400"
+                      ? "text-green-600 dark:text-green-400"
                       : type === "boolean"
-                      ? "text-purple-400"
+                      ? "text-purple-600 dark:text-purple-400"
                       : type === "array"
-                      ? "text-amber-400"
-                      : "text-zinc-400"
+                      ? "text-amber-600 dark:text-amber-400"
+                      : "text-zinc-600 dark:text-zinc-400"
                   }`}
                 >
                   {formattedValue}
@@ -201,7 +201,7 @@ export function VariableWatcher({
               .filter((v) => v.description)
               .map((v) => (
                 <div key={v.name} className="flex gap-2">
-                  <span className="font-mono text-zinc-400">{v.name}:</span>
+                  <span className="font-mono text-zinc-600 dark:text-zinc-400">{v.name}:</span>
                   <span>{v.description}</span>
                 </div>
               ))}
@@ -250,7 +250,7 @@ export function ExecutionResult({
       <div className="px-3 py-2 flex items-center justify-between">
         <span
           className={`text-xs font-medium ${
-            success ? "text-emerald-400" : "text-rose-400"
+            success ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"
           }`}
         >
           {label}
@@ -259,7 +259,7 @@ export function ExecutionResult({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className={`font-mono text-sm ${
-            success ? "text-emerald-300" : "text-rose-300"
+            success ? "text-emerald-700 dark:text-emerald-300" : "text-rose-700 dark:text-rose-300"
           }`}
         >
           {formatValue(value)}

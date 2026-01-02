@@ -55,15 +55,15 @@ function AnimationPlayer({
   }, [isPlaying, steps.length]);
 
   return (
-    <div className="rounded-xl bg-zinc-900/80 border border-zinc-800 p-4">
+    <div className="rounded-xl bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 p-4">
       <h3 className="font-semibold mb-2 flex items-center gap-2">
         <span className="text-lg">🎬</span>
         {title}
       </h3>
-      <p className="text-sm text-zinc-400 mb-4">{description}</p>
+      <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">{description}</p>
 
       {/* 可视化区域 */}
-      <div className="bg-zinc-950 rounded-lg p-4 mb-4">
+      <div className="bg-zinc-900 dark:bg-zinc-950 rounded-lg p-4 mb-4">
         {/* 数组可视化 */}
         {step.array && (
           <div className="flex justify-center gap-1 mb-4 flex-wrap">
@@ -197,7 +197,7 @@ function AnimationPlayer({
       </div>
 
       {/* 步骤说明 */}
-      <div className="bg-zinc-800/50 rounded-lg p-3 mb-4">
+      <div className="bg-zinc-100/50 dark:bg-zinc-800/50 rounded-lg p-3 mb-4">
         <p className="text-sm">{step.description}</p>
       </div>
 
@@ -207,7 +207,7 @@ function AnimationPlayer({
           <button
             onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
             disabled={currentStep === 0}
-            className="px-3 py-1.5 rounded-md bg-zinc-800 text-sm disabled:opacity-50 hover:bg-zinc-700 transition-colors"
+            className="px-3 py-1.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-sm disabled:opacity-50 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
           >
             上一步
           </button>
@@ -229,7 +229,7 @@ function AnimationPlayer({
           <button
             onClick={() => setCurrentStep(Math.min(steps.length - 1, currentStep + 1))}
             disabled={currentStep === steps.length - 1}
-            className="px-3 py-1.5 rounded-md bg-zinc-800 text-sm disabled:opacity-50 hover:bg-zinc-700 transition-colors"
+            className="px-3 py-1.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-sm disabled:opacity-50 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
           >
             下一步
           </button>
@@ -240,7 +240,7 @@ function AnimationPlayer({
       </div>
 
       {/* 进度条 */}
-      <div className="mt-3 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+      <div className="mt-3 h-1.5 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
         <div
           className="h-full bg-purple-500 transition-all duration-300"
           style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
@@ -255,14 +255,14 @@ function VariantCard({ variant }: { variant: TemplateVariant }) {
   const [showCode, setShowCode] = useState(false);
 
   return (
-    <div className="rounded-lg bg-zinc-800/50 border border-zinc-700/50 overflow-hidden">
+    <div className="rounded-lg bg-zinc-100/50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700/50 overflow-hidden">
       <button
         onClick={() => setShowCode(!showCode)}
-        className="w-full p-3 flex items-center justify-between text-left hover:bg-zinc-800/80 transition-colors"
+        className="w-full p-3 flex items-center justify-between text-left hover:bg-zinc-200/80 dark:hover:bg-zinc-800/80 transition-colors"
       >
         <div>
           <div className="font-medium text-sm">{variant.name}</div>
-          <div className="text-xs text-zinc-400">{variant.description}</div>
+          <div className="text-xs text-zinc-600 dark:text-zinc-400">{variant.description}</div>
         </div>
         <svg
           className={`w-4 h-4 text-zinc-500 transition-transform ${showCode ? "rotate-180" : ""}`}
@@ -275,15 +275,15 @@ function VariantCard({ variant }: { variant: TemplateVariant }) {
         </svg>
       </button>
       {showCode && (
-        <div className="border-t border-zinc-700/50">
-          <div className="px-3 py-2 bg-zinc-900/50 text-xs text-zinc-400">
-            <span className="text-blue-400">使用场景：</span> {variant.useCase}
+        <div className="border-t border-zinc-200 dark:border-zinc-700/50">
+          <div className="px-3 py-2 bg-zinc-100/50 dark:bg-zinc-900/50 text-xs text-zinc-500 dark:text-zinc-400">
+            <span className="text-blue-500 dark:text-blue-400">使用场景：</span> {variant.useCase}
           </div>
-          <pre className="p-3 overflow-x-auto text-xs bg-zinc-950/50">
-            <code className="text-zinc-300">{variant.codeSnippet}</code>
+          <pre className="p-3 overflow-x-auto text-xs bg-zinc-900 dark:bg-zinc-950/50">
+            <code className="text-zinc-200 dark:text-zinc-300">{variant.codeSnippet}</code>
           </pre>
           {variant.exampleProblem && (
-            <div className="px-3 py-2 border-t border-zinc-700/50">
+            <div className="px-3 py-2 border-t border-zinc-200 dark:border-zinc-700/50">
               <Link
                 href={`/problems/${variant.exampleProblem}`}
                 className="text-xs text-purple-400 hover:text-purple-300 transition-colors"
@@ -306,40 +306,7 @@ export default function TemplatesPage() {
   const [activeTab, setActiveTab] = useState<"basic" | "detail" | "animation">("basic");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 text-white">
-      {/* 顶部导航 */}
-      <header className="sticky top-0 z-10 border-b border-zinc-800/80 bg-zinc-900/70 backdrop-blur-xl">
-        <div className="mx-auto flex h-12 sm:h-14 max-w-7xl items-center justify-between px-3 sm:px-4">
-          <div className="flex items-center gap-2 sm:gap-4">
-            <Link
-              href="/concepts"
-              className="group flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white transition-colors"
-            >
-              <svg
-                className="w-4 h-4 transform group-hover:-translate-x-0.5 transition-transform"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-              <span className="hidden sm:inline">算法基础</span>
-            </Link>
-            <div className="hidden sm:block w-px h-5 bg-zinc-700" />
-            <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 text-white text-lg shadow-lg shadow-purple-500/20">
-                📋
-              </div>
-              <h1 className="text-base sm:text-lg font-bold">解题模板库</h1>
-            </div>
-          </div>
-          <div className="text-xs text-zinc-500">
-            {allTemplates.length} 个模板
-          </div>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-white to-zinc-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 text-zinc-900 dark:text-white py-6">
       <div className="mx-auto max-w-7xl px-3 sm:px-4 py-4 sm:py-6">
         {/* 介绍卡片 */}
         <div className="mb-6 rounded-xl bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-rose-500/10 border border-purple-500/20 p-4">
@@ -347,7 +314,7 @@ export default function TemplatesPage() {
             <div className="text-2xl">💡</div>
             <div>
               <h2 className="font-semibold mb-1">为什么需要模板？</h2>
-              <p className="text-sm text-zinc-400">
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">
                 算法模板帮助你快速识别问题类型，提供标准化的解题思路和代码框架。
                 掌握模板后，遇到新题时只需套用并微调，大大降低做题难度。
               </p>
@@ -358,7 +325,7 @@ export default function TemplatesPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* 模板列表 */}
           <div className="lg:col-span-1 space-y-2">
-            <h3 className="text-sm font-semibold text-zinc-400 mb-3">选择模板</h3>
+            <h3 className="text-sm font-semibold text-zinc-600 dark:text-zinc-400 mb-3">选择模板</h3>
             {allTemplates.map((template) => {
               const diffConfig = DIFFICULTY_CONFIG[template.difficulty];
               const catConfig = CATEGORY_CONFIG[template.category];
@@ -371,7 +338,7 @@ export default function TemplatesPage() {
                   className={`w-full text-left rounded-xl p-3 border transition-all ${
                     isSelected
                       ? "bg-purple-500/10 border-purple-500/30"
-                      : "bg-zinc-900/80 border-zinc-800 hover:border-zinc-700"
+                      : "bg-white dark:bg-zinc-900/80 border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700"
                   }`}
                 >
                   <div className="flex items-center gap-2 mb-1">
@@ -395,20 +362,20 @@ export default function TemplatesPage() {
           {selectedTemplate && (
             <div className="lg:col-span-2 space-y-4">
               {/* 模板标题 */}
-              <div className="rounded-xl bg-zinc-900/80 border border-zinc-800 p-4">
+              <div className="rounded-xl bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 p-4">
                 <div className="flex items-center gap-3 mb-3">
                   <span className="text-3xl">
                     {CATEGORY_CONFIG[selectedTemplate.category]?.icon || "📦"}
                   </span>
                   <div>
                     <h2 className="text-xl font-bold">{selectedTemplate.name}</h2>
-                    <p className="text-sm text-zinc-400">{selectedTemplate.description}</p>
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400">{selectedTemplate.description}</p>
                   </div>
                 </div>
 
                 {/* 识别关键词 */}
                 <div className="mb-4">
-                  <h4 className="text-sm font-semibold text-zinc-300 mb-2">
+                  <h4 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-2">
                     🔑 识别关键词（看到这些词就想到这个模板）
                   </h4>
                   <div className="flex flex-wrap gap-1.5">
@@ -441,13 +408,13 @@ export default function TemplatesPage() {
               </div>
 
               {/* 标签切换 */}
-              <div className="flex gap-1 bg-zinc-900/80 rounded-xl p-1 border border-zinc-800">
+              <div className="flex gap-1 bg-white dark:bg-zinc-900/80 rounded-xl p-1 border border-zinc-200 dark:border-zinc-800">
                 <button
                   onClick={() => setActiveTab("basic")}
                   className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
                     activeTab === "basic"
                       ? "bg-purple-500/20 text-purple-400"
-                      : "text-zinc-400 hover:text-white"
+                      : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
                   }`}
                 >
                   📝 基础模板
@@ -457,7 +424,7 @@ export default function TemplatesPage() {
                   className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
                     activeTab === "detail"
                       ? "bg-purple-500/20 text-purple-400"
-                      : "text-zinc-400 hover:text-white"
+                      : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
                   }`}
                 >
                   📖 深入讲解
@@ -467,7 +434,7 @@ export default function TemplatesPage() {
                   className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
                     activeTab === "animation"
                       ? "bg-purple-500/20 text-purple-400"
-                      : "text-zinc-400 hover:text-white"
+                      : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
                   }`}
                 >
                   🎬 动画演示
@@ -478,7 +445,7 @@ export default function TemplatesPage() {
               {activeTab === "basic" && (
                 <>
                   {/* 思维步骤 */}
-                  <div className="rounded-xl bg-zinc-900/80 border border-zinc-800 p-4">
+                  <div className="rounded-xl bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 p-4">
                     <h3 className="font-semibold mb-3 flex items-center gap-2">
                       <span className="text-lg">🧠</span>
                       思维步骤（按这个顺序思考）
@@ -487,7 +454,7 @@ export default function TemplatesPage() {
                       {selectedTemplate.thinkingSteps.map((step) => (
                         <div
                           key={step.step}
-                          className="rounded-lg bg-zinc-800/50 p-3 border border-zinc-700/50"
+                          className="rounded-lg bg-zinc-100/50 dark:bg-zinc-800/50 p-3 border border-zinc-200 dark:border-zinc-700/50"
                         >
                           <div className="flex items-center gap-2 mb-1">
                             <span className="flex items-center justify-center w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold">
@@ -495,14 +462,14 @@ export default function TemplatesPage() {
                             </span>
                             <h4 className="font-medium">{step.title}</h4>
                           </div>
-                          <p className="text-sm text-zinc-400 mb-2">{step.description}</p>
+                          <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">{step.description}</p>
                           {step.question && (
                             <p className="text-sm text-blue-400 mb-1">
                               💭 {step.question}
                             </p>
                           )}
                           {step.example && (
-                            <p className="text-xs text-zinc-500 bg-zinc-800 rounded px-2 py-1">
+                            <p className="text-xs text-zinc-500 bg-zinc-100 dark:bg-zinc-800 rounded px-2 py-1">
                               例：{step.example}
                             </p>
                           )}
@@ -512,7 +479,7 @@ export default function TemplatesPage() {
                   </div>
 
                   {/* 代码模板 */}
-                  <div className="rounded-xl bg-zinc-900/80 border border-zinc-800 p-4">
+                  <div className="rounded-xl bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 p-4">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="font-semibold flex items-center gap-2">
                         <span className="text-lg">💻</span>
@@ -541,8 +508,8 @@ export default function TemplatesPage() {
                         </button>
                       </div>
                     </div>
-                    <pre className="bg-zinc-950 rounded-lg p-4 overflow-x-auto text-sm">
-                      <code className="text-zinc-300">
+                    <pre className="bg-zinc-900 dark:bg-zinc-950 rounded-lg p-4 overflow-x-auto text-sm">
+                      <code className="text-zinc-200 dark:text-zinc-300">
                         {showCode === "template"
                           ? selectedTemplate.codeTemplate.typescript
                           : selectedTemplate.codeTemplate.comments}
@@ -551,7 +518,7 @@ export default function TemplatesPage() {
                   </div>
 
                   {/* 常见错误 */}
-                  <div className="rounded-xl bg-zinc-900/80 border border-zinc-800 p-4">
+                  <div className="rounded-xl bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 p-4">
                     <h3 className="font-semibold mb-3 flex items-center gap-2">
                       <span className="text-lg">⚠️</span>
                       常见错误（避坑指南）
@@ -560,7 +527,7 @@ export default function TemplatesPage() {
                       {selectedTemplate.commonMistakes.map((mistake, i) => (
                         <div
                           key={i}
-                          className="rounded-lg bg-zinc-800/50 p-3 border border-zinc-700/50"
+                          className="rounded-lg bg-zinc-100/50 dark:bg-zinc-800/50 p-3 border border-zinc-200 dark:border-zinc-700/50"
                         >
                           <div className="flex items-center gap-2 mb-2">
                             <span
@@ -598,7 +565,7 @@ export default function TemplatesPage() {
                               </div>
                             )}
                           </div>
-                          <p className="text-xs text-zinc-400">{mistake.explanation}</p>
+                          <p className="text-xs text-zinc-600 dark:text-zinc-400">{mistake.explanation}</p>
                         </div>
                       ))}
                     </div>
@@ -611,7 +578,7 @@ export default function TemplatesPage() {
                 <>
                   {/* 核心原理讲解 */}
                   {selectedTemplate.coreExplanation && (
-                    <div className="rounded-xl bg-zinc-900/80 border border-zinc-800 p-4">
+                    <div className="rounded-xl bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 p-4">
                       <h3 className="font-semibold mb-4 flex items-center gap-2">
                         <span className="text-lg">💡</span>
                         核心原理
@@ -623,7 +590,7 @@ export default function TemplatesPage() {
                           <h4 className="text-sm font-semibold text-blue-400 mb-2">
                             📌 这是什么？
                           </h4>
-                          <div className="text-sm text-zinc-300 whitespace-pre-wrap">
+                          <div className="text-sm text-zinc-600 dark:text-zinc-300 whitespace-pre-wrap">
                             {selectedTemplate.coreExplanation.whatIs}
                           </div>
                         </div>
@@ -633,7 +600,7 @@ export default function TemplatesPage() {
                           <h4 className="text-sm font-semibold text-emerald-400 mb-2">
                             🎯 为什么使用？
                           </h4>
-                          <div className="text-sm text-zinc-300 whitespace-pre-wrap">
+                          <div className="text-sm text-zinc-600 dark:text-zinc-300 whitespace-pre-wrap">
                             {selectedTemplate.coreExplanation.whyUse}
                           </div>
                         </div>
@@ -643,7 +610,7 @@ export default function TemplatesPage() {
                           <h4 className="text-sm font-semibold text-purple-400 mb-2">
                             ⚙️ 如何运作？
                           </h4>
-                          <div className="text-sm text-zinc-300 whitespace-pre-wrap font-mono">
+                          <div className="text-sm text-zinc-600 dark:text-zinc-300 whitespace-pre-wrap font-mono">
                             {selectedTemplate.coreExplanation.howItWorks}
                           </div>
                         </div>
@@ -654,7 +621,7 @@ export default function TemplatesPage() {
                             <h4 className="text-sm font-semibold text-amber-400 mb-2">
                               🎨 形象比喻
                             </h4>
-                            <div className="text-sm text-zinc-300 whitespace-pre-wrap">
+                            <div className="text-sm text-zinc-600 dark:text-zinc-300 whitespace-pre-wrap">
                               {selectedTemplate.coreExplanation.visualMetaphor}
                             </div>
                           </div>
@@ -665,7 +632,7 @@ export default function TemplatesPage() {
 
                   {/* 变体模式 */}
                   {selectedTemplate.variants && selectedTemplate.variants.length > 0 && (
-                    <div className="rounded-xl bg-zinc-900/80 border border-zinc-800 p-4">
+                    <div className="rounded-xl bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 p-4">
                       <h3 className="font-semibold mb-3 flex items-center gap-2">
                         <span className="text-lg">🔄</span>
                         变体模式（{selectedTemplate.variants.length} 种）
@@ -693,7 +660,7 @@ export default function TemplatesPage() {
                     <div className="rounded-xl bg-zinc-900/80 border border-zinc-800 p-8 text-center">
                       <div className="text-4xl mb-4">🚧</div>
                       <h3 className="font-semibold mb-2">动画正在制作中</h3>
-                      <p className="text-sm text-zinc-400">
+                      <p className="text-sm text-zinc-600 dark:text-zinc-400">
                         此模板的动画演示即将上线，敬请期待！
                       </p>
                     </div>
@@ -702,7 +669,7 @@ export default function TemplatesPage() {
               )}
 
               {/* 适用题目 */}
-              <div className="rounded-xl bg-zinc-900/80 border border-zinc-800 p-4">
+              <div className="rounded-xl bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 p-4">
                 <h3 className="font-semibold mb-3 flex items-center gap-2">
                   <span className="text-lg">📚</span>
                   适用题目（去练习！）
@@ -712,7 +679,7 @@ export default function TemplatesPage() {
                     <Link
                       key={problemId}
                       href={`/problems/${problemId}`}
-                      className="px-3 py-1.5 rounded-md bg-zinc-800 hover:bg-zinc-700 text-sm transition-colors"
+                      className="px-3 py-1.5 rounded-md bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-sm text-zinc-700 dark:text-zinc-300 transition-colors"
                     >
                       {problemId
                         .split("-")

@@ -24,8 +24,8 @@ export function BasicListExample() {
         ))}
       </ul>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`const frameworks = ["React", "Vue", "Angular"];
 
 {frameworks.map((item, index) => (
@@ -85,8 +85,8 @@ export function ObjectListExample() {
         ))}
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`interface User {
   id: number;
   name: string;
@@ -189,8 +189,8 @@ export function FilterSortExample() {
         )}
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`const result = products
   .filter(p => p.name.includes(filter))
   .sort((a, b) => a.price - b.price);
@@ -264,8 +264,8 @@ export function GroupedListExample() {
         ))}
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`const grouped = tasks.reduce((acc, task) => {
   acc[task.status].push(task);
   return acc;
@@ -349,7 +349,7 @@ export function KeyImportanceExample() {
               animateAdd && index === 0 ? 'animate-pulse bg-green-100 dark:bg-green-900/30' : ''
             }`}
           >
-            <span className="text-xs text-zinc-400">
+            <span className="text-xs text-zinc-500 dark:text-zinc-400">
               key={useIndexKey ? index : todo.id}
             </span>
             <input
@@ -410,8 +410,8 @@ export function FragmentExample() {
         ))}
       </dl>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`import { Fragment } from 'react';
 
 {glossary.map(item => (
@@ -516,12 +516,12 @@ export function DynamicListExample() {
               <button
                 onClick={() => moveUp(index)}
                 disabled={index === 0}
-                className="text-zinc-400 hover:text-zinc-600 disabled:opacity-30 transition-all duration-200 hover:scale-125 active:scale-95"
+                className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 transition-all duration-200 hover:scale-125 active:scale-95"
               >
                 ↑
               </button>
               <span className="flex-1">{item.text}</span>
-              <span className="text-xs text-zinc-400">id: {item.id}</span>
+              <span className="text-xs text-zinc-500 dark:text-zinc-400">id: {item.id}</span>
               <button
                 onClick={() => removeItem(item.id)}
                 className="text-red-500 hover:text-red-700 transition-all duration-200 hover:scale-125 active:scale-95"

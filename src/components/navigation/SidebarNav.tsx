@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import PWALink from "@/components/PWALink";
 import { useState, useEffect, useCallback, useRef } from "react";
+import { isDetailPage } from "@/lib/mobile-routes";
 
 interface RouteInfo {
   path: string;
@@ -132,6 +133,9 @@ export default function SidebarNav({ groups }: SidebarNavProps) {
   const [contentKey, setContentKey] = useState(0); // 用于触发淡入动画
   const prevCategoryRef = useRef(activeCategory);
 
+  // 检测是否是详情页 - 详情页不显示移动端头部
+  const isDetail = isDetailPage(pathname);
+
   // 根据当前路径确定活跃分类
   useEffect(() => {
     if (pathname === "/") {
@@ -210,8 +214,9 @@ export default function SidebarNav({ groups }: SidebarNavProps) {
 
   return (
     <>
-      {/* 移动端顶部导航栏 - 精致设计 */}
-      <header className="fixed left-0 top-0 z-50 flex h-14 w-full items-center justify-between bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border-b border-zinc-200/80 dark:border-zinc-800/80 px-4 pt-[env(safe-area-inset-top)] lg:hidden shadow-sm" role="banner">
+      {/* 移动端顶部导航栏 - 精致设计 - 详情页隐藏 */}
+      {!isDetail && (
+        <header className="fixed left-0 top-0 z-50 flex h-14 w-full items-center justify-between bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border-b border-zinc-200/80 dark:border-zinc-800/80 px-4 pt-[env(safe-area-inset-top)] lg:hidden shadow-sm" role="banner">
         <PWALink href="/" className="flex items-center gap-2.5 group" aria-label="返回首页">
           <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 text-white shadow-lg shadow-blue-500/25 group-hover:shadow-blue-500/40 transition-shadow duration-300" aria-hidden="true">
             <svg className="w-5 h-5" viewBox="-11 -11 22 22">
@@ -244,6 +249,7 @@ export default function SidebarNav({ groups }: SidebarNavProps) {
           </div>
         </button>
       </header>
+      )}
 
       {/* 遮罩层 - 带模糊效果 */}
       <div

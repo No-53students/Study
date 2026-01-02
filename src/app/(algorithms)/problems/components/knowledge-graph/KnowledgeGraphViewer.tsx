@@ -45,19 +45,19 @@ const nodeTypeConfig = {
 };
 
 const relationConfig: Record<EdgeRelationType, { label: string; color: string; style: string }> = {
-  prerequisite: { label: "前置", color: "text-red-400", style: "stroke-red-500" },
-  extends: { label: "进阶", color: "text-blue-400", style: "stroke-blue-500" },
-  similar: { label: "相似", color: "text-green-400", style: "stroke-green-500" },
-  applies: { label: "应用", color: "text-purple-400", style: "stroke-purple-500" },
-  contains: { label: "包含", color: "text-cyan-400", style: "stroke-cyan-500" },
-  variant: { label: "变体", color: "text-amber-400", style: "stroke-amber-500" },
+  prerequisite: { label: "前置", color: "text-red-600 dark:text-red-400", style: "stroke-red-500" },
+  extends: { label: "进阶", color: "text-blue-600 dark:text-blue-400", style: "stroke-blue-500" },
+  similar: { label: "相似", color: "text-green-600 dark:text-green-400", style: "stroke-green-500" },
+  applies: { label: "应用", color: "text-purple-600 dark:text-purple-400", style: "stroke-purple-500" },
+  contains: { label: "包含", color: "text-cyan-600 dark:text-cyan-400", style: "stroke-cyan-500" },
+  variant: { label: "变体", color: "text-amber-600 dark:text-amber-400", style: "stroke-amber-500" },
 };
 
 const statusConfig = {
-  locked: { bg: "bg-zinc-800", opacity: "opacity-50", icon: "🔒" },
-  available: { bg: "bg-zinc-700", opacity: "opacity-100", icon: "📖" },
-  "in-progress": { bg: "bg-yellow-900/30", opacity: "opacity-100", icon: "📝" },
-  mastered: { bg: "bg-green-900/30", opacity: "opacity-100", icon: "✅" },
+  locked: { bg: "bg-zinc-200 dark:bg-zinc-800", opacity: "opacity-50", icon: "🔒" },
+  available: { bg: "bg-zinc-100 dark:bg-zinc-700", opacity: "opacity-100", icon: "📖" },
+  "in-progress": { bg: "bg-yellow-100 dark:bg-yellow-900/30", opacity: "opacity-100", icon: "📝" },
+  mastered: { bg: "bg-green-100 dark:bg-green-900/30", opacity: "opacity-100", icon: "✅" },
 };
 
 export function KnowledgeGraphViewer({
@@ -102,22 +102,25 @@ export function KnowledgeGraphViewer({
       const row = Math.floor(index / cols);
       const col = index % cols;
       positions[node.id] = {
-        x: 60 + col * 160,
-        y: 60 + row * 120,
+        x: 16 + col * 90,
+        y: 16 + row * 70,
       };
     });
 
     return positions;
   }, [filteredNodes]);
 
-  const svgWidth = 800;
-  const svgHeight = 600;
+  // 动态计算 SVG 尺寸
+  const cols = Math.ceil(Math.sqrt(filteredNodes.length));
+  const rows = Math.ceil(filteredNodes.length / cols);
+  const svgWidth = Math.max(600, 16 + cols * 90 + 76);
+  const svgHeight = Math.max(400, 16 + rows * 70 + 50);
 
   return (
-    <div className={`rounded-xl border border-zinc-700 bg-zinc-900/80 overflow-hidden ${className}`}>
+    <div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900/80 overflow-hidden ${className}`}>
       {/* 头部 */}
-      <div className="px-4 py-3 border-b border-zinc-700 flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-zinc-200 flex items-center gap-2">
+      <div className="px-4 py-3 border-b border-zinc-200 dark:border-zinc-700 flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 flex items-center gap-2">
           <span>🗺️</span>
           知识图谱
         </h3>
@@ -127,7 +130,7 @@ export function KnowledgeGraphViewer({
             <button
               onClick={() => setFilterType("all")}
               className={`px-2 py-1 text-xs rounded transition-colors ${
-                filterType === "all" ? "bg-zinc-700 text-white" : "text-zinc-400 hover:text-white"
+                filterType === "all" ? "bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white" : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
               }`}
             >
               全部
@@ -137,7 +140,7 @@ export function KnowledgeGraphViewer({
                 key={type}
                 onClick={() => setFilterType(type)}
                 className={`px-2 py-1 text-xs rounded transition-colors ${
-                  filterType === type ? "bg-zinc-700 text-white" : "text-zinc-400 hover:text-white"
+                  filterType === type ? "bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white" : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
                 }`}
               >
                 {config.icon}
@@ -148,7 +151,7 @@ export function KnowledgeGraphViewer({
           <button
             onClick={() => setShowRelations(!showRelations)}
             className={`px-2 py-1 text-xs rounded transition-colors ${
-              showRelations ? "bg-blue-600 text-white" : "bg-zinc-700 text-zinc-400"
+              showRelations ? "bg-blue-600 text-white" : "bg-zinc-100 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-400"
             }`}
           >
             {showRelations ? "隐藏连线" : "显示连线"}
@@ -175,10 +178,10 @@ export function KnowledgeGraphViewer({
             return (
               <motion.g key={`edge-${idx}`}>
                 <motion.line
-                  x1={sourcePos.x + 60}
-                  y1={sourcePos.y + 25}
-                  x2={targetPos.x + 60}
-                  y2={targetPos.y + 25}
+                  x1={sourcePos.x + 38}
+                  y1={sourcePos.y + 22}
+                  x2={targetPos.x + 38}
+                  y2={targetPos.y + 22}
                   className={config.style}
                   strokeWidth={isRelated ? 2 : 1}
                   strokeOpacity={isRelated ? 0.8 : 0.2}
@@ -190,8 +193,8 @@ export function KnowledgeGraphViewer({
                 {/* 关系标签 */}
                 {isRelated && (
                   <motion.text
-                    x={(sourcePos.x + targetPos.x) / 2 + 60}
-                    y={(sourcePos.y + targetPos.y) / 2 + 25}
+                    x={(sourcePos.x + targetPos.x) / 2 + 38}
+                    y={(sourcePos.y + targetPos.y) / 2 + 22}
                     className={`text-xs fill-current ${config.color}`}
                     textAnchor="middle"
                     initial={{ opacity: 0 }}
@@ -233,27 +236,27 @@ export function KnowledgeGraphViewer({
                 onMouseLeave={() => setHoveredNodeId(null)}
               >
                 <div
-                  className={`w-28 p-2 rounded-lg border-2 transition-all ${typeConfig.bg} ${
+                  className={`w-[76px] p-1.5 rounded-lg border transition-all ${typeConfig.bg} ${
                     isSelected ? "border-white" : typeConfig.border
                   } ${isHovered ? "shadow-lg" : ""}`}
                 >
                   {/* 节点头部 */}
-                  <div className="flex items-center gap-1 mb-1">
-                    <span className="text-sm">{node.icon || typeConfig.icon}</span>
-                    <span className="text-[10px] text-zinc-500">{status.icon}</span>
+                  <div className="flex items-center gap-0.5 mb-0.5">
+                    <span className="text-xs">{node.icon || typeConfig.icon}</span>
+                    <span className="text-[8px] text-zinc-500">{status.icon}</span>
                   </div>
                   {/* 节点名称 */}
-                  <div className="text-xs font-medium text-white truncate">
+                  <div className="text-[10px] font-medium text-white truncate">
                     {node.name}
                   </div>
                   {/* 难度指示 */}
                   {node.difficulty && (
-                    <div className="flex gap-0.5 mt-1">
+                    <div className="flex gap-0.5 mt-0.5">
                       {[1, 2, 3, 4, 5].map((level) => (
                         <div
                           key={level}
-                          className={`w-1.5 h-1.5 rounded-full ${
-                            level <= node.difficulty! ? "bg-yellow-400" : "bg-zinc-700"
+                          className={`w-1 h-1 rounded-full ${
+                            level <= node.difficulty! ? "bg-yellow-400" : "bg-zinc-300 dark:bg-zinc-700"
                           }`}
                         />
                       ))}
@@ -268,7 +271,7 @@ export function KnowledgeGraphViewer({
 
       {/* 节点详情面板 */}
       {selectedNodeId && (
-        <div className="border-t border-zinc-700 p-4">
+        <div className="border-t border-zinc-200 dark:border-zinc-700 p-4">
           {(() => {
             const node = graph.nodes.find(n => n.id === selectedNodeId);
             if (!node) return null;
@@ -281,14 +284,14 @@ export function KnowledgeGraphViewer({
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <span className="text-xl">{node.icon || typeConfig.icon}</span>
-                  <span className="font-semibold text-white">{node.name}</span>
+                  <span className="font-semibold text-zinc-900 dark:text-white">{node.name}</span>
                   <span className={`text-xs px-2 py-0.5 rounded ${typeConfig.bg} ${typeConfig.border} border`}>
                     {node.type}
                   </span>
                 </div>
 
                 {node.description && (
-                  <p className="text-sm text-zinc-400">{node.description}</p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">{node.description}</p>
                 )}
 
                 {/* 关联信息 */}
@@ -303,7 +306,7 @@ export function KnowledgeGraphViewer({
                           return (
                             <div key={idx} className="flex items-center gap-1">
                               <span className={`${config.color}`}>{config.label}</span>
-                              <span className="text-zinc-300">{sourceNode?.name}</span>
+                              <span className="text-zinc-700 dark:text-zinc-300">{sourceNode?.name}</span>
                             </div>
                           );
                         })}
@@ -320,7 +323,7 @@ export function KnowledgeGraphViewer({
                           return (
                             <div key={idx} className="flex items-center gap-1">
                               <span className={`${config.color}`}>{config.label}</span>
-                              <span className="text-zinc-300">{targetNode?.name}</span>
+                              <span className="text-zinc-700 dark:text-zinc-300">{targetNode?.name}</span>
                             </div>
                           );
                         })}
@@ -335,12 +338,12 @@ export function KnowledgeGraphViewer({
       )}
 
       {/* 图例 */}
-      <div className="px-4 py-2 border-t border-zinc-700 flex flex-wrap gap-3 text-xs">
+      <div className="px-4 py-2 border-t border-zinc-200 dark:border-zinc-700 flex flex-wrap gap-3 text-xs">
         <span className="text-zinc-500">节点类型:</span>
         {Object.entries(nodeTypeConfig).map(([type, config]) => (
           <div key={type} className="flex items-center gap-1">
             <span>{config.icon}</span>
-            <span className="text-zinc-400">
+            <span className="text-zinc-600 dark:text-zinc-400">
               {type === "concept" ? "概念" : type === "technique" ? "技巧" : type === "pattern" ? "模板" : type === "problem" ? "题目" : "分类"}
             </span>
           </div>

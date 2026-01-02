@@ -12,7 +12,7 @@ interface PatternComparisonsPanelProps {
  */
 export function PatternComparisonsPanel({ comparisons }: PatternComparisonsPanelProps) {
   return (
-    <div className="bg-zinc-900/50 rounded-xl p-6 border border-zinc-700/50">
+    <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-xl p-6 border border-zinc-200 dark:border-zinc-700/50">
       <h3 className="text-lg font-semibold text-amber-400 mb-4 flex items-center gap-2">
         <span className="text-2xl">🔗</span>
         相似题型对比
@@ -22,7 +22,7 @@ export function PatternComparisonsPanel({ comparisons }: PatternComparisonsPanel
         {comparisons.map((comparison, index) => (
           <div
             key={index}
-            className="bg-zinc-800/50 rounded-lg p-4 border border-zinc-700/50 hover:border-amber-500/30 transition-colors"
+            className="bg-zinc-100 dark:bg-zinc-800/50 rounded-lg p-4 border border-zinc-200 dark:border-zinc-700/50 hover:border-amber-500/30 transition-colors"
           >
             <div className="flex items-center justify-between mb-3">
               <Link
@@ -30,7 +30,7 @@ export function PatternComparisonsPanel({ comparisons }: PatternComparisonsPanel
                 className="text-amber-400 hover:text-amber-300 font-medium flex items-center gap-2"
               >
                 📝 {comparison.title}
-                <span className="text-xs text-zinc-500">→</span>
+                <span className="text-xs text-zinc-400 dark:text-zinc-500">→</span>
               </Link>
             </div>
 
@@ -38,19 +38,19 @@ export function PatternComparisonsPanel({ comparisons }: PatternComparisonsPanel
               {/* 相似点 */}
               <div className="bg-green-500/10 rounded-lg p-3 border border-green-500/30">
                 <span className="text-green-400 text-sm">✓ 相似点</span>
-                <p className="text-zinc-300 text-sm mt-1">{comparison.similarity}</p>
+                <p className="text-zinc-700 dark:text-zinc-300 text-sm mt-1">{comparison.similarity}</p>
               </div>
 
               {/* 不同点 */}
               <div className="bg-blue-500/10 rounded-lg p-3 border border-blue-500/30">
                 <span className="text-blue-400 text-sm">✗ 不同点</span>
-                <p className="text-zinc-300 text-sm mt-1">{comparison.difference}</p>
+                <p className="text-zinc-700 dark:text-zinc-300 text-sm mt-1">{comparison.difference}</p>
               </div>
             </div>
 
             {/* 学习建议 */}
             {comparison.tip && (
-              <div className="mt-3 text-sm text-zinc-400">
+              <div className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
                 💡 {comparison.tip}
               </div>
             )}
@@ -76,7 +76,7 @@ export function VariationsPanel({ variations }: VariationsPanelProps) {
   };
 
   return (
-    <div className="bg-zinc-900/50 rounded-xl p-6 border border-zinc-700/50">
+    <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-xl p-6 border border-zinc-200 dark:border-zinc-700/50">
       <h3 className="text-lg font-semibold text-indigo-400 mb-4 flex items-center gap-2">
         <span className="text-2xl">🎯</span>
         变体练习
@@ -89,7 +89,7 @@ export function VariationsPanel({ variations }: VariationsPanelProps) {
           return (
             <div
               key={index}
-              className="bg-zinc-800/50 rounded-lg p-4 border border-zinc-700/50"
+              className="bg-zinc-100 dark:bg-zinc-800/50 rounded-lg p-4 border border-zinc-200 dark:border-zinc-700/50"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
@@ -99,7 +99,7 @@ export function VariationsPanel({ variations }: VariationsPanelProps) {
                     </span>
                   </div>
                   <p className="text-zinc-200 font-medium">{variation.description}</p>
-                  <p className="text-zinc-400 text-sm mt-2">
+                  <p className="text-zinc-600 dark:text-zinc-400 text-sm mt-2">
                     💡 思路调整：{variation.modification}
                   </p>
                 </div>

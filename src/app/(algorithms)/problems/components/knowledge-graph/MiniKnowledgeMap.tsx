@@ -12,12 +12,12 @@ interface MiniKnowledgeMapProps {
 }
 
 const relationConfig: Record<EdgeRelationType, { label: string; color: string; lineColor: string }> = {
-  prerequisite: { label: "前置", color: "text-red-400 bg-red-500/20 border-red-500/30", lineColor: "#ef4444" },
-  extends: { label: "进阶", color: "text-blue-400 bg-blue-500/20 border-blue-500/30", lineColor: "#3b82f6" },
-  similar: { label: "相似", color: "text-green-400 bg-green-500/20 border-green-500/30", lineColor: "#22c55e" },
-  applies: { label: "应用", color: "text-purple-400 bg-purple-500/20 border-purple-500/30", lineColor: "#a855f7" },
-  contains: { label: "包含", color: "text-cyan-400 bg-cyan-500/20 border-cyan-500/30", lineColor: "#06b6d4" },
-  variant: { label: "变体", color: "text-amber-400 bg-amber-500/20 border-amber-500/30", lineColor: "#f59e0b" },
+  prerequisite: { label: "前置", color: "text-red-600 dark:text-red-400 bg-red-500/20 border-red-500/30", lineColor: "#ef4444" },
+  extends: { label: "进阶", color: "text-blue-600 dark:text-blue-400 bg-blue-500/20 border-blue-500/30", lineColor: "#3b82f6" },
+  similar: { label: "相似", color: "text-green-600 dark:text-green-400 bg-green-500/20 border-green-500/30", lineColor: "#22c55e" },
+  applies: { label: "应用", color: "text-purple-600 dark:text-purple-400 bg-purple-500/20 border-purple-500/30", lineColor: "#a855f7" },
+  contains: { label: "包含", color: "text-cyan-600 dark:text-cyan-400 bg-cyan-500/20 border-cyan-500/30", lineColor: "#06b6d4" },
+  variant: { label: "变体", color: "text-amber-600 dark:text-amber-400 bg-amber-500/20 border-amber-500/30", lineColor: "#f59e0b" },
 };
 
 const nodeTypeIcons = {
@@ -49,10 +49,10 @@ export function MiniKnowledgeMap({
   });
 
   return (
-    <div className={`rounded-xl border border-zinc-700 bg-zinc-900/50 overflow-hidden ${className}`}>
+    <div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900/50 overflow-hidden ${className}`}>
       {/* 头部 */}
-      <div className="px-4 py-2 border-b border-zinc-700/50 flex items-center justify-between">
-        <h4 className="text-sm font-medium text-zinc-300 flex items-center gap-2">
+      <div className="px-4 py-2 border-b border-zinc-200 dark:border-zinc-700/50 flex items-center justify-between">
+        <h4 className="text-sm font-medium text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
           <span>🔗</span>
           知识关联
         </h4>
@@ -137,11 +137,11 @@ export function MiniKnowledgeMap({
               whileHover={{ scale: 1.1 }}
               onClick={() => onNodeClick?.(node)}
             >
-              <div className={`w-[70px] p-1.5 rounded-lg border transition-all ${relationStyle || "bg-zinc-800 border-zinc-700"}`}>
+              <div className={`w-[70px] p-1.5 rounded-lg border transition-all ${relationStyle || "bg-zinc-100 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700"}`}>
                 <div className="text-xs text-center">
                   {node.icon || nodeTypeIcons[node.type]}
                 </div>
-                <div className="text-[9px] font-medium text-zinc-200 truncate text-center">
+                <div className="text-[9px] font-medium text-zinc-800 dark:text-zinc-200 truncate text-center">
                   {node.name}
                 </div>
               </div>
@@ -151,7 +151,7 @@ export function MiniKnowledgeMap({
       </div>
 
       {/* 图例 */}
-      <div className="px-3 py-2 border-t border-zinc-700/50 flex flex-wrap gap-2 text-[10px]">
+      <div className="px-3 py-2 border-t border-zinc-200 dark:border-zinc-700/50 flex flex-wrap gap-2 text-[10px]">
         {Object.entries(relationConfig).map(([key, config]) => (
           <div key={key} className="flex items-center gap-1">
             <div

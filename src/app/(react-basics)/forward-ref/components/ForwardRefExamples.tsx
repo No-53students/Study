@@ -213,8 +213,8 @@ export function ImperativeHandleExample() {
         </div>
       )}
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`useImperativeHandle(ref, () => ({
   focus() { inputRef.current?.focus(); },
   clear() { inputRef.current.value = ''; },
@@ -417,8 +417,8 @@ export function ComponentLibraryExample() {
         </Button>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   function Button({ variant, size, children, ...props }, ref) {
     return (

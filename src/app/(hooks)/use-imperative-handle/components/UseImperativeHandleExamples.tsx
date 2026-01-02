@@ -523,8 +523,8 @@ export default function UseImperativeHandleExamples() {
           useImperativeHandle 用于自定义暴露给父组件的实例值，配合 forwardRef 使用。
         </p>
 
-        <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-          <p className="mb-2 text-zinc-400">// 基本语法</p>
+        <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+          <p className="mb-2 text-zinc-600 dark:text-zinc-400">// 基本语法</p>
           <pre className="text-green-400">
 {`const CustomInput = forwardRef((props, ref) => {
   const inputRef = useRef(null);

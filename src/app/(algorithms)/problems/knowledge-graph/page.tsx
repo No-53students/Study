@@ -1,24 +1,20 @@
 "use client";
 
-import Link from "next/link";
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { algorithmKnowledgeGraph } from "../data/knowledge-graph";
 import { KnowledgeNode, KnowledgeEdge } from "../types";
 
-// 使用导入的知识图谱
-const knowledgeGraph = algorithmKnowledgeGraph;
+const graph = algorithmKnowledgeGraph;
 
-// 节点类型配置
-const NODE_TYPE_CONFIG = {
-  category: { color: "#3b82f6", label: "分类", size: 60 },
-  concept: { color: "#22c55e", label: "概念", size: 45 },
-  technique: { color: "#f59e0b", label: "技巧", size: 40 },
-  pattern: { color: "#a855f7", label: "模式", size: 45 },
-  problem: { color: "#ef4444", label: "题目", size: 35 },
+const NODE_CONFIG: Record<string, { color: string; label: string; r: number }> = {
+  category: { color: "#3b82f6", label: "分类", r: 10 },
+  concept: { color: "#22c55e", label: "概念", r: 8 },
+  technique: { color: "#f59e0b", label: "技巧", r: 7 },
+  pattern: { color: "#a855f7", label: "模式", r: 8 },
+  problem: { color: "#ef4444", label: "题目", r: 6 },
 };
 
-// 关系类型配置
-const EDGE_TYPE_CONFIG = {
+const EDGE_CONFIG: Record<string, { color: string; label: string; dash: boolean }> = {
   prerequisite: { color: "#f59e0b", label: "前置知识", dash: false },
   extends: { color: "#22c55e", label: "扩展", dash: false },
   similar: { color: "#3b82f6", label: "相似", dash: true },
@@ -27,564 +23,232 @@ const EDGE_TYPE_CONFIG = {
   variant: { color: "#ec4899", label: "变体", dash: true },
 };
 
-// 简化的力导向布局
-function useForceLayout(
-  nodes: KnowledgeNode[],
-  edges: KnowledgeEdge[],
-  width: number,
-  height: number
-) {
-  const [positions, setPositions] = useState<Map<string, { x: number; y: number }>>(new Map());
+function useForceLayout(nodes: KnowledgeNode[], edges: KnowledgeEdge[], w: number, h: number) {
+  const [pos, setPos] = useState<Map<string, { x: number; y: number }>>(new Map());
 
   useEffect(() => {
-    if (nodes.length === 0) return;
+    if (!nodes.length) return;
 
-    // 初始化位置：按类型分层，增加间距
-    const newPositions = new Map<string, { x: number; y: number }>();
-    const typeGroups: Record<string, KnowledgeNode[]> = {};
+    const p = new Map<string, { x: number; y: number }>();
+    const groups: Record<string, KnowledgeNode[]> = {};
+    nodes.forEach(n => (groups[n.type] ??= []).push(n));
 
-    nodes.forEach(node => {
-      if (!typeGroups[node.type]) typeGroups[node.type] = [];
-      typeGroups[node.type].push(node);
-    });
-
-    const types = Object.keys(typeGroups);
-    const layerHeight = height / (types.length + 1);
-
-    types.forEach((type, layerIndex) => {
-      const nodesInLayer = typeGroups[type];
-      const layerWidth = width / (nodesInLayer.length + 1);
-
-      nodesInLayer.forEach((node, nodeIndex) => {
-        newPositions.set(node.id, {
-          x: layerWidth * (nodeIndex + 1) + (Math.random() - 0.5) * 50,
-          y: layerHeight * (layerIndex + 1) + (Math.random() - 0.5) * 50,
+    const types = Object.keys(groups);
+    types.forEach((type, li) => {
+      const layer = groups[type];
+      layer.forEach((n, ni) => {
+        p.set(n.id, {
+          x: (w / (layer.length + 1)) * (ni + 1) + (Math.random() - 0.5) * 40,
+          y: (h / (types.length + 1)) * (li + 1) + (Math.random() - 0.5) * 40,
         });
       });
     });
 
-    // 力迭代 - 增加迭代次数和斥力
-    for (let i = 0; i < 100; i++) {
-      nodes.forEach(node => {
-        const pos = newPositions.get(node.id)!;
+    for (let i = 0; i < 80; i++) {
+      nodes.forEach(n => {
+        const cur = p.get(n.id)!;
         let fx = 0, fy = 0;
 
-        // 节点间斥力 - 增大斥力常数
-        nodes.forEach(other => {
-          if (other.id === node.id) return;
-          const otherPos = newPositions.get(other.id)!;
-          const dx = pos.x - otherPos.x;
-          const dy = pos.y - otherPos.y;
-          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-          // 增加斥力，设置最小距离
-          const minDist = 120;
-          if (dist < minDist) {
-            const force = 8000 / (dist * dist);
-            fx += (dx / dist) * force;
-            fy += (dy / dist) * force;
-          } else {
-            const force = 4000 / (dist * dist);
-            fx += (dx / dist) * force;
-            fy += (dy / dist) * force;
-          }
+        nodes.forEach(o => {
+          if (o.id === n.id) return;
+          const op = p.get(o.id)!;
+          const dx = cur.x - op.x, dy = cur.y - op.y;
+          const d = Math.hypot(dx, dy) || 1;
+          const f = (d < 40 ? 2000 : 1000) / (d * d);
+          fx += (dx / d) * f;
+          fy += (dy / d) * f;
         });
 
-        // 边的引力 - 减小引力
-        edges.forEach(edge => {
-          let otherId: string | null = null;
-          if (edge.source === node.id) otherId = edge.target;
-          if (edge.target === node.id) otherId = edge.source;
-          if (!otherId) return;
-
-          const otherPos = newPositions.get(otherId);
-          if (!otherPos) return;
-
-          const dx = otherPos.x - pos.x;
-          const dy = otherPos.y - pos.y;
-          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-          // 理想距离
-          const idealDist = 150;
-          const force = (dist - idealDist) * 0.005;
-          fx += (dx / dist) * force;
-          fy += (dy / dist) * force;
+        edges.forEach(e => {
+          const oid = e.source === n.id ? e.target : e.target === n.id ? e.source : null;
+          if (!oid) return;
+          const op = p.get(oid);
+          if (!op) return;
+          const dx = op.x - cur.x, dy = op.y - cur.y;
+          const d = Math.hypot(dx, dy) || 1;
+          const f = (d - 60) * 0.003;
+          fx += (dx / d) * f;
+          fy += (dy / d) * f;
         });
 
-        // 边界约束 - 增大边距
-        const padding = 100;
-        if (pos.x < padding) fx += 10;
-        if (pos.x > width - padding) fx -= 10;
-        if (pos.y < padding) fy += 10;
-        if (pos.y > height - padding) fy -= 10;
+        const pad = 50;
+        if (cur.x < pad) fx += 6;
+        if (cur.x > w - pad) fx -= 6;
+        if (cur.y < pad) fy += 6;
+        if (cur.y > h - pad) fy -= 6;
 
-        newPositions.set(node.id, {
-          x: pos.x + fx * 0.1,
-          y: pos.y + fy * 0.1,
-        });
+        p.set(n.id, { x: cur.x + fx * 0.1, y: cur.y + fy * 0.1 });
       });
     }
 
-    setPositions(newPositions);
-  }, [nodes, edges, width, height]);
+    setPos(p);
+  }, [nodes, edges, w, h]);
 
-  return positions;
-}
-
-interface GraphNodeProps {
-  node: KnowledgeNode;
-  x: number;
-  y: number;
-  selected: boolean;
-  onSelect: (node: KnowledgeNode) => void;
-}
-
-function GraphNode({ node, x, y, selected, onSelect }: GraphNodeProps) {
-  const config = NODE_TYPE_CONFIG[node.type];
-  const size = config.size;
-
-  return (
-    <g
-      transform={`translate(${x}, ${y})`}
-      onClick={() => onSelect(node)}
-      className="cursor-pointer"
-    >
-      {/* 选中光晕 */}
-      {selected && (
-        <circle
-          r={size / 2 + 10}
-          fill="none"
-          stroke={node.color || config.color}
-          strokeWidth={3}
-          opacity={0.5}
-          className="animate-pulse"
-        />
-      )}
-
-      {/* 节点圆形 */}
-      <circle
-        r={size / 2}
-        fill={node.color || config.color}
-        opacity={0.9}
-        className="transition-all hover:opacity-100"
-      />
-
-      {/* 图标 */}
-      <text
-        textAnchor="middle"
-        dominantBaseline="central"
-        fontSize={size * 0.4}
-        className="pointer-events-none select-none"
-      >
-        {node.icon || "●"}
-      </text>
-
-      {/* 名称 */}
-      <text
-        y={size / 2 + 14}
-        textAnchor="middle"
-        fontSize={10}
-        fill="#e4e4e7"
-        className="pointer-events-none select-none"
-      >
-        {node.name.length > 8 ? node.name.slice(0, 8) + "..." : node.name}
-      </text>
-    </g>
-  );
-}
-
-interface GraphEdgeProps {
-  edge: KnowledgeEdge;
-  sourcePos: { x: number; y: number };
-  targetPos: { x: number; y: number };
-  selected: boolean;
-}
-
-function GraphEdge({ edge, sourcePos, targetPos, selected }: GraphEdgeProps) {
-  const config = EDGE_TYPE_CONFIG[edge.relation];
-
-  return (
-    <line
-      x1={sourcePos.x}
-      y1={sourcePos.y}
-      x2={targetPos.x}
-      y2={targetPos.y}
-      stroke={selected ? config.color : "#52525b"}
-      strokeWidth={selected ? 2 : 1}
-      strokeDasharray={config.dash ? "4,4" : undefined}
-      opacity={selected ? 0.8 : 0.3}
-      className="transition-all"
-    />
-  );
+  return pos;
 }
 
 export default function KnowledgeGraphPage() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
-  const [selectedNode, setSelectedNode] = useState<KnowledgeNode | null>(null);
-  const [filterType, setFilterType] = useState<string | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
+  const [dim, setDim] = useState({ w: 800, h: 600 });
+  const [selected, setSelected] = useState<KnowledgeNode | null>(null);
+  const [filter, setFilter] = useState<string | null>(null);
+  const [scale, setScale] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [drag, setDrag] = useState<{ x: number; y: number } | null>(null);
 
-  // 响应式尺寸
+  const zoom = useCallback((d: number) => setScale(s => Math.min(Math.max(s * d, 0.3), 3)), []);
+
   useEffect(() => {
-    const updateDimensions = () => {
-      if (containerRef.current) {
-        setDimensions({
-          width: containerRef.current.offsetWidth,
-          height: Math.max(700, window.innerHeight - 180),
-        });
-      }
+    const update = () => {
+      if (ref.current) setDim({ w: ref.current.offsetWidth, h: Math.max(600, window.innerHeight - 200) });
     };
-
-    updateDimensions();
-    window.addEventListener("resize", updateDimensions);
-    return () => window.removeEventListener("resize", updateDimensions);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
   }, []);
 
-  // 过滤节点
-  const filteredNodes = useMemo(() => {
-    if (!filterType) return knowledgeGraph.nodes;
-    return knowledgeGraph.nodes.filter((n: KnowledgeNode) => n.type === filterType);
-  }, [filterType]);
+  const nodes = useMemo(() => filter ? graph.nodes.filter(n => n.type === filter) : graph.nodes, [filter]);
+  const nodeIds = useMemo(() => new Set(nodes.map(n => n.id)), [nodes]);
+  const edges = useMemo(() => graph.edges.filter(e => nodeIds.has(e.source) && nodeIds.has(e.target)), [nodeIds]);
+  const pos = useForceLayout(nodes, edges, dim.w, dim.h);
 
-  const filteredNodeIds = useMemo(() => new Set(filteredNodes.map((n: KnowledgeNode) => n.id)), [filteredNodes]);
-
-  // 过滤边
-  const filteredEdges = useMemo(() => {
-    return knowledgeGraph.edges.filter(
-      (e: KnowledgeEdge) => filteredNodeIds.has(e.source) && filteredNodeIds.has(e.target)
-    );
-  }, [filteredNodeIds]);
-
-  // 力导向布局
-  const positions = useForceLayout(
-    filteredNodes,
-    filteredEdges,
-    dimensions.width,
-    dimensions.height
-  );
-
-  // 选中节点的相关边
-  const selectedEdges = useMemo(() => {
-    if (!selectedNode) return new Set<string>();
-    const related = new Set<string>();
-    knowledgeGraph.edges.forEach((e: KnowledgeEdge) => {
-      if (e.source === selectedNode.id || e.target === selectedNode.id) {
-        related.add(e.source);
-        related.add(e.target);
+  const relatedIds = useMemo(() => {
+    if (!selected) return new Set<string>();
+    const s = new Set<string>();
+    graph.edges.forEach(e => {
+      if (e.source === selected.id || e.target === selected.id) {
+        s.add(e.source);
+        s.add(e.target);
       }
     });
-    return related;
-  }, [selectedNode]);
+    return s;
+  }, [selected]);
 
-  // 获取关联节点信息
-  const relatedInfo = useMemo(() => {
-    if (!selectedNode) return null;
-
-    const prerequisites = knowledgeGraph.edges
-      .filter((e: KnowledgeEdge) => e.target === selectedNode.id && e.relation === "prerequisite")
-      .map((e: KnowledgeEdge) => knowledgeGraph.nodes.find((n: KnowledgeNode) => n.id === e.source))
-      .filter(Boolean) as KnowledgeNode[];
-
-    const extends_ = knowledgeGraph.edges
-      .filter((e: KnowledgeEdge) => e.source === selectedNode.id && e.relation === "extends")
-      .map((e: KnowledgeEdge) => knowledgeGraph.nodes.find((n: KnowledgeNode) => n.id === e.target))
-      .filter(Boolean) as KnowledgeNode[];
-
-    const similar = knowledgeGraph.edges
-      .filter((e: KnowledgeEdge) => (e.source === selectedNode.id || e.target === selectedNode.id) && e.relation === "similar")
-      .map((e: KnowledgeEdge) => {
-        const otherId = e.source === selectedNode.id ? e.target : e.source;
-        return knowledgeGraph.nodes.find((n: KnowledgeNode) => n.id === otherId);
-      })
-      .filter(Boolean) as KnowledgeNode[];
-
-    return { prerequisites, extends: extends_, similar };
-  }, [selectedNode]);
+  const related = useMemo(() => {
+    if (!selected) return null;
+    const get = (rel: string, dir: "in" | "out" | "both") =>
+      graph.edges
+        .filter(e => e.relation === rel && (dir === "in" ? e.target === selected.id : dir === "out" ? e.source === selected.id : e.source === selected.id || e.target === selected.id))
+        .map(e => graph.nodes.find(n => n.id === (e.source === selected.id ? e.target : e.source)))
+        .filter(Boolean) as KnowledgeNode[];
+    return { pre: get("prerequisite", "in"), ext: get("extends", "out"), sim: get("similar", "both") };
+  }, [selected]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 text-white">
-      {/* 顶部导航 */}
-      <header className="sticky top-0 z-10 border-b border-zinc-800/80 bg-zinc-900/70 backdrop-blur-xl">
-        <div className="mx-auto flex h-12 sm:h-14 max-w-7xl items-center justify-between px-3 sm:px-4">
-          <div className="flex items-center gap-2 sm:gap-4">
-            <Link
-              href="/problems"
-              className="group flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white transition-colors"
-            >
-              <svg
-                className="w-4 h-4 transform group-hover:-translate-x-0.5 transition-transform"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-              <span className="hidden sm:inline">题库</span>
-            </Link>
-            <div className="hidden sm:block w-px h-5 bg-zinc-700" />
-            <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 text-white text-lg shadow-lg shadow-purple-500/20">
-                🕸️
-              </div>
-              <h1 className="text-base sm:text-lg font-bold">知识图谱</h1>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-7xl px-3 sm:px-4 py-4 sm:py-6">
-        {/* 筛选器 */}
-        <div className="mb-4 flex flex-wrap items-center gap-2">
-          <span className="text-sm text-zinc-400">筛选:</span>
+    <main className="py-4 sm:py-6">
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <span className="text-sm text-zinc-600 dark:text-zinc-400">筛选:</span>
+        {[null, ...Object.keys(NODE_CONFIG)].map(t => (
           <button
-            onClick={() => setFilterType(null)}
-            className={`px-3 py-1 rounded-lg text-sm transition-colors ${
-              filterType === null
-                ? "bg-white text-black"
-                : "bg-zinc-800 text-zinc-400 hover:text-white"
-            }`}
+            key={t ?? "all"}
+            onClick={() => setFilter(t)}
+            className={`px-3 py-1 rounded-lg text-sm transition-colors ${filter === t ? "text-white" : "bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"}`}
+            style={{ backgroundColor: filter === t ? (t ? NODE_CONFIG[t].color : "#18181b") : undefined }}
           >
-            全部
+            {t ? NODE_CONFIG[t].label : "全部"}
           </button>
-          {Object.entries(NODE_TYPE_CONFIG).map(([type, config]) => (
-            <button
-              key={type}
-              onClick={() => setFilterType(type)}
-              className={`px-3 py-1 rounded-lg text-sm transition-colors ${
-                filterType === type
-                  ? "text-white"
-                  : "bg-zinc-800 text-zinc-400 hover:text-white"
-              }`}
-              style={{
-                backgroundColor: filterType === type ? config.color : undefined,
-              }}
-            >
-              {config.label}
-            </button>
-          ))}
-        </div>
+        ))}
+      </div>
 
-        {/* 图谱容器 */}
-        <div className="flex gap-4 flex-col lg:flex-row">
-          {/* 图谱 SVG */}
-          <div
-            ref={containerRef}
-            className="flex-1 rounded-xl bg-zinc-900/80 border border-zinc-800 overflow-hidden"
+      <div className="flex gap-4 flex-col lg:flex-row">
+        <div ref={ref} className="flex-1 rounded-xl bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 overflow-hidden relative">
+          <div className="absolute top-3 right-3 z-10 flex flex-col gap-1">
+            {[{ icon: "M12 4v16m8-8H4", fn: () => zoom(1.2) }, { icon: "M20 12H4", fn: () => zoom(0.8) }].map((b, i) => (
+              <button key={i} onClick={b.fn} className="w-8 h-8 rounded-lg bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 text-zinc-700 dark:text-white flex items-center justify-center">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={b.icon} /></svg>
+              </button>
+            ))}
+            <button onClick={() => { setScale(1); setPan({ x: 0, y: 0 }); }} className="w-8 h-8 rounded-lg bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 text-zinc-700 dark:text-white flex items-center justify-center text-xs font-medium">1:1</button>
+            <div className="mt-1 text-xs text-zinc-500 text-center">{Math.round(scale * 100)}%</div>
+          </div>
+
+          <svg
+            width={dim.w}
+            height={dim.h}
+            className={`select-none ${drag ? "cursor-grabbing" : "cursor-grab"}`}
+            onWheel={e => { e.preventDefault(); zoom(e.deltaY > 0 ? 0.9 : 1.1); }}
+            onMouseDown={e => e.button === 0 && setDrag({ x: e.clientX - pan.x, y: e.clientY - pan.y })}
+            onMouseMove={e => drag && setPan({ x: e.clientX - drag.x, y: e.clientY - drag.y })}
+            onMouseUp={() => setDrag(null)}
+            onMouseLeave={() => setDrag(null)}
           >
-            <svg
-              width={dimensions.width}
-              height={dimensions.height}
-              className="select-none"
-            >
-              {/* 边 */}
-              {filteredEdges.map((edge: KnowledgeEdge, i: number) => {
-                const sourcePos = positions.get(edge.source);
-                const targetPos = positions.get(edge.target);
-                if (!sourcePos || !targetPos) return null;
-
-                const isSelected = selectedEdges.has(edge.source) && selectedEdges.has(edge.target);
-
+            <g transform={`translate(${pan.x},${pan.y}) scale(${scale})`}>
+              {edges.map((e, i) => {
+                const s = pos.get(e.source), t = pos.get(e.target);
+                if (!s || !t) return null;
+                const sel = relatedIds.has(e.source) && relatedIds.has(e.target);
+                const c = EDGE_CONFIG[e.relation];
+                return <line key={i} x1={s.x} y1={s.y} x2={t.x} y2={t.y} stroke={sel ? c.color : "#52525b"} strokeWidth={sel ? 1.5 : 0.5} strokeDasharray={c.dash ? "3,3" : undefined} opacity={sel ? 0.8 : 0.2} />;
+              })}
+              {nodes.map(n => {
+                const p = pos.get(n.id);
+                if (!p) return null;
+                const c = NODE_CONFIG[n.type];
+                const sel = selected?.id === n.id;
+                const related = !selected || relatedIds.has(n.id);
                 return (
-                  <GraphEdge
-                    key={`edge-${i}`}
-                    edge={edge}
-                    sourcePos={sourcePos}
-                    targetPos={targetPos}
-                    selected={isSelected}
-                  />
+                  <g key={n.id} transform={`translate(${p.x},${p.y})`} onClick={() => setSelected(n)} className="cursor-pointer" opacity={related ? 1 : 0.2}>
+                    <circle r={c.r} fill={n.color || c.color} stroke={sel ? "#fff" : "none"} strokeWidth={sel ? 1.5 : 0} />
+                    <text textAnchor="middle" dominantBaseline="central" fontSize={c.r} className="pointer-events-none select-none">{n.icon || "●"}</text>
+                    <text y={c.r + 6} textAnchor="middle" fontSize={7} className="pointer-events-none select-none fill-zinc-700 dark:fill-zinc-300">{n.name.length > 4 ? n.name.slice(0, 4) + ".." : n.name}</text>
+                  </g>
                 );
               })}
-
-              {/* 节点 */}
-              {filteredNodes.map((node: KnowledgeNode) => {
-                const pos = positions.get(node.id);
-                if (!pos) return null;
-
-                return (
-                  <GraphNode
-                    key={node.id}
-                    node={node}
-                    x={pos.x}
-                    y={pos.y}
-                    selected={selectedNode?.id === node.id}
-                    onSelect={setSelectedNode}
-                  />
-                );
-              })}
-            </svg>
-          </div>
-
-          {/* 侧边栏信息 */}
-          <div className="lg:w-80 shrink-0">
-            {selectedNode ? (
-              <div className="rounded-xl bg-zinc-900/80 border border-zinc-800 p-4 space-y-4">
-                <div className="flex items-start gap-3">
-                  <div
-                    className="flex h-12 w-12 items-center justify-center rounded-lg text-2xl"
-                    style={{ backgroundColor: selectedNode.color || NODE_TYPE_CONFIG[selectedNode.type].color }}
-                  >
-                    {selectedNode.icon || "●"}
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-white">{selectedNode.name}</h3>
-                    <span
-                      className="text-xs px-2 py-0.5 rounded"
-                      style={{
-                        backgroundColor: `${NODE_TYPE_CONFIG[selectedNode.type].color}30`,
-                        color: NODE_TYPE_CONFIG[selectedNode.type].color,
-                      }}
-                    >
-                      {NODE_TYPE_CONFIG[selectedNode.type].label}
-                    </span>
-                  </div>
-                </div>
-
-                {selectedNode.description && (
-                  <p className="text-sm text-zinc-400">{selectedNode.description}</p>
-                )}
-
-                {selectedNode.difficulty && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-zinc-500">难度:</span>
-                    <div className="flex gap-1">
-                      {[1, 2, 3, 4, 5].map(i => (
-                        <div
-                          key={i}
-                          className={`w-2 h-2 rounded-full ${
-                            i <= selectedNode.difficulty!
-                              ? "bg-amber-500"
-                              : "bg-zinc-700"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {relatedInfo && (
-                  <>
-                    {relatedInfo.prerequisites.length > 0 && (
-                      <div>
-                        <h4 className="text-xs font-medium text-zinc-500 mb-2">前置知识</h4>
-                        <div className="flex flex-wrap gap-1">
-                          {relatedInfo.prerequisites.map((n: KnowledgeNode) => (
-                            <button
-                              key={n!.id}
-                              onClick={() => setSelectedNode(n!)}
-                              className="px-2 py-1 rounded bg-amber-500/10 text-amber-400 text-xs hover:bg-amber-500/20 transition-colors"
-                            >
-                              {n!.name}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {relatedInfo.extends.length > 0 && (
-                      <div>
-                        <h4 className="text-xs font-medium text-zinc-500 mb-2">扩展学习</h4>
-                        <div className="flex flex-wrap gap-1">
-                          {relatedInfo.extends.map((n: KnowledgeNode) => (
-                            <button
-                              key={n!.id}
-                              onClick={() => setSelectedNode(n!)}
-                              className="px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 text-xs hover:bg-emerald-500/20 transition-colors"
-                            >
-                              {n!.name}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {relatedInfo.similar.length > 0 && (
-                      <div>
-                        <h4 className="text-xs font-medium text-zinc-500 mb-2">相似概念</h4>
-                        <div className="flex flex-wrap gap-1">
-                          {relatedInfo.similar.map((n: KnowledgeNode) => (
-                            <button
-                              key={n!.id}
-                              onClick={() => setSelectedNode(n!)}
-                              className="px-2 py-1 rounded bg-blue-500/10 text-blue-400 text-xs hover:bg-blue-500/20 transition-colors"
-                            >
-                              {n!.name}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
-
-                {selectedNode.tags && selectedNode.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1">
-                    {selectedNode.tags.map(tag => (
-                      <span
-                        key={tag}
-                        className="px-2 py-0.5 rounded bg-zinc-800 text-zinc-400 text-xs"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="rounded-xl bg-zinc-900/80 border border-zinc-800 p-4">
-                <div className="text-center text-zinc-500">
-                  <span className="text-4xl mb-3 block">👆</span>
-                  <p className="text-sm">点击节点查看详情</p>
-                </div>
-
-                {/* 图例 */}
-                <div className="mt-6 space-y-3">
-                  <h4 className="text-xs font-medium text-zinc-400">节点类型</h4>
-                  {Object.entries(NODE_TYPE_CONFIG).map(([type, config]) => (
-                    <div key={type} className="flex items-center gap-2">
-                      <div
-                        className="w-4 h-4 rounded-full"
-                        style={{ backgroundColor: config.color }}
-                      />
-                      <span className="text-xs text-zinc-400">{config.label}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-6 space-y-3">
-                  <h4 className="text-xs font-medium text-zinc-400">关系类型</h4>
-                  {Object.entries(EDGE_TYPE_CONFIG).map(([type, config]) => (
-                    <div key={type} className="flex items-center gap-2">
-                      <div
-                        className="w-8 h-0.5"
-                        style={{
-                          backgroundColor: config.color,
-                          backgroundImage: config.dash
-                            ? `repeating-linear-gradient(90deg, ${config.color}, ${config.color} 3px, transparent 3px, transparent 6px)`
-                            : undefined,
-                        }}
-                      />
-                      <span className="text-xs text-zinc-400">{config.label}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+            </g>
+          </svg>
         </div>
 
-        {/* 使用说明 */}
-        <div className="mt-6 rounded-xl bg-gradient-to-br from-purple-500/10 via-pink-500/10 to-transparent border border-purple-500/20 p-4">
-          <h3 className="text-sm font-semibold text-white mb-2 flex items-center gap-2">
-            <span>💡</span>
-            如何使用知识图谱
-          </h3>
-          <ul className="text-sm text-zinc-400 space-y-1">
-            <li>• 点击节点查看详细信息和关联知识点</li>
-            <li>• 使用筛选器按类型过滤节点</li>
-            <li>• 通过前置知识和扩展学习规划学习路径</li>
-            <li>• 相似概念帮助你触类旁通</li>
-          </ul>
+        <div className="lg:w-72 shrink-0">
+          {selected ? (
+            <div className="rounded-xl bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 p-4 space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg text-xl" style={{ backgroundColor: selected.color || NODE_CONFIG[selected.type].color }}>{selected.icon || "●"}</div>
+                <div>
+                  <h3 className="font-bold text-zinc-900 dark:text-white">{selected.name}</h3>
+                  <span className="text-xs px-2 py-0.5 rounded" style={{ backgroundColor: `${NODE_CONFIG[selected.type].color}30`, color: NODE_CONFIG[selected.type].color }}>{NODE_CONFIG[selected.type].label}</span>
+                </div>
+              </div>
+              {selected.description && <p className="text-sm text-zinc-600 dark:text-zinc-400">{selected.description}</p>}
+              {selected.difficulty && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-zinc-500">难度:</span>
+                  <div className="flex gap-0.5">{[1, 2, 3, 4, 5].map(i => <div key={i} className={`w-1.5 h-1.5 rounded-full ${i <= selected.difficulty! ? "bg-amber-500" : "bg-zinc-300 dark:bg-zinc-700"}`} />)}</div>
+                </div>
+              )}
+              {related && (
+                <>
+                  {[{ items: related.pre, title: "前置知识", cls: "bg-amber-500/10 text-amber-400" }, { items: related.ext, title: "扩展学习", cls: "bg-emerald-500/10 text-emerald-400" }, { items: related.sim, title: "相似概念", cls: "bg-blue-500/10 text-blue-400" }].map(({ items, title, cls }) => items.length > 0 && (
+                    <div key={title}>
+                      <h4 className="text-xs font-medium text-zinc-500 mb-1">{title}</h4>
+                      <div className="flex flex-wrap gap-1">{items.map(n => <button key={n.id} onClick={() => setSelected(n)} className={`px-2 py-0.5 rounded text-xs hover:opacity-80 ${cls}`}>{n.name}</button>)}</div>
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
+          ) : (
+            <div className="rounded-xl bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 p-4">
+              <div className="text-center text-zinc-500 mb-4">
+                <span className="text-3xl block mb-2">👆</span>
+                <p className="text-sm">点击节点查看详情</p>
+              </div>
+              <div className="space-y-2">
+                <h4 className="text-xs font-medium text-zinc-500">节点类型</h4>
+                {Object.entries(NODE_CONFIG).map(([t, c]) => <div key={t} className="flex items-center gap-2"><div className="w-3 h-3 rounded-full" style={{ backgroundColor: c.color }} /><span className="text-xs text-zinc-600 dark:text-zinc-400">{c.label}</span></div>)}
+              </div>
+              <div className="mt-4 space-y-2">
+                <h4 className="text-xs font-medium text-zinc-500">关系类型</h4>
+                {Object.entries(EDGE_CONFIG).map(([t, c]) => <div key={t} className="flex items-center gap-2"><div className="w-6 h-0.5" style={{ backgroundColor: c.color, backgroundImage: c.dash ? `repeating-linear-gradient(90deg,${c.color},${c.color} 2px,transparent 2px,transparent 4px)` : undefined }} /><span className="text-xs text-zinc-600 dark:text-zinc-400">{c.label}</span></div>)}
+              </div>
+            </div>
+          )}
         </div>
-      </main>
-    </div>
+      </div>
+
+      <div className="mt-4 rounded-xl bg-gradient-to-br from-purple-500/10 via-pink-500/10 to-transparent border border-purple-200 dark:border-purple-500/20 p-4">
+        <h3 className="text-sm font-semibold text-zinc-900 dark:text-white mb-2">💡 使用提示</h3>
+        <p className="text-xs text-zinc-600 dark:text-zinc-400">点击节点查看详情 · 滚轮缩放 · 拖拽平移 · 筛选器过滤类型</p>
+      </div>
+    </main>
   );
 }

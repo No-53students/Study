@@ -38,8 +38,8 @@ export function BasicChildrenExample() {
         </Card>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`function Card({ children, title }) {
   return (
     <div className="card">
@@ -207,8 +207,8 @@ export function NamedSlotsExample() {
         </p>
       </Dialog>
 
-      <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`<Dialog
   title={<span>⚠️ 确认删除</span>}
   footer={
@@ -271,8 +271,8 @@ export function ChildrenAPIExample() {
         <span className="text-purple-600">第三个子元素</span>
       </ChildrenInfo>
 
-      <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`import { Children } from 'react';
 
 function Component({ children }) {
@@ -334,8 +334,8 @@ export function CloneElementExample() {
         </Toolbar>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`import { Children, cloneElement, isValidElement } from 'react';
 
 function Toolbar({ children }) {
@@ -414,8 +414,8 @@ export function RenderPropsExample() {
         </MouseTracker>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`interface MouseTrackerProps {
   children: (position: { x: number; y: number }) => React.ReactNode;
 }
@@ -460,7 +460,7 @@ function TypeDisplay({ children }: { children: React.ReactNode }) {
         <span className="font-medium">{count}</span>
       </div>
       <div className="rounded-md bg-zinc-100 p-3 dark:bg-zinc-800">
-        {childArray.length > 0 ? children : <span className="text-zinc-400">（空）</span>}
+        {childArray.length > 0 ? children : <span className="text-zinc-500 dark:text-zinc-400">（空）</span>}
       </div>
     </div>
   );

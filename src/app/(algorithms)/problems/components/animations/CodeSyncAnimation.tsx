@@ -195,7 +195,7 @@ export function CodeSyncAnimation({
 
   if (!step || totalSteps === 0) {
     return (
-      <div className="rounded-xl border border-zinc-700 bg-zinc-900/80 p-8">
+      <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/80 p-8">
         <p className="text-sm text-zinc-500 text-center">暂无动画数据</p>
       </div>
     );
@@ -204,18 +204,18 @@ export function CodeSyncAnimation({
   const isSplit = layout === "split";
 
   return (
-    <div className="rounded-xl border border-zinc-700 bg-zinc-900/80 overflow-hidden">
+    <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/80 overflow-hidden">
       {/* 头部 */}
-      <div className="px-4 py-3 border-b border-zinc-700 flex items-center justify-between">
+      <div className="px-4 py-3 border-b border-zinc-200 dark:border-zinc-700 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h3 className="text-sm font-semibold text-zinc-200">{title}</h3>
+          <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{title}</h3>
           <div className="flex items-center gap-1">
             <button
               onClick={() => setShowCode(!showCode)}
               className={`px-2 py-1 rounded text-xs transition-colors ${
                 showCode
-                  ? "bg-blue-500/20 text-blue-400"
-                  : "bg-zinc-700 text-zinc-400 hover:text-zinc-200"
+                  ? "bg-blue-500/20 text-blue-600 dark:text-blue-400"
+                  : "bg-zinc-200 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200"
               }`}
             >
               代码
@@ -224,15 +224,15 @@ export function CodeSyncAnimation({
               onClick={() => setShowVariables(!showVariables)}
               className={`px-2 py-1 rounded text-xs transition-colors ${
                 showVariables
-                  ? "bg-emerald-500/20 text-emerald-400"
-                  : "bg-zinc-700 text-zinc-400 hover:text-zinc-200"
+                  ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400"
+                  : "bg-zinc-200 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200"
               }`}
             >
               变量
             </button>
           </div>
         </div>
-        <div className="flex items-center gap-2 text-xs text-zinc-400">
+        <div className="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400">
           <span>
             步骤 {currentStep + 1} / {totalSteps}
           </span>
@@ -244,7 +244,7 @@ export function CodeSyncAnimation({
         {/* 左侧：动画可视化 */}
         <div
           className={`${
-            isSplit ? "flex-1 border-r border-zinc-700" : "w-full"
+            isSplit ? "flex-1 border-r border-zinc-200 dark:border-zinc-700" : "w-full"
           } p-4`}
         >
           {/* 可视化区域 */}
@@ -261,8 +261,8 @@ export function CodeSyncAnimation({
               className="space-y-2"
             >
               {/* 主描述 */}
-              <div className="p-3 rounded-lg bg-zinc-800/50 border border-zinc-700">
-                <p className="text-sm text-zinc-300">{step.description}</p>
+              <div className="p-3 rounded-lg bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700">
+                <p className="text-sm text-zinc-700 dark:text-zinc-300">{step.description}</p>
               </div>
 
               {/* 思考提示 */}
@@ -270,7 +270,7 @@ export function CodeSyncAnimation({
                 <div className="p-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
                   <div className="flex items-start gap-2">
                     <span className="text-lg">💭</span>
-                    <p className="text-sm text-purple-300">{step.thought}</p>
+                    <p className="text-sm text-purple-700 dark:text-purple-300">{step.thought}</p>
                   </div>
                 </div>
               )}
@@ -282,7 +282,7 @@ export function CodeSyncAnimation({
         {(showCode || showVariables) && (
           <div
             className={`${
-              isSplit ? "w-[400px]" : "w-full border-t border-zinc-700"
+              isSplit ? "w-[400px]" : "w-full border-t border-zinc-200 dark:border-zinc-700"
             } flex flex-col`}
           >
             {/* 代码区域 */}
@@ -338,10 +338,10 @@ export function CodeSyncAnimation({
                         <span
                           className={`flex-1 ${
                             isExecuting
-                              ? "text-yellow-300"
+                              ? "text-yellow-700 dark:text-yellow-300"
                               : isHighlighted
-                              ? "text-blue-300"
-                              : "text-zinc-400"
+                              ? "text-blue-700 dark:text-blue-300"
+                              : "text-zinc-600 dark:text-zinc-400"
                           }`}
                         >
                           {line || " "}
@@ -357,14 +357,14 @@ export function CodeSyncAnimation({
             {showCode && step.codeComment && (
               <div className="px-3 pb-3">
                 <div className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                  <p className="text-xs text-amber-300">{step.codeComment}</p>
+                  <p className="text-xs text-amber-700 dark:text-amber-300">{step.codeComment}</p>
                 </div>
               </div>
             )}
 
             {/* 变量监视器 */}
             {showVariables && step.variables && step.variables.length > 0 && (
-              <div className="p-3 border-t border-zinc-700">
+              <div className="p-3 border-t border-zinc-200 dark:border-zinc-700">
                 <VariableWatcher
                   variables={step.variables}
                   compact={compact}
@@ -375,7 +375,7 @@ export function CodeSyncAnimation({
 
             {/* 执行结果 */}
             {step.result && (
-              <div className="p-3 border-t border-zinc-700">
+              <div className="p-3 border-t border-zinc-200 dark:border-zinc-700">
                 <ExecutionResult
                   value={step.result.value}
                   label={step.result.label}
@@ -388,12 +388,12 @@ export function CodeSyncAnimation({
       </div>
 
       {/* 控制栏 */}
-      <div className="px-4 py-3 border-t border-zinc-700 flex items-center justify-between gap-4">
+      <div className="px-4 py-3 border-t border-zinc-200 dark:border-zinc-700 flex items-center justify-between gap-4">
         {/* 播放控制 */}
         <div className="flex items-center gap-2">
           <button
             onClick={reset}
-            className="p-2 rounded-lg hover:bg-zinc-700 text-zinc-400 hover:text-zinc-200 transition-colors"
+            className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors"
             title="重置"
           >
             <svg
@@ -413,7 +413,7 @@ export function CodeSyncAnimation({
           <button
             onClick={prevStep}
             disabled={currentStep === 0}
-            className="p-2 rounded-lg hover:bg-zinc-700 text-zinc-400 hover:text-zinc-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             title="上一步"
           >
             <svg
@@ -478,7 +478,7 @@ export function CodeSyncAnimation({
           <button
             onClick={nextStep}
             disabled={currentStep === totalSteps - 1}
-            className="p-2 rounded-lg hover:bg-zinc-700 text-zinc-400 hover:text-zinc-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             title="下一步"
           >
             <svg
@@ -522,19 +522,19 @@ export function CodeSyncAnimation({
               <button
                 key={idx}
                 onClick={() => goToStep(idx)}
-                className={`w-2 h-2 rounded-full transition-all ${
+                    className={`w-2 h-2 rounded-full transition-all ${
                   idx === currentStep
                     ? "w-4 bg-blue-500"
                     : idx < currentStep
                     ? "bg-blue-400/50"
-                    : "bg-zinc-600"
+                    : "bg-zinc-300 dark:bg-zinc-600"
                 }`}
                 title={`步骤 ${idx + 1}`}
               />
             ))
           ) : (
             // 多于12步显示进度条
-            <div className="flex-1 h-1 bg-zinc-700 rounded-full overflow-hidden">
+            <div className="flex-1 h-1 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden">
               <motion.div
                 className="h-full bg-blue-500"
                 initial={{ width: 0 }}

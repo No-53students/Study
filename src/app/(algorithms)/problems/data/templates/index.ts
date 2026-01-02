@@ -11,7 +11,7 @@
 
 import { AlgorithmTemplate } from "../../types/roadmap";
 
-export type { AlgorithmTemplate } from "../../types/roadmap";
+export type { AlgorithmTemplate, TemplateVariant, VariantAnimationExample } from "../../types/roadmap";
 
 // ==================== 双指针模板 ====================
 export const twoPointersTemplate: AlgorithmTemplate = {
@@ -31,7 +31,7 @@ export const twoPointersTemplate: AlgorithmTemplate = {
     visualMetaphor: "想象两个人从走廊两端走向彼此。如果他们的距离和太大，离得远的那个人往前走一步；如果太小，另一个人往前走。直到他们刚好碰面。",
   },
 
-  // ========== 变体模式 ==========
+  // ========== 变体模式（增强版） ==========
   variants: [
     {
       id: "collision",
@@ -45,11 +45,202 @@ while (left < right) {
   else right--;
 }`,
       exampleProblem: "two-sum",
+      // 详细讲解
+      detailedExplanation: {
+        coreIdea: "利用数组有序的特性，通过比较当前两端元素的和与目标值，决定移动哪个指针。和太小就移动左指针（增大值），和太大就移动右指针（减小值）。",
+        keyPoints: [
+          "前提条件：数组必须有序",
+          "初始化：left=0, right=length-1",
+          "终止条件：left < right（不能相等，因为需要两个不同的数）",
+          "每次移动都排除一半的搜索空间，保证O(n)时间复杂度"
+        ],
+        differenceFromBase: "这是双指针的基础变体，其他变体都是在此基础上的扩展",
+        pitfalls: [
+          "忘记数组需要有序",
+          "循环条件写成 left <= right 导致死循环",
+          "返回索引时忘记题目要求（0-indexed还是1-indexed）"
+        ]
+      },
+      fullCode: {
+        typescript: `function twoSum(numbers: number[], target: number): number[] {
+  let left = 0;
+  let right = numbers.length - 1;
+
+  while (left < right) {
+    const sum = numbers[left] + numbers[right];
+
+    if (sum === target) {
+      return [left + 1, right + 1]; // 1-indexed
+    } else if (sum < target) {
+      left++;
+    } else {
+      right--;
+    }
+  }
+
+  return [-1, -1];
+}`,
+        comments: `function twoSum(numbers: number[], target: number): number[] {
+  // 1. 初始化双指针，分别指向数组两端
+  let left = 0;
+  let right = numbers.length - 1;
+
+  // 2. 循环直到两指针相遇
+  while (left < right) {
+    // 3. 计算当前两数之和
+    const sum = numbers[left] + numbers[right];
+
+    if (sum === target) {
+      // 4a. 找到答案！返回索引（注意1-indexed）
+      return [left + 1, right + 1];
+    } else if (sum < target) {
+      // 4b. 和太小，需要更大的数，移动左指针
+      left++;
+    } else {
+      // 4c. 和太大，需要更小的数，移动右指针
+      right--;
+    }
+  }
+
+  // 5. 没找到答案
+  return [-1, -1];
+}`
+      },
+      // 变体动画
+      animation: {
+        type: "two-pointers" as const,
+        title: "对撞指针 - 两数之和 II",
+        description: "在有序数组 [2, 7, 11, 15] 中找到和为 9 的两个数",
+        exampleInput: {
+          description: "numbers = [2, 7, 11, 15], target = 9",
+          data: { numbers: [2, 7, 11, 15], target: 9 }
+        },
+        steps: [
+          {
+            array: [2, 7, 11, 15],
+            left: 0,
+            right: 3,
+            description: "初始化：left 指向 2，right 指向 15",
+            variables: { left: 0, right: 3, sum: "?", target: 9 },
+            codeHighlight: [2, 3]
+          },
+          {
+            array: [2, 7, 11, 15],
+            left: 0,
+            right: 3,
+            comparing: [0, 3],
+            description: "计算 sum = 2 + 15 = 17 > 9，和太大",
+            variables: { left: 0, right: 3, sum: 17, target: 9 },
+            codeHighlight: [6]
+          },
+          {
+            array: [2, 7, 11, 15],
+            left: 0,
+            right: 2,
+            description: "right-- → right 移动到 11",
+            variables: { left: 0, right: 2, sum: "?", target: 9, action: "right--" },
+            codeHighlight: [14]
+          },
+          {
+            array: [2, 7, 11, 15],
+            left: 0,
+            right: 2,
+            comparing: [0, 2],
+            description: "计算 sum = 2 + 11 = 13 > 9，仍然太大",
+            variables: { left: 0, right: 2, sum: 13, target: 9 },
+            codeHighlight: [6]
+          },
+          {
+            array: [2, 7, 11, 15],
+            left: 0,
+            right: 1,
+            description: "right-- → right 移动到 7",
+            variables: { left: 0, right: 1, sum: "?", target: 9, action: "right--" },
+            codeHighlight: [14]
+          },
+          {
+            array: [2, 7, 11, 15],
+            left: 0,
+            right: 1,
+            comparing: [0, 1],
+            highlights: [{ indices: [0, 1], color: "green" as const, label: "找到!" }],
+            description: "sum = 2 + 7 = 9 = target，找到答案！",
+            variables: { left: 0, right: 1, sum: 9, target: 9, result: "[1, 2]" },
+            codeHighlight: [9]
+          }
+        ]
+      },
+      // 多题型动画示例
+      animations: [
+        {
+          problemId: "two-sum-ii",
+          problemName: "两数之和 II",
+          difficulty: "medium" as const,
+          animation: {
+            type: "two-pointers" as const,
+            title: "两数之和 II - 输入有序数组",
+            description: "在有序数组中找到两个数使它们的和等于目标值",
+            exampleInput: {
+              description: "numbers = [2, 7, 11, 15], target = 9",
+              data: { numbers: [2, 7, 11, 15], target: 9 }
+            },
+            steps: [
+              { array: [2, 7, 11, 15], left: 0, right: 3, description: "初始化：left=0, right=3", variables: { sum: "2+15=17" }, codeHighlight: [2, 3] },
+              { array: [2, 7, 11, 15], left: 0, right: 3, comparing: [0, 3], description: "17 > 9，right--", variables: { sum: 17, action: "right--" }, codeHighlight: [12] },
+              { array: [2, 7, 11, 15], left: 0, right: 2, comparing: [0, 2], description: "2+11=13 > 9，right--", variables: { sum: 13 }, codeHighlight: [12] },
+              { array: [2, 7, 11, 15], left: 0, right: 1, comparing: [0, 1], highlights: [{ indices: [0, 1], color: "green" as const, label: "找到" }], description: "2+7=9 = target！", variables: { result: "[1,2]" }, codeHighlight: [8] }
+            ]
+          }
+        },
+        {
+          problemId: "container-with-most-water",
+          problemName: "盛最多水的容器",
+          difficulty: "medium" as const,
+          animation: {
+            type: "two-pointers" as const,
+            title: "盛最多水的容器",
+            description: "找到两条线，使它们与 x 轴构成的容器能容纳最多的水",
+            exampleInput: {
+              description: "height = [1, 8, 6, 2, 5, 4, 8, 3, 7]",
+              data: { height: [1, 8, 6, 2, 5, 4, 8, 3, 7] }
+            },
+            steps: [
+              { array: [1, 8, 6, 2, 5, 4, 8, 3, 7], left: 0, right: 8, description: "初始化：left=0(高1), right=8(高7)", variables: { area: "min(1,7)*8=8", maxArea: 8 }, codeHighlight: [2, 3] },
+              { array: [1, 8, 6, 2, 5, 4, 8, 3, 7], left: 0, right: 8, comparing: [0, 8], description: "左边更矮，left++", variables: { "h[left]": 1, "h[right]": 7, action: "left++" }, codeHighlight: [10] },
+              { array: [1, 8, 6, 2, 5, 4, 8, 3, 7], left: 1, right: 8, comparing: [1, 8], description: "area=min(8,7)*7=49 > 8，更新max", variables: { area: 49, maxArea: 49 }, codeHighlight: [6, 7] },
+              { array: [1, 8, 6, 2, 5, 4, 8, 3, 7], left: 1, right: 8, description: "右边更矮，right--", variables: { "h[left]": 8, "h[right]": 7, action: "right--" }, codeHighlight: [12] },
+              { array: [1, 8, 6, 2, 5, 4, 8, 3, 7], left: 1, right: 7, comparing: [1, 7], description: "area=min(8,3)*6=18 < 49", variables: { area: 18, maxArea: 49 }, codeHighlight: [6] },
+              { array: [1, 8, 6, 2, 5, 4, 8, 3, 7], left: 1, right: 6, comparing: [1, 6], highlights: [{ indices: [1, 6], color: "green" as const, label: "最优" }], description: "area=min(8,8)*5=40，最终答案49", variables: { maxArea: 49 }, codeHighlight: [14] }
+            ]
+          }
+        },
+        {
+          problemId: "valid-palindrome",
+          problemName: "验证回文串",
+          difficulty: "easy" as const,
+          animation: {
+            type: "two-pointers" as const,
+            title: "验证回文串",
+            description: "判断字符串是否是回文（只考虑字母和数字）",
+            exampleInput: {
+              description: 's = "A man, a plan, a canal: Panama"',
+              data: { s: "amanaplanacanalpanama" }
+            },
+            steps: [
+              { array: ["a", "m", "a", "n", "a", "p", "l", "a", "n", "a", "c", "a", "n", "a", "l", "p", "a", "n", "a", "m", "a"], left: 0, right: 20, description: "初始化：比较首尾字符", variables: { "s[left]": "a", "s[right]": "a" }, codeHighlight: [2, 3] },
+              { array: ["a", "m", "a", "n", "a", "p", "l", "a", "n", "a", "c", "a", "n", "a", "l", "p", "a", "n", "a", "m", "a"], left: 0, right: 20, comparing: [0, 20], description: "'a' === 'a' ✓，继续", variables: { match: true }, codeHighlight: [5, 6] },
+              { array: ["a", "m", "a", "n", "a", "p", "l", "a", "n", "a", "c", "a", "n", "a", "l", "p", "a", "n", "a", "m", "a"], left: 1, right: 19, comparing: [1, 19], description: "'m' === 'm' ✓", variables: { match: true }, codeHighlight: [5, 6] },
+              { array: ["a", "m", "a", "n", "a", "p", "l", "a", "n", "a", "c", "a", "n", "a", "l", "p", "a", "n", "a", "m", "a"], left: 5, right: 15, comparing: [5, 15], description: "'p' === 'p' ✓", variables: { match: true }, codeHighlight: [5, 6] },
+              { array: ["a", "m", "a", "n", "a", "p", "l", "a", "n", "a", "c", "a", "n", "a", "l", "p", "a", "n", "a", "m", "a"], left: 10, right: 10, highlights: [{ indices: [10], color: "green" as const, label: "中点" }], completed: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], description: "left >= right，是回文！", variables: { result: true }, codeHighlight: [10] }
+            ]
+          }
+        }
+      ]
     },
     {
       id: "fast-slow",
       name: "快慢指针",
-      description: "同向移动但速度不同",
+      description: "同向移动但速度不同，用于原地修改数组",
       useCase: "原地删除、移动元素、找链表中点、检测环",
       codeSnippet: `let slow = 0, fast = 0;
 while (fast < n) {
@@ -60,21 +251,484 @@ while (fast < n) {
   fast++;
 }`,
       exampleProblem: "remove-duplicates-from-sorted-array",
+      // 详细讲解
+      detailedExplanation: {
+        coreIdea: "快指针fast负责探索新元素，慢指针slow负责维护结果区域。fast每次都移动，slow只在满足条件时才移动。",
+        keyPoints: [
+          "slow 始终指向下一个要填入的位置",
+          "fast 遍历整个数组",
+          "[0, slow) 区间是已处理的有效结果",
+          "适用于原地修改、不需要额外空间的场景"
+        ],
+        differenceFromBase: "与对撞指针不同，快慢指针同向移动，适用于需要原地处理的问题",
+        pitfalls: [
+          "忘记最后返回 slow 作为新长度",
+          "先移动slow再赋值，导致覆盖问题",
+          "边界条件处理不当，如空数组"
+        ]
+      },
+      fullCode: {
+        typescript: `function removeDuplicates(nums: number[]): number {
+  if (nums.length === 0) return 0;
+
+  let slow = 1;
+
+  for (let fast = 1; fast < nums.length; fast++) {
+    if (nums[fast] !== nums[fast - 1]) {
+      nums[slow] = nums[fast];
+      slow++;
+    }
+  }
+
+  return slow;
+}`,
+        comments: `function removeDuplicates(nums: number[]): number {
+  // 边界检查
+  if (nums.length === 0) return 0;
+
+  // slow 从 1 开始，因为第一个元素一定保留
+  let slow = 1;
+
+  // fast 从 1 开始，遍历所有元素
+  for (let fast = 1; fast < nums.length; fast++) {
+    // 如果当前元素与前一个不同，说明是新元素
+    if (nums[fast] !== nums[fast - 1]) {
+      // 将新元素放到 slow 位置
+      nums[slow] = nums[fast];
+      // slow 向前移动
+      slow++;
+    }
+    // fast 每次都向前移动（for循环自动处理）
+  }
+
+  // slow 就是去重后的数组长度
+  return slow;
+}`
+      },
+      // 快慢指针动画 - 移动零
+      animation: {
+        type: "two-pointers" as const,
+        title: "快慢指针 - 移动零",
+        description: "将数组 [0, 1, 0, 3, 12] 中的零移动到末尾",
+        exampleInput: {
+          description: "nums = [0, 1, 0, 3, 12]",
+          data: { nums: [0, 1, 0, 3, 12] }
+        },
+        steps: [
+          {
+            array: [0, 1, 0, 3, 12],
+            left: 0,
+            right: 0,
+            description: "初始化：slow=0, fast=0",
+            variables: { slow: 0, fast: 0 },
+            codeHighlight: [2]
+          },
+          {
+            array: [0, 1, 0, 3, 12],
+            left: 0,
+            right: 0,
+            comparing: [0],
+            description: "nums[fast]=0，是零，不移动slow，fast++",
+            variables: { slow: 0, fast: 0, "nums[fast]": 0 },
+            codeHighlight: [4]
+          },
+          {
+            array: [0, 1, 0, 3, 12],
+            left: 0,
+            right: 1,
+            comparing: [1],
+            description: "nums[fast]=1，不是零！",
+            variables: { slow: 0, fast: 1, "nums[fast]": 1 },
+            codeHighlight: [4]
+          },
+          {
+            array: [1, 1, 0, 3, 12],
+            left: 0,
+            right: 1,
+            highlights: [{ indices: [0], color: "green" as const, label: "交换" }],
+            description: "交换 nums[slow] 和 nums[fast]，slow++",
+            variables: { slow: 1, fast: 1, action: "swap" },
+            codeHighlight: [5, 6]
+          },
+          {
+            array: [1, 0, 0, 3, 12],
+            left: 1,
+            right: 2,
+            comparing: [2],
+            description: "fast=2, nums[fast]=0，是零，跳过",
+            variables: { slow: 1, fast: 2, "nums[fast]": 0 },
+            codeHighlight: [4]
+          },
+          {
+            array: [1, 0, 0, 3, 12],
+            left: 1,
+            right: 3,
+            comparing: [3],
+            description: "fast=3, nums[fast]=3，不是零！",
+            variables: { slow: 1, fast: 3, "nums[fast]": 3 },
+            codeHighlight: [4]
+          },
+          {
+            array: [1, 3, 0, 0, 12],
+            left: 1,
+            right: 3,
+            highlights: [{ indices: [1], color: "green" as const, label: "交换" }],
+            description: "交换后 slow++",
+            variables: { slow: 2, fast: 3, action: "swap" },
+            codeHighlight: [5, 6]
+          },
+          {
+            array: [1, 3, 0, 0, 12],
+            left: 2,
+            right: 4,
+            comparing: [4],
+            description: "fast=4, nums[fast]=12，不是零！",
+            variables: { slow: 2, fast: 4, "nums[fast]": 12 },
+            codeHighlight: [4]
+          },
+          {
+            array: [1, 3, 12, 0, 0],
+            left: 2,
+            right: 4,
+            highlights: [{ indices: [2], color: "green" as const, label: "交换" }],
+            completed: [0, 1, 2],
+            description: "交换完成！所有零都移动到了末尾",
+            variables: { slow: 3, fast: 5, result: "[1,3,12,0,0]" },
+            codeHighlight: [9]
+          }
+        ]
+      },
+      // 多题型动画示例
+      animations: [
+        {
+          problemId: "move-zeroes",
+          problemName: "移动零",
+          difficulty: "easy" as const,
+          animation: {
+            type: "two-pointers" as const,
+            title: "移动零",
+            description: "将数组中的零移动到末尾，保持非零元素相对顺序",
+            exampleInput: {
+              description: "nums = [0, 1, 0, 3, 12]",
+              data: { nums: [0, 1, 0, 3, 12] }
+            },
+            steps: [
+              { array: [0, 1, 0, 3, 12], left: 0, right: 0, description: "初始化 slow=0, fast=0", variables: { slow: 0, fast: 0 }, codeHighlight: [1] },
+              { array: [0, 1, 0, 3, 12], left: 0, right: 1, comparing: [1], description: "nums[1]=1≠0，交换后 slow++", variables: { slow: 1, fast: 1 }, codeHighlight: [4, 5] },
+              { array: [1, 0, 0, 3, 12], left: 1, right: 2, comparing: [2], description: "nums[2]=0，跳过", variables: { slow: 1, fast: 2 }, codeHighlight: [3] },
+              { array: [1, 0, 0, 3, 12], left: 1, right: 3, comparing: [3], description: "nums[3]=3≠0，交换后 slow++", variables: { slow: 2, fast: 3 }, codeHighlight: [4, 5] },
+              { array: [1, 3, 0, 0, 12], left: 2, right: 4, comparing: [4], description: "nums[4]=12≠0，交换后 slow++", variables: { slow: 3, fast: 4 }, codeHighlight: [4, 5] },
+              { array: [1, 3, 12, 0, 0], left: 3, right: 5, completed: [0, 1, 2], highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "完成" }], description: "完成！零都移到末尾", variables: { result: "[1,3,12,0,0]" }, codeHighlight: [8] }
+            ]
+          }
+        },
+        {
+          problemId: "remove-duplicates-from-sorted-array",
+          problemName: "删除有序数组中的重复项",
+          difficulty: "easy" as const,
+          animation: {
+            type: "two-pointers" as const,
+            title: "删除有序数组中的重复项",
+            description: "原地删除排序数组中的重复元素",
+            exampleInput: {
+              description: "nums = [1, 1, 2, 2, 3]",
+              data: { nums: [1, 1, 2, 2, 3] }
+            },
+            steps: [
+              { array: [1, 1, 2, 2, 3], left: 0, right: 1, description: "slow=0 指向第一个元素，fast=1 开始遍历", variables: { slow: 0, fast: 1 }, codeHighlight: [2, 3] },
+              { array: [1, 1, 2, 2, 3], left: 0, right: 1, comparing: [0, 1], description: "nums[1]=nums[0]=1，重复，跳过", variables: { slow: 0, fast: 1, "nums[slow]": 1, "nums[fast]": 1 }, codeHighlight: [5] },
+              { array: [1, 1, 2, 2, 3], left: 0, right: 2, comparing: [0, 2], description: "nums[2]=2≠nums[0]=1，新元素！", variables: { slow: 0, fast: 2, "nums[slow]": 1, "nums[fast]": 2 }, codeHighlight: [5] },
+              { array: [1, 2, 2, 2, 3], left: 1, right: 2, highlights: [{ indices: [1], color: "green" as const, label: "写入" }], description: "slow++ 后写入，slow=1", variables: { slow: 1, fast: 2 }, codeHighlight: [6, 7] },
+              { array: [1, 2, 2, 2, 3], left: 1, right: 3, comparing: [1, 3], description: "nums[3]=2=nums[1]，重复，跳过", variables: { slow: 1, fast: 3 }, codeHighlight: [5] },
+              { array: [1, 2, 2, 2, 3], left: 1, right: 4, comparing: [1, 4], description: "nums[4]=3≠nums[1]=2，新元素！", variables: { slow: 1, fast: 4, "nums[fast]": 3 }, codeHighlight: [5] },
+              { array: [1, 2, 3, 2, 3], left: 2, right: 4, highlights: [{ indices: [2], color: "green" as const, label: "写入" }], completed: [0, 1, 2], description: "完成！返回长度 3", variables: { slow: 2, result: 3 }, codeHighlight: [10] }
+            ]
+          }
+        },
+        {
+          problemId: "remove-element",
+          problemName: "移除元素",
+          difficulty: "easy" as const,
+          animation: {
+            type: "two-pointers" as const,
+            title: "移除元素",
+            description: "原地移除所有等于 val 的元素",
+            exampleInput: {
+              description: "nums = [3, 2, 2, 3], val = 3",
+              data: { nums: [3, 2, 2, 3], val: 3 }
+            },
+            steps: [
+              { array: [3, 2, 2, 3], left: 0, right: 0, description: "初始化 slow=0, fast=0, val=3", variables: { slow: 0, fast: 0, val: 3 }, codeHighlight: [1] },
+              { array: [3, 2, 2, 3], left: 0, right: 0, comparing: [0], highlights: [{ indices: [0], color: "red" as const, label: "跳过" }], description: "nums[0]=3=val，跳过不复制", variables: { slow: 0, fast: 0, "nums[fast]": 3 }, codeHighlight: [3] },
+              { array: [3, 2, 2, 3], left: 0, right: 1, comparing: [1], description: "nums[1]=2≠val，复制到 slow", variables: { slow: 0, fast: 1, "nums[fast]": 2 }, codeHighlight: [4] },
+              { array: [2, 2, 2, 3], left: 1, right: 1, highlights: [{ indices: [0], color: "green" as const, label: "写入" }], description: "写入后 slow++", variables: { slow: 1, fast: 1 }, codeHighlight: [4, 5] },
+              { array: [2, 2, 2, 3], left: 1, right: 2, comparing: [2], description: "nums[2]=2≠val，复制到 slow", variables: { slow: 1, fast: 2 }, codeHighlight: [4] },
+              { array: [2, 2, 2, 3], left: 2, right: 2, highlights: [{ indices: [1], color: "green" as const, label: "写入" }], description: "写入后 slow++", variables: { slow: 2, fast: 2 }, codeHighlight: [4, 5] },
+              { array: [2, 2, 2, 3], left: 2, right: 3, comparing: [3], highlights: [{ indices: [3], color: "red" as const, label: "跳过" }], description: "nums[3]=3=val，跳过", variables: { slow: 2, fast: 3 }, codeHighlight: [3] },
+              { array: [2, 2, 2, 3], left: 2, right: 4, completed: [0, 1], highlights: [{ indices: [0, 1], color: "green" as const, label: "结果" }], description: "完成！返回长度 2", variables: { result: 2 }, codeHighlight: [8] }
+            ]
+          }
+        }
+      ]
     },
     {
-      id: "same-direction",
-      name: "同向双指针",
-      description: "两个指针同向移动，维护一个区间",
-      useCase: "滑动窗口的简化版",
-      codeSnippet: `let j = 0;
-for (let i = 0; i < n; i++) {
-  while (j < n && 可以扩展) {
-    j++;
+      id: "three-sum",
+      name: "三数之和变体",
+      description: "固定一个数，对剩余部分使用对撞指针",
+      useCase: "三数之和、最接近的三数之和",
+      codeSnippet: `nums.sort((a, b) => a - b);
+for (let i = 0; i < n - 2; i++) {
+  if (i > 0 && nums[i] === nums[i-1]) continue;
+  let left = i + 1, right = n - 1;
+  while (left < right) {
+    // 对撞指针逻辑
   }
-  // 更新答案
 }`,
-      exampleProblem: "longest-substring-without-repeating-characters",
-    },
+      exampleProblem: "3sum",
+      detailedExplanation: {
+        coreIdea: "将三数之和转化为：固定第一个数 + 两数之和问题。外层循环遍历第一个数，内层使用对撞指针找另外两个数。",
+        keyPoints: [
+          "先排序，方便去重和使用双指针",
+          "外层循环固定第一个数 nums[i]",
+          "内层使用对撞指针找 nums[left] + nums[right] = -nums[i]",
+          "去重：跳过相同的 nums[i]、nums[left]、nums[right]"
+        ],
+        differenceFromBase: "在对撞指针外面套一层循环，并增加去重逻辑",
+        pitfalls: [
+          "忘记排序",
+          "去重时机不对：应该在找到答案后去重",
+          "去重逻辑写错：应该是 nums[i] === nums[i-1] 而不是 nums[i] === nums[i+1]"
+        ]
+      },
+      fullCode: {
+        typescript: `function threeSum(nums: number[]): number[][] {
+  const result: number[][] = [];
+  nums.sort((a, b) => a - b);
+
+  for (let i = 0; i < nums.length - 2; i++) {
+    if (i > 0 && nums[i] === nums[i - 1]) continue;
+
+    let left = i + 1;
+    let right = nums.length - 1;
+
+    while (left < right) {
+      const sum = nums[i] + nums[left] + nums[right];
+
+      if (sum === 0) {
+        result.push([nums[i], nums[left], nums[right]]);
+        while (left < right && nums[left] === nums[left + 1]) left++;
+        while (left < right && nums[right] === nums[right - 1]) right--;
+        left++;
+        right--;
+      } else if (sum < 0) {
+        left++;
+      } else {
+        right--;
+      }
+    }
+  }
+
+  return result;
+}`,
+        comments: `function threeSum(nums: number[]): number[][] {
+  const result: number[][] = [];
+  // 1. 排序，方便双指针和去重
+  nums.sort((a, b) => a - b);
+
+  // 2. 固定第一个数
+  for (let i = 0; i < nums.length - 2; i++) {
+    // 去重：跳过重复的第一个数
+    if (i > 0 && nums[i] === nums[i - 1]) continue;
+
+    // 3. 对剩余部分使用对撞指针
+    let left = i + 1;
+    let right = nums.length - 1;
+
+    while (left < right) {
+      const sum = nums[i] + nums[left] + nums[right];
+
+      if (sum === 0) {
+        // 找到答案
+        result.push([nums[i], nums[left], nums[right]]);
+        // 去重：跳过重复的 left 和 right
+        while (left < right && nums[left] === nums[left + 1]) left++;
+        while (left < right && nums[right] === nums[right - 1]) right--;
+        // 移动双指针继续找
+        left++;
+        right--;
+      } else if (sum < 0) {
+        // 和太小，left 右移
+        left++;
+      } else {
+        // 和太大，right 左移
+        right--;
+      }
+    }
+  }
+
+  return result;
+}`
+      },
+      animation: {
+        type: "two-pointers" as const,
+        title: "三数之和",
+        description: "在 [-1, 0, 1, 2, -1, -4] 中找出和为 0 的三元组",
+        exampleInput: {
+          description: "nums = [-1, 0, 1, 2, -1, -4]，排序后：[-4, -1, -1, 0, 1, 2]",
+          data: { nums: [-4, -1, -1, 0, 1, 2], target: 0 }
+        },
+        steps: [
+          {
+            array: [-4, -1, -1, 0, 1, 2],
+            current: 0,
+            left: 1,
+            right: 5,
+            highlights: [{ indices: [0], color: "purple" as const, label: "固定i" }],
+            description: "固定 i=0, nums[i]=-4，找两数之和为 4",
+            variables: { i: 0, "nums[i]": -4, target: 4 },
+            codeHighlight: [5]
+          },
+          {
+            array: [-4, -1, -1, 0, 1, 2],
+            current: 0,
+            left: 1,
+            right: 5,
+            comparing: [1, 5],
+            description: "sum = -1 + 2 = 1 < 4，left++",
+            variables: { sum: 1, target: 4, action: "left++" },
+            codeHighlight: [20, 21]
+          },
+          {
+            array: [-4, -1, -1, 0, 1, 2],
+            current: 0,
+            left: 5,
+            right: 5,
+            description: "left >= right，i=0 的搜索结束，i++",
+            variables: { action: "i++" },
+            codeHighlight: [5]
+          },
+          {
+            array: [-4, -1, -1, 0, 1, 2],
+            current: 1,
+            left: 2,
+            right: 5,
+            highlights: [{ indices: [1], color: "purple" as const, label: "固定i" }],
+            description: "固定 i=1, nums[i]=-1，找两数之和为 1",
+            variables: { i: 1, "nums[i]": -1, target: 1 },
+            codeHighlight: [5]
+          },
+          {
+            array: [-4, -1, -1, 0, 1, 2],
+            current: 1,
+            left: 2,
+            right: 5,
+            comparing: [2, 5],
+            description: "sum = -1 + 2 = 1 = target！找到 [-1, -1, 2]",
+            variables: { sum: 1, target: 1 },
+            codeHighlight: [14, 15]
+          },
+          {
+            array: [-4, -1, -1, 0, 1, 2],
+            current: 1,
+            left: 3,
+            right: 4,
+            highlights: [{ indices: [1, 2, 5], color: "green" as const, label: "答案1" }],
+            description: "记录答案后，去重并移动指针",
+            variables: { result: "[[-1,-1,2]]" },
+            codeHighlight: [16, 17, 18, 19]
+          },
+          {
+            array: [-4, -1, -1, 0, 1, 2],
+            current: 1,
+            left: 3,
+            right: 4,
+            comparing: [3, 4],
+            description: "sum = 0 + 1 = 1 = target！找到 [-1, 0, 1]",
+            variables: { sum: 1, target: 1 },
+            codeHighlight: [14, 15]
+          },
+          {
+            array: [-4, -1, -1, 0, 1, 2],
+            current: 1,
+            left: 4,
+            right: 3,
+            highlights: [{ indices: [1, 3, 4], color: "green" as const, label: "答案2" }],
+            completed: [0, 1, 2, 3, 4, 5],
+            description: "找到两个答案：[[-1,-1,2], [-1,0,1]]",
+            variables: { result: "[[-1,-1,2],[-1,0,1]]" },
+            codeHighlight: [27]
+          }
+        ]
+      },
+      // 多题型动画示例
+      animations: [
+        {
+          problemId: "3sum",
+          problemName: "三数之和",
+          difficulty: "medium" as const,
+          animation: {
+            type: "two-pointers" as const,
+            title: "三数之和",
+            description: "找出所有和为 0 的不重复三元组",
+            exampleInput: {
+              description: "nums = [-1, 0, 1, 2, -1, -4]",
+              data: { nums: [-4, -1, -1, 0, 1, 2] }
+            },
+            steps: [
+              { array: [-4, -1, -1, 0, 1, 2], current: 0, left: 1, right: 5, highlights: [{ indices: [0], color: "purple" as const, label: "i" }], description: "排序后，固定 i=0, nums[i]=-4", variables: { i: 0, target: 4 }, codeHighlight: [3, 5] },
+              { array: [-4, -1, -1, 0, 1, 2], current: 0, left: 1, right: 5, comparing: [1, 5], description: "-1+2=1 < 4，left++", variables: { sum: 1 }, codeHighlight: [21] },
+              { array: [-4, -1, -1, 0, 1, 2], current: 0, left: 5, right: 5, description: "i=0 搜索结束，无解", variables: { action: "i++" }, codeHighlight: [5] },
+              { array: [-4, -1, -1, 0, 1, 2], current: 1, left: 2, right: 5, highlights: [{ indices: [1], color: "purple" as const, label: "i" }], description: "固定 i=1, nums[i]=-1", variables: { i: 1, target: 1 }, codeHighlight: [5] },
+              { array: [-4, -1, -1, 0, 1, 2], current: 1, left: 2, right: 5, comparing: [2, 5], highlights: [{ indices: [1, 2, 5], color: "green" as const, label: "答案" }], description: "-1+2=1 = target！找到 [-1,-1,2]", variables: { result: "[[-1,-1,2]]" }, codeHighlight: [14, 15] },
+              { array: [-4, -1, -1, 0, 1, 2], current: 1, left: 3, right: 4, comparing: [3, 4], highlights: [{ indices: [1, 3, 4], color: "green" as const, label: "答案" }], description: "0+1=1 = target！找到 [-1,0,1]", variables: { result: "[[-1,-1,2],[-1,0,1]]" }, codeHighlight: [14, 15] }
+            ]
+          }
+        },
+        {
+          problemId: "3sum-closest",
+          problemName: "最接近的三数之和",
+          difficulty: "medium" as const,
+          animation: {
+            type: "two-pointers" as const,
+            title: "最接近的三数之和",
+            description: "找出和最接近 target 的三元组",
+            exampleInput: {
+              description: "nums = [-1, 2, 1, -4], target = 1",
+              data: { nums: [-4, -1, 1, 2], target: 1 }
+            },
+            steps: [
+              { array: [-4, -1, 1, 2], current: 0, left: 1, right: 3, highlights: [{ indices: [0], color: "purple" as const, label: "i" }], description: "排序后，固定 i=0", variables: { i: 0, "nums[i]": -4, closest: "∞" }, codeHighlight: [3, 5] },
+              { array: [-4, -1, 1, 2], current: 0, left: 1, right: 3, comparing: [1, 3], description: "sum = -4+(-1)+2 = -3, 距离=|1-(-3)|=4", variables: { sum: -3, distance: 4, closest: -3 }, codeHighlight: [9] },
+              { array: [-4, -1, 1, 2], current: 0, left: 2, right: 3, comparing: [2, 3], description: "sum = -4+1+2 = -1, 距离=|1-(-1)|=2，更近！", variables: { sum: -1, distance: 2, closest: -1 }, codeHighlight: [9] },
+              { array: [-4, -1, 1, 2], current: 1, left: 2, right: 3, highlights: [{ indices: [1], color: "purple" as const, label: "i" }], description: "固定 i=1", variables: { i: 1, "nums[i]": -1 }, codeHighlight: [5] },
+              { array: [-4, -1, 1, 2], current: 1, left: 2, right: 3, comparing: [2, 3], highlights: [{ indices: [1, 2, 3], color: "green" as const, label: "最优" }], description: "sum = -1+1+2 = 2, 距离=1，最接近！", variables: { sum: 2, distance: 1, closest: 2 }, codeHighlight: [12] },
+              { array: [-4, -1, 1, 2], current: 2, left: 3, right: 3, completed: [0, 1, 2, 3], description: "完成！最接近的和是 2", variables: { result: 2 }, codeHighlight: [16] }
+            ]
+          }
+        },
+        {
+          problemId: "4sum",
+          problemName: "四数之和",
+          difficulty: "medium" as const,
+          animation: {
+            type: "two-pointers" as const,
+            title: "四数之和",
+            description: "在三数之和外再套一层循环",
+            exampleInput: {
+              description: "nums = [1, 0, -1, 0, -2, 2], target = 0",
+              data: { nums: [-2, -1, 0, 0, 1, 2], target: 0 }
+            },
+            steps: [
+              { array: [-2, -1, 0, 0, 1, 2], current: 0, highlights: [{ indices: [0], color: "orange" as const, label: "i" }], description: "外层固定 i=0, nums[i]=-2", variables: { i: 0, "nums[i]": -2 }, codeHighlight: [4] },
+              { array: [-2, -1, 0, 0, 1, 2], current: 0, highlights: [{ indices: [0, 1], color: "purple" as const, label: "i,j" }], left: 2, right: 5, description: "内层固定 j=1, nums[j]=-1", variables: { i: 0, j: 1, target: 3 }, codeHighlight: [6] },
+              { array: [-2, -1, 0, 0, 1, 2], current: 0, left: 2, right: 5, comparing: [2, 5], highlights: [{ indices: [0, 1, 2, 5], color: "green" as const, label: "答案" }], description: "0+2=2 < 3，但有解 [-2,-1,1,2]", variables: { sum: 2 }, codeHighlight: [11] },
+              { array: [-2, -1, 0, 0, 1, 2], current: 0, left: 3, right: 4, comparing: [3, 4], highlights: [{ indices: [0, 1, 3, 4], color: "green" as const, label: "答案" }], description: "找到 [-2,-1,0,1] 不对，继续...", variables: { sum: 1 }, codeHighlight: [11] },
+              { array: [-2, -1, 0, 0, 1, 2], current: 1, highlights: [{ indices: [1, 2, 3, 5], color: "green" as const, label: "答案" }], completed: [0, 1, 2, 3, 4, 5], description: "找到所有四元组！", variables: { result: "[[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]" }, codeHighlight: [20] }
+            ]
+          }
+        }
+      ]
+    }
   ],
 
   // ========== 动画示例 ==========
@@ -283,7 +937,7 @@ export const slidingWindowTemplate: AlgorithmTemplate = {
     visualMetaphor: "想象用一个可伸缩的框在一排数字上滑动。框右边不断扩大，直到不满足条件；然后左边收缩，直到重新满足条件。不断重复，记录过程中符合要求的最大/最小框。",
   },
 
-  // ========== 变体模式 ==========
+  // ========== 变体模式（增强版） ==========
   variants: [
     {
       id: "flexible",
@@ -305,6 +959,200 @@ for (let right = 0; right < n; right++) {
   result = Math.max(result, right - left + 1);
 }`,
       exampleProblem: "longest-substring-without-repeating-characters",
+      // 详细讲解
+      detailedExplanation: {
+        coreIdea: "窗口大小根据条件动态变化：右边界不断扩展探索新元素，当窗口不满足条件时左边界收缩，直到重新满足条件。每次扩展后都尝试更新答案。",
+        keyPoints: [
+          "右边界 right 每次循环都向右移动一步",
+          "左边界 left 只在需要收缩时移动",
+          "收缩条件：窗口不满足题目要求（如有重复字符）",
+          "更新答案时机：收缩完成后，窗口满足条件时"
+        ],
+        differenceFromBase: "这是滑动窗口的最常见形式，用于求「最长」的子串/子数组",
+        pitfalls: [
+          "忘记在扩展时更新窗口状态（如字符计数）",
+          "收缩时忘记同步更新窗口状态",
+          "窗口长度计算错误：right - left + 1 还是 right - left"
+        ]
+      },
+      fullCode: {
+        typescript: `function lengthOfLongestSubstring(s: string): number {
+  const window = new Map<string, number>();
+  let left = 0;
+  let result = 0;
+
+  for (let right = 0; right < s.length; right++) {
+    const c = s[right];
+    window.set(c, (window.get(c) || 0) + 1);
+
+    while (window.get(c)! > 1) {
+      const d = s[left];
+      window.set(d, window.get(d)! - 1);
+      left++;
+    }
+
+    result = Math.max(result, right - left + 1);
+  }
+
+  return result;
+}`,
+        comments: `function lengthOfLongestSubstring(s: string): number {
+  // 1. 初始化窗口（用Map记录字符出现次数）
+  const window = new Map<string, number>();
+  let left = 0;  // 左边界
+  let result = 0; // 记录最长长度
+
+  // 2. 右边界不断右移，扩展窗口
+  for (let right = 0; right < s.length; right++) {
+    // 3. 将右边字符加入窗口
+    const c = s[right];
+    window.set(c, (window.get(c) || 0) + 1);
+
+    // 4. 当有重复字符时，收缩窗口
+    while (window.get(c)! > 1) {
+      const d = s[left];
+      window.set(d, window.get(d)! - 1);
+      left++;
+    }
+
+    // 5. 更新最长长度（此时窗口内无重复）
+    result = Math.max(result, right - left + 1);
+  }
+
+  return result;
+}`
+      },
+      // 变体动画
+      animation: {
+        type: "sliding-window" as const,
+        title: "可变窗口 - 无重复字符的最长子串",
+        description: "在字符串 'abcabcbb' 中找到不含重复字符的最长子串",
+        exampleInput: {
+          description: "s = 'abcabcbb'",
+          data: { s: "abcabcbb" }
+        },
+        steps: [
+          {
+            array: ["a", "b", "c", "a", "b", "c", "b", "b"],
+            left: 0,
+            right: 0,
+            description: "初始化：left=0, right=0，窗口为空",
+            variables: { window: "{}", maxLen: 0 },
+            codeHighlight: [2, 3, 4]
+          },
+          {
+            array: ["a", "b", "c", "a", "b", "c", "b", "b"],
+            left: 0,
+            right: 0,
+            highlights: [{ indices: [0], color: "blue" as const, label: "窗口" }],
+            description: "加入 'a'，窗口={a:1}，无重复",
+            variables: { window: "{a:1}", maxLen: 1 },
+            codeHighlight: [7, 8]
+          },
+          {
+            array: ["a", "b", "c", "a", "b", "c", "b", "b"],
+            left: 0,
+            right: 1,
+            highlights: [{ indices: [0, 1], color: "blue" as const, label: "窗口" }],
+            description: "加入 'b'，窗口={a:1,b:1}，长度=2",
+            variables: { window: "{a:1,b:1}", maxLen: 2 },
+            codeHighlight: [7, 8, 16]
+          },
+          {
+            array: ["a", "b", "c", "a", "b", "c", "b", "b"],
+            left: 0,
+            right: 2,
+            highlights: [{ indices: [0, 1, 2], color: "blue" as const, label: "窗口" }],
+            description: "加入 'c'，窗口={a:1,b:1,c:1}，长度=3",
+            variables: { window: "{a:1,b:1,c:1}", maxLen: 3 },
+            codeHighlight: [7, 8, 16]
+          },
+          {
+            array: ["a", "b", "c", "a", "b", "c", "b", "b"],
+            left: 0,
+            right: 3,
+            highlights: [{ indices: [0], color: "red" as const, label: "重复" }, { indices: [3], color: "red" as const, label: "新a" }],
+            description: "加入 'a'，发现重复！a出现2次",
+            variables: { window: "{a:2,b:1,c:1}", duplicate: "a" },
+            codeHighlight: [10, 11]
+          },
+          {
+            array: ["a", "b", "c", "a", "b", "c", "b", "b"],
+            left: 1,
+            right: 3,
+            highlights: [{ indices: [1, 2, 3], color: "blue" as const, label: "窗口" }],
+            description: "收缩：移除左边的'a'，窗口={a:1,b:1,c:1}",
+            variables: { window: "{a:1,b:1,c:1}", maxLen: 3 },
+            codeHighlight: [12, 13, 14]
+          },
+          {
+            array: ["a", "b", "c", "a", "b", "c", "b", "b"],
+            left: 2,
+            right: 4,
+            highlights: [{ indices: [2, 3, 4], color: "blue" as const, label: "窗口" }],
+            description: "继续：加入'b'，重复，收缩到{c:1,a:1,b:1}",
+            variables: { window: "{c:1,a:1,b:1}", maxLen: 3 },
+            codeHighlight: [16]
+          },
+          {
+            array: ["a", "b", "c", "a", "b", "c", "b", "b"],
+            left: 5,
+            right: 7,
+            highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "最长=3" }],
+            completed: [0, 1, 2, 3, 4, 5, 6, 7],
+            description: "遍历结束！最长无重复子串='abc'，长度=3",
+            variables: { result: 3 },
+            codeHighlight: [19]
+          }
+        ]
+      },
+      // 多题型动画示例
+      animations: [
+        {
+          problemId: "longest-substring-without-repeating-characters",
+          problemName: "无重复字符的最长子串",
+          difficulty: "medium" as const,
+          animation: {
+            type: "sliding-window" as const,
+            title: "无重复字符的最长子串",
+            description: "找到不含重复字符的最长子串",
+            exampleInput: {
+              description: "s = 'pwwkew'",
+              data: { s: "pwwkew" }
+            },
+            steps: [
+              { array: ["p", "w", "w", "k", "e", "w"], left: 0, right: 0, highlights: [{ indices: [0], color: "blue" as const, label: "p" }], description: "加入'p'，窗口={p:1}", variables: { len: 1 }, codeHighlight: [7] },
+              { array: ["p", "w", "w", "k", "e", "w"], left: 0, right: 1, highlights: [{ indices: [0, 1], color: "blue" as const, label: "pw" }], description: "加入'w'，窗口={p:1,w:1}，长度=2", variables: { len: 2 }, codeHighlight: [7, 16] },
+              { array: ["p", "w", "w", "k", "e", "w"], left: 0, right: 2, highlights: [{ indices: [1], color: "red" as const, label: "重复" }, { indices: [2], color: "red" as const, label: "w" }], description: "加入'w'，重复！需要收缩", variables: { duplicate: "w" }, codeHighlight: [10] },
+              { array: ["p", "w", "w", "k", "e", "w"], left: 2, right: 2, highlights: [{ indices: [2], color: "blue" as const, label: "w" }], description: "收缩到{w:1}，继续扩展", variables: { len: 1 }, codeHighlight: [12, 13] },
+              { array: ["p", "w", "w", "k", "e", "w"], left: 2, right: 4, highlights: [{ indices: [2, 3, 4], color: "blue" as const, label: "wke" }], description: "扩展到'wke'，长度=3", variables: { len: 3, maxLen: 3 }, codeHighlight: [16] },
+              { array: ["p", "w", "w", "k", "e", "w"], left: 3, right: 5, highlights: [{ indices: [3, 4, 5], color: "green" as const, label: "kew" }], completed: [0, 1, 2, 3, 4, 5], description: "最终：最长='kew'或'wke'，长度=3", variables: { result: 3 }, codeHighlight: [19] }
+            ]
+          }
+        },
+        {
+          problemId: "fruit-into-baskets",
+          problemName: "水果成篮",
+          difficulty: "medium" as const,
+          animation: {
+            type: "sliding-window" as const,
+            title: "水果成篮（最多包含两种类型）",
+            description: "找到最多包含两种水果类型的最长子数组",
+            exampleInput: {
+              description: "fruits = [1, 2, 1, 2, 3]",
+              data: { fruits: [1, 2, 1, 2, 3] }
+            },
+            steps: [
+              { array: [1, 2, 1, 2, 3], left: 0, right: 0, highlights: [{ indices: [0], color: "blue" as const, label: "1种" }], description: "加入类型1，篮子={1:1}", variables: { types: 1 }, codeHighlight: [7] },
+              { array: [1, 2, 1, 2, 3], left: 0, right: 1, highlights: [{ indices: [0, 1], color: "blue" as const, label: "2种" }], description: "加入类型2，篮子={1:1,2:1}，2种", variables: { types: 2, len: 2 }, codeHighlight: [7, 16] },
+              { array: [1, 2, 1, 2, 3], left: 0, right: 3, highlights: [{ indices: [0, 1, 2, 3], color: "blue" as const, label: "2种" }], description: "继续扩展，{1:2,2:2}，长度=4", variables: { types: 2, len: 4 }, codeHighlight: [16] },
+              { array: [1, 2, 1, 2, 3], left: 0, right: 4, highlights: [{ indices: [4], color: "red" as const, label: "第3种" }], description: "加入类型3，超过2种！", variables: { types: 3 }, codeHighlight: [10] },
+              { array: [1, 2, 1, 2, 3], left: 3, right: 4, highlights: [{ indices: [3, 4], color: "blue" as const, label: "2种" }], description: "收缩到{2:1,3:1}，长度=2", variables: { types: 2, len: 2 }, codeHighlight: [12, 13] },
+              { array: [1, 2, 1, 2, 3], left: 0, right: 3, highlights: [{ indices: [0, 1, 2, 3], color: "green" as const, label: "最长" }], completed: [0, 1, 2, 3, 4], description: "最长包含2种的子数组长度=4", variables: { result: 4 }, codeHighlight: [19] }
+            ]
+          }
+        }
+      ]
     },
     {
       id: "fixed",
@@ -324,10 +1172,172 @@ for (let i = k; i < n; i++) {
   result = Math.max(result, calculate());
 }`,
       exampleProblem: "find-all-anagrams-in-a-string",
+      // 详细讲解
+      detailedExplanation: {
+        coreIdea: "窗口大小始终保持为k，每次滑动一步：加入一个新元素，移除一个旧元素。适合处理「大小固定的子数组/子串」问题。",
+        keyPoints: [
+          "先初始化大小为k的第一个窗口",
+          "然后每次移动：加入arr[i]，移除arr[i-k]",
+          "窗口大小始终保持为k",
+          "适合求固定长度子数组的最大和、平均值等"
+        ],
+        differenceFromBase: "与可变窗口不同，固定窗口不需要收缩判断，逻辑更简单",
+        pitfalls: [
+          "初始化时忘记处理k大于数组长度的情况",
+          "滑动时移除元素的索引计算错误（应该是i-k）",
+          "循环起点应该从k开始，不是k+1"
+        ]
+      },
+      fullCode: {
+        typescript: `function maxSumSubarray(nums: number[], k: number): number {
+  if (nums.length < k) return 0;
+
+  // 初始化第一个窗口
+  let windowSum = 0;
+  for (let i = 0; i < k; i++) {
+    windowSum += nums[i];
+  }
+  let maxSum = windowSum;
+
+  // 滑动窗口
+  for (let i = k; i < nums.length; i++) {
+    windowSum += nums[i];      // 加入右边
+    windowSum -= nums[i - k];  // 移除左边
+    maxSum = Math.max(maxSum, windowSum);
+  }
+
+  return maxSum;
+}`,
+        comments: `function maxSumSubarray(nums: number[], k: number): number {
+  // 边界检查
+  if (nums.length < k) return 0;
+
+  // 1. 初始化第一个窗口（前k个元素的和）
+  let windowSum = 0;
+  for (let i = 0; i < k; i++) {
+    windowSum += nums[i];
+  }
+  let maxSum = windowSum;
+
+  // 2. 滑动窗口：每次加入一个新元素，移除一个旧元素
+  for (let i = k; i < nums.length; i++) {
+    // 3. 加入新元素（索引i）
+    windowSum += nums[i];
+    // 4. 移除旧元素（索引i-k）
+    windowSum -= nums[i - k];
+    // 5. 更新最大值
+    maxSum = Math.max(maxSum, windowSum);
+  }
+
+  return maxSum;
+}`
+      },
+      // 变体动画
+      animation: {
+        type: "sliding-window" as const,
+        title: "固定窗口 - 大小为k的最大和",
+        description: "在数组 [2, 1, 5, 1, 3, 2] 中找大小为3的最大和子数组",
+        exampleInput: {
+          description: "nums = [2, 1, 5, 1, 3, 2], k = 3",
+          data: { nums: [2, 1, 5, 1, 3, 2], k: 3 }
+        },
+        steps: [
+          {
+            array: [2, 1, 5, 1, 3, 2],
+            left: 0,
+            right: 2,
+            highlights: [{ indices: [0, 1, 2], color: "blue" as const, label: "初始窗口" }],
+            description: "初始化：第一个窗口[2,1,5]，和=8",
+            variables: { windowSum: 8, maxSum: 8 },
+            codeHighlight: [5, 6, 7, 8, 9]
+          },
+          {
+            array: [2, 1, 5, 1, 3, 2],
+            left: 1,
+            right: 3,
+            highlights: [{ indices: [1, 2, 3], color: "blue" as const, label: "窗口" }],
+            description: "滑动：+1 -2，窗口[1,5,1]，和=7",
+            variables: { windowSum: 7, maxSum: 8, add: 1, remove: 2 },
+            codeHighlight: [12, 13, 14, 15]
+          },
+          {
+            array: [2, 1, 5, 1, 3, 2],
+            left: 2,
+            right: 4,
+            highlights: [{ indices: [2, 3, 4], color: "blue" as const, label: "窗口" }],
+            description: "滑动：+3 -1，窗口[5,1,3]，和=9，更新max！",
+            variables: { windowSum: 9, maxSum: 9, add: 3, remove: 1 },
+            codeHighlight: [12, 13, 14, 15]
+          },
+          {
+            array: [2, 1, 5, 1, 3, 2],
+            left: 3,
+            right: 5,
+            highlights: [{ indices: [3, 4, 5], color: "blue" as const, label: "窗口" }],
+            description: "滑动：+2 -5，窗口[1,3,2]，和=6",
+            variables: { windowSum: 6, maxSum: 9, add: 2, remove: 5 },
+            codeHighlight: [12, 13, 14, 15]
+          },
+          {
+            array: [2, 1, 5, 1, 3, 2],
+            left: 2,
+            right: 4,
+            highlights: [{ indices: [2, 3, 4], color: "green" as const, label: "最大和" }],
+            completed: [0, 1, 2, 3, 4, 5],
+            description: "完成！最大和子数组[5,1,3]，和=9",
+            variables: { result: 9 },
+            codeHighlight: [18]
+          }
+        ]
+      },
+      // 多题型动画示例
+      animations: [
+        {
+          problemId: "maximum-average-subarray-i",
+          problemName: "子数组最大平均数 I",
+          difficulty: "easy" as const,
+          animation: {
+            type: "sliding-window" as const,
+            title: "子数组最大平均数",
+            description: "找长度为k的子数组的最大平均数",
+            exampleInput: {
+              description: "nums = [1,12,-5,-6,50,3], k = 4",
+              data: { nums: [1, 12, -5, -6, 50, 3], k: 4 }
+            },
+            steps: [
+              { array: [1, 12, -5, -6, 50, 3], left: 0, right: 3, highlights: [{ indices: [0, 1, 2, 3], color: "blue" as const, label: "初始" }], description: "初始窗口[1,12,-5,-6]，和=2，平均=0.5", variables: { sum: 2, avg: 0.5 }, codeHighlight: [5, 6, 7] },
+              { array: [1, 12, -5, -6, 50, 3], left: 1, right: 4, highlights: [{ indices: [1, 2, 3, 4], color: "blue" as const, label: "窗口" }], description: "滑动：+50 -1，和=51，平均=12.75，更新！", variables: { sum: 51, avg: 12.75, maxAvg: 12.75 }, codeHighlight: [12, 13, 14] },
+              { array: [1, 12, -5, -6, 50, 3], left: 2, right: 5, highlights: [{ indices: [2, 3, 4, 5], color: "blue" as const, label: "窗口" }], description: "滑动：+3 -12，和=42，平均=10.5", variables: { sum: 42, avg: 10.5, maxAvg: 12.75 }, codeHighlight: [12, 13, 14] },
+              { array: [1, 12, -5, -6, 50, 3], left: 1, right: 4, highlights: [{ indices: [1, 2, 3, 4], color: "green" as const, label: "最大" }], completed: [0, 1, 2, 3, 4, 5], description: "最大平均数=12.75", variables: { result: 12.75 }, codeHighlight: [18] }
+            ]
+          }
+        },
+        {
+          problemId: "find-all-anagrams-in-a-string",
+          problemName: "找到字符串中所有字母异位词",
+          difficulty: "medium" as const,
+          animation: {
+            type: "sliding-window" as const,
+            title: "找到所有字母异位词",
+            description: "在s中找到p的所有字母异位词的起始索引",
+            exampleInput: {
+              description: "s = 'cbaebabacd', p = 'abc'",
+              data: { s: "cbaebabacd", p: "abc" }
+            },
+            steps: [
+              { array: ["c", "b", "a", "e", "b", "a", "b", "a", "c", "d"], left: 0, right: 2, highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "cba=abc!" }], description: "窗口'cba'是'abc'的异位词！记录索引0", variables: { window: "cba", result: "[0]" }, codeHighlight: [8] },
+              { array: ["c", "b", "a", "e", "b", "a", "b", "a", "c", "d"], left: 1, right: 3, highlights: [{ indices: [1, 2, 3], color: "blue" as const, label: "bae" }], description: "滑动：'bae'不是异位词", variables: { window: "bae" }, codeHighlight: [12, 13] },
+              { array: ["c", "b", "a", "e", "b", "a", "b", "a", "c", "d"], left: 3, right: 5, highlights: [{ indices: [3, 4, 5], color: "blue" as const, label: "eba" }], description: "'eba'不是（包含e）", variables: { window: "eba" }, codeHighlight: [12, 13] },
+              { array: ["c", "b", "a", "e", "b", "a", "b", "a", "c", "d"], left: 6, right: 8, highlights: [{ indices: [6, 7, 8], color: "green" as const, label: "bac=abc!" }], description: "'bac'是异位词！记录索引6", variables: { window: "bac", result: "[0,6]" }, codeHighlight: [8] },
+              { array: ["c", "b", "a", "e", "b", "a", "b", "a", "c", "d"], left: 0, right: 2, highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "索引0" }, { indices: [6, 7, 8], color: "green" as const, label: "索引6" }], completed: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], description: "完成！异位词起始索引=[0, 6]", variables: { result: "[0, 6]" }, codeHighlight: [18] }
+            ]
+          }
+        }
+      ]
     },
     {
       id: "shrink-first",
-      name: "先收缩后扩展",
+      name: "先满足再收缩",
       description: "先让窗口满足条件，再尝试收缩找更优解",
       useCase: "最小覆盖子串、最小长度子数组",
       codeSnippet: `for (let right = 0; right < n; right++) {
@@ -341,6 +1351,193 @@ for (let i = k; i < n; i++) {
   }
 }`,
       exampleProblem: "minimum-window-substring",
+      // 详细讲解
+      detailedExplanation: {
+        coreIdea: "与「可变窗口」相反：先扩展直到满足条件，然后在满足条件时不断收缩寻找最短解。适合求「最小」长度的子串/子数组。",
+        keyPoints: [
+          "收缩条件：窗口满足题目要求（而不是不满足）",
+          "更新答案时机：在收缩循环内部，每次收缩前",
+          "收缩后可能不再满足条件，继续扩展",
+          "核心区别：while(valid()) 而不是 while(!valid())"
+        ],
+        differenceFromBase: "与可变窗口的收缩条件相反：满足条件时收缩，用于求最小长度",
+        pitfalls: [
+          "收缩条件写反（应该是满足条件时收缩）",
+          "更新答案的位置错误（应该在收缩前更新）",
+          "result初始值应设为Infinity（求最小值）"
+        ]
+      },
+      fullCode: {
+        typescript: `function minSubArrayLen(target: number, nums: number[]): number {
+  let left = 0;
+  let sum = 0;
+  let result = Infinity;
+
+  for (let right = 0; right < nums.length; right++) {
+    sum += nums[right];
+
+    // 满足条件时尽量收缩
+    while (sum >= target) {
+      result = Math.min(result, right - left + 1);
+      sum -= nums[left];
+      left++;
+    }
+  }
+
+  return result === Infinity ? 0 : result;
+}`,
+        comments: `function minSubArrayLen(target: number, nums: number[]): number {
+  let left = 0;
+  let sum = 0;
+  // 初始化为无穷大，因为求最小值
+  let result = Infinity;
+
+  // 右边界不断扩展
+  for (let right = 0; right < nums.length; right++) {
+    // 扩展窗口
+    sum += nums[right];
+
+    // 关键：满足条件时尽量收缩，寻找更短的解
+    while (sum >= target) {
+      // 先更新答案（当前已满足条件）
+      result = Math.min(result, right - left + 1);
+      // 再收缩窗口
+      sum -= nums[left];
+      left++;
+    }
+  }
+
+  // 如果没找到，返回0
+  return result === Infinity ? 0 : result;
+}`
+      },
+      // 变体动画
+      animation: {
+        type: "sliding-window" as const,
+        title: "先满足再收缩 - 长度最小的子数组",
+        description: "找到和 >= 7 的最短子数组",
+        exampleInput: {
+          description: "target = 7, nums = [2, 3, 1, 2, 4, 3]",
+          data: { target: 7, nums: [2, 3, 1, 2, 4, 3] }
+        },
+        steps: [
+          {
+            array: [2, 3, 1, 2, 4, 3],
+            left: 0,
+            right: 0,
+            highlights: [{ indices: [0], color: "blue" as const, label: "扩展" }],
+            description: "扩展：加入2，sum=2 < 7",
+            variables: { sum: 2, target: 7, minLen: "∞" },
+            codeHighlight: [6, 7]
+          },
+          {
+            array: [2, 3, 1, 2, 4, 3],
+            left: 0,
+            right: 2,
+            highlights: [{ indices: [0, 1, 2], color: "blue" as const, label: "扩展" }],
+            description: "继续扩展：sum=2+3+1=6 < 7",
+            variables: { sum: 6, target: 7, minLen: "∞" },
+            codeHighlight: [6, 7]
+          },
+          {
+            array: [2, 3, 1, 2, 4, 3],
+            left: 0,
+            right: 3,
+            highlights: [{ indices: [0, 1, 2, 3], color: "green" as const, label: "满足!" }],
+            description: "加入2，sum=8 >= 7，满足条件！记录长度4",
+            variables: { sum: 8, target: 7, minLen: 4 },
+            codeHighlight: [10, 11]
+          },
+          {
+            array: [2, 3, 1, 2, 4, 3],
+            left: 1,
+            right: 3,
+            highlights: [{ indices: [1, 2, 3], color: "green" as const, label: "收缩" }],
+            description: "收缩：移除2，sum=6 < 7，停止收缩",
+            variables: { sum: 6, target: 7, minLen: 4 },
+            codeHighlight: [12, 13]
+          },
+          {
+            array: [2, 3, 1, 2, 4, 3],
+            left: 1,
+            right: 4,
+            highlights: [{ indices: [1, 2, 3, 4], color: "green" as const, label: "满足!" }],
+            description: "扩展：加入4，sum=10 >= 7，长度4不更新",
+            variables: { sum: 10, target: 7, minLen: 4 },
+            codeHighlight: [10, 11]
+          },
+          {
+            array: [2, 3, 1, 2, 4, 3],
+            left: 2,
+            right: 4,
+            highlights: [{ indices: [2, 3, 4], color: "green" as const, label: "收缩" }],
+            description: "收缩：移除3，sum=7 >= 7，长度3，更新！",
+            variables: { sum: 7, target: 7, minLen: 3 },
+            codeHighlight: [11, 12, 13]
+          },
+          {
+            array: [2, 3, 1, 2, 4, 3],
+            left: 4,
+            right: 5,
+            highlights: [{ indices: [4, 5], color: "green" as const, label: "最短!" }],
+            description: "继续...找到[4,3]，sum=7，长度=2，更新！",
+            variables: { sum: 7, target: 7, minLen: 2 },
+            codeHighlight: [11]
+          },
+          {
+            array: [2, 3, 1, 2, 4, 3],
+            left: 4,
+            right: 5,
+            highlights: [{ indices: [4, 5], color: "green" as const, label: "答案" }],
+            completed: [0, 1, 2, 3, 4, 5],
+            description: "完成！最短子数组[4,3]，长度=2",
+            variables: { result: 2 },
+            codeHighlight: [17]
+          }
+        ]
+      },
+      // 多题型动画示例
+      animations: [
+        {
+          problemId: "minimum-size-subarray-sum",
+          problemName: "长度最小的子数组",
+          difficulty: "medium" as const,
+          animation: {
+            type: "sliding-window" as const,
+            title: "长度最小的子数组",
+            description: "找到和 >= target 的最短连续子数组",
+            exampleInput: {
+              description: "target = 7, nums = [2, 3, 1, 2, 4, 3]",
+              data: { target: 7, nums: [2, 3, 1, 2, 4, 3] }
+            },
+            steps: [
+              { array: [2, 3, 1, 2, 4, 3], left: 0, right: 3, highlights: [{ indices: [0, 1, 2, 3], color: "blue" as const, label: "8>=7" }], description: "扩展到sum=8>=7，长度4", variables: { sum: 8, len: 4 }, codeHighlight: [10] },
+              { array: [2, 3, 1, 2, 4, 3], left: 2, right: 4, highlights: [{ indices: [2, 3, 4], color: "blue" as const, label: "7>=7" }], description: "收缩再扩展，sum=7，长度3", variables: { sum: 7, len: 3 }, codeHighlight: [11] },
+              { array: [2, 3, 1, 2, 4, 3], left: 4, right: 5, highlights: [{ indices: [4, 5], color: "green" as const, label: "最短" }], completed: [0, 1, 2, 3, 4, 5], description: "找到最短[4,3]，长度=2", variables: { result: 2 }, codeHighlight: [17] }
+            ]
+          }
+        },
+        {
+          problemId: "minimum-window-substring",
+          problemName: "最小覆盖子串",
+          difficulty: "hard" as const,
+          animation: {
+            type: "sliding-window" as const,
+            title: "最小覆盖子串",
+            description: "在s中找包含t所有字符的最短子串",
+            exampleInput: {
+              description: 's = "ADOBECODEBANC", t = "ABC"',
+              data: { s: "ADOBECODEBANC", t: "ABC" }
+            },
+            steps: [
+              { array: ["A", "D", "O", "B", "E", "C", "O", "D", "E", "B", "A", "N", "C"], left: 0, right: 5, highlights: [{ indices: [0, 1, 2, 3, 4, 5], color: "blue" as const, label: "包含ABC" }], description: "扩展到包含ABC：'ADOBEC'，长度6", variables: { window: "ADOBEC", len: 6 }, codeHighlight: [10] },
+              { array: ["A", "D", "O", "B", "E", "C", "O", "D", "E", "B", "A", "N", "C"], left: 0, right: 5, highlights: [{ indices: [0, 1, 2, 3, 4, 5], color: "green" as const, label: "当前最短" }], description: "记录当前最短='ADOBEC'", variables: { minWindow: "ADOBEC", len: 6 }, codeHighlight: [11] },
+              { array: ["A", "D", "O", "B", "E", "C", "O", "D", "E", "B", "A", "N", "C"], left: 5, right: 10, highlights: [{ indices: [5, 6, 7, 8, 9, 10], color: "blue" as const, label: "包含" }], description: "收缩后扩展，找到'CODEBA'包含ABC", variables: { window: "CODEBA", len: 6 }, codeHighlight: [10, 11] },
+              { array: ["A", "D", "O", "B", "E", "C", "O", "D", "E", "B", "A", "N", "C"], left: 9, right: 12, highlights: [{ indices: [9, 10, 11, 12], color: "green" as const, label: "最短!" }], completed: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], description: "找到最短'BANC'，长度=4", variables: { result: "BANC", len: 4 }, codeHighlight: [17] }
+            ]
+          }
+        }
+      ]
     },
   ],
 
@@ -573,7 +1770,7 @@ export const binarySearchTemplate: AlgorithmTemplate = {
     visualMetaphor: "想象猜数字游戏。每次猜中间的数，根据'太大'或'太小'的反馈，排除一半的可能。100个数最多只需7次就能猜中。",
   },
 
-  // ========== 变体模式 ==========
+  // ========== 变体模式（增强版） ==========
   variants: [
     {
       id: "exact",
@@ -588,6 +1785,157 @@ export const binarySearchTemplate: AlgorithmTemplate = {
 }
 return -1;`,
       exampleProblem: "binary-search",
+      // 详细讲解
+      detailedExplanation: {
+        coreIdea: "在有序数组中查找目标值的精确位置。通过比较中点值与目标值，每次排除一半的搜索空间，直到找到目标或确定不存在。",
+        keyPoints: [
+          "使用左闭右闭区间 [left, right]",
+          "循环条件：left <= right（区间不为空）",
+          "找到 nums[mid] === target 时立即返回",
+          "没找到时更新边界：left = mid + 1 或 right = mid - 1"
+        ],
+        differenceFromBase: "这是二分查找的标准形式，找到就返回，适合查找唯一值",
+        pitfalls: [
+          "循环条件写成 left < right 会漏掉最后一个元素",
+          "边界更新不 +1/-1 会导致死循环",
+          "mid 计算不防溢出：应该用 left + (right - left) / 2"
+        ]
+      },
+      fullCode: {
+        typescript: `function search(nums: number[], target: number): number {
+  let left = 0;
+  let right = nums.length - 1;
+
+  while (left <= right) {
+    const mid = left + Math.floor((right - left) / 2);
+
+    if (nums[mid] === target) {
+      return mid;
+    } else if (nums[mid] < target) {
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
+  }
+
+  return -1;
+}`,
+        comments: `function search(nums: number[], target: number): number {
+  // 1. 定义搜索区间 [left, right]（左闭右闭）
+  let left = 0;
+  let right = nums.length - 1;
+
+  // 2. 循环直到区间为空
+  while (left <= right) {
+    // 3. 计算中点（防溢出写法）
+    const mid = left + Math.floor((right - left) / 2);
+
+    if (nums[mid] === target) {
+      // 4a. 找到目标，直接返回
+      return mid;
+    } else if (nums[mid] < target) {
+      // 4b. 目标在右半边，排除左半边
+      left = mid + 1;
+    } else {
+      // 4c. 目标在左半边，排除右半边
+      right = mid - 1;
+    }
+  }
+
+  // 5. 未找到目标
+  return -1;
+}`
+      },
+      // 变体动画
+      animation: {
+        type: "binary-search" as const,
+        title: "精确查找 - 二分查找",
+        description: "在有序数组 [-1, 0, 3, 5, 9, 12] 中查找 9",
+        exampleInput: {
+          description: "nums = [-1, 0, 3, 5, 9, 12], target = 9",
+          data: { nums: [-1, 0, 3, 5, 9, 12], target: 9 }
+        },
+        steps: [
+          {
+            array: [-1, 0, 3, 5, 9, 12],
+            left: 0,
+            right: 5,
+            description: "初始化：left=0, right=5，搜索整个数组",
+            variables: { left: 0, right: 5, target: 9 },
+            codeHighlight: [2, 3]
+          },
+          {
+            array: [-1, 0, 3, 5, 9, 12],
+            left: 0,
+            right: 5,
+            current: 2,
+            highlights: [{ indices: [2], color: "yellow" as const, label: "mid=2" }],
+            description: "mid=2, nums[2]=3 < 9，目标在右边",
+            variables: { mid: 2, "nums[mid]": 3, action: "left = mid + 1" },
+            codeHighlight: [10, 11]
+          },
+          {
+            array: [-1, 0, 3, 5, 9, 12],
+            left: 3,
+            right: 5,
+            highlights: [{ indices: [3, 4, 5], color: "blue" as const, label: "搜索区间" }],
+            description: "left=3，新搜索区间 [5, 9, 12]",
+            variables: { left: 3, right: 5 },
+            codeHighlight: [5]
+          },
+          {
+            array: [-1, 0, 3, 5, 9, 12],
+            left: 3,
+            right: 5,
+            current: 4,
+            highlights: [{ indices: [4], color: "green" as const, label: "找到!" }],
+            completed: [0, 1, 2, 3, 4, 5],
+            description: "mid=4, nums[4]=9 === target，找到！返回 4",
+            variables: { mid: 4, "nums[mid]": 9, result: 4 },
+            codeHighlight: [8, 9]
+          }
+        ]
+      },
+      // 多题型动画示例
+      animations: [
+        {
+          problemId: "binary-search",
+          problemName: "二分查找",
+          difficulty: "easy" as const,
+          animation: {
+            type: "binary-search" as const,
+            title: "二分查找",
+            description: "在有序数组中查找目标值",
+            exampleInput: {
+              description: "nums = [-1, 0, 3, 5, 9, 12], target = 9",
+              data: { nums: [-1, 0, 3, 5, 9, 12], target: 9 }
+            },
+            steps: [
+              { array: [-1, 0, 3, 5, 9, 12], left: 0, right: 5, current: 2, highlights: [{ indices: [2], color: "yellow" as const, label: "mid" }], description: "mid=2, nums[2]=3 < 9，往右找", variables: { mid: 2 }, codeHighlight: [6, 10] },
+              { array: [-1, 0, 3, 5, 9, 12], left: 3, right: 5, current: 4, highlights: [{ indices: [4], color: "green" as const, label: "找到" }], completed: [0, 1, 2, 3, 4, 5], description: "mid=4, nums[4]=9，找到！", variables: { result: 4 }, codeHighlight: [8, 9] }
+            ]
+          }
+        },
+        {
+          problemId: "search-insert-position",
+          problemName: "搜索插入位置",
+          difficulty: "easy" as const,
+          animation: {
+            type: "binary-search" as const,
+            title: "搜索插入位置",
+            description: "找到目标值或应该插入的位置",
+            exampleInput: {
+              description: "nums = [1, 3, 5, 6], target = 2",
+              data: { nums: [1, 3, 5, 6], target: 2 }
+            },
+            steps: [
+              { array: [1, 3, 5, 6], left: 0, right: 3, current: 1, highlights: [{ indices: [1], color: "yellow" as const, label: "mid" }], description: "mid=1, nums[1]=3 > 2，往左找", variables: { mid: 1 }, codeHighlight: [6, 12] },
+              { array: [1, 3, 5, 6], left: 0, right: 0, current: 0, highlights: [{ indices: [0], color: "yellow" as const, label: "mid" }], description: "mid=0, nums[0]=1 < 2，left++", variables: { mid: 0 }, codeHighlight: [6, 10] },
+              { array: [1, 3, 5, 6], left: 1, right: 0, highlights: [{ indices: [1], color: "green" as const, label: "插入位置" }], completed: [0, 1, 2, 3], description: "left > right，返回 left=1 作为插入位置", variables: { result: 1 }, codeHighlight: [16] }
+            ]
+          }
+        }
+      ]
     },
     {
       id: "left-bound",
@@ -601,6 +1949,150 @@ return -1;`,
 }
 return left;  // 第一个 >= target`,
       exampleProblem: "find-first-and-last-position",
+      // 详细讲解
+      detailedExplanation: {
+        coreIdea: "找到第一个大于等于 target 的位置。即使找到等于 target 的值，也继续向左搜索，确保找到最左边的那个。",
+        keyPoints: [
+          "nums[mid] >= target 时，right = mid - 1（继续往左找）",
+          "nums[mid] < target 时，left = mid + 1",
+          "循环结束后，left 指向第一个 >= target 的位置",
+          "如果要找第一个等于 target 的，需要额外判断 nums[left] === target"
+        ],
+        differenceFromBase: "即使 nums[mid] === target 也不返回，而是继续往左找，保证找到第一个",
+        pitfalls: [
+          "返回值应该是 left 而不是 right",
+          "需要检查 left 是否越界（left < nums.length）",
+          "需要额外判断 nums[left] 是否真的等于 target"
+        ]
+      },
+      fullCode: {
+        typescript: `function searchLeftBound(nums: number[], target: number): number {
+  let left = 0;
+  let right = nums.length - 1;
+
+  while (left <= right) {
+    const mid = left + Math.floor((right - left) / 2);
+
+    if (nums[mid] >= target) {
+      right = mid - 1;  // 继续向左找
+    } else {
+      left = mid + 1;
+    }
+  }
+
+  // left 是第一个 >= target 的位置
+  // 需要检查是否真的等于 target
+  if (left < nums.length && nums[left] === target) {
+    return left;
+  }
+  return -1;
+}`,
+        comments: `function searchLeftBound(nums: number[], target: number): number {
+  let left = 0;
+  let right = nums.length - 1;
+
+  // 循环直到区间为空
+  while (left <= right) {
+    const mid = left + Math.floor((right - left) / 2);
+
+    if (nums[mid] >= target) {
+      // 关键：即使相等也继续往左找
+      right = mid - 1;
+    } else {
+      left = mid + 1;
+    }
+  }
+
+  // left 现在指向第一个 >= target 的位置
+  // 需要判断是否真的找到了 target
+  if (left < nums.length && nums[left] === target) {
+    return left;
+  }
+  return -1;  // 没有等于 target 的元素
+}`
+      },
+      // 变体动画
+      animation: {
+        type: "binary-search" as const,
+        title: "左边界查找 - 第一个等于target的位置",
+        description: "在 [1, 2, 2, 2, 3] 中找第一个 2",
+        exampleInput: {
+          description: "nums = [1, 2, 2, 2, 3], target = 2",
+          data: { nums: [1, 2, 2, 2, 3], target: 2 }
+        },
+        steps: [
+          {
+            array: [1, 2, 2, 2, 3],
+            left: 0,
+            right: 4,
+            description: "初始化：left=0, right=4",
+            variables: { left: 0, right: 4, target: 2 },
+            codeHighlight: [2, 3]
+          },
+          {
+            array: [1, 2, 2, 2, 3],
+            left: 0,
+            right: 4,
+            current: 2,
+            highlights: [{ indices: [2], color: "yellow" as const, label: "mid=2" }],
+            description: "mid=2, nums[2]=2 >= target，right = mid - 1",
+            variables: { mid: 2, "nums[mid]": 2, action: "right = mid - 1" },
+            codeHighlight: [8, 9]
+          },
+          {
+            array: [1, 2, 2, 2, 3],
+            left: 0,
+            right: 1,
+            current: 0,
+            highlights: [{ indices: [0], color: "yellow" as const, label: "mid=0" }],
+            description: "mid=0, nums[0]=1 < target，left = mid + 1",
+            variables: { mid: 0, "nums[mid]": 1, action: "left = mid + 1" },
+            codeHighlight: [10, 11]
+          },
+          {
+            array: [1, 2, 2, 2, 3],
+            left: 1,
+            right: 1,
+            current: 1,
+            highlights: [{ indices: [1], color: "yellow" as const, label: "mid=1" }],
+            description: "mid=1, nums[1]=2 >= target，right = mid - 1",
+            variables: { mid: 1, "nums[mid]": 2, action: "right = mid - 1" },
+            codeHighlight: [8, 9]
+          },
+          {
+            array: [1, 2, 2, 2, 3],
+            left: 1,
+            right: 0,
+            highlights: [{ indices: [1], color: "green" as const, label: "第一个2" }],
+            completed: [0, 1, 2, 3, 4],
+            description: "left > right 循环结束，left=1 是第一个 2 的位置",
+            variables: { result: 1 },
+            codeHighlight: [16, 17]
+          }
+        ]
+      },
+      // 多题型动画示例
+      animations: [
+        {
+          problemId: "find-first-and-last-position",
+          problemName: "在排序数组中查找元素的第一个位置",
+          difficulty: "medium" as const,
+          animation: {
+            type: "binary-search" as const,
+            title: "查找第一个位置",
+            description: "找到目标值的第一个出现位置",
+            exampleInput: {
+              description: "nums = [5, 7, 7, 8, 8, 10], target = 8",
+              data: { nums: [5, 7, 7, 8, 8, 10], target: 8 }
+            },
+            steps: [
+              { array: [5, 7, 7, 8, 8, 10], left: 0, right: 5, current: 2, highlights: [{ indices: [2], color: "yellow" as const, label: "mid" }], description: "mid=2, nums[2]=7 < 8，left++", variables: { mid: 2 }, codeHighlight: [10] },
+              { array: [5, 7, 7, 8, 8, 10], left: 3, right: 5, current: 4, highlights: [{ indices: [4], color: "yellow" as const, label: "mid" }], description: "mid=4, nums[4]=8 >= 8，right--", variables: { mid: 4 }, codeHighlight: [8, 9] },
+              { array: [5, 7, 7, 8, 8, 10], left: 3, right: 3, current: 3, highlights: [{ indices: [3], color: "green" as const, label: "第一个8" }], completed: [0, 1, 2, 3, 4, 5], description: "找到第一个 8 在索引 3", variables: { result: 3 }, codeHighlight: [16] }
+            ]
+          }
+        }
+      ]
     },
     {
       id: "right-bound",
@@ -614,6 +2106,149 @@ return left;  // 第一个 >= target`,
 }
 return right;  // 最后一个 <= target`,
       exampleProblem: "find-first-and-last-position",
+      // 详细讲解
+      detailedExplanation: {
+        coreIdea: "找到最后一个小于等于 target 的位置。即使找到等于 target 的值，也继续向右搜索，确保找到最右边的那个。",
+        keyPoints: [
+          "nums[mid] <= target 时，left = mid + 1（继续往右找）",
+          "nums[mid] > target 时，right = mid - 1",
+          "循环结束后，right 指向最后一个 <= target 的位置",
+          "如果要找最后一个等于 target 的，需要判断 nums[right] === target"
+        ],
+        differenceFromBase: "即使 nums[mid] === target 也不返回，而是继续往右找，保证找到最后一个",
+        pitfalls: [
+          "返回值应该是 right 而不是 left",
+          "需要检查 right 是否合法（right >= 0）",
+          "需要额外判断 nums[right] 是否真的等于 target"
+        ]
+      },
+      fullCode: {
+        typescript: `function searchRightBound(nums: number[], target: number): number {
+  let left = 0;
+  let right = nums.length - 1;
+
+  while (left <= right) {
+    const mid = left + Math.floor((right - left) / 2);
+
+    if (nums[mid] <= target) {
+      left = mid + 1;  // 继续向右找
+    } else {
+      right = mid - 1;
+    }
+  }
+
+  // right 是最后一个 <= target 的位置
+  if (right >= 0 && nums[right] === target) {
+    return right;
+  }
+  return -1;
+}`,
+        comments: `function searchRightBound(nums: number[], target: number): number {
+  let left = 0;
+  let right = nums.length - 1;
+
+  while (left <= right) {
+    const mid = left + Math.floor((right - left) / 2);
+
+    if (nums[mid] <= target) {
+      // 关键：即使相等也继续往右找
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
+  }
+
+  // right 现在指向最后一个 <= target 的位置
+  // 需要判断是否真的找到了 target
+  if (right >= 0 && nums[right] === target) {
+    return right;
+  }
+  return -1;
+}`
+      },
+      // 变体动画
+      animation: {
+        type: "binary-search" as const,
+        title: "右边界查找 - 最后一个等于target的位置",
+        description: "在 [1, 2, 2, 2, 3] 中找最后一个 2",
+        exampleInput: {
+          description: "nums = [1, 2, 2, 2, 3], target = 2",
+          data: { nums: [1, 2, 2, 2, 3], target: 2 }
+        },
+        steps: [
+          {
+            array: [1, 2, 2, 2, 3],
+            left: 0,
+            right: 4,
+            description: "初始化：left=0, right=4",
+            variables: { left: 0, right: 4, target: 2 },
+            codeHighlight: [2, 3]
+          },
+          {
+            array: [1, 2, 2, 2, 3],
+            left: 0,
+            right: 4,
+            current: 2,
+            highlights: [{ indices: [2], color: "yellow" as const, label: "mid=2" }],
+            description: "mid=2, nums[2]=2 <= target，left = mid + 1",
+            variables: { mid: 2, "nums[mid]": 2, action: "left = mid + 1" },
+            codeHighlight: [8, 9]
+          },
+          {
+            array: [1, 2, 2, 2, 3],
+            left: 3,
+            right: 4,
+            current: 3,
+            highlights: [{ indices: [3], color: "yellow" as const, label: "mid=3" }],
+            description: "mid=3, nums[3]=2 <= target，left = mid + 1",
+            variables: { mid: 3, "nums[mid]": 2, action: "left = mid + 1" },
+            codeHighlight: [8, 9]
+          },
+          {
+            array: [1, 2, 2, 2, 3],
+            left: 4,
+            right: 4,
+            current: 4,
+            highlights: [{ indices: [4], color: "yellow" as const, label: "mid=4" }],
+            description: "mid=4, nums[4]=3 > target，right = mid - 1",
+            variables: { mid: 4, "nums[mid]": 3, action: "right = mid - 1" },
+            codeHighlight: [10, 11]
+          },
+          {
+            array: [1, 2, 2, 2, 3],
+            left: 4,
+            right: 3,
+            highlights: [{ indices: [3], color: "green" as const, label: "最后一个2" }],
+            completed: [0, 1, 2, 3, 4],
+            description: "left > right 循环结束，right=3 是最后一个 2 的位置",
+            variables: { result: 3 },
+            codeHighlight: [15, 16]
+          }
+        ]
+      },
+      // 多题型动画示例
+      animations: [
+        {
+          problemId: "find-first-and-last-position",
+          problemName: "在排序数组中查找元素的最后一个位置",
+          difficulty: "medium" as const,
+          animation: {
+            type: "binary-search" as const,
+            title: "查找最后一个位置",
+            description: "找到目标值的最后一个出现位置",
+            exampleInput: {
+              description: "nums = [5, 7, 7, 8, 8, 10], target = 8",
+              data: { nums: [5, 7, 7, 8, 8, 10], target: 8 }
+            },
+            steps: [
+              { array: [5, 7, 7, 8, 8, 10], left: 0, right: 5, current: 2, highlights: [{ indices: [2], color: "yellow" as const, label: "mid" }], description: "mid=2, nums[2]=7 < 8，left++", variables: { mid: 2 }, codeHighlight: [8] },
+              { array: [5, 7, 7, 8, 8, 10], left: 3, right: 5, current: 4, highlights: [{ indices: [4], color: "yellow" as const, label: "mid" }], description: "mid=4, nums[4]=8 <= 8，left++", variables: { mid: 4 }, codeHighlight: [8, 9] },
+              { array: [5, 7, 7, 8, 8, 10], left: 5, right: 5, current: 5, highlights: [{ indices: [5], color: "yellow" as const, label: "mid" }], description: "mid=5, nums[5]=10 > 8，right--", variables: { mid: 5 }, codeHighlight: [10, 11] },
+              { array: [5, 7, 7, 8, 8, 10], left: 5, right: 4, highlights: [{ indices: [4], color: "green" as const, label: "最后一个8" }], completed: [0, 1, 2, 3, 4, 5], description: "找到最后一个 8 在索引 4", variables: { result: 4 }, codeHighlight: [15] }
+            ]
+          }
+        }
+      ]
     },
     {
       id: "answer-search",
@@ -628,6 +2263,213 @@ while (left < right) {
 }
 return left;`,
       exampleProblem: "capacity-to-ship-packages",
+      // 详细讲解
+      detailedExplanation: {
+        coreIdea: "不是在数组中查找，而是在答案空间中二分。先确定答案的可能范围，然后二分查找满足条件的最小/最大答案。",
+        keyPoints: [
+          "确定答案的范围：[minPossible, maxPossible]",
+          "设计 isValid(mid) 函数判断答案是否可行",
+          "根据可行性缩小范围，找到最优答案",
+          "通常用于「最小化最大值」或「最大化最小值」问题"
+        ],
+        differenceFromBase: "不是在数组中查找元素，而是在答案空间中查找满足条件的最优解",
+        pitfalls: [
+          "答案范围确定错误（太大太小都会影响效率或正确性）",
+          "isValid 函数逻辑错误",
+          "二分方向搞反（求最小用 right = mid，求最大用 left = mid + 1）"
+        ]
+      },
+      fullCode: {
+        typescript: `function shipWithinDays(weights: number[], days: number): number {
+  // 答案范围：最小是最重的一个，最大是全部重量之和
+  let left = Math.max(...weights);
+  let right = weights.reduce((a, b) => a + b, 0);
+
+  while (left < right) {
+    const mid = left + Math.floor((right - left) / 2);
+
+    if (canShip(weights, days, mid)) {
+      right = mid;  // 可行，尝试更小的容量
+    } else {
+      left = mid + 1;  // 不可行，需要更大容量
+    }
+  }
+
+  return left;
+}
+
+function canShip(weights: number[], days: number, capacity: number): boolean {
+  let currentLoad = 0;
+  let daysNeeded = 1;
+
+  for (const weight of weights) {
+    if (currentLoad + weight > capacity) {
+      daysNeeded++;
+      currentLoad = weight;
+    } else {
+      currentLoad += weight;
+    }
+  }
+
+  return daysNeeded <= days;
+}`,
+        comments: `function shipWithinDays(weights: number[], days: number): number {
+  // 1. 确定答案范围
+  // 最小容量：至少要能装下最重的一个包裹
+  let left = Math.max(...weights);
+  // 最大容量：一次全装完
+  let right = weights.reduce((a, b) => a + b, 0);
+
+  // 2. 二分查找最小可行容量
+  while (left < right) {
+    const mid = left + Math.floor((right - left) / 2);
+
+    // 3. 判断 mid 容量是否能在 days 天内运完
+    if (canShip(weights, days, mid)) {
+      // 可行，尝试更小的容量
+      right = mid;
+    } else {
+      // 不可行，需要更大容量
+      left = mid + 1;
+    }
+  }
+
+  return left;
+}
+
+// 辅助函数：判断给定容量能否在指定天数内运完
+function canShip(weights: number[], days: number, capacity: number): boolean {
+  let currentLoad = 0;  // 当前船的负载
+  let daysNeeded = 1;   // 需要的天数
+
+  for (const weight of weights) {
+    if (currentLoad + weight > capacity) {
+      // 装不下了，需要新的一天
+      daysNeeded++;
+      currentLoad = weight;
+    } else {
+      currentLoad += weight;
+    }
+  }
+
+  return daysNeeded <= days;
+}`
+      },
+      // 变体动画
+      animation: {
+        type: "binary-search" as const,
+        title: "答案二分 - 在D天内送达包裹的能力",
+        description: "weights = [1,2,3,4,5,6,7,8,9,10], days = 5，求最小载重",
+        exampleInput: {
+          description: "weights = [1,2,3,4,5,6,7,8,9,10], days = 5",
+          data: { weights: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], days: 5 }
+        },
+        steps: [
+          {
+            array: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            left: 10,
+            right: 55,
+            description: "答案范围：[10, 55]（最重单件=10，总重=55）",
+            variables: { left: 10, right: 55, days: 5 },
+            codeHighlight: [3, 4]
+          },
+          {
+            array: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            left: 10,
+            right: 55,
+            current: 32,
+            description: "mid=32，检验：能否用容量32在5天内运完？",
+            variables: { mid: 32, check: "canShip(32)?" },
+            codeHighlight: [7, 9]
+          },
+          {
+            array: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            left: 10,
+            right: 32,
+            highlights: [{ indices: [0, 1, 2, 3, 4, 5], color: "blue" as const, label: "Day1" }],
+            description: "容量32可行（Day1:[1-6]=21, Day2:[7-8]=15, Day3:[9]=9, Day4:[10]=10），尝试更小",
+            variables: { mid: 32, canShip: true, action: "right = mid" },
+            codeHighlight: [10, 11]
+          },
+          {
+            array: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            left: 10,
+            right: 32,
+            current: 21,
+            description: "mid=21，检验容量21",
+            variables: { mid: 21, check: "canShip(21)?" },
+            codeHighlight: [7, 9]
+          },
+          {
+            array: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            left: 10,
+            right: 21,
+            description: "容量21可行（需4天），尝试更小",
+            variables: { mid: 21, canShip: true, daysNeeded: 4 },
+            codeHighlight: [10, 11]
+          },
+          {
+            array: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            left: 10,
+            right: 15,
+            current: 12,
+            description: "继续二分...mid=15，可行；mid=12，不可行",
+            variables: { mid: 15, canShip: true },
+            codeHighlight: [7]
+          },
+          {
+            array: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            left: 15,
+            right: 15,
+            highlights: [{ indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], color: "green" as const, label: "答案" }],
+            completed: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            description: "找到最小容量 15！Day1:[1-5]=15, Day2:[6,7]=13, Day3:[8]=8, Day4:[9]=9, Day5:[10]=10",
+            variables: { result: 15 },
+            codeHighlight: [16]
+          }
+        ]
+      },
+      // 多题型动画示例
+      animations: [
+        {
+          problemId: "capacity-to-ship-packages",
+          problemName: "在D天内送达包裹的能力",
+          difficulty: "medium" as const,
+          animation: {
+            type: "binary-search" as const,
+            title: "在D天内送达包裹的能力",
+            description: "找到在指定天数内送达所有包裹的最小载重能力",
+            exampleInput: {
+              description: "weights = [1,2,3,4,5,6,7,8,9,10], days = 5",
+              data: { weights: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], days: 5 }
+            },
+            steps: [
+              { array: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], left: 10, right: 55, current: 32, description: "范围[10,55]，mid=32可行", variables: { mid: 32 }, codeHighlight: [3, 4, 7] },
+              { array: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], left: 10, right: 32, current: 21, description: "mid=21可行，继续缩小", variables: { mid: 21 }, codeHighlight: [10] },
+              { array: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], left: 15, right: 15, highlights: [{ indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], color: "green" as const, label: "答案" }], completed: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], description: "最小容量=15", variables: { result: 15 }, codeHighlight: [16] }
+            ]
+          }
+        },
+        {
+          problemId: "split-array-largest-sum",
+          problemName: "分割数组的最大值",
+          difficulty: "hard" as const,
+          animation: {
+            type: "binary-search" as const,
+            title: "分割数组的最大值",
+            description: "将数组分成k个子数组，使得各子数组和的最大值最小",
+            exampleInput: {
+              description: "nums = [7,2,5,10,8], k = 2",
+              data: { nums: [7, 2, 5, 10, 8], k: 2 }
+            },
+            steps: [
+              { array: [7, 2, 5, 10, 8], left: 10, right: 32, current: 21, description: "范围[10,32]，mid=21", variables: { mid: 21, k: 2 }, codeHighlight: [3, 4] },
+              { array: [7, 2, 5, 10, 8], left: 10, right: 21, current: 15, highlights: [{ indices: [0, 1, 2], color: "blue" as const, label: "分组1" }, { indices: [3, 4], color: "purple" as const, label: "分组2" }], description: "mid=15不可行（需3组），left++", variables: { mid: 15, groups: 3 }, codeHighlight: [12] },
+              { array: [7, 2, 5, 10, 8], left: 18, right: 18, highlights: [{ indices: [0, 1, 2], color: "green" as const, label: "14" }, { indices: [3, 4], color: "green" as const, label: "18" }], completed: [0, 1, 2, 3, 4], description: "最小最大和=18，分成[7,2,5]和[10,8]", variables: { result: 18 }, codeHighlight: [16] }
+            ]
+          }
+        }
+      ]
     },
   ],
 

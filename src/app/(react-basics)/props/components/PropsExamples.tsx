@@ -46,8 +46,8 @@ export function BasicPropsExample() {
 
       <Greeting name={name} message={message} />
 
-      <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`interface GreetingProps {
   name: string;
   message?: string;  // 可选，有默认值
@@ -230,8 +230,8 @@ export function DefaultPropsExample() {
         </div>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`interface ButtonProps {
   label: string;                              // 必需
   variant?: "primary" | "secondary" | "danger"; // 可选
@@ -301,8 +301,8 @@ export function SpreadPropsExample() {
         </div>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`const cardData = {
   title: "卡片标题",
   content: "内容...",
@@ -382,8 +382,8 @@ export function RestPropsExample() {
         </label>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`// 继承原生 input 的所有属性
 interface CustomInputProps extends ComponentProps<"input"> {
   label: string;
@@ -485,8 +485,8 @@ export function CallbackPropsExample() {
         </div>
       )}
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`interface CounterProps {
   value: number;
   onChange: (newValue: number) => void;

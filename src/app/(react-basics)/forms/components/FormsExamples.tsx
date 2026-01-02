@@ -49,7 +49,7 @@ export function ControlledExample() {
             className={inputNormalClass}
           />
           {/* 字符计数指示器 */}
-          <div className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium transition-all duration-200 ${isFocused ? 'text-blue-500' : 'text-zinc-400'}`}>
+          <div className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium transition-all duration-200 ${isFocused ? 'text-blue-500' : 'text-zinc-500 dark:text-zinc-400'}`}>
             {charCount}
           </div>
         </div>
@@ -58,8 +58,8 @@ export function ControlledExample() {
         </p>
       </div>
 
-      <div className="rounded-xl bg-zinc-900 p-4 text-sm overflow-x-auto">
-        <pre className="text-green-400">
+      <div className="rounded-xl bg-zinc-900 dark:bg-zinc-950 p-4 text-sm overflow-x-auto">
+        <pre className="text-green-600 dark:text-green-400">
 {`const [text, setText] = useState("");
 
 <input
@@ -140,8 +140,8 @@ export function UncontrolledExample() {
         </div>
       </div>
 
-      <div className="rounded-xl bg-zinc-900 p-4 text-sm overflow-x-auto">
-        <pre className="text-green-400">
+      <div className="rounded-xl bg-zinc-900 dark:bg-zinc-950 p-4 text-sm overflow-x-auto">
+        <pre className="text-green-600 dark:text-green-400">
 {`const inputRef = useRef<HTMLInputElement>(null);
 
 const handleSubmit = () => {
@@ -215,7 +215,7 @@ export function MultiFieldExample() {
             用户名
           </label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 dark:text-zinc-400">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
               </svg>
@@ -236,7 +236,7 @@ export function MultiFieldExample() {
             邮箱
           </label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 dark:text-zinc-400">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
               </svg>
@@ -741,7 +741,7 @@ export function AsyncSubmitExample() {
             邮箱
           </label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 dark:text-zinc-400">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
               </svg>
@@ -833,8 +833,8 @@ export function AsyncSubmitExample() {
         </div>
       </div>
 
-      <div className="rounded-xl bg-zinc-900 p-4 text-sm overflow-x-auto">
-        <pre className="text-green-400">
+      <div className="rounded-xl bg-zinc-900 dark:bg-zinc-950 p-4 text-sm overflow-x-auto">
+        <pre className="text-green-600 dark:text-green-400">
 {`const handleSubmit = async (e) => {
   e.preventDefault();
   if (isSubmitting) return;

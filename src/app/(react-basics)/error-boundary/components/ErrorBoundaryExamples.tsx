@@ -124,8 +124,8 @@ export function BasicErrorBoundaryExample() {
         </ErrorBoundary>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`class ErrorBoundary extends Component {
   static getDerivedStateFromError(error) {
     return { hasError: true, error };
@@ -340,8 +340,8 @@ export function EventHandlerErrorExample() {
         </div>
       )}
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`// Error Boundary 无法捕获事件处理器中的错误
 // 需要使用 try-catch
 
@@ -425,8 +425,8 @@ export function AsyncErrorExample() {
         </ErrorBoundary>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`// 自定义 Hook：让异步错误能被 Error Boundary 捕获
 function useAsyncError() {
   const [, setError] = useState();

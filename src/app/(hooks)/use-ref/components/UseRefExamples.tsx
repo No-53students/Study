@@ -553,8 +553,8 @@ export default function UseRefExamples() {
           useRef 用于创建可变引用，主要用于访问 DOM 元素和存储不触发渲染的值。
         </p>
 
-        <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-          <p className="mb-2 text-zinc-400">// 基本语法</p>
+        <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+          <p className="mb-2 text-zinc-600 dark:text-zinc-400">// 基本语法</p>
           <pre className="text-green-400">
 {`// DOM 引用
 const inputRef = useRef<HTMLInputElement>(null);

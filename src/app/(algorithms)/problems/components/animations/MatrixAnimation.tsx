@@ -53,7 +53,7 @@ export function MatrixAnimation({
   // 如果没有步骤数据，显示空状态
   if (!step || totalSteps === 0) {
     return (
-      <div className="rounded-xl border border-zinc-700 bg-zinc-900/80 overflow-hidden p-4">
+      <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/80 overflow-hidden p-4">
         <p className="text-sm text-zinc-500 text-center">暂无动画数据</p>
       </div>
     );
@@ -155,18 +155,18 @@ export function MatrixAnimation({
       return { bg: "bg-zinc-600", border: "border-zinc-500", shadow: "" };
     }
 
-    return { bg: "bg-zinc-800", border: "border-zinc-700", shadow: "" };
+    return { bg: "bg-zinc-100 dark:bg-zinc-800", border: "border-zinc-200 dark:border-zinc-700", shadow: "" };
   };
 
   const rows = step.matrix.length;
   const cols = step.matrix[0]?.length || 0;
 
   return (
-    <div className="rounded-xl border border-zinc-700 bg-zinc-900/80 overflow-hidden">
+    <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/80 overflow-hidden">
       {/* 头部 */}
-      <div className="px-4 py-3 border-b border-zinc-700 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-zinc-200">{title}</h3>
-        <span className="text-xs text-zinc-400">步骤 {currentStep + 1} / {totalSteps}</span>
+      <div className="px-4 py-3 border-b border-zinc-200 dark:border-zinc-700 flex items-center justify-between">
+        <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{title}</h3>
+        <span className="text-xs text-zinc-600 dark:text-zinc-400">步骤 {currentStep + 1} / {totalSteps}</span>
       </div>
 
       {/* 矩阵可视化 */}
@@ -235,15 +235,15 @@ export function MatrixAnimation({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="p-3 rounded-lg bg-zinc-800/50 border border-zinc-700"
+            className="p-3 rounded-lg bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700"
           >
-            <p className="text-sm text-zinc-300">{step.description}</p>
+            <p className="text-sm text-zinc-700 dark:text-zinc-300">{step.description}</p>
           </motion.div>
         </AnimatePresence>
       </div>
 
       {/* 图例 */}
-      <div className="px-4 pb-4 flex flex-wrap gap-3 text-xs text-zinc-400">
+      <div className="px-4 pb-4 flex flex-wrap gap-3 text-xs text-zinc-600 dark:text-zinc-400">
         {step.current && (
           <span className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded bg-purple-500 shadow shadow-purple-500/50"></span>
@@ -273,14 +273,14 @@ export function MatrixAnimation({
       </div>
 
       {/* 控制栏 */}
-      <div className="px-4 py-3 border-t border-zinc-700 flex items-center justify-between">
+      <div className="px-4 py-3 border-t border-zinc-200 dark:border-zinc-700 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <button onClick={reset} className="p-2 rounded-lg hover:bg-zinc-700 text-zinc-400 hover:text-zinc-200">
+          <button onClick={reset} className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
           </button>
-          <button onClick={prevStep} disabled={currentStep === 0} className="p-2 rounded-lg hover:bg-zinc-700 text-zinc-400 disabled:opacity-30">
+          <button onClick={prevStep} disabled={currentStep === 0} className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-400 disabled:opacity-30">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -297,7 +297,7 @@ export function MatrixAnimation({
               </svg>
             )}
           </button>
-          <button onClick={nextStep} disabled={currentStep === totalSteps - 1} className="p-2 rounded-lg hover:bg-zinc-700 text-zinc-400 disabled:opacity-30">
+          <button onClick={nextStep} disabled={currentStep === totalSteps - 1} className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-400 disabled:opacity-30">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>

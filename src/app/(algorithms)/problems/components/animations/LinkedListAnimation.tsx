@@ -32,11 +32,11 @@ export interface LinkedListAnimationProps {
 }
 
 const colorMap = {
-  blue: { bg: "bg-blue-500", border: "border-blue-500", text: "text-blue-400" },
-  green: { bg: "bg-green-500", border: "border-green-500", text: "text-green-400" },
-  red: { bg: "bg-red-500", border: "border-red-500", text: "text-red-400" },
-  yellow: { bg: "bg-yellow-500", border: "border-yellow-500", text: "text-yellow-400" },
-  purple: { bg: "bg-purple-500", border: "border-purple-500", text: "text-purple-400" },
+  blue: { bg: "bg-blue-500", border: "border-blue-500", text: "text-blue-600 dark:text-blue-400" },
+  green: { bg: "bg-green-500", border: "border-green-500", text: "text-green-600 dark:text-green-400" },
+  red: { bg: "bg-red-500", border: "border-red-500", text: "text-red-600 dark:text-red-400" },
+  yellow: { bg: "bg-yellow-500", border: "border-yellow-500", text: "text-yellow-600 dark:text-yellow-400" },
+  purple: { bg: "bg-purple-500", border: "border-purple-500", text: "text-purple-600 dark:text-purple-400" },
 };
 
 export function LinkedListAnimation({
@@ -54,7 +54,7 @@ export function LinkedListAnimation({
   // 如果没有步骤数据，显示空状态
   if (!step || totalSteps === 0) {
     return (
-      <div className="rounded-xl border border-zinc-700 bg-zinc-900/80 overflow-hidden p-4">
+      <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/80 overflow-hidden p-4">
         <p className="text-sm text-zinc-500 text-center">暂无动画数据</p>
       </div>
     );
@@ -130,7 +130,7 @@ export function LinkedListAnimation({
         return colorMap[highlight.color];
       }
     }
-    return { bg: "bg-zinc-700", border: "border-zinc-600", text: "text-zinc-400" };
+    return { bg: "bg-zinc-700", border: "border-zinc-600", text: "text-zinc-600 dark:text-zinc-400" };
   };
 
   const isConnectionBroken = (fromId: string, toId: string) => {
@@ -146,11 +146,11 @@ export function LinkedListAnimation({
   };
 
   return (
-    <div className="rounded-xl border border-zinc-700 bg-zinc-900/80 overflow-hidden">
+    <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/80 overflow-hidden">
       {/* 头部 */}
-      <div className="px-4 py-3 border-b border-zinc-700 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-zinc-200">{title}</h3>
-        <span className="text-xs text-zinc-400">步骤 {currentStep + 1} / {totalSteps}</span>
+      <div className="px-4 py-3 border-b border-zinc-200 dark:border-zinc-700 flex items-center justify-between">
+        <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{title}</h3>
+        <span className="text-xs text-zinc-600 dark:text-zinc-400">步骤 {currentStep + 1} / {totalSteps}</span>
       </div>
 
       {/* 动画区域 */}
@@ -184,7 +184,7 @@ export function LinkedListAnimation({
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
-                            className="text-xs font-bold text-blue-400"
+                            className="text-xs font-bold text-blue-600 dark:text-blue-400"
                           >
                             {label}↓
                           </motion.span>
@@ -250,7 +250,7 @@ export function LinkedListAnimation({
               className="flex items-center"
             >
               <div className="w-8 h-0.5 bg-zinc-500" />
-              <div className="px-2 py-1 bg-zinc-800 rounded text-xs text-zinc-500 font-mono">
+              <div className="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 rounded text-xs text-zinc-500 font-mono">
                 null
               </div>
             </motion.div>
@@ -266,19 +266,19 @@ export function LinkedListAnimation({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="p-3 rounded-lg bg-zinc-800/50 border border-zinc-700"
+            className="p-3 rounded-lg bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700"
           >
-            <p className="text-sm text-zinc-300">{step.description}</p>
+            <p className="text-sm text-zinc-700 dark:text-zinc-300">{step.description}</p>
           </motion.div>
         </AnimatePresence>
       </div>
 
       {/* 控制栏 */}
-      <div className="px-4 py-3 border-t border-zinc-700 flex items-center justify-between">
+      <div className="px-4 py-3 border-t border-zinc-200 dark:border-zinc-700 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <button
             onClick={reset}
-            className="p-2 rounded-lg hover:bg-zinc-700 text-zinc-400 hover:text-zinc-200 transition-colors"
+            className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors"
             title="重置"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -288,7 +288,7 @@ export function LinkedListAnimation({
           <button
             onClick={prevStep}
             disabled={currentStep === 0}
-            className="p-2 rounded-lg hover:bg-zinc-700 text-zinc-400 hover:text-zinc-200 transition-colors disabled:opacity-30"
+            className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors disabled:opacity-30"
             title="上一步"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -318,7 +318,7 @@ export function LinkedListAnimation({
           <button
             onClick={nextStep}
             disabled={currentStep === totalSteps - 1}
-            className="p-2 rounded-lg hover:bg-zinc-700 text-zinc-400 hover:text-zinc-200 transition-colors disabled:opacity-30"
+            className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors disabled:opacity-30"
             title="下一步"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

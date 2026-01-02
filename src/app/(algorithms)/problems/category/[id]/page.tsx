@@ -19,46 +19,24 @@ export default async function CategoryPage({ params }: Props) {
   const problems = getProblemsByCategory(categoryId);
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
-      {/* 顶部导航 */}
-      <header className="sticky top-0 z-10 border-b border-zinc-800 bg-zinc-900/80 backdrop-blur-sm">
-        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/problems"
-              className="text-sm text-zinc-400 hover:text-white transition-colors"
-            >
-              ← 题库
-            </Link>
-            <div className="flex items-center gap-2">
-              <span className="text-xl">{category.icon}</span>
-              <h1 className="text-lg font-semibold">{category.name}</h1>
-            </div>
-          </div>
-          <div className="flex items-center gap-4 text-sm text-zinc-400">
-            <span>{problems.length} 道题目</span>
-          </div>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-7xl px-4 py-8">
+    <main className="py-8">
         {/* 分类描述 */}
-        <div className="mb-8 rounded-lg bg-zinc-900 border border-zinc-800 p-6">
-          <p className="text-zinc-400">{category.description}</p>
+        <div className="mb-8 rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm dark:shadow-none">
+          <p className="text-zinc-600 dark:text-zinc-400">{category.description}</p>
         </div>
 
         {/* 题目列表 */}
-        <div className="rounded-lg border border-zinc-800 overflow-hidden">
+        <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 overflow-hidden shadow-sm dark:shadow-none">
           <table className="w-full">
-            <thead className="bg-zinc-900">
-              <tr className="text-left text-sm text-zinc-400">
+            <thead className="bg-zinc-100 dark:bg-zinc-900">
+              <tr className="text-left text-sm text-zinc-600 dark:text-zinc-400">
                 <th className="px-4 py-3 font-medium">题号</th>
                 <th className="px-4 py-3 font-medium">题目</th>
                 <th className="px-4 py-3 font-medium">难度</th>
                 <th className="px-4 py-3 font-medium hidden sm:table-cell">前端</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800">
+            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800 bg-white dark:bg-transparent">
               {problems.map((problem) => {
                 const relevanceConfig = problem.frontendRelevance
                   ? FRONTEND_RELEVANCE_CONFIG[problem.frontendRelevance]
@@ -67,15 +45,15 @@ export default async function CategoryPage({ params }: Props) {
                 return (
                   <tr
                     key={problem.id}
-                    className="hover:bg-zinc-900/50 transition-colors"
+                    className="hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors"
                   >
-                    <td className="px-4 py-3 text-zinc-400">
+                    <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">
                       {problem.leetcodeId || "-"}
                     </td>
                     <td className="px-4 py-3">
                       <Link
                         href={`/problems/${problem.id}`}
-                        className="hover:text-green-400 transition-colors"
+                        className="text-zinc-900 dark:text-white hover:text-green-600 dark:hover:text-green-400 transition-colors"
                       >
                         {problem.title}
                       </Link>
@@ -111,7 +89,6 @@ export default async function CategoryPage({ params }: Props) {
           </div>
         )}
       </main>
-    </div>
   );
 }
 

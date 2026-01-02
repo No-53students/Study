@@ -163,8 +163,8 @@ export function BasicSuspenseExample() {
         </Suspense>
       )}
 
-      <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`<Suspense fallback={<LoadingSkeleton />}>
   <UserProfile />
 </Suspense>`}
@@ -255,14 +255,14 @@ export function LazyLoadingExample() {
           </Suspense>
         )}
         {!activeTab && (
-          <div className="flex h-40 items-center justify-center text-zinc-400">
+          <div className="flex h-40 items-center justify-center text-zinc-500 dark:text-zinc-400">
             点击上方按钮加载组件
           </div>
         )}
       </div>
 
-      <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`const LazyChart = lazy(() => import('./ChartComponent'));
 
 <Suspense fallback={<Loading />}>
@@ -458,8 +458,8 @@ export function PreloadExample() {
         </Suspense>
       )}
 
-      <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`// 预加载函数
 const preload = () => import('./HeavyComponent');
 

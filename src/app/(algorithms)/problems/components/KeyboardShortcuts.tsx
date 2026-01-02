@@ -65,17 +65,17 @@ export function KeyboardShortcuts() {
       onClick={() => setShowHelp(false)}
     >
       <div
-        className="mx-4 w-full max-w-md rounded-2xl bg-zinc-900 border border-zinc-700 p-6 shadow-2xl"
+        className="mx-4 w-full max-w-md rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 p-6 shadow-2xl"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-white flex items-center gap-2">
+          <h2 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
             <span>⌨️</span>
             键盘快捷键
           </h2>
           <button
             onClick={() => setShowHelp(false)}
-            className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+            className="p-1 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
             aria-label="关闭"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -90,19 +90,19 @@ export function KeyboardShortcuts() {
             .map(shortcut => (
               <div
                 key={shortcut.key}
-                className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-zinc-800/50 transition-colors"
+                className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800/50 transition-colors"
               >
-                <span className="text-sm text-zinc-300">{shortcut.description}</span>
-                <kbd className="px-2 py-1 rounded bg-zinc-800 border border-zinc-700 text-xs font-mono text-zinc-400">
+                <span className="text-sm text-zinc-700 dark:text-zinc-300">{shortcut.description}</span>
+                <kbd className="px-2 py-1 rounded bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-xs font-mono text-zinc-600 dark:text-zinc-400">
                   {shortcut.key === "Escape" ? "Esc" : shortcut.key.toUpperCase()}
                 </kbd>
               </div>
             ))}
         </div>
 
-        <div className="mt-4 pt-4 border-t border-zinc-800">
+        <div className="mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-800">
           <p className="text-xs text-zinc-500 text-center">
-            按 <kbd className="px-1.5 py-0.5 rounded bg-zinc-800 border border-zinc-700 text-zinc-400 mx-1">Esc</kbd> 关闭
+            按 <kbd className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 mx-1">Esc</kbd> 关闭
           </p>
         </div>
       </div>
@@ -126,9 +126,9 @@ export function ShortcutHint() {
 
   return (
     <div className="fixed bottom-4 right-4 z-40 animate-fade-in">
-      <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-zinc-800/90 border border-zinc-700 text-xs text-zinc-400 shadow-lg backdrop-blur-sm">
+      <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/90 dark:bg-zinc-800/90 border border-zinc-200 dark:border-zinc-700 text-xs text-zinc-600 dark:text-zinc-400 shadow-lg backdrop-blur-sm">
         <span>按</span>
-        <kbd className="px-1.5 py-0.5 rounded bg-zinc-700 border border-zinc-600 text-zinc-300 font-mono">?</kbd>
+        <kbd className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-700 border border-zinc-200 dark:border-zinc-600 text-zinc-700 dark:text-zinc-300 font-mono">?</kbd>
         <span>查看快捷键</span>
       </div>
     </div>

@@ -265,8 +265,8 @@ export default function LeetCodeLayout({
   // 等待加载完成，避免闪烁
   if (!isLoaded) {
     return (
-      <div className="fixed inset-0 z-[100] bg-zinc-950 flex items-center justify-center">
-        <div className="text-zinc-400">加载中...</div>
+      <div className="fixed inset-0 z-[100] bg-white dark:bg-zinc-950 flex items-center justify-center">
+        <div className="text-zinc-500 dark:text-zinc-400">加载中...</div>
       </div>
     );
   }
@@ -278,12 +278,12 @@ export default function LeetCodeLayout({
       className={`fixed z-[102] select-none ${isDragging ? "cursor-grabbing" : ""}`}
       style={getButtonStyle()}
     >
-      <div className="flex items-center bg-zinc-800/90 backdrop-blur-sm rounded border border-zinc-700/50 shadow-md overflow-hidden">
+      <div className="flex items-center bg-white/90 dark:bg-zinc-800/90 backdrop-blur-sm rounded border border-zinc-200 dark:border-zinc-700/50 shadow-md overflow-hidden">
         {/* 拖拽手柄 */}
         <div
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
-          className="px-1 py-1 cursor-grab active:cursor-grabbing hover:bg-zinc-700/50 transition-colors"
+          className="px-1 py-1 cursor-grab active:cursor-grabbing hover:bg-zinc-100 dark:hover:bg-zinc-700/50 transition-colors"
           title="拖拽移动"
         >
           <svg
@@ -305,8 +305,8 @@ export default function LeetCodeLayout({
           onClick={() => setIsFullscreen(!isFullscreen)}
           className={`flex items-center gap-1 px-1.5 py-1 text-[10px] transition-colors ${
             isFullscreen
-              ? "text-zinc-300 hover:text-white hover:bg-zinc-700/50"
-              : "text-green-400 hover:text-green-300 hover:bg-green-600/20"
+              ? "text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-700/50"
+              : "text-green-600 dark:text-green-400 hover:text-green-500 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-600/20"
           }`}
           title={
             isFullscreen
@@ -357,8 +357,8 @@ export default function LeetCodeLayout({
             onClick={toggleBrowserFullscreen}
             className={`flex items-center gap-1 px-1.5 py-1 text-[10px] transition-colors ${
               isBrowserFs
-                ? "text-amber-400 hover:text-amber-300 hover:bg-amber-600/20"
-                : "text-zinc-300 hover:text-white hover:bg-zinc-700/50"
+                ? "text-amber-600 dark:text-amber-400 hover:text-amber-500 dark:hover:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-600/20"
+                : "text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-700/50"
             }`}
             title={isBrowserFs ? "退出浏览器全屏" : "浏览器全屏（隐藏地址栏）"}
           >
@@ -403,7 +403,7 @@ export default function LeetCodeLayout({
         {/* 最小化/展开按钮 */}
         <button
           onClick={() => setIsMinimized(!isMinimized)}
-          className="px-1 py-1 text-zinc-500 hover:text-zinc-300 hover:bg-zinc-700/50 transition-colors"
+          className="px-1 py-1 text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700/50 transition-colors"
           title={isMinimized ? "展开按钮" : "最小化按钮"}
         >
           <svg
@@ -440,9 +440,9 @@ export default function LeetCodeLayout({
 
       {/* 根据模式决定布局 */}
       {isFullscreen ? (
-        <div className="fixed inset-0 z-[100] bg-zinc-950">{children}</div>
+        <div className="fixed inset-0 z-[100] bg-white dark:bg-zinc-950">{children}</div>
       ) : (
-        <div className="min-h-screen bg-zinc-950">
+        <div className="min-h-screen bg-white dark:bg-zinc-950">
           {children}
         </div>
       )}

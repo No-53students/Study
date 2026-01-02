@@ -267,6 +267,45 @@ export interface TemplateVariant {
   useCase: string;           // 使用场景
   codeSnippet: string;       // 代码片段
   exampleProblem?: string;   // 示例题目ID
+
+  // ========== 新增：详细讲解 ==========
+  /** 详细原理说明 */
+  detailedExplanation?: {
+    /** 核心思想 */
+    coreIdea: string;
+    /** 实现要点 */
+    keyPoints: string[];
+    /** 与基础版本的区别 */
+    differenceFromBase?: string;
+    /** 常见陷阱 */
+    pitfalls?: string[];
+  };
+
+  /** 完整代码模板（带注释） */
+  fullCode?: {
+    typescript: string;
+    comments: string;
+  };
+
+  /** 变体专属动画（单个） */
+  animation?: TemplateAnimation;
+
+  /** 多题型动画示例 */
+  animations?: VariantAnimationExample[];
+}
+
+/**
+ * 变体动画示例（用于展示多种题型）
+ */
+export interface VariantAnimationExample {
+  /** 题目ID */
+  problemId: string;
+  /** 题目名称 */
+  problemName: string;
+  /** 难度 */
+  difficulty: "easy" | "medium" | "hard";
+  /** 动画配置 */
+  animation: TemplateAnimation;
 }
 
 /**

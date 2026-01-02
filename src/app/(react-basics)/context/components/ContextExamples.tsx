@@ -69,8 +69,8 @@ export function BasicContextExample() {
         </div>
       </UserContext.Provider>
 
-      <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`const UserContext = createContext(null);
 
 // 提供数据
@@ -170,8 +170,8 @@ export function ThemeContextExample() {
         </div>
       </ThemeProvider>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`function ThemeProvider({ children }) {
   const [theme, setTheme] = useState('light');
   const toggleTheme = () => setTheme(t =>
@@ -486,8 +486,8 @@ export function MultipleContextExample() {
         </AuthContext.Provider>
       </LanguageContext.Provider>
 
-      <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`<LanguageContext.Provider value={language}>
   <AuthContext.Provider value={auth}>
     <App />

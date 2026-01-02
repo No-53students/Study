@@ -22,7 +22,7 @@ export function CommonMistakesPanel({ mistakes }: CommonMistakesPanelProps) {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   return (
-    <div className="bg-zinc-900/50 rounded-xl p-6 border border-zinc-700/50">
+    <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-xl p-6 border border-zinc-200 dark:border-zinc-700/50">
       <h3 className="text-lg font-semibold text-red-400 mb-4 flex items-center gap-2">
         <span className="text-2xl">⚠️</span>
         常见错误
@@ -38,8 +38,8 @@ export function CommonMistakesPanel({ mistakes }: CommonMistakesPanelProps) {
               key={index}
               className={`rounded-lg border transition-all ${
                 isExpanded
-                  ? "bg-zinc-800 border-red-500/50"
-                  : "bg-zinc-800/50 border-zinc-700/50 hover:border-zinc-600"
+                  ? "bg-zinc-100 dark:bg-zinc-800 border-red-500/50"
+                  : "bg-zinc-100 dark:bg-zinc-800/50 border-zinc-200 dark:border-zinc-700/50 hover:border-zinc-300 dark:hover:border-zinc-600"
               }`}
             >
               {/* 标题栏 */}
@@ -54,7 +54,7 @@ export function CommonMistakesPanel({ mistakes }: CommonMistakesPanelProps) {
                   <span className="text-zinc-200">{mistake.description}</span>
                 </div>
                 <span
-                  className={`text-zinc-500 transition-transform ${
+                  className={`text-zinc-400 dark:text-zinc-500 transition-transform ${
                     isExpanded ? "rotate-180" : ""
                   }`}
                 >
@@ -93,13 +93,13 @@ export function CommonMistakesPanel({ mistakes }: CommonMistakesPanelProps) {
                   {/* 为什么会错 */}
                   <div className="bg-black/30 rounded-lg p-3">
                     <span className="text-yellow-400 text-sm">🤔 为什么会犯这个错：</span>
-                    <p className="text-zinc-300 mt-1">{mistake.whyWrong}</p>
+                    <p className="text-zinc-700 dark:text-zinc-300 mt-1">{mistake.whyWrong}</p>
                   </div>
 
                   {/* 如何避免 */}
                   <div className="bg-blue-500/10 rounded-lg p-3 border border-blue-500/30">
                     <span className="text-blue-400 text-sm">💡 如何避免：</span>
-                    <p className="text-zinc-300 mt-1">{mistake.howToAvoid}</p>
+                    <p className="text-zinc-700 dark:text-zinc-300 mt-1">{mistake.howToAvoid}</p>
                   </div>
                 </div>
               )}

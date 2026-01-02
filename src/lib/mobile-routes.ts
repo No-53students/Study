@@ -3,10 +3,7 @@
  * 用于智能底部导航的模式切换和同级页面导航
  */
 
-// 一级页面路径（显示主 Tab 导航）
-export const PRIMARY_PATHS = ["/", "/learn", "/problems", "/profile"];
-
-// 主导航配置
+// 主导航配置 - 与 Web 端 SidebarNav 保持一致
 export interface MainTab {
   id: string;
   label: string;
@@ -17,18 +14,46 @@ export interface MainTab {
 export const mainTabs: MainTab[] = [
   { id: "home", label: "首页", path: "/" },
   {
-    id: "learn",
-    label: "学习",
+    id: "react",
+    label: "React",
     path: "/learn",
-    matchPaths: ["/hooks", "/react-basics", "/use-"],
+    matchPaths: ["/learn", "/use-", "/component", "/props", "/children", "/conditional", "/list-rendering", "/event", "/forms", "/composition", "/react-memo", "/forward-ref", "/suspense", "/fragment", "/portal", "/context", "/error-boundary", "/hoc", "/render-props", "/compound", "/controlled"],
   },
   {
-    id: "practice",
-    label: "刷题",
+    id: "algorithms",
+    label: "算法",
     path: "/problems",
-    matchPaths: ["/problems", "/algorithms", "/interview"],
+    matchPaths: ["/problems", "/algorithms", "/concepts", "/stack", "/queue", "/linked-list", "/hash-table", "/binary-tree", "/two-pointers", "/sliding-window", "/backtracking", "/dynamic-programming", "/bit-manipulation", "/graph", "/heap", "/sorting", "/searching"],
   },
-  { id: "profile", label: "我的", path: "/profile" },
+  {
+    id: "tools",
+    label: "工具",
+    path: "/tools",
+    matchPaths: ["/tools"],
+  },
+];
+
+// 列表页路径（显示主导航的页面）
+// 这些页面是"入口"或"列表"，不是具体内容
+export const LIST_PAGE_PATHS = [
+  "/",
+  "/learn",
+  "/profile",
+  "/tools",
+  // 算法模块的列表/入口页
+  "/problems",
+  "/problems/roadmap",
+  "/problems/templates",
+  "/problems/animations",
+  "/problems/knowledge-graph",
+  "/problems/categories",
+  "/problems/cases",
+  "/problems/leetcode",
+  "/problems/js-api",
+  "/concepts",
+  "/concepts/templates",
+  // 算法分类列表页
+  "/algorithms",
 ];
 
 // 同级页面分组（用于上下切换）
@@ -226,13 +251,82 @@ export function getSiblings(pathname: string): SiblingNavInfo {
   };
 }
 
-// 判断是否为一级页面
-export function isPrimaryPage(pathname: string): boolean {
-  // 精确匹配一级页面
-  if (PRIMARY_PATHS.includes(pathname)) {
+// 判断是否为列表页（显示主导航）
+export function isListPage(pathname: string): boolean {
+  // 精确匹配列表页
+  if (LIST_PAGE_PATHS.includes(pathname)) {
     return true;
   }
   return false;
+}
+
+// 判断是否为详情页（需要显示浮动返回按钮，隐藏主导航）
+export function isDetailPage(pathname: string): boolean {
+  // 列表页不是详情页
+  if (isListPage(pathname)) {
+    return false;
+  }
+
+  // 具体的 hook 教程页面
+  if (pathname.startsWith("/use-") || pathname === "/use") {
+    return true;
+  }
+
+  // 具体的组件教程页面
+  const componentPages = [
+    "/component-basics", "/props", "/children", "/conditional-rendering",
+    "/list-rendering", "/event-handling", "/forms", "/composition",
+    "/react-memo", "/forward-ref", "/suspense-lazy", "/fragment",
+    "/portal", "/context", "/error-boundary", "/hoc", "/render-props",
+    "/compound-components", "/controlled-uncontrolled"
+  ];
+  if (componentPages.includes(pathname)) {
+    return true;
+  }
+
+  // 具体的数据结构页面
+  const dataStructurePages = ["/stack", "/queue", "/linked-list", "/hash-table", "/binary-tree"];
+  if (dataStructurePages.includes(pathname)) {
+    return true;
+  }
+
+  // 具体的算法页面
+  const algorithmPages = [
+    "/two-pointers", "/sliding-window", "/backtracking", "/dynamic-programming",
+    "/bit-manipulation", "/graph", "/heap", "/sorting", "/searching"
+  ];
+  if (algorithmPages.includes(pathname)) {
+    return true;
+  }
+
+  // LeetCode 具体题目页 /problems/leetcode/[id]
+  if (/^\/problems\/leetcode\/\d+/.test(pathname)) {
+    return true;
+  }
+
+  // 模板详情页 /problems/templates/[id]
+  if (/^\/problems\/templates\/[^/]+$/.test(pathname) && pathname !== "/problems/templates") {
+    return true;
+  }
+
+  // 分类详情页 /problems/category/[id]
+  if (/^\/problems\/category\/[^/]+$/.test(pathname)) {
+    return true;
+  }
+
+  // 其他带有动态参数的详情页
+  // 如 /concepts/xxx, /algorithms/xxx 等
+  if (/^\/concepts\/[^/]+$/.test(pathname) && pathname !== "/concepts/templates") {
+    return true;
+  }
+
+  return false;
+}
+
+// 判断是否隐藏底部导航
+export function shouldHideBottomNav(pathname: string): boolean {
+  // 只有详情页才隐藏底部导航
+  return isDetailPage(pathname);
 }
 
 // 获取当前活跃的主导航 Tab

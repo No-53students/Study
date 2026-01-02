@@ -472,8 +472,8 @@ export default function UseExamples() {
           use 是 React 19 的新 Hook，可以读取 Promise 或 Context，且可以在条件语句中使用。
         </p>
 
-        <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-          <p className="mb-2 text-zinc-400">// 基本语法</p>
+        <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+          <p className="mb-2 text-zinc-600 dark:text-zinc-400">// 基本语法</p>
           <pre className="text-green-400">
 {`// 读取 Promise
 const data = use(dataPromise);

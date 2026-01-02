@@ -49,8 +49,8 @@ export function BasicFragmentExample() {
         </div>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`// ❌ 使用 div - 产生额外 DOM
 function WithDiv() {
   return (
@@ -115,8 +115,8 @@ export function DefinitionListExample() {
         ))}
       </dl>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`// 定义列表需要 dt 和 dd 是 dl 的直接子元素
 function GlossaryItem({ term, definition }) {
   return (
@@ -204,8 +204,8 @@ export function TableFragmentExample() {
         </table>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`// 表格列组件返回多个 td
 function TableColumns({ user }) {
   return (

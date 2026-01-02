@@ -311,10 +311,10 @@ export default function AnimationDemoPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white p-6">
+    <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white p-6">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-2xl font-bold mb-2">算法动画组件演示</h1>
-        <p className="text-zinc-400 mb-6">
+        <p className="text-zinc-600 dark:text-zinc-400 mb-6">
           基于 Framer Motion 构建的交互式算法可视化组件
         </p>
 
@@ -327,7 +327,7 @@ export default function AnimationDemoPage() {
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 activeDemo === demo.id
                   ? "bg-blue-500 text-white"
-                  : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
+                  : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
               }`}
             >
               {demo.label}
@@ -419,9 +419,9 @@ export default function AnimationDemoPage() {
         </div>
 
         {/* 使用说明 */}
-        <div className="mt-8 p-4 rounded-lg bg-zinc-900 border border-zinc-800">
+        <div className="mt-8 p-4 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
           <h3 className="font-semibold mb-2">使用说明</h3>
-          <ul className="text-sm text-zinc-400 space-y-1">
+          <ul className="text-sm text-zinc-600 dark:text-zinc-400 space-y-1">
             <li>• 点击播放按钮自动播放动画</li>
             <li>• 使用左右箭头手动控制步骤</li>
             <li>• 拖动速度滑块调整播放速度</li>

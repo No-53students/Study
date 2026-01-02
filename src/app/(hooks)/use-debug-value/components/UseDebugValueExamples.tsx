@@ -413,8 +413,8 @@ export default function UseDebugValueExamples() {
           useDebugValue 用于在 React DevTools 中为自定义 Hook 添加标签，提升调试体验。
         </p>
 
-        <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-          <p className="mb-2 text-zinc-400">// 基本语法</p>
+        <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+          <p className="mb-2 text-zinc-600 dark:text-zinc-400">// 基本语法</p>
           <pre className="text-green-400">
 {`// 简单用法
 useDebugValue(value);

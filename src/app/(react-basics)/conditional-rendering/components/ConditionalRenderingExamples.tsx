@@ -91,8 +91,8 @@ export function IfElseExample() {
         </button>
       </div>
 
-      <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`function StatusDisplay({ status }) {
   if (status === "loading") return <Loading />;
   if (status === "success") return <Success />;
@@ -141,8 +141,8 @@ export function TernaryExample() {
         </button>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`function UserStatus({ isOnline }) {
   return (
     <span className={isOnline ? "online" : "offline"}>
@@ -212,8 +212,8 @@ export function LogicalAndExample() {
         </div>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`// ✅ 正确：使用 count > 0
 {count > 0 && <Badge>{count}</Badge>}
 
@@ -267,8 +267,8 @@ export function DefaultValueExample() {
         <UserCard />
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`// || 会将空字符串视为假值
 {name || "匿名用户"}  // "" → "匿名用户"
 
@@ -400,8 +400,8 @@ export function EarlyReturnExample() {
 
       <UserProfile {...states[state]} />
 
-      <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`function UserProfile({ user, loading, error }) {
   if (loading) return <Loading />;
   if (error) return <Error />;
@@ -484,8 +484,8 @@ export function ConditionalStyleExample() {
         </label>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`// 根据 props 动态组合 className
 const variantClasses = {
   primary: "bg-blue-600 text-white",

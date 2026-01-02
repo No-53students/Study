@@ -89,7 +89,7 @@ function renderArrayVisualization(step: VisualizationStep) {
           {step.annotations.map((ann, idx) => (
             <span
               key={idx}
-              className="px-2 py-1 rounded-md bg-zinc-700/50 text-xs text-zinc-300"
+              className="px-2 py-1 rounded-md bg-zinc-200 dark:bg-zinc-700/50 text-xs text-zinc-700 dark:text-zinc-300"
             >
               {ann.text}
             </span>
@@ -100,20 +100,20 @@ function renderArrayVisualization(step: VisualizationStep) {
       {/* 哈希表状态（如果有） */}
       {step.hashTable && step.hashTable.length > 0 && (
         <div className="mt-4">
-          <div className="text-xs text-zinc-400 mb-2">Map 状态:</div>
+          <div className="text-xs text-zinc-600 dark:text-zinc-400 mb-2">Map 状态:</div>
           <div className="flex flex-wrap gap-2">
             {step.hashTable.map((entry, idx) => (
               <div
                 key={idx}
                 className={`px-3 py-1.5 rounded-lg border text-sm font-mono ${
                   entry.highlight
-                    ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300"
-                    : "bg-zinc-800 border-zinc-700 text-zinc-300"
+                    ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-300"
+                    : "bg-zinc-100 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300"
                 }`}
               >
-                <span className="text-blue-400">{String(entry.key)}</span>
+                <span className="text-blue-600 dark:text-blue-400">{String(entry.key)}</span>
                 <span className="text-zinc-500 mx-1">→</span>
-                <span className="text-amber-400">{String(entry.value)}</span>
+                <span className="text-amber-600 dark:text-amber-400">{String(entry.value)}</span>
               </div>
             ))}
           </div>

@@ -110,8 +110,8 @@ export function BasicModalExample() {
         </div>
       </Modal>
 
-      <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`function Modal({ isOpen, children }) {
   if (!isOpen) return null;
 
@@ -331,8 +331,8 @@ export function NotificationExample() {
         onRemove={removeNotification}
       />
 
-      <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`createPortal(
   <div className="fixed top-4 right-4">
     {notifications.map(n => (
@@ -399,7 +399,7 @@ export function EventBubblingExample() {
         <p className="mb-2 text-sm font-medium">点击记录：</p>
         <div className="flex flex-wrap gap-1">
           {clicks.length === 0 ? (
-            <span className="text-sm text-zinc-400">暂无点击</span>
+            <span className="text-sm text-zinc-500 dark:text-zinc-400">暂无点击</span>
           ) : (
             clicks.map((click, i) => (
               <span

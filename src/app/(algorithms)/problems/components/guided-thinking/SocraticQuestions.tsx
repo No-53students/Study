@@ -51,21 +51,21 @@ export function SocraticQuestions({ questions }: SocraticQuestionsProps) {
   };
 
   return (
-    <div className="bg-zinc-900/50 rounded-xl border border-zinc-700/50 overflow-hidden">
+    <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-700/50 overflow-hidden">
       {/* 标题和进度 */}
-      <div className="p-4 border-b border-zinc-700/50">
+      <div className="p-4 border-b border-zinc-200 dark:border-zinc-700/50">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-lg font-semibold text-cyan-400 flex items-center gap-2">
             <span className="text-2xl">🤔</span>
             思维引导
           </h3>
-          <span className="text-sm text-zinc-400">
+          <span className="text-sm text-zinc-600 dark:text-zinc-400">
             {answeredQuestions.size} / {questions.length} 已思考
           </span>
         </div>
 
         {/* 进度条 */}
-        <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+        <div className="h-1.5 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-cyan-500 to-purple-500 transition-all duration-300"
             style={{ width: `${progress}%` }}
@@ -74,7 +74,7 @@ export function SocraticQuestions({ questions }: SocraticQuestionsProps) {
       </div>
 
       {/* 问题导航 */}
-      <div className="flex flex-wrap gap-2 p-4 border-b border-zinc-700/50 bg-black/20">
+      <div className="flex flex-wrap gap-2 p-4 border-b border-zinc-200 dark:border-zinc-700/50 bg-black/20">
         {questions.map((q, index) => {
           const qConfig = stageConfig[q.stage];
           const isAnswered = answeredQuestions.has(index);
@@ -89,7 +89,7 @@ export function SocraticQuestions({ questions }: SocraticQuestionsProps) {
                   ? `${qConfig.bg} ${qConfig.color} ring-2 ring-offset-2 ring-offset-zinc-900 ring-cyan-500`
                   : isAnswered
                   ? "bg-green-500/20 text-green-400"
-                  : "bg-zinc-800 text-zinc-500 hover:text-zinc-300"
+                  : "bg-zinc-200 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500 hover:text-zinc-300"
               }`}
             >
               <span>{isAnswered ? "✓" : qConfig.icon}</span>
@@ -132,7 +132,7 @@ export function SocraticQuestions({ questions }: SocraticQuestionsProps) {
                 <span className="text-yellow-400">💡</span>
                 <div>
                   <span className="text-sm text-yellow-400 font-medium">提示</span>
-                  <p className="text-zinc-300 mt-1">{currentQuestion.hint}</p>
+                  <p className="text-zinc-700 dark:text-zinc-300 mt-1">{currentQuestion.hint}</p>
                 </div>
               </div>
             </div>
@@ -155,7 +155,7 @@ export function SocraticQuestions({ questions }: SocraticQuestionsProps) {
                 <span className="text-green-400">✨</span>
                 <div>
                   <span className="text-sm text-green-400 font-medium">答案</span>
-                  <p className="text-zinc-300 mt-1">{currentQuestion.answer}</p>
+                  <p className="text-zinc-700 dark:text-zinc-300 mt-1">{currentQuestion.answer}</p>
                 </div>
               </div>
             </div>
@@ -168,7 +168,7 @@ export function SocraticQuestions({ questions }: SocraticQuestionsProps) {
                 <span className="text-purple-400">🎓</span>
                 <div>
                   <span className="text-sm text-purple-400 font-medium">这个问题想让你发现</span>
-                  <p className="text-zinc-300 mt-1">{currentQuestion.insight}</p>
+                  <p className="text-zinc-700 dark:text-zinc-300 mt-1">{currentQuestion.insight}</p>
                 </div>
               </div>
             </div>
@@ -177,16 +177,16 @@ export function SocraticQuestions({ questions }: SocraticQuestionsProps) {
       </div>
 
       {/* 导航按钮 */}
-      <div className="flex items-center justify-between p-4 border-t border-zinc-700/50 bg-black/20">
+      <div className="flex items-center justify-between p-4 border-t border-zinc-200 dark:border-zinc-700/50 bg-black/20">
         <button
           onClick={handlePrev}
           disabled={currentIndex === 0}
-          className="px-4 py-2 rounded-lg bg-zinc-800 text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          className="px-4 py-2 rounded-lg bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
           ← 上一个
         </button>
 
-        <span className="text-sm text-zinc-500">
+        <span className="text-sm text-zinc-400 dark:text-zinc-500">
           {currentIndex + 1} / {questions.length}
         </span>
 

@@ -42,8 +42,8 @@ export function BasicClickExample() {
         )}
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`const handleClick = () => {
   setCount(c => c + 1);
 };
@@ -133,8 +133,8 @@ export function EventParamsExample() {
         </div>
       )}
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`const handleDelete = (id: number, name: string) => {
   setItems(items => items.filter(item => item.id !== id));
 };
@@ -223,8 +223,8 @@ export function EventObjectExample() {
         </div>
       )}
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`const handleMouseMove = (e: React.MouseEvent) => {
   console.log(e.type);      // 'mousemove'
   console.log(e.target);    // 事件目标
@@ -322,8 +322,8 @@ export function PreventDefaultExample() {
         </div>
       )}
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`// 阻止默认行为
 const handleClick = (e) => {
   e.preventDefault();
@@ -421,8 +421,8 @@ export function KeyboardEventExample() {
         </div>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`const handleKeyDown = (e: React.KeyboardEvent) => {
   if (e.key === 'Enter') {
     // 提交
@@ -521,8 +521,8 @@ export function FormEventExample() {
         </div>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`const handleSubmit = (e: React.FormEvent) => {
   e.preventDefault();  // 阻止页面刷新
   // 处理提交

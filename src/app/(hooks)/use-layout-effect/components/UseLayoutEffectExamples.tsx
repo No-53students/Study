@@ -336,9 +336,9 @@ export function ExecutionOrderExample() {
         </button>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 font-mono text-sm">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 font-mono text-sm">
         {logs.length === 0 ? (
-          <p className="text-zinc-500">点击&ldquo;触发渲染&rdquo;查看执行顺序...</p>
+          <p className="text-zinc-400">点击&ldquo;触发渲染&rdquo;查看执行顺序...</p>
         ) : (
           logs.map((log, i) => (
             <p
@@ -382,8 +382,8 @@ export default function UseLayoutEffectExamples() {
           useLayoutEffect 在浏览器绘制之前同步执行，用于需要同步读取或修改 DOM 布局的场景。
         </p>
 
-        <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-          <p className="mb-2 text-zinc-400">// 与 useEffect 签名相同</p>
+        <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+          <p className="mb-2 text-zinc-600 dark:text-zinc-400">// 与 useEffect 签名相同</p>
           <pre className="text-green-400">
 {`useLayoutEffect(() => {
   // 在绘制前同步执行

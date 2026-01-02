@@ -371,8 +371,8 @@ export default function UseIdExamples() {
           useId 用于生成唯一且稳定的 ID，主要用于 DOM 元素和 ARIA 属性。
         </p>
 
-        <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-          <p className="mb-2 text-zinc-400">// 基本语法</p>
+        <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+          <p className="mb-2 text-zinc-600 dark:text-zinc-400">// 基本语法</p>
           <pre className="text-green-400">
 {`const id = useId();
 

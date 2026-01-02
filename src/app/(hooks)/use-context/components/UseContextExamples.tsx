@@ -403,8 +403,8 @@ export default function UseContextExamples() {
           useContext 用于跨组件共享数据，避免 props 层层传递。
         </p>
 
-        <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-          <p className="mb-2 text-zinc-400">// 基本用法</p>
+        <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+          <p className="mb-2 text-zinc-600 dark:text-zinc-400">// 基本用法</p>
           <pre className="text-green-400">
 {`// 1. 创建 Context
 const ThemeContext = createContext('light');

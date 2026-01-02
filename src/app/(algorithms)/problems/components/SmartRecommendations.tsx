@@ -32,11 +32,11 @@ export function RecommendationCard({ recommendation, variant = "default" }: Reco
     return (
       <Link
         href={`/problems/${problem.id}`}
-        className="group flex items-center gap-3 p-3 rounded-lg bg-zinc-800/50 border border-zinc-700/50 hover:border-zinc-600 hover:bg-zinc-800 transition-all"
+        className="group flex items-center gap-3 p-3 rounded-lg bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700/50 hover:border-zinc-300 dark:hover:border-zinc-600 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-all"
       >
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs text-zinc-500 font-mono">#{problem.leetcodeId || "-"}</span>
+            <span className="text-xs text-zinc-400 dark:text-zinc-500 font-mono">#{problem.leetcodeId || "-"}</span>
             <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${diffConfig.color} ${diffConfig.bg}`}>
               {diffConfig.label}
             </span>
@@ -80,10 +80,10 @@ export function RecommendationCard({ recommendation, variant = "default" }: Reco
           <h3 className="text-base sm:text-lg font-semibold mb-2 group-hover:text-emerald-400 transition-colors">
             {problem.title}
           </h3>
-          <div className="flex items-center gap-2 text-xs text-zinc-400">
+          <div className="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400">
             <span>{category?.icon}</span>
             <span>{category?.name}</span>
-            <span className="text-zinc-600">·</span>
+            <span className="text-zinc-400 dark:text-zinc-600">·</span>
             <span className="text-emerald-400">{reasonText}</span>
           </div>
         </div>
@@ -95,11 +95,11 @@ export function RecommendationCard({ recommendation, variant = "default" }: Reco
   return (
     <Link
       href={`/problems/${problem.id}`}
-      className="group block p-4 rounded-xl bg-zinc-900/80 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800/80 transition-all"
+      className="group block p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800/80 transition-all"
     >
       <div className="flex items-start justify-between gap-3 mb-2">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-xs text-zinc-500 font-mono">#{problem.leetcodeId || "-"}</span>
+          <span className="text-xs text-zinc-400 dark:text-zinc-500 font-mono">#{problem.leetcodeId || "-"}</span>
           <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${diffConfig.color} ${diffConfig.bg}`}>
             {diffConfig.label}
           </span>
@@ -113,7 +113,7 @@ export function RecommendationCard({ recommendation, variant = "default" }: Reco
       <h4 className="text-sm font-medium text-white mb-2 group-hover:text-emerald-400 transition-colors">
         {problem.title}
       </h4>
-      <div className="text-xs text-zinc-500">
+      <div className="text-xs text-zinc-400 dark:text-zinc-500">
         {reasonText}
       </div>
     </Link>
@@ -152,13 +152,13 @@ export function SmartRecommendations({ completedProblems, className = "" }: Smar
           </h3>
           <span className="text-lg font-bold text-blue-400">{progress.percentage}%</span>
         </div>
-        <div className="h-2 bg-zinc-800 rounded-full overflow-hidden mb-3">
+        <div className="h-2 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden mb-3">
           <div
             className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all duration-500"
             style={{ width: `${progress.percentage}%` }}
           />
         </div>
-        <div className="flex items-center justify-between text-xs text-zinc-400">
+        <div className="flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-400">
           <span>已完成 {progress.completed} / {progress.total} 题</span>
           {nextCategory && (
             <span className="flex items-center gap-1">
@@ -256,13 +256,13 @@ export function RecommendationList({
     <div className={className}>
       {showProgress && (
         <div className="mb-6 flex items-center gap-4">
-          <div className="flex-1 h-2 bg-zinc-800 rounded-full overflow-hidden">
+          <div className="flex-1 h-2 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full"
               style={{ width: `${progress.percentage}%` }}
             />
           </div>
-          <span className="text-sm text-zinc-400 shrink-0">
+          <span className="text-sm text-zinc-600 dark:text-zinc-400 shrink-0">
             {progress.completed} / {progress.total}
           </span>
         </div>
@@ -302,7 +302,7 @@ export function MiniRecommendation({
   if (recommendations.length === 0) return null;
 
   return (
-    <div className={`rounded-xl bg-zinc-900/80 border border-zinc-800 p-4 ${className}`}>
+    <div className={`rounded-xl bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 p-4 ${className}`}>
       <h4 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
         <span>💡</span>
         推荐练习
@@ -312,7 +312,7 @@ export function MiniRecommendation({
           <Link
             key={rec.problem.id}
             href={`/problems/${rec.problem.id}`}
-            className="group flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors"
+            className="group flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400 hover:text-white transition-colors"
           >
             <span className={`w-1.5 h-1.5 rounded-full ${DIFFICULTY_CONFIG[rec.problem.difficulty].bg.replace('/10', '/50')}`} />
             <span className="truncate group-hover:text-emerald-400">{rec.problem.title}</span>

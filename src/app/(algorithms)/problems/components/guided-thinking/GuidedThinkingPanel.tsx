@@ -77,12 +77,12 @@ export function GuidedThinkingPanel({ thinking }: GuidedThinkingPanelProps) {
           <span className="text-2xl">🧭</span>
           思维引导
         </h2>
-        <div className="text-sm text-zinc-400">引导式学习，步步深入</div>
+        <div className="text-sm text-zinc-600 dark:text-zinc-400">引导式学习，步步深入</div>
       </div>
 
       {/* 介绍卡片 */}
       <div className="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 rounded-xl p-4 border border-cyan-500/30">
-        <p className="text-zinc-300 text-sm">
+        <p className="text-zinc-700 dark:text-zinc-300 text-sm">
           <span className="text-cyan-400 font-medium">学习提示：</span>
           不要直接看答案！尝试先独立思考每个问题，这样能更好地理解和记忆解法。
         </p>
@@ -90,7 +90,7 @@ export function GuidedThinkingPanel({ thinking }: GuidedThinkingPanelProps) {
 
       {/* Tab 导航 */}
       {availableTabs.length > 1 && (
-        <div className="flex flex-wrap gap-2 p-1 bg-zinc-800/50 rounded-lg">
+        <div className="flex flex-wrap gap-2 p-1 bg-zinc-200 dark:bg-zinc-800/50 rounded-lg">
           {availableTabs.map((tab) => (
             <button
               key={tab.id}
@@ -98,7 +98,7 @@ export function GuidedThinkingPanel({ thinking }: GuidedThinkingPanelProps) {
               className={`flex-1 min-w-[120px] px-4 py-3 rounded-lg text-sm font-medium transition-all ${
                 effectiveTab === tab.id
                   ? "bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg"
-                  : "text-zinc-400 hover:text-white hover:bg-zinc-700"
+                  : "text-zinc-600 dark:text-zinc-400 hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-700"
               }`}
             >
               <div className="flex flex-col items-center gap-1">

@@ -121,8 +121,8 @@ export function ArrayVisualizer({
 
   if (barMode) {
     return (
-      <div className="p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
-        {title && <h4 className="text-sm font-medium mb-2 text-zinc-300">{title}</h4>}
+      <div className="p-4 rounded-lg bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800">
+        {title && <h4 className="text-sm font-medium mb-2 text-zinc-700 dark:text-zinc-300">{title}</h4>}
         {description && <p className="text-xs text-zinc-500 mb-3">{description}</p>}
 
         <div className="flex items-end justify-center gap-1 h-40 px-2">
@@ -177,8 +177,8 @@ export function ArrayVisualizer({
 
   // 标准数组显示模式
   return (
-    <div className="p-4 rounded-lg bg-zinc-900/50 border border-zinc-800">
-      {title && <h4 className="text-sm font-medium mb-2 text-zinc-300">{title}</h4>}
+    <div className="p-4 rounded-lg bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800">
+      {title && <h4 className="text-sm font-medium mb-2 text-zinc-700 dark:text-zinc-300">{title}</h4>}
       {description && <p className="text-xs text-zinc-500 mb-3">{description}</p>}
 
       <div className="flex flex-col items-center">
@@ -325,7 +325,7 @@ function Legend({
   if (!hasLegend) return null;
 
   return (
-    <div className="flex flex-wrap gap-3 mt-4 pt-3 border-t border-zinc-800 text-xs text-zinc-400">
+    <div className="flex flex-wrap gap-3 mt-4 pt-3 border-t border-zinc-200 dark:border-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">
       {swapping && (
         <span className="flex items-center gap-1.5">
           <span className="w-3 h-3 rounded bg-red-500 shadow shadow-red-500/50"></span>

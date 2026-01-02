@@ -69,8 +69,8 @@ export function ContainerContentExample() {
         </Card>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`function Card({ children, title, footer }) {
   return (
     <div className="card">
@@ -161,8 +161,8 @@ export function SpecializationExample() {
         <ErrorAlert>发生了一个错误，请重试。</ErrorAlert>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`// 通用组件
 function Alert({ children, type, title }) { ... }
 
@@ -258,8 +258,8 @@ export function SlotPatternExample() {
         </p>
       </Layout>
 
-      <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`<Layout
   header={<Header />}
   sidebar={<Sidebar />}
@@ -378,8 +378,8 @@ export function CompoundComponentExample() {
         </Tabs>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`<Tabs defaultTab="react">
   <TabList>
     <Tab value="react">React</Tab>
@@ -482,8 +482,8 @@ export function CompositionFactoryExample() {
         </IconButton>
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`// 基础 Button 组件
 function Button({ variant, size, children, ...props }) { ... }
 

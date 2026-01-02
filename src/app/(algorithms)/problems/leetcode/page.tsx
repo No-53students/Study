@@ -35,13 +35,13 @@ import { getCodeSyncAnimationsByProblemId } from "../data/code-sync-animations";
 const Editor = dynamic(() => import("@monaco-editor/react"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-full items-center justify-center bg-zinc-900">
+    <div className="flex h-full items-center justify-center bg-white dark:bg-zinc-900">
       <div className="flex flex-col items-center gap-3">
         <div className="relative">
-          <div className="h-10 w-10 rounded-full border-2 border-zinc-700" />
+          <div className="h-10 w-10 rounded-full border-2 border-zinc-300 dark:border-zinc-700" />
           <div className="absolute inset-0 h-10 w-10 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin" />
         </div>
-        <span className="text-sm text-zinc-400">加载编辑器中...</span>
+        <span className="text-sm text-zinc-500 dark:text-zinc-400">加载编辑器中...</span>
       </div>
     </div>
   ),
@@ -611,12 +611,12 @@ export default function LeetCodePage() {
   // ==================== 移动端布局 ====================
   if (isMobile) {
     return (
-      <div className="flex flex-col h-[100dvh] bg-zinc-950 text-white">
+      <div className="flex flex-col h-[100dvh] bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white">
         {/* 顶部 Tab 导航 */}
-        <nav className="flex border-b border-zinc-800 bg-zinc-900 shrink-0 pt-[var(--safe-area-top)]">
+        <nav className="flex border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 shrink-0 pt-[var(--safe-area-top)]">
           <Link
             href="/problems"
-            className="px-3 py-2.5 text-zinc-400 hover:text-white"
+            className="px-3 py-2.5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -673,13 +673,13 @@ export default function LeetCodePage() {
           {mobileView === "list" && (
             <div className="h-full flex flex-col">
               {/* 搜索和筛选 */}
-              <div className="p-3 space-y-2 border-b border-zinc-800 bg-zinc-900/50 shrink-0">
+              <div className="p-3 space-y-2 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 shrink-0">
                 <input
                   type="text"
                   placeholder="搜索题目..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-3 py-2 text-sm bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-green-500"
+                  className="w-full px-3 py-2 text-sm bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:border-green-500"
                 />
                 {/* 难度筛选 */}
                 <div className="flex gap-1">
@@ -690,9 +690,9 @@ export default function LeetCodePage() {
                       className={`flex-1 px-2 py-1.5 text-xs rounded-lg transition-colors ${
                         difficultyFilter === d
                           ? d === "all"
-                            ? "bg-zinc-700 text-white"
+                            ? "bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white"
                             : `${DIFFICULTY_CONFIG[d].bg} ${DIFFICULTY_CONFIG[d].color}`
-                          : "text-zinc-400 bg-zinc-800"
+                          : "text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800"
                       }`}
                     >
                       {d === "all" ? "全部" : DIFFICULTY_CONFIG[d].label}
@@ -703,7 +703,7 @@ export default function LeetCodePage() {
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value as Category | "all")}
-                  className="w-full px-3 py-2 text-sm bg-zinc-800 border border-zinc-700 rounded-lg focus:outline-none focus:border-green-500"
+                  className="w-full px-3 py-2 text-sm bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:border-green-500"
                 >
                   <option value="all">📋 所有分类 ({categoryStats.all})</option>
                   {categoriesWithProblems.map((category) => (
@@ -714,15 +714,15 @@ export default function LeetCodePage() {
                 </select>
               </div>
               {/* 题目列表 */}
-              <div className="flex-1 overflow-y-auto overscroll-contain">
+              <div className="flex-1 overflow-y-auto overscroll-contain bg-white dark:bg-transparent">
                 {filteredProblems.map((problem) => (
                   <button
                     key={problem.id}
                     onClick={() => selectProblem(problem, true)}
-                    className={`w-full flex items-center gap-3 px-4 py-3 border-b border-zinc-800/50 transition-colors ${
+                    className={`w-full flex items-center gap-3 px-4 py-3 border-b border-zinc-100 dark:border-zinc-800/50 transition-colors ${
                       selectedProblem?.id === problem.id
-                        ? "bg-green-900/30"
-                        : "active:bg-zinc-800"
+                        ? "bg-green-50 dark:bg-green-900/30"
+                        : "active:bg-zinc-50 dark:active:bg-zinc-800"
                     }`}
                   >
                     {/* 完成状态 */}
@@ -772,7 +772,7 @@ export default function LeetCodePage() {
                   </span>
                 )}
                 {selectedProblem.tags?.map((tag) => (
-                  <span key={tag} className="px-2 py-1 rounded-full text-xs bg-zinc-800 text-zinc-400">
+                  <span key={tag} className="px-2 py-1 rounded-full text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
                     {tag}
                   </span>
                 ))}
@@ -787,26 +787,26 @@ export default function LeetCodePage() {
 
               {/* 提示 */}
               {selectedProblem.hints && selectedProblem.hints.length > 0 && (
-                <div className="mt-6 pt-4 border-t border-zinc-800">
+                <div className="mt-6 pt-4 border-t border-zinc-200 dark:border-zinc-800">
                   {!showHints ? (
                     <button
                       onClick={() => setShowHints(true)}
-                      className="text-sm text-blue-400"
+                      className="text-sm text-blue-600 dark:text-blue-400"
                     >
                       💡 显示提示 ({selectedProblem.hints.length})
                     </button>
                   ) : (
                     <div className="space-y-2">
                       {selectedProblem.hints.slice(0, currentHintIndex + 1).map((hint, i) => (
-                        <div key={i} className="rounded-lg bg-amber-900/20 border border-amber-700/50 p-3">
-                          <div className="text-xs text-amber-400 mb-1">提示 {i + 1}</div>
-                          <p className="text-sm text-amber-200">{hint}</p>
+                        <div key={i} className="rounded-lg bg-amber-100 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700/50 p-3">
+                          <div className="text-xs text-amber-600 dark:text-amber-400 mb-1">提示 {i + 1}</div>
+                          <p className="text-sm text-amber-700 dark:text-amber-200">{hint}</p>
                         </div>
                       ))}
                       {currentHintIndex < selectedProblem.hints.length - 1 && (
                         <button
                           onClick={() => setCurrentHintIndex(i => i + 1)}
-                          className="text-xs text-amber-400"
+                          className="text-xs text-amber-600 dark:text-amber-400"
                         >
                           显示更多提示 →
                         </button>
@@ -835,7 +835,7 @@ export default function LeetCodePage() {
                         className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
                           selectedSolutionIndex === index
                             ? "bg-green-600 text-white"
-                            : "bg-zinc-800 text-zinc-400"
+                            : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
                         }`}
                       >
                         {sol.name}
@@ -848,12 +848,12 @@ export default function LeetCodePage() {
               {/* 复杂度 */}
               {currentSolution && (
                 <div className="flex flex-wrap gap-2 mb-4">
-                  <div className="px-3 py-1.5 rounded bg-zinc-800 text-sm">
-                    <span className="text-zinc-400">时间: </span>
+                  <div className="px-3 py-1.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm">
+                    <span className="text-zinc-600 dark:text-zinc-400">时间: </span>
                     <span className="text-green-400 font-mono">{currentSolution.timeComplexity || selectedProblem.timeComplexity}</span>
                   </div>
-                  <div className="px-3 py-1.5 rounded bg-zinc-800 text-sm">
-                    <span className="text-zinc-400">空间: </span>
+                  <div className="px-3 py-1.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm">
+                    <span className="text-zinc-600 dark:text-zinc-400">空间: </span>
                     <span className="text-blue-400 font-mono">{currentSolution.spaceComplexity || selectedProblem.spaceComplexity}</span>
                   </div>
                 </div>
@@ -913,8 +913,8 @@ export default function LeetCodePage() {
               {selectedProblem && getCodeSyncAnimationsByProblemId(selectedProblem.id).length > 0 && (
                 <div className="mb-6 space-y-4">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-zinc-300">代码同步动画</span>
-                    <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-xs">新功能</span>
+                    <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">代码同步动画</span>
+                    <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs">新功能</span>
                   </div>
                   {getCodeSyncAnimationsByProblemId(selectedProblem.id).map((animation) => (
                     <CodeSyncDemo key={animation.id} data={animation} layout="stacked" />
@@ -923,7 +923,7 @@ export default function LeetCodePage() {
               )}
 
               {/* 解释 */}
-              <div className="prose prose-invert prose-sm max-w-none prose-pre:bg-zinc-800 prose-pre:text-xs prose-code:text-green-400">
+              <div className="prose dark:prose-invert prose-sm max-w-none prose-pre:bg-zinc-100 dark:prose-pre:bg-zinc-800 prose-pre:text-xs prose-code:text-green-600 dark:prose-code:text-green-400">
                 <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
                   {currentSolution?.explanation || selectedProblem.explanation}
                 </ReactMarkdown>
@@ -932,7 +932,7 @@ export default function LeetCodePage() {
               {/* 参考代码 */}
               {currentSolution?.code && (
                 <div className="mt-6">
-                  <h3 className="text-sm font-medium text-zinc-400 mb-2">参考代码</h3>
+                  <h3 className="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-2">参考代码</h3>
                   <SyntaxHighlighter
                     style={oneDark}
                     language="javascript"
@@ -976,9 +976,9 @@ export default function LeetCodePage() {
               </div>
 
               {/* 运行按钮和结果 */}
-              <div className="border-t border-zinc-800 bg-zinc-900">
+              <div className="border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900">
                 {/* 操作栏 */}
-                <div className="flex items-center gap-2 p-2 border-b border-zinc-800">
+                <div className="flex items-center gap-2 p-2 border-b border-zinc-200 dark:border-zinc-800">
                   <button
                     onClick={runCode}
                     disabled={isRunning}
@@ -1004,7 +1004,7 @@ export default function LeetCodePage() {
                   </button>
                   <button
                     onClick={resetCode}
-                    className="px-3 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-sm transition-colors"
+                    className="px-3 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-sm transition-colors"
                   >
                     重置
                   </button>
@@ -1014,7 +1014,7 @@ export default function LeetCodePage() {
                         setCode(currentSolution.code);
                       }
                     }}
-                    className="px-3 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-sm transition-colors"
+                    className="px-3 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-sm transition-colors"
                     title="填入参考答案"
                   >
                     答案
@@ -1038,11 +1038,11 @@ export default function LeetCodePage() {
                             </span>
                           </div>
                           {!result.passed && (
-                            <div className="text-zinc-400 space-y-1">
-                              <div>输入: <code className="text-zinc-300">{result.input}</code></div>
-                              <div>期望: <code className="text-green-400">{result.expected}</code></div>
-                              <div>实际: <code className="text-red-400">{result.actual}</code></div>
-                              {result.error && <div className="text-red-400">错误: {result.error}</div>}
+                            <div className="text-zinc-600 dark:text-zinc-400 space-y-1">
+                              <div>输入: <code className="text-zinc-700 dark:text-zinc-300">{result.input}</code></div>
+                              <div>期望: <code className="text-green-600 dark:text-green-400">{result.expected}</code></div>
+                              <div>实际: <code className="text-red-600 dark:text-red-400">{result.actual}</code></div>
+                              {result.error && <div className="text-red-600 dark:text-red-400">错误: {result.error}</div>}
                             </div>
                           )}
                         </div>
@@ -1050,9 +1050,9 @@ export default function LeetCodePage() {
                       {/* 通过率统计 */}
                       <div className="text-center py-2 text-sm">
                         {testResults.filter(r => r.passed).length === testResults.length ? (
-                          <span className="text-green-400">🎉 全部通过！</span>
+                          <span className="text-green-600 dark:text-green-400">🎉 全部通过！</span>
                         ) : (
-                          <span className="text-zinc-400">
+                          <span className="text-zinc-600 dark:text-zinc-400">
                             通过 {testResults.filter(r => r.passed).length}/{testResults.length} 个用例
                           </span>
                         )}
@@ -1074,15 +1074,15 @@ export default function LeetCodePage() {
 
   // ==================== 桌面端布局 ====================
   return (
-    <div ref={containerRef} className={`flex h-[100dvh] bg-zinc-950 text-white ${isDragging ? 'select-none' : ''}`}>
+    <div ref={containerRef} className={`flex h-[100dvh] bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white ${isDragging ? 'select-none' : ''}`}>
       {/* 侧边栏折叠时的悬浮按钮 - 小型图标按钮 */}
       {sidebarCollapsed && (
         <button
           onClick={() => setSidebarCollapsed(false)}
-          className="fixed left-3 top-3 z-50 flex items-center justify-center w-8 h-8 bg-zinc-800/90 hover:bg-zinc-700 border border-zinc-700 rounded-lg text-sm transition-colors shadow-lg backdrop-blur-sm"
+          className="fixed left-3 top-3 z-50 flex items-center justify-center w-8 h-8 bg-white/90 dark:bg-zinc-800/90 hover:bg-zinc-100 dark:hover:bg-zinc-700 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm transition-colors shadow-lg backdrop-blur-sm"
           title="显示侧边栏 (Ctrl+\)"
         >
-          <svg className="w-4 h-4 text-zinc-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-4 h-4 text-zinc-600 dark:text-zinc-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
@@ -1091,19 +1091,19 @@ export default function LeetCodePage() {
       {/* 左侧边栏 - 题目列表 */}
       {!sidebarCollapsed && (
         <div
-          className="flex flex-col border-r border-zinc-800 bg-zinc-900 relative"
+          className="flex flex-col border-r border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 relative"
           style={{ width: `${sidebarWidth}px` }}
         >
           {/* 侧边栏头部 */}
-          <div className="flex items-center justify-between p-3 border-b border-zinc-800">
-            <Link href="/problems" className="text-sm text-zinc-400 hover:text-white transition-colors">
+          <div className="flex items-center justify-between p-3 border-b border-zinc-200 dark:border-zinc-800">
+            <Link href="/problems" className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">
               ← 返回
             </Link>
             <div className="flex items-center gap-2">
-              <h2 className="text-sm font-semibold">算法题库</h2>
+              <h2 className="text-sm font-semibold text-zinc-900 dark:text-white">算法题库</h2>
               <button
                 onClick={() => setSidebarCollapsed(true)}
-                className="p-1 text-zinc-500 hover:text-white hover:bg-zinc-800 rounded transition-colors"
+                className="p-1 text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded transition-colors"
                 title="隐藏侧边栏 (Ctrl+\)"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1114,14 +1114,14 @@ export default function LeetCodePage() {
           </div>
 
           {/* 进度显示 */}
-          <div className="px-3 py-2 border-b border-zinc-800 bg-zinc-800/50">
+          <div className="px-3 py-2 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800/50">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-zinc-400">已完成</span>
-              <span className="text-green-400 font-medium">
+              <span className="text-zinc-500 dark:text-zinc-400">已完成</span>
+              <span className="text-green-600 dark:text-green-400 font-medium">
                 {completedProblems.size} / {allProblems.length}
               </span>
             </div>
-            <div className="mt-1.5 h-1.5 bg-zinc-700 rounded-full overflow-hidden">
+            <div className="mt-1.5 h-1.5 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden">
               <div
                 className="h-full bg-green-500 rounded-full transition-all duration-300"
                 style={{ width: `${(completedProblems.size / allProblems.length) * 100}%` }}
@@ -1130,18 +1130,18 @@ export default function LeetCodePage() {
           </div>
 
           {/* 搜索框 */}
-          <div className="p-2 border-b border-zinc-800">
+          <div className="p-2 border-b border-zinc-200 dark:border-zinc-800">
             <input
               type="text"
               placeholder="搜索题目..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-3 py-1.5 text-sm bg-zinc-800 border border-zinc-700 rounded focus:outline-none focus:border-green-500"
+              className="w-full px-3 py-1.5 text-sm bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded focus:outline-none focus:border-green-500"
             />
           </div>
 
           {/* 难度筛选 */}
-          <div className="flex gap-1 p-2 border-b border-zinc-800">
+          <div className="flex gap-1 p-2 border-b border-zinc-200 dark:border-zinc-800">
             {(["all", "easy", "medium", "hard"] as const).map((d) => (
               <button
                 key={d}
@@ -1149,9 +1149,9 @@ export default function LeetCodePage() {
                 className={`flex-1 px-2 py-1 text-xs rounded transition-colors ${
                   difficultyFilter === d
                     ? d === "all"
-                      ? "bg-zinc-700 text-white"
+                      ? "bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white"
                       : `${DIFFICULTY_CONFIG[d].bg} ${DIFFICULTY_CONFIG[d].color}`
-                    : "text-zinc-400 hover:text-white hover:bg-zinc-800"
+                    : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 }`}
               >
                 {d === "all" ? "全部" : DIFFICULTY_CONFIG[d].label}
@@ -1160,7 +1160,7 @@ export default function LeetCodePage() {
           </div>
 
           {/* 前端相关度筛选 */}
-          <div className="flex gap-1 p-2 border-b border-zinc-800">
+          <div className="flex gap-1 p-2 border-b border-zinc-200 dark:border-zinc-800">
             {(["all", "high", "medium", "low"] as const).map((r) => (
               <button
                 key={r}
@@ -1168,9 +1168,9 @@ export default function LeetCodePage() {
                 className={`flex-1 px-2 py-1 text-xs rounded transition-colors ${
                   relevanceFilter === r
                     ? r === "all"
-                      ? "bg-zinc-700 text-white"
+                      ? "bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white"
                       : `${FRONTEND_RELEVANCE_CONFIG[r].bg} ${FRONTEND_RELEVANCE_CONFIG[r].color}`
-                    : "text-zinc-400 hover:text-white hover:bg-zinc-800"
+                    : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 }`}
                 title={r !== "all" ? FRONTEND_RELEVANCE_CONFIG[r].description : "显示所有题目"}
               >
@@ -1180,11 +1180,11 @@ export default function LeetCodePage() {
           </div>
 
           {/* 分类下拉选择器 */}
-          <div className="p-2 border-b border-zinc-800">
+          <div className="p-2 border-b border-zinc-200 dark:border-zinc-800">
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value as Category | "all")}
-              className="w-full px-3 py-1.5 text-sm bg-zinc-800 border border-zinc-700 rounded focus:outline-none focus:border-green-500 cursor-pointer"
+              className="w-full px-3 py-1.5 text-sm bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded focus:outline-none focus:border-green-500 cursor-pointer"
             >
               <option value="all">📋 所有分类 ({categoryStats.all})</option>
               {categoriesWithProblems.map((category) => (
@@ -1197,17 +1197,17 @@ export default function LeetCodePage() {
 
           {/* 题目列表 */}
           <div className="flex-1 overflow-y-auto overscroll-contain">
-            <div className="text-xs text-zinc-500 px-3 py-2 sticky top-0 bg-zinc-900 border-b border-zinc-800">
+            <div className="text-xs text-zinc-500 px-3 py-2 sticky top-0 bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800">
               {filteredProblems.length} 道题目
             </div>
             {filteredProblems.map((problem) => (
               <button
                 key={problem.id}
                 onClick={() => selectProblem(problem)}
-                className={`w-full flex items-center gap-2 px-3 py-2 text-sm border-b border-zinc-800/50 transition-colors ${
+                className={`w-full flex items-center gap-2 px-3 py-2 text-sm border-b border-zinc-100 dark:border-zinc-800/50 transition-colors ${
                   selectedProblem?.id === problem.id
-                    ? "bg-green-900/30 text-green-400"
-                    : "text-zinc-300 hover:bg-zinc-800"
+                    ? "bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400"
+                    : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 }`}
               >
                 {/* 完成状态 */}
@@ -1242,11 +1242,11 @@ export default function LeetCodePage() {
       {/* 侧边栏拖拽条 */}
       {!sidebarCollapsed && (
         <div
-          className={`w-2 bg-zinc-800 hover:bg-green-500 active:bg-green-600 cursor-col-resize transition-colors touch-none flex items-center justify-center ${isDragging ? 'bg-green-500' : ''}`}
+          className={`w-2 bg-zinc-200 dark:bg-zinc-800 hover:bg-green-500 active:bg-green-600 cursor-col-resize transition-colors touch-none flex items-center justify-center ${isDragging ? 'bg-green-500' : ''}`}
           onMouseDown={() => { isDraggingSidebar.current = true; }}
           onTouchStart={(e) => { e.preventDefault(); isDraggingSidebar.current = true; }}
         >
-          <div className="w-0.5 h-8 bg-zinc-600 rounded-full" />
+          <div className="w-0.5 h-8 bg-zinc-400 dark:bg-zinc-600 rounded-full" />
         </div>
       )}
 
@@ -1255,17 +1255,17 @@ export default function LeetCodePage() {
         <div ref={mainContentRef} className="flex-1 flex min-w-0 overflow-hidden">
           {/* 左侧面板 - 题目描述 */}
           <div
-            className="flex flex-col border-r border-zinc-800 overflow-hidden min-w-0"
+            className="flex flex-col border-r border-zinc-200 dark:border-zinc-800 overflow-hidden min-w-0"
             style={{ width: `${leftPanelWidth}%` }}
           >
             {/* 左侧标签栏 */}
-            <div className="flex items-center border-b border-zinc-800 bg-zinc-900">
+            <div className="flex items-center border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900">
               <button
                 onClick={() => setLeftTab("description")}
                 className={`px-4 py-2 text-sm font-medium transition-colors ${
                   leftTab === "description"
-                    ? "text-white border-b-2 border-green-500"
-                    : "text-zinc-400 hover:text-white"
+                    ? "text-zinc-900 dark:text-white border-b-2 border-green-500"
+                    : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
                 }`}
               >
                 题目描述
@@ -1274,8 +1274,8 @@ export default function LeetCodePage() {
                 onClick={() => setLeftTab("solution")}
                 className={`px-4 py-2 text-sm font-medium transition-colors ${
                   leftTab === "solution"
-                    ? "text-white border-b-2 border-green-500"
-                    : "text-zinc-400 hover:text-white"
+                    ? "text-zinc-900 dark:text-white border-b-2 border-green-500"
+                    : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
                 }`}
               >
                 题解
@@ -1285,8 +1285,8 @@ export default function LeetCodePage() {
                   onClick={() => setLeftTab("deep")}
                   className={`px-4 py-2 text-sm font-medium transition-colors flex items-center gap-1 ${
                     leftTab === "deep"
-                      ? "text-white border-b-2 border-purple-500"
-                      : "text-zinc-400 hover:text-white"
+                      ? "text-zinc-900 dark:text-white border-b-2 border-purple-500"
+                      : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
                   }`}
                 >
                   <span className="text-lg">🎓</span>
@@ -1336,14 +1336,14 @@ export default function LeetCodePage() {
                   {/* 分类标签 */}
                   <div className="flex flex-wrap gap-2 mb-4">
                     {categoryInfo && (
-                      <span className="px-2 py-1 rounded-full text-xs bg-zinc-800 text-zinc-400">
+                      <span className="px-2 py-1 rounded-full text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
                         {categoryInfo.icon} {categoryInfo.name}
                       </span>
                     )}
                     {selectedProblem.tags?.map((tag) => (
                       <span
                         key={tag}
-                        className="px-2 py-1 rounded-full text-xs bg-zinc-800 text-zinc-400"
+                        className="px-2 py-1 rounded-full text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
                       >
                         {tag}
                       </span>
@@ -1351,7 +1351,7 @@ export default function LeetCodePage() {
                   </div>
 
                   {/* 题目描述 */}
-                  <div className="prose prose-invert prose-sm max-w-none prose-pre:bg-zinc-800 prose-pre:border prose-pre:border-zinc-700 prose-pre:overflow-x-auto prose-pre:max-w-full prose-code:text-green-400 prose-code:before:content-none prose-code:after:content-none [&_pre]:min-w-0 [&_code]:break-all">
+                  <div className="prose dark:prose-invert prose-sm max-w-none prose-pre:bg-zinc-100 dark:prose-pre:bg-zinc-800 prose-pre:border prose-pre:border-zinc-200 dark:prose-pre:border-zinc-700 prose-pre:overflow-x-auto prose-pre:max-w-full prose-code:text-green-600 dark:prose-code:text-green-400 prose-code:before:content-none prose-code:after:content-none [&_pre]:min-w-0 [&_code]:break-all">
                     <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
                       {selectedProblem.description}
                     </ReactMarkdown>
@@ -1365,11 +1365,11 @@ export default function LeetCodePage() {
 
                   {/* 提示区域 */}
                   {selectedProblem.hints && selectedProblem.hints.length > 0 && (
-                    <div className="mt-6 pt-4 border-t border-zinc-800">
+                    <div className="mt-6 pt-4 border-t border-zinc-200 dark:border-zinc-800">
                       {!showHints ? (
                         <button
                           onClick={() => setShowHints(true)}
-                          className="text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1"
+                          className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 flex items-center gap-1"
                         >
                           💡 显示提示 ({selectedProblem.hints.length})
                         </button>
@@ -1378,16 +1378,16 @@ export default function LeetCodePage() {
                           {selectedProblem.hints.slice(0, currentHintIndex + 1).map((hint, i) => (
                             <div
                               key={i}
-                              className="rounded-lg bg-amber-900/20 border border-amber-700/50 p-3"
+                              className="rounded-lg bg-amber-100 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700/50 p-3"
                             >
-                              <div className="text-xs text-amber-400 mb-1">提示 {i + 1}</div>
-                              <p className="text-sm text-amber-200">{hint}</p>
+                              <div className="text-xs text-amber-600 dark:text-amber-400 mb-1">提示 {i + 1}</div>
+                              <p className="text-sm text-amber-700 dark:text-amber-200">{hint}</p>
                             </div>
                           ))}
                           {currentHintIndex < selectedProblem.hints.length - 1 && (
                             <button
                               onClick={() => setCurrentHintIndex((i) => i + 1)}
-                              className="text-xs text-amber-400 hover:text-amber-300"
+                              className="text-xs text-amber-600 dark:text-amber-400 hover:text-amber-500 dark:hover:text-amber-300"
                             >
                               显示更多提示 →
                             </button>
@@ -1413,7 +1413,7 @@ export default function LeetCodePage() {
                             className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
                               selectedSolutionIndex === index
                                 ? "bg-green-600 text-white"
-                                : "bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700"
+                                : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700"
                             }`}
                           >
                             {sol.name}
@@ -1426,15 +1426,15 @@ export default function LeetCodePage() {
                   {/* 复杂度 */}
                   {currentSolution && (
                     <div className="flex gap-4 mb-4 text-sm">
-                      <div className="px-3 py-1.5 rounded bg-zinc-800">
-                        <span className="text-zinc-400">时间复杂度: </span>
-                        <span className="text-green-400 font-mono">
+                      <div className="px-3 py-1.5 rounded bg-zinc-100 dark:bg-zinc-800">
+                        <span className="text-zinc-600 dark:text-zinc-400">时间复杂度: </span>
+                        <span className="text-green-600 dark:text-green-400 font-mono">
                           {currentSolution.timeComplexity || selectedProblem.timeComplexity}
                         </span>
                       </div>
-                      <div className="px-3 py-1.5 rounded bg-zinc-800">
-                        <span className="text-zinc-400">空间复杂度: </span>
-                        <span className="text-blue-400 font-mono">
+                      <div className="px-3 py-1.5 rounded bg-zinc-100 dark:bg-zinc-800">
+                        <span className="text-zinc-600 dark:text-zinc-400">空间复杂度: </span>
+                        <span className="text-blue-600 dark:text-blue-400 font-mono">
                           {currentSolution.spaceComplexity || selectedProblem.spaceComplexity}
                         </span>
                       </div>
@@ -1495,8 +1495,8 @@ export default function LeetCodePage() {
                   {selectedProblem && getCodeSyncAnimationsByProblemId(selectedProblem.id).length > 0 && (
                     <div className="mb-6 space-y-4">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-zinc-300">代码同步动画</span>
-                        <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-xs">新功能</span>
+                        <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">代码同步动画</span>
+                        <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs">新功能</span>
                       </div>
                       {getCodeSyncAnimationsByProblemId(selectedProblem.id).map((animation) => (
                         <CodeSyncDemo key={animation.id} data={animation} layout="split" />
@@ -1505,7 +1505,7 @@ export default function LeetCodePage() {
                   )}
 
                   {/* 详细解释 */}
-                  <div className="prose prose-invert prose-sm max-w-none prose-pre:bg-zinc-800 prose-pre:border prose-pre:border-zinc-700 prose-code:text-green-400">
+                  <div className="prose dark:prose-invert prose-sm max-w-none prose-pre:bg-zinc-100 dark:prose-pre:bg-zinc-800 prose-pre:border prose-pre:border-zinc-200 dark:prose-pre:border-zinc-700 prose-code:text-green-600 dark:prose-code:text-green-400">
                     <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
                       {currentSolution?.explanation || selectedProblem.explanation}
                     </ReactMarkdown>
@@ -1513,8 +1513,8 @@ export default function LeetCodePage() {
 
                   {/* 相关题目 */}
                   {selectedProblem.relatedProblems && selectedProblem.relatedProblems.length > 0 && (
-                    <div className="mt-6 pt-4 border-t border-zinc-800">
-                      <h3 className="text-sm font-medium mb-2 text-zinc-400">相关题目</h3>
+                    <div className="mt-6 pt-4 border-t border-zinc-200 dark:border-zinc-800">
+                      <h3 className="text-sm font-medium mb-2 text-zinc-600 dark:text-zinc-400">相关题目</h3>
                       <div className="flex flex-wrap gap-2">
                         {selectedProblem.relatedProblems.map((id) => (
                           <button
@@ -1523,7 +1523,7 @@ export default function LeetCodePage() {
                               const problem = allProblems.find(p => p.id === id);
                               if (problem) selectProblem(problem);
                             }}
-                            className="px-2 py-1 rounded text-xs bg-zinc-800 text-zinc-400 hover:text-white transition-colors"
+                            className="px-2 py-1 rounded text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
                           >
                             {id}
                           </button>
@@ -1548,24 +1548,24 @@ export default function LeetCodePage() {
 
           {/* 垂直分隔线 */}
           <div
-            className={`w-2 bg-zinc-800 hover:bg-green-500 active:bg-green-600 cursor-col-resize transition-colors touch-none flex items-center justify-center ${isDragging ? 'bg-green-500' : ''}`}
+            className={`w-2 bg-zinc-200 dark:bg-zinc-800 hover:bg-green-500 active:bg-green-600 cursor-col-resize transition-colors touch-none flex items-center justify-center ${isDragging ? 'bg-green-500' : ''}`}
             onMouseDown={() => { isDraggingVertical.current = true; }}
             onTouchStart={(e) => { e.preventDefault(); isDraggingVertical.current = true; }}
           >
-            <div className="w-0.5 h-8 bg-zinc-600 rounded-full" />
+            <div className="w-0.5 h-8 bg-zinc-400 dark:bg-zinc-600 rounded-full" />
           </div>
 
           {/* 右侧面板 - 代码编辑器 */}
           <div className="flex-1 flex flex-col min-w-0">
             {/* 工具栏 */}
-            <div className="flex items-center justify-between border-b border-zinc-800 bg-zinc-900 px-3">
+            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 px-3">
               <div className="flex items-center gap-2 py-2">
                 {/* 上下切题按钮 */}
                 <div className="flex items-center gap-1 mr-2">
                   <button
                     onClick={goToPrevProblem}
                     disabled={currentProblemIndex <= 0}
-                    className="p-1.5 text-zinc-400 hover:text-white rounded hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="p-1.5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded hover:bg-zinc-100 dark:hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed"
                     title="上一题 (Ctrl+[)"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1578,7 +1578,7 @@ export default function LeetCodePage() {
                   <button
                     onClick={goToNextProblem}
                     disabled={currentProblemIndex >= filteredProblems.length - 1}
-                    className="p-1.5 text-zinc-400 hover:text-white rounded hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="p-1.5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded hover:bg-zinc-100 dark:hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed"
                     title="下一题 (Ctrl+])"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1586,7 +1586,7 @@ export default function LeetCodePage() {
                     </svg>
                   </button>
                 </div>
-                <div className="h-4 w-px bg-zinc-700" />
+                <div className="h-4 w-px bg-zinc-300 dark:bg-zinc-700" />
                 <span className="text-xs text-zinc-500 uppercase">{selectedProblem.language || "javascript"}</span>
               </div>
               <div className="flex items-center gap-2">
@@ -1596,7 +1596,7 @@ export default function LeetCodePage() {
                     className={`px-2 py-1 text-xs rounded transition-colors ${
                       showSolution
                         ? "bg-amber-600 text-white"
-                        : "bg-zinc-800 text-zinc-400 hover:text-white"
+                        : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
                     }`}
                   >
                     {showSolution ? "隐藏答案" : "查看答案"}
@@ -1604,7 +1604,7 @@ export default function LeetCodePage() {
                 )}
                 <button
                   onClick={copyCode}
-                  className="p-1.5 text-zinc-400 hover:text-white rounded hover:bg-zinc-800"
+                  className="p-1.5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded hover:bg-zinc-100 dark:hover:bg-zinc-800"
                   title="复制代码"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1613,7 +1613,7 @@ export default function LeetCodePage() {
                 </button>
                 <button
                   onClick={resetCode}
-                  className="p-1.5 text-zinc-400 hover:text-white rounded hover:bg-zinc-800"
+                  className="p-1.5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded hover:bg-zinc-100 dark:hover:bg-zinc-800"
                   title="重置代码"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1678,31 +1678,31 @@ export default function LeetCodePage() {
 
             {/* 水平分隔线 */}
             <div
-              className={`h-2 bg-zinc-800 hover:bg-green-500 active:bg-green-600 cursor-row-resize transition-colors touch-none flex items-center justify-center ${isDragging ? 'bg-green-500' : ''}`}
+              className={`h-2 bg-zinc-200 dark:bg-zinc-800 hover:bg-green-500 active:bg-green-600 cursor-row-resize transition-colors touch-none flex items-center justify-center ${isDragging ? 'bg-green-500' : ''}`}
               onMouseDown={() => { isDraggingHorizontal.current = true; }}
               onTouchStart={(e) => { e.preventDefault(); isDraggingHorizontal.current = true; }}
             >
-              <div className="w-8 h-0.5 bg-zinc-600 rounded-full" />
+              <div className="w-8 h-0.5 bg-zinc-400 dark:bg-zinc-600 rounded-full" />
             </div>
 
             {/* 底部控制台 */}
             <div
-              className="flex flex-col bg-zinc-900"
+              className="flex flex-col bg-zinc-50 dark:bg-zinc-900"
               style={{ height: `${bottomHeight}px` }}
             >
-              <div className="flex items-center justify-between border-b border-zinc-800 px-2">
+              <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 px-2">
                 <div className="flex">
                   <button
                     onClick={() => setBottomTab("testcases")}
                     className={`px-3 py-1.5 text-sm font-medium transition-colors ${
                       bottomTab === "testcases"
-                        ? "text-white border-b-2 border-green-500"
-                        : "text-zinc-400 hover:text-white"
+                        ? "text-zinc-900 dark:text-white border-b-2 border-green-500"
+                        : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
                     }`}
                   >
                     测试用例
                     {testResults.length > 0 && (
-                      <span className={`ml-1 ${allPassed ? "text-green-400" : "text-zinc-400"}`}>
+                      <span className={`ml-1 ${allPassed ? "text-green-600 dark:text-green-400" : "text-zinc-600 dark:text-zinc-400"}`}>
                         ({passedCount}/{testResults.length})
                       </span>
                     )}
@@ -1711,19 +1711,19 @@ export default function LeetCodePage() {
                     onClick={() => setBottomTab("console")}
                     className={`px-3 py-1.5 text-sm font-medium transition-colors ${
                       bottomTab === "console"
-                        ? "text-white border-b-2 border-green-500"
-                        : "text-zinc-400 hover:text-white"
+                        ? "text-zinc-900 dark:text-white border-b-2 border-green-500"
+                        : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
                     }`}
                   >
                     控制台
                     {consoleOutput.length > 0 && (
-                      <span className="ml-1 text-zinc-400">({consoleOutput.length})</span>
+                      <span className="ml-1 text-zinc-600 dark:text-zinc-400">({consoleOutput.length})</span>
                     )}
                   </button>
                 </div>
                 <button
                   onClick={clearConsole}
-                  className="px-2 py-1 text-xs text-zinc-400 hover:text-white"
+                  className="px-2 py-1 text-xs text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
                 >
                   清空
                 </button>
@@ -1740,18 +1740,18 @@ export default function LeetCodePage() {
                           className={`rounded-lg p-3 ${
                             result
                               ? result.passed
-                                ? "bg-green-900/20 border border-green-700/50"
-                                : "bg-red-900/20 border border-red-700/50"
-                              : "bg-zinc-800 border border-zinc-700"
+                                ? "bg-green-100 dark:bg-green-900/20 border border-green-300 dark:border-green-700/50"
+                                : "bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700/50"
+                              : "bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700"
                           }`}
                         >
                           <div className="flex items-center justify-between mb-2">
                             <span className="font-medium text-sm">
                               {result ? (
                                 result.passed ? (
-                                  <span className="text-green-400">✓</span>
+                                  <span className="text-green-600 dark:text-green-400">✓</span>
                                 ) : (
-                                  <span className="text-red-400">✗</span>
+                                  <span className="text-red-600 dark:text-red-400">✗</span>
                                 )
                               ) : (
                                 <span className="text-zinc-500">○</span>
@@ -1759,7 +1759,7 @@ export default function LeetCodePage() {
                               Case {index + 1}: {tc.name}
                             </span>
                             {result && (
-                              <span className={`text-xs ${result.passed ? "text-green-400" : "text-red-400"}`}>
+                              <span className={`text-xs ${result.passed ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
                                 {result.passed ? "Accepted" : "Wrong Answer"}
                               </span>
                             )}
@@ -1770,22 +1770,22 @@ export default function LeetCodePage() {
                           <div className="space-y-1 font-mono text-xs">
                             <div className="flex">
                               <span className="text-zinc-500 w-12 flex-shrink-0">输入:</span>
-                              <span className="text-zinc-300">{JSON.stringify(tc.input)}</span>
+                              <span className="text-zinc-700 dark:text-zinc-300">{JSON.stringify(tc.input)}</span>
                             </div>
                             <div className="flex">
                               <span className="text-zinc-500 w-12 flex-shrink-0">预期:</span>
-                              <span className="text-zinc-300">{JSON.stringify(tc.expected)}</span>
+                              <span className="text-zinc-700 dark:text-zinc-300">{JSON.stringify(tc.expected)}</span>
                             </div>
                             {result && (
                               <div className="flex">
                                 <span className="text-zinc-500 w-12 flex-shrink-0">输出:</span>
-                                <span className={result.passed ? "text-green-400" : "text-red-400"}>
+                                <span className={result.passed ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}>
                                   {result.actual}
                                 </span>
                               </div>
                             )}
                             {result?.error && (
-                              <div className="mt-1 text-red-400">错误: {result.error}</div>
+                              <div className="mt-1 text-red-600 dark:text-red-400">错误: {result.error}</div>
                             )}
                           </div>
                         </div>
@@ -1802,14 +1802,14 @@ export default function LeetCodePage() {
                           key={index}
                           className={`flex items-start gap-2 ${
                             output.type === "error"
-                              ? "text-red-400"
+                              ? "text-red-600 dark:text-red-400"
                               : output.type === "warn"
-                                ? "text-amber-400"
+                                ? "text-amber-600 dark:text-amber-400"
                                 : output.type === "info"
-                                  ? "text-blue-400"
+                                  ? "text-blue-600 dark:text-blue-400"
                                   : output.type === "result"
-                                    ? "text-green-400"
-                                    : "text-zinc-200"
+                                    ? "text-green-600 dark:text-green-400"
+                                    : "text-zinc-700 dark:text-zinc-200"
                           }`}
                         >
                           <span className="text-zinc-600 select-none">
@@ -1826,14 +1826,14 @@ export default function LeetCodePage() {
           </div>
         </div>
       ) : (
-        <div className="flex-1 flex items-center justify-center text-zinc-500">
+        <div className="flex-1 flex items-center justify-center text-zinc-500 bg-white dark:bg-transparent">
           <div className="text-center">
-            <div className="flex h-16 w-16 mx-auto mb-4 items-center justify-center rounded-full bg-zinc-800/50 border border-zinc-700/50">
-              <svg className="w-8 h-8 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <div className="flex h-16 w-16 mx-auto mb-4 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700/50">
+              <svg className="w-8 h-8 text-zinc-400 dark:text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
               </svg>
             </div>
-            <p className="text-lg font-medium text-zinc-400 mb-2">暂无题目</p>
+            <p className="text-lg font-medium text-zinc-600 dark:text-zinc-400 mb-2">暂无题目</p>
             <p className="text-sm text-zinc-500">请先添加题目数据</p>
           </div>
         </div>

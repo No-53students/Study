@@ -32,21 +32,21 @@ export function ProgressiveRevealPanel({ reveals }: ProgressiveRevealPanelProps)
   };
 
   return (
-    <div className="bg-zinc-900/50 rounded-xl border border-zinc-700/50 overflow-hidden">
+    <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-700/50 overflow-hidden">
       {/* 标题 */}
-      <div className="p-4 border-b border-zinc-700/50 flex items-center justify-between">
+      <div className="p-4 border-b border-zinc-200 dark:border-zinc-700/50 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-amber-400 flex items-center gap-2">
           <span className="text-2xl">🔍</span>
           逐步揭示
         </h3>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-zinc-400">
+          <span className="text-sm text-zinc-600 dark:text-zinc-400">
             {revealedLevel} / {reveals.length} 已揭示
           </span>
           {revealedLevel > 0 && (
             <button
               onClick={handleReset}
-              className="text-xs text-zinc-500 hover:text-zinc-300"
+              className="text-xs text-zinc-400 dark:text-zinc-500 hover:text-zinc-300"
             >
               重置
             </button>
@@ -82,12 +82,12 @@ export function ProgressiveRevealPanel({ reveals }: ProgressiveRevealPanelProps)
                   {isRevealed ? (
                     <div className="animate-fadeIn">
                       {/* 揭示内容 */}
-                      <p className="text-zinc-200 mb-2">{reveal.content}</p>
+                      <p className="text-zinc-700 dark:text-zinc-200 mb-2">{reveal.content}</p>
 
                       {/* 代码片段 */}
                       {reveal.codeFragment && (
-                        <div className="mt-2 p-3 bg-black/50 rounded-lg border border-zinc-700">
-                          <pre className="text-sm text-green-400 overflow-x-auto">
+                        <div className="mt-2 p-3 bg-black/50 rounded-lg border border-zinc-200 dark:border-zinc-700">
+                          <pre className="text-sm text-green-600 dark:text-green-400 overflow-x-auto">
                             <code>{reveal.codeFragment}</code>
                           </pre>
                         </div>
@@ -104,8 +104,8 @@ export function ProgressiveRevealPanel({ reveals }: ProgressiveRevealPanelProps)
                       </span>
                     </button>
                   ) : (
-                    <div className="p-4 rounded-lg bg-zinc-800/50 border border-zinc-700/30">
-                      <span className="text-zinc-500 flex items-center gap-2">
+                    <div className="p-4 rounded-lg bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700/30">
+                      <span className="text-zinc-400 dark:text-zinc-500 flex items-center gap-2">
                         <span>🔒</span>
                         <span>第 {reveal.level} 层思路（先揭示前面的内容）</span>
                       </span>
@@ -121,7 +121,7 @@ export function ProgressiveRevealPanel({ reveals }: ProgressiveRevealPanelProps)
         {revealedLevel === reveals.length && (
           <div className="p-4 rounded-lg bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 text-center">
             <span className="text-green-400 text-lg">🎉 全部揭示完成！</span>
-            <p className="text-zinc-400 text-sm mt-1">现在你应该能够独立解决这道题了</p>
+            <p className="text-zinc-600 dark:text-zinc-400 text-sm mt-1">现在你应该能够独立解决这道题了</p>
           </div>
         )}
       </div>

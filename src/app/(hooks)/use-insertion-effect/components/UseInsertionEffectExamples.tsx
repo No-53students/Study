@@ -51,9 +51,9 @@ export function ExecutionOrderExample() {
         触发渲染
       </button>
 
-      <div className="rounded-md bg-zinc-900 p-4 font-mono text-sm">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 font-mono text-sm">
         {logs.length === 0 ? (
-          <p className="text-zinc-500">点击按钮查看执行顺序...</p>
+          <p className="text-zinc-400">点击按钮查看执行顺序...</p>
         ) : (
           logs.map((log, i) => (
             <p
@@ -410,8 +410,8 @@ export default function UseInsertionEffectExamples() {
           useInsertionEffect 用于在 DOM 变更之前注入样式，主要面向 CSS-in-JS 库作者。
         </p>
 
-        <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-          <p className="mb-2 text-zinc-400">// 基本语法</p>
+        <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+          <p className="mb-2 text-zinc-600 dark:text-zinc-400">// 基本语法</p>
           <pre className="text-green-400">
 {`useInsertionEffect(() => {
   // 在 DOM 变更之前执行

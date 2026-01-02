@@ -404,8 +404,8 @@ export default function UseFormStatusExamples() {
           useFormStatus 用于获取父级表单的提交状态，必须在 form 的子组件中使用。
         </p>
 
-        <div className="mt-4 rounded-md bg-zinc-900 p-4 text-sm">
-          <p className="mb-2 text-zinc-400">// 基本语法</p>
+        <div className="mt-4 rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+          <p className="mb-2 text-zinc-600 dark:text-zinc-400">// 基本语法</p>
           <pre className="text-green-400">
 {`import { useFormStatus } from 'react-dom';
 

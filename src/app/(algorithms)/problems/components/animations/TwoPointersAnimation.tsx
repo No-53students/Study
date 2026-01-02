@@ -61,7 +61,7 @@ export function TwoPointersAnimation({
   // 如果没有步骤数据，显示空状态
   if (!step || totalSteps === 0) {
     return (
-      <div className="rounded-xl border border-zinc-700 bg-zinc-900/80 overflow-hidden p-4">
+      <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/80 overflow-hidden p-4">
         <p className="text-sm text-zinc-500 text-center">暂无动画数据</p>
       </div>
     );
@@ -139,11 +139,11 @@ export function TwoPointersAnimation({
   }, [speed, isPlaying, totalSteps, clearTimer]);
 
   return (
-    <div className="rounded-xl border border-zinc-700 bg-zinc-900/80 overflow-hidden">
+    <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/80 overflow-hidden">
       {/* 头部 */}
-      <div className="px-4 py-3 border-b border-zinc-700 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-zinc-200">{title}</h3>
-        <div className="flex items-center gap-2 text-xs text-zinc-400">
+      <div className="px-4 py-3 border-b border-zinc-200 dark:border-zinc-700 flex items-center justify-between">
+        <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{title}</h3>
+        <div className="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400">
           <span>步骤 {currentStep + 1} / {totalSteps}</span>
         </div>
       </div>
@@ -171,9 +171,9 @@ export function TwoPointersAnimation({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="mt-4 p-3 rounded-lg bg-zinc-800/50 border border-zinc-700"
+            className="mt-4 p-3 rounded-lg bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700"
           >
-            <p className="text-sm text-zinc-300">{step.description}</p>
+            <p className="text-sm text-zinc-700 dark:text-zinc-300">{step.description}</p>
           </motion.div>
         </AnimatePresence>
       </div>
@@ -181,8 +181,8 @@ export function TwoPointersAnimation({
       {/* 代码区域（可选） */}
       {code && (
         <div className="px-4 pb-4">
-          <div className="rounded-lg bg-zinc-950 p-3 text-xs font-mono overflow-x-auto">
-            <pre className="text-zinc-400">
+          <div className="rounded-lg bg-white dark:bg-zinc-950 p-3 text-xs font-mono overflow-x-auto">
+            <pre className="text-zinc-600 dark:text-zinc-400">
               {code.split("\n").map((line, idx) => (
                 <motion.div
                   key={idx}
@@ -209,11 +209,11 @@ export function TwoPointersAnimation({
       )}
 
       {/* 控制栏 */}
-      <div className="px-4 py-3 border-t border-zinc-700 flex items-center justify-between">
+      <div className="px-4 py-3 border-t border-zinc-200 dark:border-zinc-700 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <button
             onClick={reset}
-            className="p-2 rounded-lg hover:bg-zinc-700 text-zinc-400 hover:text-zinc-200 transition-colors"
+            className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors"
             title="重置"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -223,7 +223,7 @@ export function TwoPointersAnimation({
           <button
             onClick={prevStep}
             disabled={currentStep === 0}
-            className="p-2 rounded-lg hover:bg-zinc-700 text-zinc-400 hover:text-zinc-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             title="上一步"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -253,7 +253,7 @@ export function TwoPointersAnimation({
           <button
             onClick={nextStep}
             disabled={currentStep === totalSteps - 1}
-            className="p-2 rounded-lg hover:bg-zinc-700 text-zinc-400 hover:text-zinc-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             title="下一步"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

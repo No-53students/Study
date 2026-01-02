@@ -19,8 +19,8 @@ export function BasicComponentExample() {
         <SimpleGreeting />
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`function SimpleGreeting() {
   return <h3>Hello, React!</h3>;
 }`}
@@ -83,8 +83,8 @@ export function PropsComponentExample() {
         <Welcome name={name} role={role} />
       </div>
 
-      <div className="rounded-md bg-zinc-900 p-4 text-sm">
-        <pre className="text-green-400">
+      <div className="rounded-md bg-zinc-900 dark:bg-zinc-950 p-4 text-sm">
+        <pre className="text-green-600 dark:text-green-400">
 {`interface WelcomeProps {
   name: string;
   role?: string;  // 可选，默认 "访客"
@@ -375,8 +375,8 @@ export function ComponentTypesExample() {
       <div className="mb-4 grid gap-4 sm:grid-cols-2">
         <div>
           <FunctionCounter />
-          <div className="mt-3 rounded-md bg-zinc-900 p-3 text-xs">
-            <pre className="text-green-400">
+          <div className="mt-3 rounded-md bg-zinc-900 dark:bg-zinc-950 p-3 text-xs">
+            <pre className="text-green-600 dark:text-green-400">
 {`function FunctionCounter() {
   const [count, setCount] = useState(0);
   return (
@@ -397,8 +397,8 @@ export function ComponentTypesExample() {
             <p className="mb-2 text-sm font-medium">类组件（了解即可）</p>
             <p className="text-sm text-zinc-500">代码量更多，需要处理 this 绑定</p>
           </div>
-          <div className="mt-3 rounded-md bg-zinc-900 p-3 text-xs">
-            <pre className="text-yellow-400">{classComponentCode}</pre>
+          <div className="mt-3 rounded-md bg-zinc-900 dark:bg-zinc-950 p-3 text-xs">
+            <pre className="text-yellow-600 dark:text-yellow-400">{classComponentCode}</pre>
           </div>
         </div>
       </div>

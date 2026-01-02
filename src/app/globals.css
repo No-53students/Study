@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* 配置 dark 变体使用系统偏好 */
+@variant dark (@media (prefers-color-scheme: dark));
+
 :root {
   /* ================================
      基础颜色 - 灰度系统 (Zinc)

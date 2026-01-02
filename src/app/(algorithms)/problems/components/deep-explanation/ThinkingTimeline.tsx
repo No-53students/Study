@@ -15,7 +15,7 @@ export function ThinkingTimeline({ steps, onStepClick }: ThinkingTimelineProps) 
   const [expandedStep, setExpandedStep] = useState<number | null>(null);
 
   return (
-    <div className="bg-zinc-900/50 rounded-xl p-6 border border-zinc-700/50">
+    <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-xl p-6 border border-zinc-200 dark:border-zinc-700/50">
       <h3 className="text-lg font-semibold text-green-400 mb-6 flex items-center gap-2">
         <span className="text-2xl">🧠</span>
         思维过程
@@ -41,7 +41,7 @@ export function ThinkingTimeline({ steps, onStepClick }: ThinkingTimelineProps) 
                   className={`absolute left-4 w-5 h-5 rounded-full border-2 cursor-pointer transition-all ${
                     isExpanded
                       ? "bg-green-500 border-green-400 scale-125"
-                      : "bg-zinc-800 border-green-500 hover:bg-green-500/20"
+                      : "bg-zinc-100 dark:bg-zinc-800 border-green-500 hover:bg-green-500/20"
                   }`}
                   onClick={() => {
                     setExpandedStep(isExpanded ? null : index);
@@ -55,10 +55,10 @@ export function ThinkingTimeline({ steps, onStepClick }: ThinkingTimelineProps) 
 
                 {/* 步骤内容 */}
                 <div
-                  className={`bg-zinc-800/50 rounded-lg p-4 border transition-all cursor-pointer ${
+                  className={`bg-zinc-100 dark:bg-zinc-800/50 rounded-lg p-4 border transition-all cursor-pointer ${
                     isExpanded
-                      ? "border-green-500/50 bg-zinc-800"
-                      : "border-zinc-700/50 hover:border-zinc-600"
+                      ? "border-green-500/50 bg-zinc-200 dark:bg-zinc-800"
+                      : "border-zinc-200 dark:border-zinc-700/50 hover:border-zinc-300 dark:hover:border-zinc-600"
                   }`}
                   onClick={() => setExpandedStep(isExpanded ? null : index)}
                 >
@@ -66,7 +66,7 @@ export function ThinkingTimeline({ steps, onStepClick }: ThinkingTimelineProps) 
                   <div className="flex items-center justify-between">
                     <h4 className="font-medium text-zinc-200">{step.title}</h4>
                     <span
-                      className={`text-zinc-500 transition-transform ${
+                      className={`text-zinc-400 dark:text-zinc-500 transition-transform ${
                         isExpanded ? "rotate-180" : ""
                       }`}
                     >
@@ -75,7 +75,7 @@ export function ThinkingTimeline({ steps, onStepClick }: ThinkingTimelineProps) 
                   </div>
 
                   {/* 思考内容 */}
-                  <div className="mt-2 text-sm text-zinc-400">
+                  <div className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
                     <span className="text-blue-400">💭 思考：</span>
                     {step.thought}
                   </div>
@@ -86,14 +86,14 @@ export function ThinkingTimeline({ steps, onStepClick }: ThinkingTimelineProps) 
                       {/* 行动 */}
                       <div className="bg-black/30 rounded-lg p-3">
                         <span className="text-green-400 text-sm">⚡ 决策：</span>
-                        <p className="text-zinc-300 mt-1">{step.action}</p>
+                        <p className="text-zinc-700 dark:text-zinc-300 mt-1">{step.action}</p>
                       </div>
 
                       {/* 代码片段 */}
                       {step.codeSnippet && (
                         <div className="bg-black/50 rounded-lg p-3">
                           <span className="text-purple-400 text-sm">📝 对应代码：</span>
-                          <pre className="mt-2 text-sm text-zinc-300 overflow-x-auto">
+                          <pre className="mt-2 text-sm text-zinc-700 dark:text-zinc-300 overflow-x-auto">
                             <code>{step.codeSnippet}</code>
                           </pre>
                         </div>
