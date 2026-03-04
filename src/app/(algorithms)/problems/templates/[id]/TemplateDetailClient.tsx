@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlgorithmTemplate, TemplateVariant } from "../../data/templates";
-import { CodeHighlighter } from "../../components/CodeHighlighter";
+import { CodeHighlighter, InlineCode } from "../../components/CodeHighlighter";
+import { getProblemById } from "../../data";
 import { TwoPointersAnimation } from "../../components/animations/TwoPointersAnimation";
 
 // 难度配置
@@ -263,16 +264,16 @@ export default function TemplateDetailClient({ template }: TemplateDetailClientP
                         <div className="text-xs text-rose-600 dark:text-rose-400 mb-2 flex items-center gap-1">
                           <span>❌</span> 错误写法
                         </div>
-                        <div className="p-3 rounded-lg bg-rose-500/5 border border-rose-200 dark:border-rose-500/20 font-mono text-sm text-rose-700 dark:text-rose-300">
-                          {mistake.wrongCode}
+                        <div className="p-3 rounded-lg bg-rose-500/5 border border-rose-200 dark:border-rose-500/20 overflow-x-auto">
+                          <InlineCode code={mistake.wrongCode} language="typescript" />
                         </div>
                       </div>
                       <div>
                         <div className="text-xs text-emerald-600 dark:text-emerald-400 mb-2 flex items-center gap-1">
                           <span>✅</span> 正确写法
                         </div>
-                        <div className="p-3 rounded-lg bg-emerald-500/5 border border-emerald-200 dark:border-emerald-500/20 font-mono text-sm text-emerald-700 dark:text-emerald-300">
-                          {mistake.rightCode}
+                        <div className="p-3 rounded-lg bg-emerald-500/5 border border-emerald-200 dark:border-emerald-500/20 overflow-x-auto">
+                          <InlineCode code={mistake.rightCode} language="typescript" />
                         </div>
                       </div>
                     </div>
@@ -290,33 +291,33 @@ export default function TemplateDetailClient({ template }: TemplateDetailClientP
               以下题目可以使用{template.name}解决：
             </p>
             <div className="grid gap-2">
-              {template.applicableProblems.map((problemId) => (
-                <Link
-                  key={problemId}
-                  href={`/problems/${problemId}`}
-                  className="flex items-center justify-between p-3 rounded-lg bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 hover:border-purple-400 dark:hover:border-purple-500/50 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all group shadow-sm dark:shadow-none"
-                >
-                  <span className="text-zinc-600 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-white">
-                    {problemId
-                      .split("-")
-                      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                      .join(" ")}
-                  </span>
-                  <svg
-                    className="w-5 h-5 text-zinc-400 dark:text-zinc-600 group-hover:text-purple-500 dark:group-hover:text-purple-400 group-hover:translate-x-0.5 transition-all"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+              {template.applicableProblems.map((problemId) => {
+                const problem = getProblemById(problemId);
+                return (
+                  <Link
+                    key={problemId}
+                    href={`/problems/${problemId}`}
+                    className="flex items-center justify-between p-3 rounded-lg bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 hover:border-purple-400 dark:hover:border-purple-500/50 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all group shadow-sm dark:shadow-none"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </Link>
-              ))}
+                    <span className="text-zinc-600 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-white">
+                      {problem?.title || problemId}
+                    </span>
+                    <svg
+                      className="w-5 h-5 text-zinc-400 dark:text-zinc-600 group-hover:text-purple-500 dark:group-hover:text-purple-400 group-hover:translate-x-0.5 transition-all"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         );

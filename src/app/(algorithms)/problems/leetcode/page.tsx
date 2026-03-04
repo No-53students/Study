@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import type { editor } from "monaco-editor";
 import ReactMarkdown, { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -184,6 +185,7 @@ export default function LeetCodePage() {
   const isDraggingSidebar = useRef(false);
   const isDraggingVertical = useRef(false);
   const isDraggingHorizontal = useRef(false);
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
   // 初始化：从 localStorage 恢复布局和进度
   useEffect(() => {
@@ -463,6 +465,13 @@ export default function LeetCodePage() {
       document.body.removeChild(textarea);
     }
   }, [code]);
+
+  // 格式化代码
+  const formatCode = useCallback(async () => {
+    const ed = editorRef.current;
+    if (!ed || showSolution) return;
+    await ed.getAction("editor.action.formatDocument")?.run();
+  }, [showSolution]);
 
   useEffect(() => {
     const handleMove = (clientX: number, clientY: number) => {
@@ -958,6 +967,7 @@ export default function LeetCodePage() {
                   defaultLanguage="javascript"
                   value={code}
                   onChange={(value) => setCode(value || "")}
+                  onMount={(ed) => { editorRef.current = ed; }}
                   theme="vs-dark"
                   options={{
                     minimap: { enabled: false },
@@ -1001,6 +1011,15 @@ export default function LeetCodePage() {
                         运行代码
                       </>
                     )}
+                  </button>
+                  <button
+                    onClick={formatCode}
+                    className="px-3 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-sm transition-colors"
+                    title="格式化代码"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h10M4 18h6" />
+                    </svg>
                   </button>
                   <button
                     onClick={resetCode}
@@ -1603,6 +1622,15 @@ export default function LeetCodePage() {
                   </button>
                 )}
                 <button
+                  onClick={formatCode}
+                  className="p-1.5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                  title="格式化代码"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h10M4 18h6" />
+                  </svg>
+                </button>
+                <button
                   onClick={copyCode}
                   className="p-1.5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded hover:bg-zinc-100 dark:hover:bg-zinc-800"
                   title="复制代码"
@@ -1656,6 +1684,7 @@ export default function LeetCodePage() {
                     setCode(value || "");
                   }
                 }}
+                onMount={(ed) => { editorRef.current = ed; }}
                 theme="vs-dark"
                 options={{
                   minimap: { enabled: false },

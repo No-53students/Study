@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { allTemplates, AlgorithmTemplate } from "../../problems/data/templates";
 import { TemplateVariant, TemplateAnimationStep } from "../../problems/types/roadmap";
+import { CodeHighlighter, InlineCode } from "../../problems/components/CodeHighlighter";
+import { getProblemById } from "../../problems/data";
 
 // 难度配置
 const DIFFICULTY_CONFIG = {
@@ -279,9 +281,13 @@ function VariantCard({ variant }: { variant: TemplateVariant }) {
           <div className="px-3 py-2 bg-zinc-100/50 dark:bg-zinc-900/50 text-xs text-zinc-500 dark:text-zinc-400">
             <span className="text-blue-500 dark:text-blue-400">使用场景：</span> {variant.useCase}
           </div>
-          <pre className="p-3 overflow-x-auto text-xs bg-zinc-900 dark:bg-zinc-950/50">
-            <code className="text-zinc-200 dark:text-zinc-300">{variant.codeSnippet}</code>
-          </pre>
+          <CodeHighlighter
+            code={variant.codeSnippet}
+            language="typescript"
+            showLineNumbers={false}
+            maxHeight="300px"
+            className="rounded-none border-0 shadow-none"
+          />
           {variant.exampleProblem && (
             <div className="px-3 py-2 border-t border-zinc-200 dark:border-zinc-700/50">
               <Link
@@ -508,13 +514,14 @@ export default function TemplatesPage() {
                         </button>
                       </div>
                     </div>
-                    <pre className="bg-zinc-900 dark:bg-zinc-950 rounded-lg p-4 overflow-x-auto text-sm">
-                      <code className="text-zinc-200 dark:text-zinc-300">
-                        {showCode === "template"
-                          ? selectedTemplate.codeTemplate.typescript
-                          : selectedTemplate.codeTemplate.comments}
-                      </code>
-                    </pre>
+                    <CodeHighlighter
+                      code={showCode === "template"
+                        ? selectedTemplate.codeTemplate.typescript
+                        : selectedTemplate.codeTemplate.comments}
+                      language="typescript"
+                      showLineNumbers={true}
+                      maxHeight="500px"
+                    />
                   </div>
 
                   {/* 常见错误 */}
@@ -551,17 +558,17 @@ export default function TemplatesPage() {
                             {mistake.wrongCode && (
                               <div>
                                 <div className="text-xs text-rose-400 mb-1">❌ 错误写法</div>
-                                <pre className="bg-rose-950/30 rounded px-2 py-1 text-xs text-rose-300 overflow-x-auto">
-                                  {mistake.wrongCode}
-                                </pre>
+                                <div className="bg-rose-950/30 rounded px-2 py-1 overflow-x-auto">
+                                  <InlineCode code={mistake.wrongCode} language="typescript" />
+                                </div>
                               </div>
                             )}
                             {mistake.rightCode && (
                               <div>
                                 <div className="text-xs text-emerald-400 mb-1">✅ 正确写法</div>
-                                <pre className="bg-emerald-950/30 rounded px-2 py-1 text-xs text-emerald-300 overflow-x-auto">
-                                  {mistake.rightCode}
-                                </pre>
+                                <div className="bg-emerald-950/30 rounded px-2 py-1 overflow-x-auto">
+                                  <InlineCode code={mistake.rightCode} language="typescript" />
+                                </div>
                               </div>
                             )}
                           </div>
@@ -675,18 +682,18 @@ export default function TemplatesPage() {
                   适用题目（去练习！）
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {selectedTemplate.applicableProblems.map((problemId) => (
-                    <Link
-                      key={problemId}
-                      href={`/problems/${problemId}`}
-                      className="px-3 py-1.5 rounded-md bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-sm text-zinc-700 dark:text-zinc-300 transition-colors"
-                    >
-                      {problemId
-                        .split("-")
-                        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                        .join(" ")}
-                    </Link>
-                  ))}
+                  {selectedTemplate.applicableProblems.map((problemId) => {
+                    const problem = getProblemById(problemId);
+                    return (
+                      <Link
+                        key={problemId}
+                        href={`/problems/${problemId}`}
+                        className="px-3 py-1.5 rounded-md bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-sm text-zinc-700 dark:text-zinc-300 transition-colors"
+                      >
+                        {problem?.title || problemId}
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             </div>

@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
+import type { editor } from "monaco-editor";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -85,6 +86,11 @@ export function LeetCodeEditor({
   const [rightTab, setRightTab] = useState<"code" | "docs">("code");
   const [bottomTab, setBottomTab] = useState<"testcases" | "console">("testcases");
 
+  // 移动端状态
+  type MobileTab = "description" | "code" | "console";
+  const [mobileTab, setMobileTab] = useState<MobileTab>("description");
+  const [isMobile, setIsMobile] = useState(false);
+
   // 布局状态 - 使用百分比，与题解页面保持一致
   const [leftPanelWidth, setLeftPanelWidth] = useState(40); // 百分比
   const [bottomHeight, setBottomHeight] = useState(200); // 像素
@@ -95,6 +101,15 @@ export function LeetCodeEditor({
   const isDraggingVertical = useRef(false);
   const isDraggingHorizontal = useRef(false);
   const consoleEndRef = useRef<HTMLDivElement>(null);
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
+
+  // 检测移动端
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   // 添加控制台输出
   const addConsoleOutput = useCallback((type: ConsoleType, content: string) => {
@@ -244,6 +259,13 @@ export function LeetCodeEditor({
     }
   }, [code]);
 
+  // 格式化代码
+  const formatCode = useCallback(async () => {
+    const ed = editorRef.current;
+    if (!ed || showSolution) return;
+    await ed.getAction("editor.action.formatDocument")?.run();
+  }, [showSolution]);
+
   // 拖拽处理 - 与题解页面完全一致的实现
   useEffect(() => {
     const handleMove = (clientX: number, clientY: number) => {
@@ -301,6 +323,374 @@ export function LeetCodeEditor({
     hard: { label: "困难", color: "text-rose-400", bg: "bg-rose-500/15", border: "border-rose-500/30", glow: "shadow-rose-500/10" },
   };
 
+  // 共享的 Editor onMount 处理
+  const handleEditorMount = useCallback((ed: editor.IStandaloneCodeEditor) => {
+    editorRef.current = ed;
+  }, []);
+
+  // 共享的测试用例渲染
+  const renderTestCases = (compact = false) => (
+    <div className="space-y-2">
+      {testCases.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-8 text-zinc-500">
+          <svg className="w-10 h-10 mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+          </svg>
+          <span className="text-sm">暂无测试用例</span>
+        </div>
+      ) : (
+        testCases.map((tc, index) => {
+          const result = testResults.find((r) => r.id === tc.id);
+          return (
+            <div
+              key={tc.id}
+              className={`rounded-xl ${compact ? "p-2.5" : "p-3.5"} transition-all ${
+                result
+                  ? result.passed
+                    ? "bg-gradient-to-r from-emerald-900/25 to-emerald-900/10 border border-emerald-600/40 shadow-sm shadow-emerald-500/5"
+                    : "bg-gradient-to-r from-red-900/25 to-red-900/10 border border-red-600/40 shadow-sm shadow-red-500/5"
+                  : "bg-zinc-800/80 border border-zinc-700/60"
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="flex items-center gap-2 font-medium text-sm">
+                  <span className={`flex h-5 w-5 items-center justify-center rounded-full ${
+                    result
+                      ? result.passed
+                        ? "bg-emerald-500 text-white"
+                        : "bg-red-500 text-white"
+                      : "bg-zinc-700 text-zinc-400"
+                  }`}>
+                    {result ? (
+                      result.passed ? (
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
+                        </svg>
+                      ) : (
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                      )
+                    ) : (
+                      <span className="text-xs">{index + 1}</span>
+                    )}
+                  </span>
+                  <span className={result ? (result.passed ? "text-emerald-300" : "text-red-300") : "text-zinc-200"}>
+                    {tc.name}
+                  </span>
+                </span>
+                {result && (
+                  <span className={`px-2 py-0.5 rounded-md text-xs font-semibold ${
+                    result.passed
+                      ? "text-emerald-400 bg-emerald-500/20"
+                      : "text-red-400 bg-red-500/20"
+                  }`}>
+                    {result.passed ? "Accepted" : "Wrong Answer"}
+                  </span>
+                )}
+              </div>
+              {tc.description && (
+                <p className="text-xs text-zinc-400 mb-2 pl-7">{tc.description}</p>
+              )}
+              <div className="space-y-1.5 font-mono text-xs pl-7">
+                <div className="flex gap-2">
+                  <span className="text-zinc-500 w-10 flex-shrink-0">输入</span>
+                  <span className="text-zinc-300 bg-zinc-900/50 px-2 py-0.5 rounded break-all">{JSON.stringify(tc.input)}</span>
+                </div>
+                <div className="flex gap-2">
+                  <span className="text-zinc-500 w-10 flex-shrink-0">预期</span>
+                  <span className="text-zinc-300 bg-zinc-900/50 px-2 py-0.5 rounded break-all">{JSON.stringify(tc.expected)}</span>
+                </div>
+                {result && (
+                  <div className="flex gap-2">
+                    <span className="text-zinc-500 w-10 flex-shrink-0">输出</span>
+                    <span className={`px-2 py-0.5 rounded break-all ${
+                      result.passed
+                        ? "text-emerald-400 bg-emerald-900/30"
+                        : "text-red-400 bg-red-900/30"
+                    }`}>
+                      {result.actual}
+                    </span>
+                  </div>
+                )}
+                {result?.error && (
+                  <div className="mt-2 flex items-start gap-2 text-red-400 bg-red-900/20 rounded-lg p-2">
+                    <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <span>{result.error}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })
+      )}
+    </div>
+  );
+
+  // 共享的控制台输出渲染
+  const renderConsoleOutput = () => (
+    <div className="font-mono text-sm space-y-1.5">
+      {consoleOutput.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-8 text-zinc-500">
+          <svg className="w-10 h-10 mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+          <span className="text-sm">运行代码查看输出...</span>
+        </div>
+      ) : (
+        consoleOutput.map((output, index) => {
+          const typeConfig = {
+            error: { icon: "ERR", color: "text-red-400", bg: "bg-red-500/20", iconBg: "bg-red-500" },
+            warn: { icon: "WARN", color: "text-amber-400", bg: "bg-amber-500/20", iconBg: "bg-amber-500" },
+            info: { icon: "INFO", color: "text-blue-400", bg: "bg-blue-500/20", iconBg: "bg-blue-500" },
+            result: { icon: "OK", color: "text-emerald-400", bg: "bg-emerald-500/20", iconBg: "bg-emerald-500" },
+            log: { icon: "LOG", color: "text-zinc-200", bg: "bg-zinc-700/50", iconBg: "bg-zinc-600" },
+          };
+          const config = typeConfig[output.type];
+          return (
+            <div
+              key={index}
+              className={`flex items-start gap-2.5 p-2 rounded-lg ${config.bg}`}
+            >
+              <span className={`flex-shrink-0 px-1.5 py-0.5 rounded text-xs font-bold text-white ${config.iconBg}`}>
+                {config.icon}
+              </span>
+              <span className={`whitespace-pre-wrap break-all ${config.color}`}>{output.content}</span>
+            </div>
+          );
+        })
+      )}
+      <div ref={consoleEndRef} />
+    </div>
+  );
+
+  // ==================== 移动端布局 ====================
+  if (isMobile) {
+    return (
+      <div className="flex flex-col h-[100dvh] bg-zinc-900 text-white">
+        {/* 顶部 Tab 导航 */}
+        <nav className="flex border-b border-zinc-700/80 bg-zinc-800/80 shrink-0 pt-[var(--safe-area-top)]">
+          {(["description", "code", "console"] as const).map((tab) => {
+            const labels = { description: "题目", code: "代码", console: "结果" };
+            return (
+              <button
+                key={tab}
+                onClick={() => setMobileTab(tab)}
+                className={`flex-1 py-2.5 text-sm font-medium transition-colors border-b-2 ${
+                  mobileTab === tab
+                    ? "text-emerald-400 border-emerald-500"
+                    : "text-zinc-500 border-transparent"
+                }`}
+              >
+                {labels[tab]}
+                {tab === "console" && testResults.length > 0 && (
+                  <span className={`ml-1 text-xs ${allPassed ? "text-emerald-400" : "text-zinc-400"}`}>
+                    {passedCount}/{testResults.length}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* 内容区域 */}
+        <div className="flex-1 overflow-hidden">
+          {/* 题目描述 */}
+          {mobileTab === "description" && (
+            <div className="h-full overflow-y-auto overscroll-contain p-4 pb-[var(--safe-area-bottom)]">
+              <div className="mb-4">
+                <h1 className="text-lg font-bold mb-2 text-white">{title}</h1>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-xs font-semibold ${difficultyConfig[difficulty].color} ${difficultyConfig[difficulty].bg} ${difficultyConfig[difficulty].border} border`}>
+                    <span className="w-1.5 h-1.5 rounded-full bg-current"/>
+                    {difficultyConfig[difficulty].label}
+                  </span>
+                  {allPassed && (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-xs font-semibold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30">
+                      ✓ 已解决
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="prose prose-invert prose-sm max-w-none prose-pre:bg-zinc-800 prose-pre:border prose-pre:border-zinc-700 prose-pre:overflow-x-auto prose-pre:max-w-full prose-code:break-all prose-pre:text-xs">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {description}
+                </ReactMarkdown>
+              </div>
+
+              {hints.length > 0 && (
+                <div className="mt-5 pt-4 border-t border-zinc-700/50">
+                  {!showHints ? (
+                    <button
+                      onClick={() => setShowHints(true)}
+                      className="flex items-center gap-2 text-sm text-amber-400"
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                      </svg>
+                      显示提示 ({hints.length})
+                    </button>
+                  ) : (
+                    <div className="rounded-xl bg-amber-900/20 border border-amber-700/40 p-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-semibold text-amber-400">提示 {currentHintIndex + 1}/{hints.length}</span>
+                        {currentHintIndex < hints.length - 1 && (
+                          <button onClick={showNextHint} className="text-xs text-amber-400">下一个 →</button>
+                        )}
+                      </div>
+                      <p className="text-sm text-amber-100/90 leading-relaxed">{hints[currentHintIndex]}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 代码编辑器 */}
+          {mobileTab === "code" && (
+            <div className="h-full flex flex-col">
+              {/* 移动端工具栏 */}
+              <div className="flex items-center gap-1.5 px-2 py-1.5 border-b border-zinc-700/80 bg-zinc-800/50 shrink-0">
+                <span className="px-1.5 py-0.5 rounded text-xs text-zinc-500 bg-zinc-800 border border-zinc-700 font-mono">{language}</span>
+                <div className="flex-1" />
+                {solution && (
+                  <button
+                    onClick={() => setShowSolution(!showSolution)}
+                    className={`px-2 py-1 text-xs rounded-lg transition-colors ${
+                      showSolution ? "bg-amber-500 text-white" : "bg-zinc-700 text-zinc-300"
+                    }`}
+                  >
+                    {showSolution ? "隐藏答案" : "答案"}
+                  </button>
+                )}
+                <button
+                  onClick={formatCode}
+                  className="p-1.5 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-700/80 transition-colors"
+                  title="格式化代码"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h10M4 18h6" />
+                  </svg>
+                </button>
+                <button
+                  onClick={resetCode}
+                  className="p-1.5 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-700/80 transition-colors"
+                  title="重置代码"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                </button>
+                <button
+                  onClick={runCode}
+                  disabled={isRunning}
+                  className="flex items-center gap-1 px-3 py-1.5 bg-emerald-600 text-white text-sm font-semibold rounded-lg disabled:opacity-50 active:scale-95 transition-all"
+                >
+                  {isRunning ? (
+                    <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  )}
+                  {isRunning ? "运行中" : "运行"}
+                </button>
+              </div>
+
+              {/* 编辑器 */}
+              <div className="flex-1 min-h-0 relative">
+                <Editor
+                  height="100%"
+                  defaultLanguage={language}
+                  value={showSolution && solution ? solution : code}
+                  onChange={(value) => { if (!showSolution) setCode(value || ""); }}
+                  onMount={handleEditorMount}
+                  theme="vs-dark"
+                  options={{
+                    minimap: { enabled: false },
+                    fontSize: 13,
+                    lineNumbers: "off",
+                    scrollBeyondLastLine: false,
+                    wordWrap: "on",
+                    automaticLayout: true,
+                    tabSize: 2,
+                    folding: false,
+                    glyphMargin: false,
+                    lineDecorationsWidth: 0,
+                    lineNumbersMinChars: 0,
+                    padding: { top: 12, bottom: 12 },
+                    readOnly: showSolution,
+                  }}
+                />
+                {showSolution && (
+                  <div className="absolute top-2 right-2 px-2 py-1 bg-amber-500 text-white text-xs font-medium rounded">
+                    参考答案
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* 测试结果 / 控制台 */}
+          {mobileTab === "console" && (
+            <div className="h-full flex flex-col">
+              {/* 子标签 */}
+              <div className="flex items-center justify-between border-b border-zinc-700/80 bg-zinc-800/50 px-2 shrink-0">
+                <div className="flex">
+                  <button
+                    onClick={() => setBottomTab("testcases")}
+                    className={`px-3 py-2 text-sm font-medium transition-colors ${
+                      bottomTab === "testcases" ? "text-white border-b-2 border-emerald-500" : "text-zinc-400"
+                    }`}
+                  >
+                    测试用例
+                  </button>
+                  <button
+                    onClick={() => setBottomTab("console")}
+                    className={`px-3 py-2 text-sm font-medium transition-colors ${
+                      bottomTab === "console" ? "text-white border-b-2 border-emerald-500" : "text-zinc-400"
+                    }`}
+                  >
+                    控制台
+                  </button>
+                </div>
+                <button
+                  onClick={clearConsole}
+                  className="text-xs text-zinc-400 hover:text-white px-2 py-1 rounded"
+                >
+                  清空
+                </button>
+              </div>
+
+              {/* 内容 */}
+              <div className="flex-1 overflow-y-auto overscroll-contain p-3 pb-[var(--safe-area-bottom)]">
+                {bottomTab === "testcases" ? renderTestCases(true) : renderConsoleOutput()}
+              </div>
+
+              {/* 通过率统计 */}
+              {testResults.length > 0 && (
+                <div className="text-center py-2 text-sm border-t border-zinc-700/80 bg-zinc-800/30 pb-[var(--safe-area-bottom)]">
+                  {allPassed ? (
+                    <span className="text-emerald-400">🎉 全部通过！({passedCount}/{testResults.length})</span>
+                  ) : (
+                    <span className="text-zinc-400">通过 {passedCount}/{testResults.length} 个用例</span>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ==================== 桌面端布局 ====================
   return (
     <div
       ref={containerRef}
@@ -466,6 +856,15 @@ export function LeetCodeEditor({
               </button>
             )}
             <button
+              onClick={formatCode}
+              className="p-1.5 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-700/80 transition-colors"
+              title="格式化代码"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h10M4 18h6" />
+              </svg>
+            </button>
+            <button
               onClick={copyCode}
               className="p-1.5 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-700/80 transition-colors"
               title="复制代码"
@@ -521,6 +920,7 @@ export function LeetCodeEditor({
                     setCode(value || "");
                   }
                 }}
+                onMount={handleEditorMount}
                 theme="vs-dark"
                 options={{
                   minimap: { enabled: false },
@@ -615,139 +1015,7 @@ export function LeetCodeEditor({
 
           {/* 控制台内容 */}
           <div className="flex-1 overflow-y-auto overscroll-contain p-3">
-            {bottomTab === "testcases" ? (
-              <div className="space-y-2">
-                {testCases.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-8 text-zinc-500">
-                    <svg className="w-10 h-10 mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                    </svg>
-                    <span className="text-sm">暂无测试用例</span>
-                  </div>
-                ) : (
-                  testCases.map((tc, index) => {
-                    const result = testResults.find((r) => r.id === tc.id);
-                    return (
-                      <div
-                        key={tc.id}
-                        className={`rounded-xl p-3.5 transition-all ${
-                          result
-                            ? result.passed
-                              ? "bg-gradient-to-r from-emerald-900/25 to-emerald-900/10 border border-emerald-600/40 shadow-sm shadow-emerald-500/5"
-                              : "bg-gradient-to-r from-red-900/25 to-red-900/10 border border-red-600/40 shadow-sm shadow-red-500/5"
-                            : "bg-zinc-800/80 border border-zinc-700/60"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between mb-2.5">
-                          <span className="flex items-center gap-2 font-medium text-sm">
-                            <span className={`flex h-5 w-5 items-center justify-center rounded-full ${
-                              result
-                                ? result.passed
-                                  ? "bg-emerald-500 text-white"
-                                  : "bg-red-500 text-white"
-                                : "bg-zinc-700 text-zinc-400"
-                            }`}>
-                              {result ? (
-                                result.passed ? (
-                                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
-                                  </svg>
-                                ) : (
-                                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                                  </svg>
-                                )
-                              ) : (
-                                <span className="text-xs">{index + 1}</span>
-                              )}
-                            </span>
-                            <span className={result ? (result.passed ? "text-emerald-300" : "text-red-300") : "text-zinc-200"}>
-                              {tc.name}
-                            </span>
-                          </span>
-                          {result && (
-                            <span className={`px-2 py-0.5 rounded-md text-xs font-semibold ${
-                              result.passed
-                                ? "text-emerald-400 bg-emerald-500/20"
-                                : "text-red-400 bg-red-500/20"
-                            }`}>
-                              {result.passed ? "Accepted" : "Wrong Answer"}
-                            </span>
-                          )}
-                        </div>
-                        {tc.description && (
-                          <p className="text-xs text-zinc-400 mb-2.5 pl-7">{tc.description}</p>
-                        )}
-                        <div className="space-y-1.5 font-mono text-xs pl-7">
-                          <div className="flex gap-2">
-                            <span className="text-zinc-500 w-10 flex-shrink-0">输入</span>
-                            <span className="text-zinc-300 bg-zinc-900/50 px-2 py-0.5 rounded">{JSON.stringify(tc.input)}</span>
-                          </div>
-                          <div className="flex gap-2">
-                            <span className="text-zinc-500 w-10 flex-shrink-0">预期</span>
-                            <span className="text-zinc-300 bg-zinc-900/50 px-2 py-0.5 rounded">{JSON.stringify(tc.expected)}</span>
-                          </div>
-                          {result && (
-                            <div className="flex gap-2">
-                              <span className="text-zinc-500 w-10 flex-shrink-0">输出</span>
-                              <span className={`px-2 py-0.5 rounded ${
-                                result.passed
-                                  ? "text-emerald-400 bg-emerald-900/30"
-                                  : "text-red-400 bg-red-900/30"
-                              }`}>
-                                {result.actual}
-                              </span>
-                            </div>
-                          )}
-                          {result?.error && (
-                            <div className="mt-2 flex items-start gap-2 text-red-400 bg-red-900/20 rounded-lg p-2">
-                              <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                              </svg>
-                              <span>{result.error}</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-            ) : (
-              <div className="font-mono text-sm space-y-1.5">
-                {consoleOutput.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-8 text-zinc-500">
-                    <svg className="w-10 h-10 mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
-                    <span className="text-sm">运行代码查看输出...</span>
-                  </div>
-                ) : (
-                  consoleOutput.map((output, index) => {
-                    const typeConfig = {
-                      error: { icon: "ERR", color: "text-red-400", bg: "bg-red-500/20", iconBg: "bg-red-500" },
-                      warn: { icon: "WARN", color: "text-amber-400", bg: "bg-amber-500/20", iconBg: "bg-amber-500" },
-                      info: { icon: "INFO", color: "text-blue-400", bg: "bg-blue-500/20", iconBg: "bg-blue-500" },
-                      result: { icon: "OK", color: "text-emerald-400", bg: "bg-emerald-500/20", iconBg: "bg-emerald-500" },
-                      log: { icon: "LOG", color: "text-zinc-200", bg: "bg-zinc-700/50", iconBg: "bg-zinc-600" },
-                    };
-                    const config = typeConfig[output.type];
-                    return (
-                      <div
-                        key={index}
-                        className={`flex items-start gap-2.5 p-2 rounded-lg ${config.bg}`}
-                      >
-                        <span className={`flex-shrink-0 px-1.5 py-0.5 rounded text-xs font-bold text-white ${config.iconBg}`}>
-                          {config.icon}
-                        </span>
-                        <span className={`whitespace-pre-wrap break-all ${config.color}`}>{output.content}</span>
-                      </div>
-                    );
-                  })
-                )}
-                <div ref={consoleEndRef} />
-              </div>
-            )}
+            {bottomTab === "testcases" ? renderTestCases() : renderConsoleOutput()}
           </div>
         </div>
       </div>
