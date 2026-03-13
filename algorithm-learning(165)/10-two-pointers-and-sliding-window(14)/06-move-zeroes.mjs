@@ -1,3 +1,4 @@
+// node ./06-move-zeroes.mjs
 /**
  * 283. 移动零 (Move Zeroes)
  * 难度: easy
@@ -29,6 +30,7 @@ export function moveZeroes(nums) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 283. 移动零 (Move Zeroes)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

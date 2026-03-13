@@ -1,3 +1,4 @@
+// node ./13-find-k-pairs-with-smallest-sums.mjs
 /**
  * 373. 查找和最小的 K 对数字 (Find K Pairs with Smallest Sums)
  * 难度: medium
@@ -43,6 +44,7 @@ export function kSmallestPairs(nums1, nums2, k) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 373. 查找和最小的 K 对数字 (Find K Pairs with Smallest Sums)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

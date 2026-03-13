@@ -1,3 +1,4 @@
+// node ./13-find-all-anagrams-in-a-string.mjs
 /**
  * 438. 找到字符串中所有字母异位词 (Find All Anagrams in a String)
  * 难度: medium
@@ -37,6 +38,7 @@ export function findAnagrams(s, p) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 438. 找到字符串中所有字母异位词 (Find All Anagrams in a String)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

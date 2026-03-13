@@ -1,15 +1,16 @@
+// node ./19-longest-common-prefix.mjs
 /**
  * 14. 最长公共前缀 (Longest Common Prefix)
  * 难度: easy
  *
  * 编写一个函数来查找字符串数组中的最长公共前缀。
- * 
+ *
  * 如果不存在公共前缀，返回空字符串 ""。
  *
  * 示例 1：
  * 输入：strs = ["flower","flow","flight"]
  * 输出："fl"
- * 
+ *
  * 示例 2：
  * 输入：strs = ["dog","racecar","car"]
  * 输出：""
@@ -31,11 +32,32 @@
  * @return {string}
  */
 export function solution(strs) {
-  // 在这里编写你的代码
-
+  if (strs.length === 0) return "";
+  const firstStr = strs[0];
+  let resStr = "";
+  console.log("firstStr", firstStr);
+  for (let index = 0; index < firstStr.length; index++) {
+    // 在这里编写你的代码
+    for (let i = 0; i < strs.length; i++) {
+      console.log("查找", strs[i], strs[i][index]);
+      if (firstStr[index] === (strs[i]?.[index])) {
+        // 到了最后一步，添加进去
+        console.log("步骤统计", i, strs.length - 1);
+        if (i == strs.length - 1) {
+          resStr += firstStr[index];
+          console.log('目前的结果', resStr);
+        }
+      } else {
+        // 不等于直接返回
+        return resStr;
+      }
+    }
+  }
+  return resStr;
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 14. 最长公共前缀 (Longest Common Prefix)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();
@@ -44,21 +66,23 @@ const assert = {
   deepStrictEqual(actual, expected) {
     console.log(`输出: ${JSON.stringify(actual)}`);
     console.log(`期望: ${JSON.stringify(expected)}`);
-    console.log(`结果: ${JSON.stringify(actual) === JSON.stringify(expected) ? '✅ 通过' : '❌ 不通过'}`);
+    console.log(
+      `结果: ${JSON.stringify(actual) === JSON.stringify(expected) ? "✅ 通过" : "❌ 不通过"}`,
+    );
   },
   strictEqual(actual, expected) {
     console.log(`输出: ${JSON.stringify(actual)}`);
     console.log(`期望: ${JSON.stringify(expected)}`);
-    console.log(`结果: ${actual === expected ? '✅ 通过' : '❌ 不通过'}`);
+    console.log(`结果: ${actual === expected ? "✅ 通过" : "❌ 不通过"}`);
   },
 };
 
 test("有公共前缀", () => {
-  assert.deepStrictEqual(solution(["flower","flow","flight"]), "fl");
+  assert.deepStrictEqual(solution(["flower", "flow", "flight"]), "fl");
 });
 
 test("无公共前缀", () => {
-  assert.deepStrictEqual(solution(["dog","racecar","car"]), "");
+  assert.deepStrictEqual(solution(["dog", "racecar", "car"]), "");
 });
 
 test("单字符串", () => {
@@ -66,9 +90,9 @@ test("单字符串", () => {
 });
 
 test("相同字符串", () => {
-  assert.deepStrictEqual(solution(["aa","aa","aa"]), "aa");
+  assert.deepStrictEqual(solution(["aa", "aa", "aa"]), "aa");
 });
 
 test("空字符串", () => {
-  assert.deepStrictEqual(solution(["",""]), "");
+  assert.deepStrictEqual(solution(["", ""]), "");
 });

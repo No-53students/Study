@@ -1,3 +1,4 @@
+// node ./04-remove-duplicates-from-sorted-array-ii.mjs
 /**
  * 80. 删除有序数组中的重复项 II (Remove Duplicates from Sorted Array II)
  * 难度: medium
@@ -33,10 +34,20 @@
  */
 export function solution(nums) {
   // 在这里编写你的代码
-
+  let slowIndex = -2;
+  nums.forEach((item, index) => {
+    // 从第0个位置开始对比，如果不相等就存入这个位置。
+    if (item !== nums[slowIndex]) {
+      nums[slowIndex+2] = item;
+      slowIndex++;
+    }
+  })
+  console.log('输出的结果', nums)
+  return slowIndex+2;
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 80. 删除有序数组中的重复项 II (Remove Duplicates from Sorted Array II)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

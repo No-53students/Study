@@ -1,3 +1,4 @@
+// node ./23-count-complete-tree-nodes.mjs
 /**
  * 222. 完全二叉树的节点个数 (Count Complete Tree Nodes)
  * 难度: easy
@@ -37,6 +38,7 @@ export function countNodes(root) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 222. 完全二叉树的节点个数 (Count Complete Tree Nodes)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

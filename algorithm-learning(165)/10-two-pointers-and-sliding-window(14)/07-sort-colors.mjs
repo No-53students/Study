@@ -1,3 +1,4 @@
+// node ./07-sort-colors.mjs
 /**
  * 75. 颜色分类 (Sort Colors)
  * 难度: medium
@@ -32,6 +33,7 @@ export function sortColors(nums: number[]): void {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 75. 颜色分类 (Sort Colors)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

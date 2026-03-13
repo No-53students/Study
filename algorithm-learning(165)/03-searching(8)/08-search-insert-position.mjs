@@ -1,3 +1,4 @@
+// node ./08-search-insert-position.mjs
 /**
  * 35. 搜索插入位置 (Search Insert Position)
  * 难度: easy
@@ -36,6 +37,7 @@ export function searchInsert(nums, target) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 35. 搜索插入位置 (Search Insert Position)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

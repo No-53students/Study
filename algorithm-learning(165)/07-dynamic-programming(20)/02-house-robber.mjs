@@ -1,3 +1,4 @@
+// node ./02-house-robber.mjs
 /**
  * 198. 打家劫舍 (House Robber)
  * 难度: medium
@@ -34,6 +35,7 @@ export function rob(nums) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 198. 打家劫舍 (House Robber)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

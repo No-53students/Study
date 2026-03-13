@@ -1,3 +1,4 @@
+// node ./12-product-of-array-except-self.mjs
 /**
  * 238. 除自身以外数组的乘积 (Product of Array Except Self)
  * 难度: medium
@@ -35,10 +36,19 @@
  */
 export function solution(nums) {
   // 在这里编写你的代码
-
+  const answer = new Array(nums.length).fill(1);
+  for (let i = 0; i < nums.length; i++){
+    for (let j = 0; j < nums.length; j++) { 
+      if (i !== j) {
+        answer[i] = answer[i] * nums[j];
+      }
+    }
+  }
+  return answer;
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 238. 除自身以外数组的乘积 (Product of Array Except Self)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

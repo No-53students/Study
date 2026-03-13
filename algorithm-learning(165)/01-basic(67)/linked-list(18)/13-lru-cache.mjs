@@ -1,3 +1,4 @@
+// node ./13-lru-cache.mjs
 /**
  * 146. LRU 缓存 (LRU Cache)
  * 难度: medium
@@ -47,6 +48,7 @@ export class LRUCache {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 146. LRU 缓存 (LRU Cache)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

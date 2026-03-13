@@ -1,3 +1,4 @@
+// node ./15-longest-common-subsequence.mjs
 /**
  * 1143. 最长公共子序列 (Longest Common Subsequence)
  * 难度: medium
@@ -41,6 +42,7 @@ export function longestCommonSubsequence(text1, text2) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 1143. 最长公共子序列 (Longest Common Subsequence)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

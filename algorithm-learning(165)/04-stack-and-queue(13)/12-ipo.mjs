@@ -1,3 +1,4 @@
+// node ./12-ipo.mjs
 /**
  * 502. IPO (IPO)
  * 难度: hard
@@ -47,6 +48,7 @@ export function findMaximizedCapital(k, w, profits, capital) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 502. IPO (IPO)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

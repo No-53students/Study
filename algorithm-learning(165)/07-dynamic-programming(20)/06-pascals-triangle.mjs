@@ -1,3 +1,4 @@
+// node ./06-pascals-triangle.mjs
 /**
  * 118. 杨辉三角 (Pascal's Triangle)
  * 难度: easy
@@ -28,6 +29,7 @@ export function generate(numRows) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 118. 杨辉三角 (Pascal's Triangle)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

@@ -1,3 +1,4 @@
+// node ./05-generate-parentheses.mjs
 /**
  * 22. 括号生成 (Generate Parentheses)
  * 难度: medium
@@ -27,6 +28,7 @@ export function generateParenthesis(n) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 22. 括号生成 (Generate Parentheses)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

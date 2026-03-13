@@ -1,3 +1,4 @@
+// node ./07-maximum-product-subarray.mjs
 /**
  * 152. 乘积最大子数组 (Maximum Product Subarray)
  * 难度: medium
@@ -32,6 +33,7 @@ export function maxProduct(nums) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 152. 乘积最大子数组 (Maximum Product Subarray)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

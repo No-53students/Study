@@ -1,3 +1,4 @@
+// node ./02-same-tree.mjs
 /**
  * 100. 相同的树 (Same Tree)
  * 难度: easy
@@ -34,6 +35,7 @@ export function isSameTree(p, q) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 100. 相同的树 (Same Tree)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

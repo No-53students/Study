@@ -1,3 +1,4 @@
+// node ./07-median-of-two-sorted-arrays.mjs
 /**
  * 4. 寻找两个正序数组的中位数 (Median of Two Sorted Arrays)
  * 难度: hard
@@ -36,6 +37,7 @@ export function findMedianSortedArrays(nums1, nums2) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 4. 寻找两个正序数组的中位数 (Median of Two Sorted Arrays)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

@@ -1,3 +1,4 @@
+// node ./02-find-minimum-in-rotated-sorted-array.mjs
 /**
  * 153. 寻找旋转排序数组中的最小值 (Find Minimum in Rotated Sorted Array)
  * 难度: medium
@@ -46,6 +47,7 @@ export function findMin(nums) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 153. 寻找旋转排序数组中的最小值 (Find Minimum in Rotated Sorted Array)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

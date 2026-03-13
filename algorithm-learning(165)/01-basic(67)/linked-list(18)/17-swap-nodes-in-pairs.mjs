@@ -1,3 +1,4 @@
+// node ./17-swap-nodes-in-pairs.mjs
 /**
  * 24. 两两交换链表中的节点 (Swap Nodes in Pairs)
  * 难度: medium
@@ -31,6 +32,7 @@ export function swapPairs(head: ListNode | null): ListNode | null {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 24. 两两交换链表中的节点 (Swap Nodes in Pairs)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

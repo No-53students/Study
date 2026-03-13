@@ -1,3 +1,4 @@
+// node ./09-n-queens-ii.mjs
 /**
  * 52. N 皇后 II (N-Queens II)
  * 难度: hard
@@ -29,6 +30,7 @@ export function totalNQueens(n) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 52. N 皇后 II (N-Queens II)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

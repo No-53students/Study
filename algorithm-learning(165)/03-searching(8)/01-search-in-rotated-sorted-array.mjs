@@ -1,3 +1,4 @@
+// node ./01-search-in-rotated-sorted-array.mjs
 /**
  * 33. 搜索旋转排序数组 (Search in Rotated Sorted Array)
  * 难度: medium
@@ -41,6 +42,7 @@ export function search(nums, target) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 33. 搜索旋转排序数组 (Search in Rotated Sorted Array)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

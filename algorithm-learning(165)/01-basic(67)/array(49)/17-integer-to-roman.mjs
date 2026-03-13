@@ -1,9 +1,10 @@
+// node ./17-integer-to-roman.mjs
 /**
  * 12. 整数转罗马数字 (Integer to Roman)
  * 难度: medium
  *
  * 七个不同的符号代表罗马数字，其值如下：
- * 
+ *
  * | 符号 | 值    |
  * |------|-------|
  * | I    | 1     |
@@ -13,13 +14,13 @@
  * | C    | 100   |
  * | D    | 500   |
  * | M    | 1000  |
- * 
+ *
  * 罗马数字是通过添加从最高到最低的小数位值的转换而形成的。将小数位值转换为罗马数字有以下规则：
- * 
+ *
  * - 如果该值不是以 4 或 9 开头，请选择可以从输入中减去的最大值的符号，将该符号附加到结果，减去其值，然后将其余部分转换为罗马数字。
  * - 如果该值以 4 或 9 开头，使用 减法形式，表示从以下符号中减去一个符号，例如 4 是 5 (V) 减 1 (I): IV ，9 是 10 (X) 减 1 (I)：IX。仅使用以下减法形式：4 (IV)，9 (IX)，40 (XL)，90 (XC)，400 (CD) 和 900 (CM)。
  * - 只有 10 的次方（I, X, C, M）最多可以连续附加 3 次以代表 10 的倍数。你不能多次附加 5 (V)，50 (L) 或 500 (D)。如果需要将符号附加4次，请使用 减法形式。
- * 
+ *
  * 给你一个整数，将其转换为罗马数字。
  *
  * 示例 1：
@@ -31,14 +32,14 @@
  *   40 = XL 由于 able to 50 (L) 减 10 (X)
  *    9 = IX 由于 10 (X) 减 1 (I)
  * 注意：49 不是 able to 50 (L) 减 1 (I) 因为转换是基于小数位
- * 
+ *
  * 示例 2：
  * 输入：num = 58
  * 输出："LVIII"
  * 解释：
  * 50 = L
  *  8 = VIII
- * 
+ *
  * 示例 3：
  * 输入：num = 1994
  * 输出："MCMXCIV"
@@ -62,11 +63,40 @@
  * @return {string}
  */
 export function solution(num) {
+  const str1 = `${num}`;
   // 在这里编写你的代码
-
+  const obStr = {
+    1: "I",
+    5: "V",
+    10: "X",
+    50: "L",
+    100: "C",
+    500: "D",
+    1000: "M",
+  };
+  let str = "";
+  for (let i = 0; i < str1.length; i++) {
+    console.log("i", str1[i]);
+    const unitNum = 10 ** (str1.length - 1 - i);
+    const val = str1[i];
+    console.log("val", val, unitNum);
+    if (val == 0) {
+      continue;
+    } else if (val <= 3) {
+      str += obStr[unitNum].repeat(val);
+    } else if (val == "4") {
+      str += obStr[unitNum] + obStr[5 * unitNum];
+    } else if (val == "9") {
+      str += obStr[unitNum] + obStr[10 * unitNum];
+    } else {
+      str += obStr[5 * unitNum] + obStr[unitNum].repeat(val - 5) || "";
+    }
+  }
+  return str;
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 12. 整数转罗马数字 (Integer to Roman)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();
@@ -75,12 +105,14 @@ const assert = {
   deepStrictEqual(actual, expected) {
     console.log(`输出: ${JSON.stringify(actual)}`);
     console.log(`期望: ${JSON.stringify(expected)}`);
-    console.log(`结果: ${JSON.stringify(actual) === JSON.stringify(expected) ? '✅ 通过' : '❌ 不通过'}`);
+    console.log(
+      `结果: ${JSON.stringify(actual) === JSON.stringify(expected) ? "✅ 通过" : "❌ 不通过"}`,
+    );
   },
   strictEqual(actual, expected) {
     console.log(`输出: ${JSON.stringify(actual)}`);
     console.log(`期望: ${JSON.stringify(expected)}`);
-    console.log(`结果: ${actual === expected ? '✅ 通过' : '❌ 不通过'}`);
+    console.log(`结果: ${actual === expected ? "✅ 通过" : "❌ 不通过"}`);
   },
 };
 

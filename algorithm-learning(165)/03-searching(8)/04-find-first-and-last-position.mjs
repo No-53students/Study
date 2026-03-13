@@ -1,3 +1,4 @@
+// node ./04-find-first-and-last-position.mjs
 /**
  * 34. 在排序数组中查找元素的第一个和最后一个位置 (Find First and Last Position of Element in Sorted Array)
  * 难度: medium
@@ -38,6 +39,7 @@ export function searchRange(nums, target) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 34. 在排序数组中查找元素的第一个和最后一个位置 (Find First and Last Position of Element in Sorted Array)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

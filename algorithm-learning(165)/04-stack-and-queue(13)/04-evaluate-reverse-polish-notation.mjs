@@ -1,3 +1,4 @@
+// node ./04-evaluate-reverse-polish-notation.mjs
 /**
  * 150. 逆波兰表达式求值 (Evaluate Reverse Polish Notation)
  * 难度: medium
@@ -52,6 +53,7 @@ export function evalRPN(tokens) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 150. 逆波兰表达式求值 (Evaluate Reverse Polish Notation)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

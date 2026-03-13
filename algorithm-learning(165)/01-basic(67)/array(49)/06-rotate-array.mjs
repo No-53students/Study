@@ -1,3 +1,4 @@
+// node ./06-rotate-array.mjs
 /**
  * 189. 轮转数组 (Rotate Array)
  * 难度: medium
@@ -41,11 +42,18 @@
  * @return {number[]}
  */
 export function solution(nums, k) {
+  k = k % nums.length; // 处理 k > n 的情况
   // 在这里编写你的代码
-
+  for (let i = 0; i < k; i++) {
+    nums.unshift(nums[nums.length - 1]);
+    console.log("前面添加", nums);
+    nums.pop();
+  }
+  return nums;
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 189. 轮转数组 (Rotate Array)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

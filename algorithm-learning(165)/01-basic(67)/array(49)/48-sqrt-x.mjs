@@ -1,3 +1,4 @@
+// node ./48-sqrt-x.mjs
 /**
  * 69. x 的平方根 (Sqrt(x))
  * 难度: easy
@@ -32,6 +33,7 @@ export function mySqrt(x) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 69. x 的平方根 (Sqrt(x))");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

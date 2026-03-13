@@ -1,3 +1,4 @@
+// node ./04-container-with-most-water.mjs
 /**
  * 11. 盛最多水的容器 (Container With Most Water)
  * 难度: medium
@@ -36,6 +37,7 @@ export function maxArea(height) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 11. 盛最多水的容器 (Container With Most Water)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

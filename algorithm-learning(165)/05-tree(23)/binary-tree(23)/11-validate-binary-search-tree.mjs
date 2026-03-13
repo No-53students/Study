@@ -1,3 +1,4 @@
+// node ./11-validate-binary-search-tree.mjs
 /**
  * 98. 验证二叉搜索树 (Validate Binary Search Tree)
  * 难度: medium
@@ -35,6 +36,7 @@ export function isValidBST(root) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 98. 验证二叉搜索树 (Validate Binary Search Tree)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

@@ -1,3 +1,4 @@
+// node ./06-remove-nth-node-from-end.mjs
 /**
  * 19. 删除链表的倒数第 N 个结点 (Remove Nth Node From End of List)
  * 难度: medium
@@ -43,6 +44,7 @@ export function removeNthFromEnd(head, n) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 19. 删除链表的倒数第 N 个结点 (Remove Nth Node From End of List)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

@@ -1,3 +1,4 @@
+// node ./05-is-subsequence.mjs
 /**
  * 392. 判断子序列 (Is Subsequence)
  * 难度: easy
@@ -34,6 +35,7 @@ export function isSubsequence(s, t) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 392. 判断子序列 (Is Subsequence)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

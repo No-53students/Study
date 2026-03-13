@@ -1,3 +1,4 @@
+// node ./01-valid-parentheses.mjs
 /**
  * 20. 有效的括号 (Valid Parentheses)
  * 难度: easy
@@ -41,6 +42,7 @@ export function isValid(s) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 20. 有效的括号 (Valid Parentheses)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

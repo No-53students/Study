@@ -1,3 +1,4 @@
+// node ./13-gas-station.mjs
 /**
  * 134. 加油站 (Gas Station)
  * 难度: medium
@@ -49,11 +50,33 @@
  * @return {number}
  */
 export function solution(gas, cost) {
+  const diffArr = [];
   // 在这里编写你的代码
-
+  for (let i = 0; i < cost.length; i++){
+    diffArr[i] =  gas[i]-cost[i];
+  }
+  console.log('计算出来的差值', diffArr);
+  let count = 0;
+  let resCount = 0;
+  let start = 0
+  for (let j = 0; j < diffArr.length; j++){
+    count += diffArr[j];
+    resCount += diffArr[j];
+    if (count < 0) {
+      start += 1;
+      count = 0;
+    }
+  }
+  console.log("最后记录", start, count, resCount);
+  if (resCount < 0) {
+    return -1;
+  } else {
+    return start;
+  }
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 134. 加油站 (Gas Station)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

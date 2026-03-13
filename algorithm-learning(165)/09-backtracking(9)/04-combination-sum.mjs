@@ -1,3 +1,4 @@
+// node ./04-combination-sum.mjs
 /**
  * 39. 组合总和 (Combination Sum)
  * 难度: medium
@@ -42,6 +43,7 @@ export function combinationSum(candidates, target) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 39. 组合总和 (Combination Sum)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

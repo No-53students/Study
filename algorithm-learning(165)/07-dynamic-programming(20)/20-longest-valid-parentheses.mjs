@@ -1,3 +1,4 @@
+// node ./20-longest-valid-parentheses.mjs
 /**
  * 32. 最长有效括号 (Longest Valid Parentheses)
  * 难度: hard
@@ -34,6 +35,7 @@ export function longestValidParentheses(s) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 32. 最长有效括号 (Longest Valid Parentheses)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

@@ -1,3 +1,4 @@
+// node ./19-path-sum-iii.mjs
 /**
  * 437. 路径总和 III (Path Sum III)
  * 难度: medium
@@ -35,6 +36,7 @@ export function pathSum(root, targetSum) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 437. 路径总和 III (Path Sum III)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

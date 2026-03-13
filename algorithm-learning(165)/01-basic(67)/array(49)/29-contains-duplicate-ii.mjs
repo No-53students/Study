@@ -1,3 +1,4 @@
+// node ./29-contains-duplicate-ii.mjs
 /**
  * 219. 存在重复元素 II (Contains Duplicate II)
  * 难度: easy
@@ -7,11 +8,11 @@
  * 示例 1：
  * 输入：nums = [1,2,3,1], k = 3
  * 输出：true
- * 
+ *
  * 示例 2：
  * 输入：nums = [1,0,1,1], k = 1
  * 输出：true
- * 
+ *
  * 示例 3：
  * 输入：nums = [1,2,3,1,2,3], k = 2
  * 输出：false
@@ -29,10 +30,26 @@
 
 export function containsNearbyDuplicate(nums, k) {
   // 在此处编写你的代码
-
+  const map1 = new Map();
+  for (let i = 0; i < nums.length; i++) {
+    const val = map1.get(nums[i]);
+    console.log("查找到的👈", val, i, k);
+    // 唯一可以简化的地方：map1.get() 已经调用过一次了，map1.has() 又调用一次，有点多余。可以直接判断 val !== undefined：
+    if (val !== undefined) {
+      if (i - val <= k) {
+        return true;
+      } else {
+        map1.set(nums[i], i);
+      }
+    } else {
+      map1.set(nums[i], i);
+    }
+  }
+  return false;
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 219. 存在重复元素 II (Contains Duplicate II)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();
@@ -41,27 +58,29 @@ const assert = {
   deepStrictEqual(actual, expected) {
     console.log(`输出: ${JSON.stringify(actual)}`);
     console.log(`期望: ${JSON.stringify(expected)}`);
-    console.log(`结果: ${JSON.stringify(actual) === JSON.stringify(expected) ? '✅ 通过' : '❌ 不通过'}`);
+    console.log(
+      `结果: ${JSON.stringify(actual) === JSON.stringify(expected) ? "✅ 通过" : "❌ 不通过"}`,
+    );
   },
   strictEqual(actual, expected) {
     console.log(`输出: ${JSON.stringify(actual)}`);
     console.log(`期望: ${JSON.stringify(expected)}`);
-    console.log(`结果: ${actual === expected ? '✅ 通过' : '❌ 不通过'}`);
+    console.log(`结果: ${actual === expected ? "✅ 通过" : "❌ 不通过"}`);
   },
 };
 
 test("示例1", () => {
-  assert.deepStrictEqual(containsNearbyDuplicate([1,2,3,1], 3), true);
+  assert.deepStrictEqual(containsNearbyDuplicate([1, 2, 3, 1], 3), true);
 });
 
 test("示例2", () => {
-  assert.deepStrictEqual(containsNearbyDuplicate([1,0,1,1], 1), true);
+  assert.deepStrictEqual(containsNearbyDuplicate([1, 0, 1, 1], 1), true);
 });
 
 test("示例3", () => {
-  assert.deepStrictEqual(containsNearbyDuplicate([1,2,3,1,2,3], 2), false);
+  assert.deepStrictEqual(containsNearbyDuplicate([1, 2, 3, 1, 2, 3], 2), false);
 });
 
 test("k=0", () => {
-  assert.deepStrictEqual(containsNearbyDuplicate([1,2,1], 0), false);
+  assert.deepStrictEqual(containsNearbyDuplicate([1, 2, 1], 0), false);
 });

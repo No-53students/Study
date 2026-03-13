@@ -1,3 +1,4 @@
+// node ./46-plus-one.mjs
 /**
  * 66. 加一 (Plus One)
  * 难度: easy
@@ -38,6 +39,7 @@ export function plusOne(digits) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 66. 加一 (Plus One)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

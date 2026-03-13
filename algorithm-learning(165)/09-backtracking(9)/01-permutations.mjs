@@ -1,3 +1,4 @@
+// node ./01-permutations.mjs
 /**
  * 46. 全排列 (Permutations)
  * 难度: medium
@@ -33,6 +34,7 @@ export function permute(nums) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 46. 全排列 (Permutations)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

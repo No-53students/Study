@@ -1,3 +1,4 @@
+// node ./10-top-k-frequent-elements.mjs
 /**
  * 347. 前K个高频元素 (Top K Frequent Elements)
  * 难度: medium
@@ -30,6 +31,7 @@ export function topKFrequent(nums, k) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 347. 前K个高频元素 (Top K Frequent Elements)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

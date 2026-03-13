@@ -1,3 +1,4 @@
+// node ./16-flatten-binary-tree-to-linked-list.mjs
 /**
  * 114. 二叉树展开为链表 (Flatten Binary Tree to Linked List)
  * 难度: medium
@@ -37,6 +38,7 @@ export function flatten(root) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 114. 二叉树展开为链表 (Flatten Binary Tree to Linked List)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

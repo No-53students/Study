@@ -1,3 +1,4 @@
+// node ./02-linked-list-cycle-ii.mjs
 /**
  * 142. 环形链表 II (Linked List Cycle II)
  * 难度: medium
@@ -49,6 +50,7 @@ export function detectCycle(head) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 142. 环形链表 II (Linked List Cycle II)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

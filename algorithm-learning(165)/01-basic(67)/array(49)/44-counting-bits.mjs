@@ -1,3 +1,4 @@
+// node ./44-counting-bits.mjs
 /**
  * 338. 比特位计数 (Counting Bits)
  * 难度: easy
@@ -38,6 +39,7 @@ export function countBits(n) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 338. 比特位计数 (Counting Bits)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

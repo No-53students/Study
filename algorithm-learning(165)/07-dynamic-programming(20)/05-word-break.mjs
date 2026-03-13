@@ -1,3 +1,4 @@
+// node ./05-word-break.mjs
 /**
  * 139. 单词拆分 (Word Break)
  * 难度: medium
@@ -40,6 +41,7 @@ export function wordBreak(s, wordDict) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 139. 单词拆分 (Word Break)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

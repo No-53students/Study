@@ -1,3 +1,4 @@
+// node ./11-rotate-list.mjs
 /**
  * 61. 旋转链表 (Rotate List)
  * 难度: medium
@@ -36,6 +37,7 @@ export function rotateRight(head, k) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 61. 旋转链表 (Rotate List)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

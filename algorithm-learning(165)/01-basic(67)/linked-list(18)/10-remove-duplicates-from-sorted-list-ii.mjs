@@ -1,3 +1,4 @@
+// node ./10-remove-duplicates-from-sorted-list-ii.mjs
 /**
  * 82. 删除排序链表中的重复元素 II (Remove Duplicates from Sorted List II)
  * 难度: medium
@@ -36,6 +37,7 @@ export function deleteDuplicates(head) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 82. 删除排序链表中的重复元素 II (Remove Duplicates from Sorted List II)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

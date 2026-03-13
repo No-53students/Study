@@ -1,3 +1,4 @@
+// node ./28-contains-duplicate.mjs
 /**
  * 217. 存在重复元素 (Contains Duplicate)
  * 难度: easy
@@ -29,11 +30,59 @@
  */
 
 export function containsDuplicate(nums) {
-  // 在此处编写你的代码
-
+  const arr = new Set(nums)
+  return arr.size !== nums.length
 }
 
+// export function containsDuplicate(nums) {
+//   const arr = new Set();
+//   for (let i = 0; i < nums.length; i++) {
+//     if (arr.has(nums[i])) {
+//       return true;
+//     }
+//     arr.add(nums[i]);
+//   }
+//   return false;
+// }
+
+  // 当前方案：用数组下标模拟哈希表
+  //   arr[nums[i]] = true  → 把值当作下标，标记"出现过"
+  //   下次遇到同样的值时，arr[nums[i]] 已是 true → 有重复
+  //
+  // ⚠️ 此方案有严重缺陷：
+  //   约束条件 nums[i] 最大可达 10^9，arr[1000000000] = true
+  //   会创建一个长度 10 亿的稀疏数组，极度浪费内存！
+  //
+  // ⚠️ 负数情况说明（JS 特性）：
+  //   arr[-1] = true  → JS 数组本质是对象，负数会变成字符串属性 "-1" 存储
+  //   arr[-1]         → 读取属性 "-1"，返回 true（碰巧能用）
+  //   但这不是标准数组行为，属于"走运"，不推荐依赖
+  //
+  // ✅ 标准做法：用 Set，O(1) 查找，无内存浪费，支持任意值
+  //   const seen = new Set();
+  //   for (let num of nums) {
+  //     if (seen.has(num)) return true;
+  //     seen.add(num);
+  //   }
+  //   return false;
+  //
+  // ⚡ 最简写法：
+  //   return new Set(nums).size !== nums.length;
+  //   原理：Set 自动去重，如果有重复元素，size 会小于数组长度
+// export function containsDuplicate(nums) {
+
+//   const arr = [];
+//   for (let i = 0; i < nums.length; i++){
+//     if (arr[nums[i]]) {
+//       return true;
+//     }
+//     arr[nums[i]] = true;
+//   }
+//   return false
+// }
+
 // ---- 测试用例 ----
+console.log("\n📝 题目: 217. 存在重复元素 (Contains Duplicate)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

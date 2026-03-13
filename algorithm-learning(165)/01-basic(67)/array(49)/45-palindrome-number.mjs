@@ -1,3 +1,4 @@
+// node ./45-palindrome-number.mjs
 /**
  * 9. 回文数 (Palindrome Number)
  * 难度: easy
@@ -37,6 +38,7 @@ export function isPalindrome(x) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 9. 回文数 (Palindrome Number)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

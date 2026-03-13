@@ -1,3 +1,4 @@
+// node ./08-path-sum.mjs
 /**
  * 112. 路径总和 (Path Sum)
  * 难度: easy
@@ -41,6 +42,7 @@ export function hasPathSum(root, targetSum) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 112. 路径总和 (Path Sum)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

@@ -1,3 +1,4 @@
+// node ./01-number-of-islands.mjs
 /**
  * 200. 岛屿数量 (Number of Islands)
  * 难度: medium
@@ -44,6 +45,7 @@ export function numIslands(grid) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 200. 岛屿数量 (Number of Islands)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

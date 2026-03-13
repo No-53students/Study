@@ -1,3 +1,4 @@
+// node ./01-summary-ranges.mjs
 /**
  * 228. 汇总区间 (Summary Ranges)
  * 难度: easy
@@ -45,6 +46,7 @@ export function summaryRanges(nums) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 228. 汇总区间 (Summary Ranges)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

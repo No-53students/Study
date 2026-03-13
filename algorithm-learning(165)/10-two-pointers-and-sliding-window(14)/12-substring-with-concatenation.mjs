@@ -1,3 +1,4 @@
+// node ./12-substring-with-concatenation.mjs
 /**
  * 30. 串联所有单词的子串 (Substring with Concatenation of All Words)
  * 难度: hard
@@ -51,6 +52,7 @@ export function findSubstring(s, words) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 30. 串联所有单词的子串 (Substring with Concatenation of All Words)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

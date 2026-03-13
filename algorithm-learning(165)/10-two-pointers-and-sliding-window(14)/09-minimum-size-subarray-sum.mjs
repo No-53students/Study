@@ -1,3 +1,4 @@
+// node ./09-minimum-size-subarray-sum.mjs
 /**
  * 209. 长度最小的子数组 (Minimum Size Subarray Sum)
  * 难度: medium
@@ -38,6 +39,7 @@ export function minSubArrayLen(target, nums) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 209. 长度最小的子数组 (Minimum Size Subarray Sum)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

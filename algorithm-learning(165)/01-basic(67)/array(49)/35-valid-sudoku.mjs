@@ -1,3 +1,4 @@
+// node ./35-valid-sudoku.mjs
 /**
  * 36. 有效的数独 (Valid Sudoku)
  * 难度: medium
@@ -57,6 +58,7 @@ export function isValidSudoku(board) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 36. 有效的数独 (Valid Sudoku)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

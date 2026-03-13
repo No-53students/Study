@@ -1,3 +1,4 @@
+// node ./04-symmetric-tree.mjs
 /**
  * 101. 对称二叉树 (Symmetric Tree)
  * 难度: easy
@@ -30,6 +31,7 @@ export function isSymmetric(root) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 101. 对称二叉树 (Symmetric Tree)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

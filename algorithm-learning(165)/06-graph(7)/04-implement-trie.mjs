@@ -1,3 +1,4 @@
+// node ./04-implement-trie.mjs
 /**
  * 208. 实现 Trie (前缀树) (Implement Trie (Prefix Tree))
  * 难度: medium
@@ -57,6 +58,7 @@ export class Trie {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 208. 实现 Trie (前缀树) (Implement Trie (Prefix Tree))");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

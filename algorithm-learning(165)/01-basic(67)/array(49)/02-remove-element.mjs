@@ -1,3 +1,4 @@
+// node ./02-remove-element.mjs
 /**
  * 27. 移除元素 (Remove Element)
  * 难度: easy
@@ -58,6 +59,7 @@ export function solution(nums, val) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 27. 移除元素 (Remove Element)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

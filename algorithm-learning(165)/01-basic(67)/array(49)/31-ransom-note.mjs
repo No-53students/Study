@@ -1,3 +1,4 @@
+// node ./31-ransom-note.mjs
 /**
  * 383. 赎金信 (Ransom Note)
  * 难度: easy
@@ -36,6 +37,7 @@ export function canConstruct(ransomNote, magazine) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 383. 赎金信 (Ransom Note)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

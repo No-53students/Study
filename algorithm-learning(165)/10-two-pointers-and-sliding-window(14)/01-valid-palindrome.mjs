@@ -1,3 +1,4 @@
+// node ./01-valid-palindrome.mjs
 /**
  * 125. 验证回文串 (Valid Palindrome)
  * 难度: easy
@@ -40,6 +41,7 @@ export function isPalindrome(s) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 125. 验证回文串 (Valid Palindrome)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

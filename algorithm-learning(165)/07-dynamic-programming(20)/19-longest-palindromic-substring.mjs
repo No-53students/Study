@@ -1,3 +1,4 @@
+// node ./19-longest-palindromic-substring.mjs
 /**
  * 5. 最长回文子串 (Longest Palindromic Substring)
  * 难度: medium
@@ -29,6 +30,7 @@ export function longestPalindrome(s) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 5. 最长回文子串 (Longest Palindromic Substring)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

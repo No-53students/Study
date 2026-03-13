@@ -1,3 +1,4 @@
+// node ./11-unique-paths.mjs
 /**
  * 62. 不同路径 (Unique Paths)
  * 难度: medium
@@ -40,6 +41,7 @@ export function uniquePaths(m, n) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 62. 不同路径 (Unique Paths)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

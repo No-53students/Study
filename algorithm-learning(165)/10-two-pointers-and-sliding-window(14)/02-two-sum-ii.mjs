@@ -1,3 +1,4 @@
+// node ./02-two-sum-ii.mjs
 /**
  * 167. 两数之和 II - 输入有序数组 (Two Sum II - Input Array Is Sorted)
  * 难度: medium
@@ -44,6 +45,7 @@ export function twoSum(numbers, target) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 167. 两数之和 II - 输入有序数组 (Two Sum II - Input Array Is Sorted)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

@@ -1,3 +1,4 @@
+// node ./03-letter-combinations.mjs
 /**
  * 17. 电话号码的字母组合 (Letter Combinations of a Phone Number)
  * 难度: medium
@@ -43,6 +44,7 @@ export function letterCombinations(digits) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 17. 电话号码的字母组合 (Letter Combinations of a Phone Number)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

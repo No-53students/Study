@@ -1,3 +1,4 @@
+// node ./14-reverse-nodes-in-k-group.mjs
 /**
  * 25. K 个一组翻转链表 (Reverse Nodes in k-Group)
  * 难度: hard
@@ -34,6 +35,7 @@ export function reverseKGroup(head, k) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 25. K 个一组翻转链表 (Reverse Nodes in k-Group)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

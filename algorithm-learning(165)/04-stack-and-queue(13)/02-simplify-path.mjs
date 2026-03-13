@@ -1,3 +1,4 @@
+// node ./02-simplify-path.mjs
 /**
  * 71. 简化路径 (Simplify Path)
  * 难度: medium
@@ -53,6 +54,7 @@ export function simplifyPath(path) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 71. 简化路径 (Simplify Path)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

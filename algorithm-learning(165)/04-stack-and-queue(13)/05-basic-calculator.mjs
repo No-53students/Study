@@ -1,3 +1,4 @@
+// node ./05-basic-calculator.mjs
 /**
  * 224. 基本计算器 (Basic Calculator)
  * 难度: hard
@@ -39,6 +40,7 @@ export function calculate(s) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 224. 基本计算器 (Basic Calculator)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

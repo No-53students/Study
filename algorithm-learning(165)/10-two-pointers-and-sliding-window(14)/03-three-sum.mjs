@@ -1,3 +1,4 @@
+// node ./03-three-sum.mjs
 /**
  * 15. 三数之和 (3Sum)
  * 难度: medium
@@ -42,6 +43,7 @@ export function threeSum(nums) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 15. 三数之和 (3Sum)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

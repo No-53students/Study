@@ -1,3 +1,4 @@
+// node ./01-linked-list-cycle.mjs
 /**
  * 141. 环形链表 (Linked List Cycle)
  * 难度: easy
@@ -49,6 +50,7 @@ export function hasCycle(head) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 141. 环形链表 (Linked List Cycle)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

@@ -1,3 +1,4 @@
+// node ./09-maximum-subarray.mjs
 /**
  * 53. 最大子数组和 (Maximum Subarray)
  * 难度: medium
@@ -37,6 +38,7 @@ export function maxSubArray(nums) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 53. 最大子数组和 (Maximum Subarray)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

@@ -1,3 +1,4 @@
+// node ./01-merge-sorted-array.mjs
 /**
  * 88. 合并两个有序数组 (Merge Sorted Array)
  * 难度: easy
@@ -121,6 +122,7 @@ export function solution(nums1, m, nums2, n) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 88. 合并两个有序数组 (Merge Sorted Array)");
 const tests = [
   { nums1: [1,2,3,0,0,0], m: 3, nums2: [2,5,6], n: 3, expected: [1,2,2,3,5,6] },
   { nums1: [1], m: 1, nums2: [], n: 0, expected: [1] },

@@ -1,3 +1,4 @@
+// node ./05-construct-binary-tree-from-preorder-and-inorder.mjs
 /**
  * 105. 从前序与中序遍历序列构造二叉树 (Construct Binary Tree from Preorder and Inorder Traversal)
  * 难度: medium
@@ -33,6 +34,7 @@ export function buildTree(preorder, inorder) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 105. 从前序与中序遍历序列构造二叉树 (Construct Binary Tree from Preorder and Inorder Traversal)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

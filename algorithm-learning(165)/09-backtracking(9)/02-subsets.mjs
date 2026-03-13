@@ -1,3 +1,4 @@
+// node ./02-subsets.mjs
 /**
  * 78. 子集 (Subsets)
  * 难度: medium
@@ -31,6 +32,7 @@ export function subsets(nums) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 78. 子集 (Subsets)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

@@ -1,3 +1,4 @@
+// node ./17-best-time-to-buy-and-sell-stock-iii.mjs
 /**
  * 123. 买卖股票的最佳时机 III (Best Time to Buy and Sell Stock III)
  * 难度: hard
@@ -43,6 +44,7 @@ export function maxProfit(prices) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 123. 买卖股票的最佳时机 III (Best Time to Buy and Sell Stock III)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

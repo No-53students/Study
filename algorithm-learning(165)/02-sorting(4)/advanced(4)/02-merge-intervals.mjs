@@ -1,3 +1,4 @@
+// node ./02-merge-intervals.mjs
 /**
  * 56. 合并区间 (Merge Intervals)
  * 难度: medium
@@ -31,6 +32,7 @@ export function merge(intervals) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 56. 合并区间 (Merge Intervals)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

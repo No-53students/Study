@@ -1,3 +1,4 @@
+// node ./15-sort-list.mjs
 /**
  * 148. 排序链表 (Sort List)
  * 难度: medium
@@ -34,6 +35,7 @@ export function sortList(head) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 148. 排序链表 (Sort List)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

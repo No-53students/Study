@@ -1,3 +1,4 @@
+// node ./18-merge-k-sorted-lists.mjs
 /**
  * 23. 合并 K 个升序链表 (Merge k Sorted Lists)
  * 难度: hard
@@ -45,6 +46,7 @@ export function mergeKLists(lists: Array<ListNode | null>): ListNode | null {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 23. 合并 K 个升序链表 (Merge k Sorted Lists)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

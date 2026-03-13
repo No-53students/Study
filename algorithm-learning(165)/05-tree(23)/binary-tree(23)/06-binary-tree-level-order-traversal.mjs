@@ -1,3 +1,4 @@
+// node ./06-binary-tree-level-order-traversal.mjs
 /**
  * 102. 二叉树的层序遍历 (Binary Tree Level Order Traversal)
  * 难度: medium
@@ -32,6 +33,7 @@ export function levelOrder(root) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 102. 二叉树的层序遍历 (Binary Tree Level Order Traversal)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

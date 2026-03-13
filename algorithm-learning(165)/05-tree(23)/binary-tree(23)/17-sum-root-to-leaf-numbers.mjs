@@ -1,3 +1,4 @@
+// node ./17-sum-root-to-leaf-numbers.mjs
 /**
  * 129. 求根节点到叶节点数字之和 (Sum Root to Leaf Numbers)
  * 难度: medium
@@ -42,6 +43,7 @@ export function sumNumbers(root) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 129. 求根节点到叶节点数字之和 (Sum Root to Leaf Numbers)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

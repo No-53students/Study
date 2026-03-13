@@ -1,3 +1,4 @@
+// node ./05-find-peak-element.mjs
 /**
  * 162. 寻找峰值 (Find Peak Element)
  * 难度: medium
@@ -37,6 +38,7 @@ export function findPeakElement(nums) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 162. 寻找峰值 (Find Peak Element)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

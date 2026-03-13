@@ -1,3 +1,4 @@
+// node ./14-diameter-of-binary-tree.mjs
 /**
  * 543. 二叉树的直径 (Diameter of Binary Tree)
  * 难度: easy
@@ -33,6 +34,7 @@ export function diameterOfBinaryTree(root) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 543. 二叉树的直径 (Diameter of Binary Tree)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

@@ -1,3 +1,4 @@
+// node ./04-longest-increasing-subsequence.mjs
 /**
  * 300. 最长递增子序列 (Longest Increasing Subsequence)
  * 难度: medium
@@ -35,6 +36,7 @@ export function lengthOfLIS(nums) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 300. 最长递增子序列 (Longest Increasing Subsequence)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

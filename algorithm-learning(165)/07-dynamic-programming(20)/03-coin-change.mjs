@@ -1,3 +1,4 @@
+// node ./03-coin-change.mjs
 /**
  * 322. 零钱兑换 (Coin Change)
  * 难度: medium
@@ -38,6 +39,7 @@ export function coinChange(coins, amount) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 322. 零钱兑换 (Coin Change)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

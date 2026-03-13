@@ -1,3 +1,4 @@
+// node ./10-longest-substring-without-repeating.mjs
 /**
  * 3. 无重复字符的最长子串 (Longest Substring Without Repeating Characters)
  * 难度: medium
@@ -36,6 +37,7 @@ export function lengthOfLongestSubstring(s) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 3. 无重复字符的最长子串 (Longest Substring Without Repeating Characters)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

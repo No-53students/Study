@@ -1,3 +1,4 @@
+// node ./07-daily-temperatures.mjs
 /**
  * 739. 每日温度 (Daily Temperatures)
  * 难度: medium
@@ -31,6 +32,7 @@ export function dailyTemperatures(temperatures) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 739. 每日温度 (Daily Temperatures)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

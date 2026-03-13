@@ -1,3 +1,4 @@
+// node ./12-kth-smallest-element-in-bst.mjs
 /**
  * 230. 二叉搜索树中第K小的元素 (Kth Smallest Element in a BST)
  * 难度: medium
@@ -31,6 +32,7 @@ export function kthSmallest(root, k) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 230. 二叉搜索树中第K小的元素 (Kth Smallest Element in a BST)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

@@ -1,3 +1,4 @@
+// node ./03-course-schedule.mjs
 /**
  * 207. 课程表 (Course Schedule)
  * 难度: medium
@@ -39,6 +40,7 @@ export function canFinish(numCourses, prerequisites) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 207. 课程表 (Course Schedule)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

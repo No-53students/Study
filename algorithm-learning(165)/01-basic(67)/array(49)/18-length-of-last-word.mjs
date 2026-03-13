@@ -1,3 +1,4 @@
+// node ./18-length-of-last-word.mjs
 /**
  * 58. 最后一个单词的长度 (Length of Last Word)
  * 难度: easy
@@ -38,10 +39,13 @@
  */
 export function solution(s) {
   // 在这里编写你的代码
-
+  const sArr = s.trim().split(' ');
+  console.log("sArr", sArr, sArr[sArr.length - 1], sArr[sArr.length - 1].length);
+  return sArr[sArr.length - 1].length;
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 58. 最后一个单词的长度 (Length of Last Word)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

@@ -1,3 +1,4 @@
+// node ./07-course-schedule-ii.mjs
 /**
  * 210. 课程表 II (Course Schedule II)
  * 难度: medium
@@ -42,6 +43,7 @@ export function findOrder(numCourses, prerequisites) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 210. 课程表 II (Course Schedule II)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

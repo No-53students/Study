@@ -1,3 +1,4 @@
+// node ./04-minimum-number-of-arrows.mjs
 /**
  * 452. 用最少数量的箭引爆气球 (Minimum Number of Arrows to Burst Balloons)
  * 难度: medium
@@ -44,6 +45,7 @@ export function findMinArrowShots(points) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 452. 用最少数量的箭引爆气球 (Minimum Number of Arrows to Burst Balloons)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

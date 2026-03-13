@@ -1,3 +1,4 @@
+// node ./42-single-number.mjs
 /**
  * 136. 只出现一次的数字 (Single Number)
  * 难度: easy
@@ -35,6 +36,7 @@ export function singleNumber(nums) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 136. 只出现一次的数字 (Single Number)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

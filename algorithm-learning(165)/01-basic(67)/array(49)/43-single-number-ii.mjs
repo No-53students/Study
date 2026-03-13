@@ -1,3 +1,4 @@
+// node ./43-single-number-ii.mjs
 /**
  * 137. 只出现一次的数字 II (Single Number II)
  * 难度: medium
@@ -31,6 +32,7 @@ export function singleNumber(nums) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 137. 只出现一次的数字 II (Single Number II)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

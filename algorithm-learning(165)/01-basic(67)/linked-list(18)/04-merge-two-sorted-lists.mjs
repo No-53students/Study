@@ -1,3 +1,4 @@
+// node ./04-merge-two-sorted-lists.mjs
 /**
  * 21. 合并两个有序链表 (Merge Two Sorted Lists)
  * 难度: easy
@@ -40,6 +41,7 @@ export function mergeTwoLists(list1, list2) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 21. 合并两个有序链表 (Merge Two Sorted Lists)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

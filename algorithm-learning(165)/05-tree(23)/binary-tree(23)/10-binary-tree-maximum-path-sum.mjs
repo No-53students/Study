@@ -1,3 +1,4 @@
+// node ./10-binary-tree-maximum-path-sum.mjs
 /**
  * 124. 二叉树中的最大路径和 (Binary Tree Maximum Path Sum)
  * 难度: hard
@@ -35,6 +36,7 @@ export function maxPathSum(root) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 124. 二叉树中的最大路径和 (Binary Tree Maximum Path Sum)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

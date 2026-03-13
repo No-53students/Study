@@ -1,3 +1,4 @@
+// node ./33-isomorphic-strings.mjs
 /**
  * 205. 同构字符串 (Isomorphic Strings)
  * 难度: easy
@@ -37,6 +38,7 @@ export function isIsomorphic(s, t) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 205. 同构字符串 (Isomorphic Strings)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

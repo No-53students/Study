@@ -1,3 +1,4 @@
+// node ./13-unique-paths-ii.mjs
 /**
  * 63. 不同路径 II (Unique Paths II)
  * 难度: medium
@@ -40,6 +41,7 @@ export function uniquePathsWithObstacles(obstacleGrid) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 63. 不同路径 II (Unique Paths II)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

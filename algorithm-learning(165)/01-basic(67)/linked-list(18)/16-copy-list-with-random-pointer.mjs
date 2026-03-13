@@ -1,3 +1,4 @@
+// node ./16-copy-list-with-random-pointer.mjs
 /**
  * 138. 随机链表的复制 (Copy List with Random Pointer)
  * 难度: medium
@@ -34,6 +35,7 @@ export function copyRandomList(head) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 138. 随机链表的复制 (Copy List with Random Pointer)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

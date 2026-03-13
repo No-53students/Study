@@ -1,3 +1,4 @@
+// node ./41-number-of-1-bits.mjs
 /**
  * 191. 位1的个数 (Number of 1 Bits)
  * 难度: easy
@@ -34,6 +35,7 @@ export function hammingWeight(n) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 191. 位1的个数 (Number of 1 Bits)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

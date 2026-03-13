@@ -1,3 +1,4 @@
+// node ./38-set-matrix-zeroes.mjs
 /**
  * 73. 矩阵置零 (Set Matrix Zeroes)
  * 难度: medium
@@ -35,6 +36,7 @@ export function setZeroes(matrix) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 73. 矩阵置零 (Set Matrix Zeroes)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

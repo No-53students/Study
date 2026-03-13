@@ -1,3 +1,4 @@
+// node ./03-min-stack.mjs
 /**
  * 155. 最小栈 (Min Stack)
  * 难度: medium
@@ -68,6 +69,7 @@ export class MinStack {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 155. 最小栈 (Min Stack)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

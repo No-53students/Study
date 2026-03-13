@@ -1,3 +1,4 @@
+// node ./07-palindrome-partitioning.mjs
 /**
  * 131. 分割回文串 (Palindrome Partitioning)
  * 难度: medium
@@ -28,6 +29,7 @@ export function partition(s) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 131. 分割回文串 (Palindrome Partitioning)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

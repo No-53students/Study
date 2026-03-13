@@ -1,3 +1,4 @@
+// node ./01-maximum-depth-of-binary-tree.mjs
 /**
  * 104. 二叉树的最大深度 (Maximum Depth of Binary Tree)
  * 难度: easy
@@ -30,6 +31,7 @@ export function maxDepth(root) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 104. 二叉树的最大深度 (Maximum Depth of Binary Tree)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

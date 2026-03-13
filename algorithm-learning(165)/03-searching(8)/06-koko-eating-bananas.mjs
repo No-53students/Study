@@ -1,3 +1,4 @@
+// node ./06-koko-eating-bananas.mjs
 /**
  * 875. 爱吃香蕉的珂珂 (Koko Eating Bananas)
  * 难度: medium
@@ -39,6 +40,7 @@ export function minEatingSpeed(piles, h) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 875. 爱吃香蕉的珂珂 (Koko Eating Bananas)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

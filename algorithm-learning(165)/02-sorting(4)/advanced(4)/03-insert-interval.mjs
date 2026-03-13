@@ -1,3 +1,4 @@
+// node ./03-insert-interval.mjs
 /**
  * 57. 插入区间 (Insert Interval)
  * 难度: medium
@@ -40,6 +41,7 @@ export function insert(intervals, newInterval) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 57. 插入区间 (Insert Interval)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

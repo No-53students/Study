@@ -1,3 +1,4 @@
+// node ./06-rotting-oranges.mjs
 /**
  * 994. 腐烂的橘子 (Rotting Oranges)
  * 难度: medium
@@ -44,6 +45,7 @@ export function orangesRotting(grid) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 994. 腐烂的橘子 (Rotting Oranges)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

@@ -1,3 +1,4 @@
+// node ./03-reverse-linked-list.mjs
 /**
  * 206. 反转链表 (Reverse Linked List)
  * 难度: easy
@@ -41,6 +42,7 @@ export function reverseList(head) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 206. 反转链表 (Reverse Linked List)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

@@ -1,3 +1,4 @@
+// node ./15-construct-binary-tree-from-inorder-and-postorder-traversal.mjs
 /**
  * 106. 从中序与后序遍历序列构造二叉树 (Construct Binary Tree from Inorder and Postorder Traversal)
  * 难度: medium
@@ -34,6 +35,7 @@ export function buildTree(inorder, postorder) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 106. 从中序与后序遍历序列构造二叉树 (Construct Binary Tree from Inorder and Postorder Traversal)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

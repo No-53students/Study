@@ -1,3 +1,4 @@
+// node ./47-pow-x-n.mjs
 /**
  * 50. Pow(x, n) (Pow(x, n))
  * 难度: medium
@@ -35,6 +36,7 @@ export function myPow(x, n) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 50. Pow(x, n) (Pow(x, n))");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

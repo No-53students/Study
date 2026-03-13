@@ -1,3 +1,4 @@
+// node ./06-word-search.mjs
 /**
  * 79. 单词搜索 (Word Search)
  * 难度: medium
@@ -37,6 +38,7 @@ export function exist(board, word) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 79. 单词搜索 (Word Search)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

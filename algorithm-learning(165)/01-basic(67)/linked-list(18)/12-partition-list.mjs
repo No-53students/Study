@@ -1,3 +1,4 @@
+// node ./12-partition-list.mjs
 /**
  * 86. 分隔链表 (Partition List)
  * 难度: medium
@@ -38,6 +39,7 @@ export function partition(head, x) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 86. 分隔链表 (Partition List)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

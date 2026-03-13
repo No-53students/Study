@@ -1,3 +1,4 @@
+// node ./10-perfect-squares.mjs
 /**
  * 279. 完全平方数 (Perfect Squares)
  * 难度: medium
@@ -31,6 +32,7 @@ export function numSquares(n) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 279. 完全平方数 (Perfect Squares)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

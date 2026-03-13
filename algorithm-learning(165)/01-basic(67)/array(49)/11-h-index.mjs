@@ -1,3 +1,4 @@
+// node ./11-h-index.mjs
 /**
  * 274. H 指数 (H-Index)
  * 难度: medium
@@ -33,10 +34,21 @@
  */
 export function solution(citations) {
   // 在这里编写你的代码
-
+  // 降序排列
+  citations.sort((a, b) => b - a)
+  console.log('倒序的数组', citations);
+  let h = 0;
+  for (let i = 0; i < citations.length; i++) { 
+    if (citations[i] >= i + 1) {
+      h = i+1
+    }
+  }
+  return h;
+  // for寻找citations[i] >= i+1
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 274. H 指数 (H-Index)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

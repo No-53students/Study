@@ -1,3 +1,4 @@
+// node ./07-binary-tree-right-side-view.mjs
 /**
  * 199. 二叉树的右视图 (Binary Tree Right Side View)
  * 难度: medium
@@ -32,6 +33,7 @@ export function rightSideView(root) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 199. 二叉树的右视图 (Binary Tree Right Side View)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

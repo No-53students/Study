@@ -1,3 +1,4 @@
+// node ./08-largest-rectangle-in-histogram.mjs
 /**
  * 84. 柱状图中最大的矩形 (Largest Rectangle in Histogram)
  * 难度: hard
@@ -30,6 +31,7 @@ export function largestRectangleArea(heights) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 84. 柱状图中最大的矩形 (Largest Rectangle in Histogram)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

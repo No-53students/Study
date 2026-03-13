@@ -1,3 +1,4 @@
+// node ./20-convert-sorted-array-to-binary-search-tree.mjs
 /**
  * 108. 将有序数组转换为二叉搜索树 (Convert Sorted Array to Binary Search Tree)
  * 难度: easy
@@ -30,6 +31,7 @@ export function sortedArrayToBST(nums) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 108. 将有序数组转换为二叉搜索树 (Convert Sorted Array to Binary Search Tree)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

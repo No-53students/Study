@@ -1,3 +1,4 @@
+// node ./40-search-a-2d-matrix-ii.mjs
 /**
  * 240. 搜索二维矩阵 II (Search a 2D Matrix II)
  * 难度: medium
@@ -35,6 +36,7 @@ export function searchMatrix(matrix: number[][], target: number): boolean {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 240. 搜索二维矩阵 II (Search a 2D Matrix II)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

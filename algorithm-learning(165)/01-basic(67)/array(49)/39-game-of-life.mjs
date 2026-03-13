@@ -1,3 +1,4 @@
+// node ./39-game-of-life.mjs
 /**
  * 289. 生命游戏 (Game of Life)
  * 难度: medium
@@ -43,6 +44,7 @@ export function gameOfLife(board) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 289. 生命游戏 (Game of Life)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

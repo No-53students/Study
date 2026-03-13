@@ -1,3 +1,4 @@
+// node ./08-n-queens.mjs
 /**
  * 51. N 皇后 (N-Queens)
  * 难度: hard
@@ -34,6 +35,7 @@ export function solveNQueens(n) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 51. N 皇后 (N-Queens)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

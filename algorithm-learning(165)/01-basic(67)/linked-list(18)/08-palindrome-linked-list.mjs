@@ -1,3 +1,4 @@
+// node ./08-palindrome-linked-list.mjs
 /**
  * 234. 回文链表 (Palindrome Linked List)
  * 难度: easy
@@ -37,6 +38,7 @@ export function isPalindrome(head) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 234. 回文链表 (Palindrome Linked List)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

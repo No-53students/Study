@@ -1,3 +1,4 @@
+// node ./08-best-time-to-buy-and-sell-stock-ii.mjs
 /**
  * 122. 买卖股票的最佳时机 II (Best Time to Buy and Sell Stock II)
  * 难度: medium
@@ -41,10 +42,19 @@
  */
 export function solution(prices) {
   // 在这里编写你的代码
+  let countNums = 0;
+  prices.forEach((item, index) => {
+    if (item < prices[index + 1]) {
+      // 获取每个阶段的收益
+      countNums = countNums + prices[index + 1] - item;
+    }
+  })
 
+  return countNums;
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 122. 买卖股票的最佳时机 II (Best Time to Buy and Sell Stock II)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

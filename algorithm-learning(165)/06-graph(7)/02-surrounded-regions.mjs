@@ -1,3 +1,4 @@
+// node ./02-surrounded-regions.mjs
 /**
  * 130. 被围绕的区域 (Surrounded Regions)
  * 难度: medium
@@ -37,6 +38,7 @@ export function solve(board) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 130. 被围绕的区域 (Surrounded Regions)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

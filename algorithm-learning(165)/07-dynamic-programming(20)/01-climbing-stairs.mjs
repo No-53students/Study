@@ -1,3 +1,4 @@
+// node ./01-climbing-stairs.mjs
 /**
  * 70. 爬楼梯 (Climbing Stairs)
  * 难度: easy
@@ -36,6 +37,7 @@ export function climbStairs(n) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 70. 爬楼梯 (Climbing Stairs)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

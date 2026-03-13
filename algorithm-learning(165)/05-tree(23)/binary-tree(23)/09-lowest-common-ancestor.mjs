@@ -1,3 +1,4 @@
+// node ./09-lowest-common-ancestor.mjs
 /**
  * 236. 二叉树的最近公共祖先 (Lowest Common Ancestor of a Binary Tree)
  * 难度: medium
@@ -39,6 +40,7 @@ export function lowestCommonAncestor(root, p, q) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 236. 二叉树的最近公共祖先 (Lowest Common Ancestor of a Binary Tree)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

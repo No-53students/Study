@@ -1,3 +1,4 @@
+// node ./37-rotate-image.mjs
 /**
  * 48. 旋转图像 (Rotate Image)
  * 难度: medium
@@ -31,6 +32,7 @@ export function rotate(matrix) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 48. 旋转图像 (Rotate Image)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

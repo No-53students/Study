@@ -1,3 +1,4 @@
+// node ./08-find-the-duplicate-number.mjs
 /**
  * 287. 寻找重复数 (Find the Duplicate Number)
  * 难度: medium
@@ -37,6 +38,7 @@ export function findDuplicate(nums: number[]): number {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 287. 寻找重复数 (Find the Duplicate Number)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

@@ -1,3 +1,4 @@
+// node ./13-binary-tree-inorder-traversal.mjs
 /**
  * 94. 二叉树的中序遍历 (Binary Tree Inorder Traversal)
  * 难度: easy
@@ -34,6 +35,7 @@ export function inorderTraversal(root) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 94. 二叉树的中序遍历 (Binary Tree Inorder Traversal)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

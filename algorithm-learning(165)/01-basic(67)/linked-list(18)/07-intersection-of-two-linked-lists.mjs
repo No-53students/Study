@@ -1,3 +1,4 @@
+// node ./07-intersection-of-two-linked-lists.mjs
 /**
  * 160. 相交链表 (Intersection of Two Linked Lists)
  * 难度: easy
@@ -59,6 +60,7 @@ export function getIntersectionNode(headA, headB) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 160. 相交链表 (Intersection of Two Linked Lists)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

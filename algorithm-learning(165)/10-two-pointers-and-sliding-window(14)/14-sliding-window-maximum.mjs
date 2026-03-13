@@ -1,3 +1,4 @@
+// node ./14-sliding-window-maximum.mjs
 /**
  * 239. 滑动窗口最大值 (Sliding Window Maximum)
  * 难度: hard
@@ -40,6 +41,7 @@ export function maxSlidingWindow(nums, k) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 239. 滑动窗口最大值 (Sliding Window Maximum)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

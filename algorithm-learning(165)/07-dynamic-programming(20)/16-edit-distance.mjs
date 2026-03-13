@@ -1,3 +1,4 @@
+// node ./16-edit-distance.mjs
 /**
  * 72. 编辑距离 (Edit Distance)
  * 难度: medium
@@ -43,6 +44,7 @@ export function minDistance(word1, word2) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 72. 编辑距离 (Edit Distance)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

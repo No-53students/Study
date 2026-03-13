@@ -1,3 +1,4 @@
+// node ./34-subarray-sum-equals-k.mjs
 /**
  * 560. 和为 K 的子数组 (Subarray Sum Equals K)
  * 难度: medium
@@ -31,6 +32,7 @@ export function subarraySum(nums, k) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 560. 和为 K 的子数组 (Subarray Sum Equals K)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

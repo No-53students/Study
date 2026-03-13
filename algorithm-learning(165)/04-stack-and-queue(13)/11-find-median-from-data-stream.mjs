@@ -1,3 +1,4 @@
+// node ./11-find-median-from-data-stream.mjs
 /**
  * 295. 数据流的中位数 (Find Median from Data Stream)
  * 难度: hard
@@ -54,6 +55,7 @@ export class MedianFinder {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 295. 数据流的中位数 (Find Median from Data Stream)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

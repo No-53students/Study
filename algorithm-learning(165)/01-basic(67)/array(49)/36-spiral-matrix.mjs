@@ -1,3 +1,4 @@
+// node ./36-spiral-matrix.mjs
 /**
  * 54. 螺旋矩阵 (Spiral Matrix)
  * 难度: medium
@@ -30,6 +31,7 @@ export function spiralOrder(matrix) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 54. 螺旋矩阵 (Spiral Matrix)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

@@ -1,3 +1,4 @@
+// node ./03-invert-binary-tree.mjs
 /**
  * 226. 翻转二叉树 (Invert Binary Tree)
  * 难度: easy
@@ -32,6 +33,7 @@ export function invertTree(root) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 226. 翻转二叉树 (Invert Binary Tree)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

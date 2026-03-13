@@ -1,3 +1,4 @@
+// node ./22-binary-search-tree-iterator.mjs
 /**
  * 173. 二叉搜索树迭代器 (Binary Search Tree Iterator)
  * 难度: medium
@@ -46,6 +47,7 @@ export class BSTIterator {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 173. 二叉搜索树迭代器 (Binary Search Tree Iterator)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

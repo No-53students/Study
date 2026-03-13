@@ -1,3 +1,4 @@
+// node ./21-populating-next-right-pointers-in-each-node-ii.mjs
 /**
  * 117. 填充每个节点的下一个右侧节点指针 II (Populating Next Right Pointers in Each Node II)
  * 难度: medium
@@ -40,6 +41,7 @@ export function connect(root) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 117. 填充每个节点的下一个右侧节点指针 II (Populating Next Right Pointers in Each Node II)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

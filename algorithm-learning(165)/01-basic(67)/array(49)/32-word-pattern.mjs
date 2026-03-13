@@ -1,3 +1,4 @@
+// node ./32-word-pattern.mjs
 /**
  * 290. 单词规律 (Word Pattern)
  * 难度: easy
@@ -38,6 +39,7 @@ export function wordPattern(pattern, s) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 290. 单词规律 (Word Pattern)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

@@ -1,3 +1,4 @@
+// node ./06-decode-string.mjs
 /**
  * 394. 字符串解码 (Decode String)
  * 难度: medium
@@ -39,6 +40,7 @@ export function decodeString(s) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 394. 字符串解码 (Decode String)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

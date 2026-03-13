@@ -1,3 +1,4 @@
+// node ./30-longest-consecutive-sequence.mjs
 /**
  * 128. 最长连续序列 (Longest Consecutive Sequence)
  * 难度: medium
@@ -27,10 +28,14 @@
 
 export function longestConsecutive(nums) {
   // 在此处编写你的代码
-
+  nums = nums.sort((a, b) => a - b);
+  const set1 = new Set(nums);
+  console.log('处理后的数组', set1);
+  
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 128. 最长连续序列 (Longest Consecutive Sequence)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

@@ -1,3 +1,4 @@
+// node ./14-triangle.mjs
 /**
  * 120. 三角形最小路径和 (Triangle)
  * 难度: medium
@@ -38,6 +39,7 @@ export function minimumTotal(triangle) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 120. 三角形最小路径和 (Triangle)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

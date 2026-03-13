@@ -1,3 +1,4 @@
+// node ./12-minimum-path-sum.mjs
 /**
  * 64. 最小路径和 (Minimum Path Sum)
  * 难度: medium
@@ -33,6 +34,7 @@ export function minPathSum(grid) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 64. 最小路径和 (Minimum Path Sum)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

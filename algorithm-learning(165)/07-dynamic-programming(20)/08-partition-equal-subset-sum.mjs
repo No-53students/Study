@@ -1,3 +1,4 @@
+// node ./08-partition-equal-subset-sum.mjs
 /**
  * 416. 分割等和子集 (Partition Equal Subset Sum)
  * 难度: medium
@@ -29,6 +30,7 @@ export function canPartition(nums) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 416. 分割等和子集 (Partition Equal Subset Sum)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

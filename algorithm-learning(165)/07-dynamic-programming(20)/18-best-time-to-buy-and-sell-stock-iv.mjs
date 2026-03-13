@@ -1,3 +1,4 @@
+// node ./18-best-time-to-buy-and-sell-stock-iv.mjs
 /**
  * 188. 买卖股票的最佳时机 IV (Best Time to Buy and Sell Stock IV)
  * 难度: hard
@@ -37,6 +38,7 @@ export function maxProfit(k, prices) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 188. 买卖股票的最佳时机 IV (Best Time to Buy and Sell Stock IV)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

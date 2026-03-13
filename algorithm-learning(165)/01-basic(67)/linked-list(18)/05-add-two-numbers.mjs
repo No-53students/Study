@@ -1,3 +1,4 @@
+// node ./05-add-two-numbers.mjs
 /**
  * 2. 两数相加 (Add Two Numbers)
  * 难度: medium
@@ -45,6 +46,7 @@ export function addTwoNumbers(l1, l2) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 2. 两数相加 (Add Two Numbers)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

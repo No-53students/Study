@@ -1,3 +1,4 @@
+// node ./18-binary-tree-zigzag-level-order-traversal.mjs
 /**
  * 103. 二叉树的锯齿形层序遍历 (Binary Tree Zigzag Level Order Traversal)
  * 难度: medium
@@ -36,6 +37,7 @@ export function zigzagLevelOrder(root) {
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 103. 二叉树的锯齿形层序遍历 (Binary Tree Zigzag Level Order Traversal)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();

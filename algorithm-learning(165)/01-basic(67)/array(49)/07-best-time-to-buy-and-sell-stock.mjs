@@ -1,3 +1,4 @@
+// node ./07-best-time-to-buy-and-sell-stock.mjs
 /**
  * 121. 买卖股票的最佳时机 (Best Time to Buy and Sell Stock)
  * 难度: easy
@@ -35,10 +36,23 @@
  */
 export function solution(prices) {
   // 在这里编写你的代码
+  let countNum = 0;
+  let minNum = Infinity;
 
+  prices.forEach((item, index) => {
+    if (item < minNum) {
+      minNum = item;
+    }
+    // 获取到最小值的时候肯定不会走到这里
+    if (item-minNum > countNum) {
+      countNum = item - minNum;
+    }
+  })
+  return countNum;
 }
 
 // ---- 测试用例 ----
+console.log("\n📝 题目: 121. 买卖股票的最佳时机 (Best Time to Buy and Sell Stock)");
 function test(name, fn) {
   console.log(`\n--- ${name} ---`);
   fn();
@@ -57,7 +71,7 @@ const assert = {
 };
 
 test("基本测试", () => {
-  assert.deepStrictEqual(solution([7,1,5,3,6,4]), 5);
+  assert.deepStrictEqual(solution([7,3,8,1,5,4]), 5);
 });
 
 test("持续下跌", () => {
